@@ -5,5 +5,8 @@ This zip-File includes a AVM FRITZ!Box-Export-File for FRITZ OS 7.00 and above.
 It includes Firewall-Rules for Amazon 
 Alexa/Echo, NAS, MS-Servers etc.
 #
-The pi-hole Teleporter-file inludes White- and Blacklist (Advertisement, Mailware and Porn)
+The pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz inludes White- and Blacklist (Advertisement and Maleware)
+with over 70% blocking rate
+#
+The pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz inludes White- and Blacklist (Advertisement, Maleware and Porn)
 with over 70% blocking rate
