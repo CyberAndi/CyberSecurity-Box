@@ -16,7 +16,7 @@ with over 70% blocking rate
 </p><p>
 The regex.bkp.list includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate 
 <br>
-#
+
 contact: <br>
 andreas@stawimedia.de<br>
 https://www.cyberandi.de
