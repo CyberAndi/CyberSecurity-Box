@@ -15,7 +15,9 @@ The pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz inludes White- and B
 with over 70% blocking rate
 </p><p>
 The regex.bkp.list includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate 
-<br>
+</p><p>
+For more Information in german visit https://www.cyberandi.de/Smarthome
+</p><P>
 
 contact: <br>
 andreas@stawimedia.de<br>
