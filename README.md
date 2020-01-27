@@ -1,6 +1,6 @@
 # CyberSecurity-Box
 <p>
-<h3>Configuration of the AVM FRITZ!Box, Pi-Hole, UnBound and Tor(rc) with Presets for Security and Ports-List</h3>
+<h3>Configuration of the AVM FRITZ!Box, Pi-Hole, UnBound and Tor(rc)-SD-Card with Presets for Security and Port-List</h3>
 </p><p>
 This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above.
 It includes Firewall-Rules for Amazon 
