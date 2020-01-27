@@ -1,6 +1,6 @@
 # CyberSecurity-Box
 <p>
-<h3>Configuration of the AVM FRITZ!Box with Presets for Security and Ports-List</h3>
+<h3>Configuration of the AVM FRITZ!Box, Pi-Hole, UnBound and Tor(rc) with Presets for Security and Ports-List</h3>
 </p><p>
 This zip-File includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above.
 It includes Firewall-Rules for Amazon 
@@ -15,6 +15,8 @@ The pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz inludes White- and B
 with over 70% blocking rate
 </p><p>
 The regex.bkp.list includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate 
+</p><p>
+The CyberSecurityBox_2.img is the Pi-Hole, UnBound, UnBound and torrc Image-RaspberryPi on SD-Card. Install with balenaEtcher
 </p><p>
 For more Information in german visit https://www.cyberandi.de/Smarthome
 </p><P>
