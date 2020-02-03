@@ -1,9 +1,10 @@
-# CyberSecurity-Box
+# CyberSecurity-Box (inkl. Pi-Hole, UnBound and Tor)
 <p>
-<h3>Configuration of the AVM FRITZ!Box an a SD-Card-Image with Pi-Hole, UnBound and Tor(rc) Presets for Security and Port-List</h3>
-</p><p>
-<ul>
-  <li value="1"><h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above.</h4>
+<ul><li>
+<h3>Configuration of the AVM FRITZ!Box an a SD-Card-Image with Presets for Security and Port-List</h3>
+<br>
+
+  <h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above.</h4>
   It includes Firewall-Rules for Amazon 
   Alexa/Echo, NAS, MS-Servers etc.
   <br>
