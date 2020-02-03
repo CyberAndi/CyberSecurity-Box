@@ -23,18 +23,18 @@
   Password: <i><b>raspberry</b></i><br><br>
   Change the Password with<br><br>
   <pre><code>passwd
-  [newpassword]
-  [newpassword]</code></pre>
+[newpassword]
+[newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>.<br>
   <br>
   <pre><code>sudo su
-  apt-get update
-  apt-get upgrade -y</code></pre>
+apt-get update
+apt-get upgrade -y</code></pre>
   <ol>
-    <li value="I">
+    <li value="1">
 <h4>Type for Installation</h4>
      <pre><code>apt-get install tor unbound
-     curl -sSL https://install.pi-hole.net | bash
+curl -sSL https://install.pi-hole.net | bash
      </code></pre>
      and follow the messages on the screen.<br>
     </li>
