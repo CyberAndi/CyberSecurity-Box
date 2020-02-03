@@ -27,22 +27,22 @@
   [newpassword]</code></pre><br>
   Don´t forget to note the [newpassword].
   <ol>
-    <li>
+    <li value="a">
 Type for Installation<br><br>
      <pre><code>Sudo su
      curl -sSL https://install.pi-hole.net | bash
      </code></pre><br>
-     and follow the messages on the screen.
+     and follow the messages on the screen.<br>
     </li>
     <li>
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz</a></h4> inludes White- and Blacklist (Advertisement and Maleware)
+    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz</a></h4> inludes White- and Blacklist (Advertisement and Maleware)
     with over 70% blocking rate
     </li>
     <li>
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz</a></h4> inludes White- and Blacklist (Advertisement, Maleware and Porn)
+    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz</a></h4> inludes White- and Blacklist (Advertisement, Maleware and Porn)
     with over 70% blocking rate
     </li><li>
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>
+    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>
     
   <pre><code>sudo su
     service pihole stop
@@ -54,8 +54,7 @@ Type for Installation<br><br>
   </ol>
 </li></ol>
 For more Information in german visit https://www.cyberandi.de/Smarthome
-</p><P>
-
+</p><p>
 contact: <br>
 andreas@stawimedia.de<br>
 https://www.cyberandi.de
