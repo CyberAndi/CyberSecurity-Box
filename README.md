@@ -15,22 +15,24 @@
   <h3>Installation CyberSecurityBox</h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian-SD-Card-Image</a></b> or 
-  <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc ready to use Image
-  <br>and Install one of this with <b><a href="https://www.balena.io/etcher/">balenaEtcher</a></b> on a SD-Card. Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.<br>
+  <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
+  <br>Install one of this with <b><a href="https://www.balena.io/etcher/">balenaEtcher</a></b> on a SD-Card. <br>Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of RasPi]</code></pre>
   User: <b>pi</b>
   <br>
   Password: <b>raspberry</b><br><br>
-  Change the Password with<br>
+  Change the Password with<br><br>
   <pre><code>passwd
   [newpassword]
   [newpassword]</code></pre><br>
-    <ol>
+  Don´t forget to note the [newpassword].
+  <ol>
     <li>
-Type for Installation<br>
+Type for Installation<br><br>
      <pre><code>Sudo su
      curl -sSL https://install.pi-hole.net | bash
-     </code></pre>
+     </code></pre><br>
+     and follow the messages on the screen.
     </li>
     <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz</a></h4> inludes White- and Blacklist (Advertisement and Maleware)
