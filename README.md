@@ -25,7 +25,7 @@
   <pre><code>passwd
   [newpassword]
   [newpassword]</code></pre>
-  Don´t forget to note the <i><b>[newpassword]</b></i>.<br><br>
+  Don´t forget to note the <i><b>newpassword</b></i>.<br><br>
   <ol>
     <li value="I">
 <h4>Type for Installation</h4><br><br>
@@ -43,8 +43,7 @@
     with over 70% blocking rate
     </li>
     <li>
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>
-    
+    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>    
   <pre><code>sudo su
     service pihole stop
     curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list > regex.list
