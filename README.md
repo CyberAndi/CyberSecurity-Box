@@ -14,7 +14,10 @@ with over 70% blocking rate
   The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz</a> inludes White- and Blacklist (Advertisement, Maleware and Porn)
 with over 70% blocking rate
 </p><p>
-  The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/regex.bkp.list">regex.bkp.list</a> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate 
+  The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/regex.list">regex.list</a> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>
+curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list > regex.list
+cp regex.list /etc/pihole/regex.list
+
 </p><p>
 The CyberSecurityBox_2.img is the Pi-Hole, UnBound and torrc Image-RaspberryPi on SD-Card. Install with balenaEtcher
 </p><p>
