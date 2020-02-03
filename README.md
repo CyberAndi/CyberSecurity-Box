@@ -49,13 +49,13 @@ curl -sSL https://install.pi-hole.net | bash
     <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>    
   <pre><code>service pihole stop
-  curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list > regex.list
-  cp regex.list /etc/pihole/regex.list
-  service pihole start</code></pre>
+curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list > regex.list
+cp regex.list /etc/pihole/regex.list
+service pihole start</code></pre>
    </li>
   </ol>
   </li>
-</ul><br></p>
+</ul></p>
 <p>
 For more Information in german visit https://www.cyberandi.de/Smarthome
 </p><p>
