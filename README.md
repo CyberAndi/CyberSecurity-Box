@@ -2,7 +2,7 @@
 <p>
 <h3>Configuration of the AVM FRITZ!Box an a SD-Card-Image with Pi-Hole, UnBound and Tor(rc) Presets for Security and Port-List</h3>
 </p><p>
-<ol>
+<ul>
   <li value="1"><h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above.</h4>
   It includes Firewall-Rules for Amazon 
   Alexa/Echo, NAS, MS-Servers etc.
@@ -33,8 +33,7 @@
   <ol>
     <li value="I">
 <h4>Type for Installation</h4>
-     <pre><code>
-     apt-get install tor unbound
+     <pre><code>apt-get install tor unbound
      curl -sSL https://install.pi-hole.net | bash
      </code></pre>
      and follow the messages on the screen.<br>
@@ -49,15 +48,14 @@
     </li>
     <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>    
-  <pre><code>sudo su
-    service pihole stop
+  <pre><code>service pihole stop
     curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list > regex.list
     cp regex.list /etc/pihole/regex.list
     service pihole start</code></pre>
    </li>
   </ol>
   </li>
-</ol><br></p>
+</ul><br></p>
 <p>
 For more Information in german visit https://www.cyberandi.de/Smarthome
 </p><p>
