@@ -51,7 +51,7 @@ Type for Installation<br><br>
     cp regex.list /etc/pihole/regex.list
     service pihole start
     </code></pre>
-    </li>
+   </li>
   </ol>
   </li>
 </ol>
