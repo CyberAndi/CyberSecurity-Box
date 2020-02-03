@@ -16,16 +16,22 @@
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian-SD-Card-Image</a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc ready to use Image
-  <br>and Install one of this with <b><a href="https://www.balena.io/etcher/">balenaEtcher</a></b> on a SD-Card. Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.
+  <br>and Install one of this with <b><a href="https://www.balena.io/etcher/">balenaEtcher</a></b> on a SD-Card. Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.<br>
   <pre><code>ssh [ip-address of RasPi]</code></pre>
   User: <b>pi</b>
   <br>
-  Password: <b>raspberry</b><br>
-  Change the Password with
+  Password: <b>raspberry</b><br><br>
+  Change the Password with<br>
   <pre><code>passwd
   [newpassword]
-  [newpassword]</code></pre>
+  [newpassword]</code></pre><br>
     <ol>
+    <li>
+Type for Installation<br>
+     <pre><code>Sudo su
+     curl -sSL https://install.pi-hole.net | bash
+     </code></pre>
+    </li>
     <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz</a></h4> inludes White- and Blacklist (Advertisement and Maleware)
     with over 70% blocking rate
@@ -36,7 +42,7 @@
     </li><li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>
     
-    <pre><code>sudo su
+  <pre><code>sudo su
     service pihole stop
     curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list > regex.list
     cp regex.list /etc/pihole/regex.list
