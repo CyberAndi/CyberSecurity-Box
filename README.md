@@ -20,8 +20,11 @@ with over 70% blocking rate
 </li><li>
 <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>
 Use SSH (Putty) for Installation and type the following code.
-<pre><code>curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list > regex.list
+<pre><code>sudo su
+service pihole stop
+curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list > regex.list
 cp regex.list /etc/pihole/regex.list
+service pihole start
 </code></pre>
 </li><li>
   <h4>The CyberSecurityBox_2.img is the Pi-Hole, UnBound and torrc RaspberryPi-Image on SD-Card</h4> Install with <b>balenaEtcher</b>
