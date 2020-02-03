@@ -25,12 +25,16 @@
   <pre><code>passwd
   [newpassword]
   [newpassword]</code></pre>
-  Don´t forget to note the <i><b>newpassword</b></i>.<br><br>
+  Don´t forget to note the <i><b>newpassword</b></i>.<br>
+  <br>
+  <pre><code>sudo su
+  apt-get update
+  apt-get upgrade
+  apt-get install tor unbound</code></pre>
   <ol>
     <li value="I">
 <h4>Type for Installation</h4>
-     <pre><code>Sudo su
-     curl -sSL https://install.pi-hole.net | bash
+     <pre><code>curl -sSL https://install.pi-hole.net | bash
      </code></pre>
      and follow the messages on the screen.<br>
     </li>
@@ -52,7 +56,7 @@
    </li>
   </ol>
   </li>
-</ol></p>
+</ol><br></p>
 <p>
 For more Information in german visit https://www.cyberandi.de/Smarthome
 </p><p>
