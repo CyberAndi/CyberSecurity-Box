@@ -29,12 +29,13 @@
   <br>
   <pre><code>sudo su
   apt-get update
-  apt-get upgrade
-  apt-get install tor unbound</code></pre>
+  apt-get upgrade -y</code></pre>
   <ol>
     <li value="I">
 <h4>Type for Installation</h4>
-     <pre><code>curl -sSL https://install.pi-hole.net | bash
+     <pre><code>
+     apt-get install tor unbound
+     curl -sSL https://install.pi-hole.net | bash
      </code></pre>
      and follow the messages on the screen.<br>
     </li>
