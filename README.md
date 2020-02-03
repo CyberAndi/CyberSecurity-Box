@@ -25,9 +25,9 @@
   <pre><code>passwd
   [newpassword]
   [newpassword]</code></pre><br>
-  Don´t forget to note the [newpassword].
+  Don´t forget to note the [newpassword].<br>
   <ol>
-    <li value="a">
+    <li value="A">
 Type for Installation<br><br>
      <pre><code>Sudo su
      curl -sSL https://install.pi-hole.net | bash
@@ -41,7 +41,8 @@ Type for Installation<br><br>
     <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz</a></h4> inludes White- and Blacklist (Advertisement, Maleware and Porn)
     with over 70% blocking rate
-    </li><li>
+    </li>
+    <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>
     
   <pre><code>sudo su
@@ -52,7 +53,8 @@ Type for Installation<br><br>
     </code></pre>
     </li>
   </ol>
-</li></ol>
+  </li>
+</ol>
 For more Information in german visit https://www.cyberandi.de/Smarthome
 </p><p>
 contact: <br>
