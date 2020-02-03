@@ -28,7 +28,7 @@
   Don´t forget to note the <i><b>newpassword</b></i>.<br><br>
   <ol>
     <li value="I">
-<h4>Type for Installation</h4><br><br>
+<h4>Type for Installation</h4>
      <pre><code>Sudo su
      curl -sSL https://install.pi-hole.net | bash
      </code></pre>
