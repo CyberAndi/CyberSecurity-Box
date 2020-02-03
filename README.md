@@ -24,14 +24,14 @@
   Change the Password with<br><br>
   <pre><code>passwd
   [newpassword]
-  [newpassword]</code></pre><br>
+  [newpassword]</code></pre>
   Don´t forget to note the [newpassword].<br><br>
   <ol>
     <li value="I">
 Type for Installation<br><br>
      <pre><code>Sudo su
      curl -sSL https://install.pi-hole.net | bash
-     </code></pre><br>
+     </code></pre>
      and follow the messages on the screen.<br>
     </li>
     <li>
