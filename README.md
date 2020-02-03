@@ -25,7 +25,7 @@
   <pre><code>passwd
   [newpassword]
   [newpassword]</code></pre>
-  Don´t forget to note the <i><b>[newpassword]<7b></i>.<br><br>
+  Don´t forget to note the <i><b>[newpassword]</b></i>.<br><br>
   <ol>
     <li value="I">
 <h4>Type for Installation</h4><br><br>
