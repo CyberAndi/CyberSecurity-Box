@@ -18,12 +18,13 @@
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc ready to use Image
   <br>and Install one of this with <b><a href="https://www.balena.io/etcher/">balenaEtcher</a></b> on a SD-Card. Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.
   <pre><code>
-  ssh <ip-address of RasPi>
-  </code>
-  User: <b>pi>/b><br>
+  ssh [ip-address of RasPi]
+  </code></pre>
+  User: <b>pi</b>
+  <br>
   Password: <b>raspberry</b>
   Change the Password with
-  <code>
+  <pre><code>
   passwd
   newpassword
   newpassword
