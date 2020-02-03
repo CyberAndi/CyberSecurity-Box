@@ -52,7 +52,8 @@
    </li>
   </ol>
   </li>
-</ol>
+</ol></p>
+<p>
 For more Information in german visit https://www.cyberandi.de/Smarthome
 </p><p>
 contact: <br>
