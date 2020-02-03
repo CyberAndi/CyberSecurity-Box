@@ -17,19 +17,14 @@
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian-SD-Card-Image</a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc ready to use Image
   <br>and Install one of this with <b><a href="https://www.balena.io/etcher/">balenaEtcher</a></b> on a SD-Card. Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.
-  <pre><code>
-  ssh [ip-address of RasPi]
-  </code></pre>
+  <pre><code>ssh [ip-address of RasPi]</code></pre>
   User: <b>pi</b>
   <br>
   Password: <b>raspberry</b><br>
   Change the Password with
-  <pre><code>
-  passwd
+  <pre><code>passwd
   [newpassword]
-  [newpassword]
-  </code>
-  </pre>
+  [newpassword]</code></pre>
     <ol>
     <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz</a></h4> inludes White- and Blacklist (Advertisement and Maleware)
