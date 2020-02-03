@@ -12,11 +12,11 @@
   </li>
   <li>
     
-      <h3>Installation CyberSecurityBox</h3>
-      You need a Raspberry Pi and a SD-Card with 8 GByte or more.
-      Use a blank <h4><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian-SD-Card-Image</a></h4> or 
-      <h4>CyberSecurityBox_2.img</h4> is the Pi-Hole, UnBound and torrc ready to use Image
-  <br>and Install one of this with <b>balenaEtcher</b>  on a SD-Card
+  <h3>Installation CyberSecurityBox</h3>
+  You need a Raspberry Pi and a SD-Card with 8 GByte or more.
+  Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian-SD-Card-Image</a></b> or 
+  <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc ready to use Image
+  <br>and Install one of this with <b><a href="https://www.balena.io/etcher/">balenaEtcher</a></b> on a SD-Card.
     <ol>
     <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz</a></h4> inludes White- and Blacklist (Advertisement and Maleware)
