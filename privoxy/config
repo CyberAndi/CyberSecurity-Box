@@ -2437,9 +2437,9 @@
 #
 #
 #
-trust-info-url  http://www.stawimedia.de/why_we_block.html
-trust-info-url  http://www.stawimedia.de/what_we_allow.html
-admin-address andreas@stawimedia.de
+trust-info-url  
+trust-info-url  
+admin-address 
 session-cookies-only 1
 confdir /etc/privoxy
 logdir /var/log/privoxy
@@ -2451,7 +2451,7 @@ forward	192.168.*.*/	.
 forward 10.*.*.*/	.
 forward 127.*.*.*/	.
 
-listen-address  192.168.175.200:8188
+listen-address  192.168.160.200:8188
 listen-address  127.0.0.1:8188
 listen-address  [::1]:8188
 user-manual /usr/share/doc/privoxy/user-manual
