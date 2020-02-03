@@ -2,10 +2,7 @@
 <p>
 <ul><li>
 <h3>Configuration of the AVM FRITZ!Box with Presets for Security and Port-List</h3>
-<h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above.</h4>
-  It includes Firewall-Rules for Amazon 
-  Alexa/Echo, NAS, MS-Servers etc.
-  <br>
+<h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
   <img src="Schema.PNG" width="450px"></img>
 
   </li>
