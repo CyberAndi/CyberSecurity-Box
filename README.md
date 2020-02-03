@@ -34,8 +34,7 @@ apt-get upgrade -y</code></pre>
     <li value="1">
 <h4>Type for Installation</h4>
      <pre><code>apt-get install tor unbound
-curl -sSL https://install.pi-hole.net | bash
-     </code></pre>
+curl -sSL https://install.pi-hole.net | bash</code></pre>
      and follow the messages on the screen.<br>
     </li>
     <li>
