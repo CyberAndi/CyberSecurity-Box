@@ -22,12 +22,12 @@
   </code></pre>
   User: <b>pi</b>
   <br>
-  Password: <b>raspberry</b>
+  Password: <b>raspberry</b><br>
   Change the Password with
   <pre><code>
   passwd
-  newpassword
-  newpassword
+  [newpassword]
+  [newpassword]
   </code>
   </pre>
     <ol>
