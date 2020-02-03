@@ -2,8 +2,8 @@
 <p>
 <h3>Configuration of the AVM FRITZ!Box an a SD-Card-Image with Pi-Hole, UnBound and Tor(rc) Presets for Security and Port-List</h3>
 </p><p>
-<lo>
-<li>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above.
+<ol>
+<li value="1">This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above.
 It includes Firewall-Rules for Amazon 
 Alexa/Echo, NAS, MS-Servers etc.
 <br>
@@ -19,13 +19,14 @@ with over 70% blocking rate
 with over 70% blocking rate
 </li><li>
   The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/regex.list">regex.list</a> includes Blacklist (Advertisment, Maleware and Porn) with over 40% blocking rate<br>
+Use SSH (Putty) for Installation and type the following code.
 <pre><code>curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list > regex.list
 cp regex.list /etc/pihole/regex.list
 </code></pre>
 </li><li>
 The CyberSecurityBox_2.img is the Pi-Hole, UnBound and torrc Image-RaspberryPi on SD-Card. Install with balenaEtcher
 </li>
-</lo>
+</ol>
 For more Information in german visit https://www.cyberandi.de/Smarthome
 </p><P>
 
