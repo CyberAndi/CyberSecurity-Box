@@ -2,13 +2,6 @@
 <h3>(inkl. Pi-Hole, UnBound, ntopng and Tor)</h3>
 <p>
 <ul><li>
-<h3>Configuration of the AVM FRITZ!Box with Presets for Security and Port-List</h3>
-<h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
-  <img src="Schema.PNG" width="450px"></img>
-
-  </li>
-  <li>
-    
   <h3>Installation CyberSecurityBox</h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian-SD-Card-Image</a></b> or 
@@ -45,7 +38,11 @@ curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master
 cp regex.list /etc/pihole/regex.list
 service pihole start</code></pre>
    </li>
-  </ol>
+    </lo>
+   <li>
+  <h3>(optional) Configuration of the AVM FRITZ!Box with Presets for Security and Port-List</h3>
+<h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
+  <img src="Schema.PNG" width="450px"></img>
   </li>
 </ul></p>
 <p>
