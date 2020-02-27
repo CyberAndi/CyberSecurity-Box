@@ -29,7 +29,7 @@ apt-get upgrade -y</code></pre>
   <ol>
     <li value="1">
 <h4>Type for Installation</h4>
-     <pre><code>apt-get install tor unbound privoxy socat
+     <pre><code>apt-get install tor unbound privoxy ntopng socat
 curl -sSL https://install.pi-hole.net | bash</code></pre>
      and follow the messages on the screen.<br>
     </li>
