@@ -48,7 +48,6 @@ service pihole start</code></pre>
 <p>
 For more Information in german visit https://www.cyberandi.de/Smarthome
 </p>
-<hr></hr>
-<p>
+<hr>
 Contact: cyberandi@outlook.de - Website: https://www.cyberandi.de
-</p>
+</hr>
