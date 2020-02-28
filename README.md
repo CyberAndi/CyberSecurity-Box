@@ -50,7 +50,5 @@ For more Information in german visit https://www.cyberandi.de/Smarthome
 </p>
 <hr></hr>
 <p>
-contact: <br>
-mailto: cyberandi@outlook.de <br>
-https://www.cyberandi.de
+Contact: cyberandi@outlook.de - Website: https://www.cyberandi.de
 </p>
