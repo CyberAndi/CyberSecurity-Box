@@ -34,7 +34,7 @@ curl -sSL https://install.pi-hole.net | bash</code></pre>
     <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware, Tracking and Porn) with over 40% blocking rate<br>    
   <pre><code>service pihole stop
-curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list > regex.list
+curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/regex.list > regex.list
 cp regex.list /etc/pihole/regex.list
 service pihole start</code></pre>
    </li>
