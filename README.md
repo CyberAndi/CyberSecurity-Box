@@ -44,6 +44,7 @@ curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Versi
 cp regex.list /etc/pihole/regex.list
 cp boxed-bg.jpg /var/www/html/admin/img/boxed-bg.jpg
 cp *.css /var/www/html/admin/style/vendor/
+cp blockingpage.css /var/www/html/pihole/
 <br>
 service pihole-FTL start</code></pre>
    </li>
