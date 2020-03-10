@@ -39,6 +39,7 @@ curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Versi
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/tor/torrc > torrc
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/unbound/root.hints > root.hints
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/unbound/unbound.conf > unbound.conf
+curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/tree/Version2/unbound/unbound.conf.d > unbound.conf.d
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/boxed-bg.jpg > boxed-bg.jpg
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/boxed-bg.png > boxed-bg.png
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/blockingpage.css > blockingpage.css
@@ -49,6 +50,7 @@ cp regex.list /etc/pihole/regex.list
 cp whitelist.txt /etc/pihole/whitelist.txt
 cp root.hints /etc/unbound/root.hints
 cp unbound.conf /etc/unbound/unbound.conf
+cp unbound.conf.d /etc/unbound/unbound.conf.d -r -v
 cp boxed-bg.jpg /var/www/html/admin/img/boxed-bg.jpg
 cp *.css /var/www/html/admin/style/vendor/
 cp blockingpage.css /var/www/html/pihole/
