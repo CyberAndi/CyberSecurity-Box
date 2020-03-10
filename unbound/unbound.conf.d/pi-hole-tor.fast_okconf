@@ -1,0 +1,89 @@
+server:
+# If no logfile is specified, syslog is used
+logfile: "/var/log/unbound/unbound.log"
+verbosity: 0
+
+#interface: 127.0.0.1  # IPv4 localhost
+#interface: 192.168.175.200  # Instruction writer assuming this as our IP.
+#interface: ::1        # IPv6 localhost
+
+port: 5353
+do-ip4: yes
+do-udp: yes
+do-tcp: yes
+
+# May be set to yes if you have IPv6 connectivity
+do-ip6: no
+
+# Use this only when you downloaded the list of primary root servers!
+root-hints: "/var/lib/unbound/root.hints"
+
+# Trust glue only if it is within the servers authority
+harden-glue: yes
+
+# Require DNSSEC data for trust-anchored zones, if such data is absent, the zone becomes BOGUS
+harden-dnssec-stripped: yes
+
+# Don't use Capitalization randomization as it known to cause DNSSEC issues sometimes
+# see https://discourse.pi-hole.net/t/unbound-stubby-or-dnscrypt-proxy/9378 for further details
+use-caps-for-id: no
+
+# Reduce EDNS reassembly buffer size.
+# Suggested by the unbound man page to reduce fragmentation reassembly problems
+edns-buffer-size: 1472
+
+# TTL bounds for cache
+cache-min-ttl: 3600
+cache-max-ttl: 86400
+
+# Perform prefetching of close to expired message cache entries
+# This only applies to domains that have been frequently queried
+prefetch: yes
+
+# One thread should be sufficient, can be increased on beefy machines
+num-threads: 2
+
+# Ensure kernel buffer is large enough to not lose messages in traffic spikes
+so-rcvbuf: 1m
+
+# Ensure privacy of local IP ranges
+private-address: 192.168.0.0/16
+private-address: 169.254.0.0/16
+private-address: 172.16.0.0/12
+private-address: 10.0.0.0/8
+private-address: fd00::/8
+private-address: fe80::/10
+
+# Tor Configuration on lokalhost
+domain-insecure: "onion"
+private-domain: "onion"
+do-not-query-localhost: no
+local-zone: "onion." nodefault
+
+#forward-zone:
+#    name: "onion"
+#    forward-addr: 127.0.0.1@5053 #5053 dnsport torrc
+
+forward-zone:
+    name: "onion"
+    forward-addr: 127.0.0.1@5053 #5053 dnsport torrc
+
+
+forward-zone:
+	name: "." # [Root.Zone]
+# Local Router. It uses your ISP's DNS servers. Unless you changed to
+# something else, inside the router:
+forward-addr: 192.168.175.254@53
+#forward-addr: 127.0.10.1@53   # torr DNSport
+
+
+# enable remote-control
+remote-control:
+    control-enable: yes
+
+# enable extended statistics.
+server:
+    statistics-interval: 0
+    extended-statistics: yes
+    # set to yes if graphing tool needs it
+    statistics-cumulative: no

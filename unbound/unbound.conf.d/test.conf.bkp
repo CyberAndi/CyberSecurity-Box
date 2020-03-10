@@ -1,0 +1,152 @@
+server:
+# If no logfile is specified, syslog is used
+logfile: "/var/log/unbound/unbound.log"
+verbosity: 0
+
+port: 5353
+do-ip4: yes
+do-udp: yes
+do-tcp: yes
+
+# May be set to yes if you have IPv6 connectivity
+do-ip6: no
+
+# upstream connections use TCP only (and no UDP), "yes" or "no"
+	# useful for tunneling scenarios, default no.
+	# tcp-upstream: <yes or no>
+	# Enable or disable whether the upstream queries use TCP only  for
+	# transport.  Default is no.  Useful in tunneling scenarios.
+	# tcp-upstream: no
+tcp-upstream: yes
+
+	# enable to not answer id.server and hostname.bind queries.
+	# hide-identity: no
+hide-identity: "yes"
+
+	# enable to not answer version.server and version.bind queries.
+	# hide-version: <yes or no>
+	# If enabled version.server and version.bind queries are refused.
+	# hide-version: no
+hide-version: "yes"
+
+	# the identity to report. Leave "" or default to return hostname.
+	# identity: <string>
+	# Set  the identity to report. If set to "", the default, then the
+	# hostname of the server is returned.
+	# identity: ""
+identity: "DNS"
+
+# Use this only when you downloaded the list of primary root servers!
+root-hints: "/var/lib/unbound/root.hints"
+
+# Trust glue only if it is within the servers authority
+harden-glue: yes
+
+# Require DNSSEC data for trust-anchored zones, if such data is absent, the zone becomes BOGUS
+harden-dnssec-stripped: yes
+
+# Don't use Capitalization randomization as it known to cause DNSSEC issues sometimes
+# see https://discourse.pi-hole.net/t/unbound-stubby-or-dnscrypt-proxy/9378 for further details
+use-caps-for-id: yes
+
+# Reduce EDNS reassembly buffer size.
+# Suggested by the unbound man page to reduce fragmentation reassembly problems
+edns-buffer-size: 1472
+
+# TTL bounds for cache
+#cache-min-ttl: 3600
+#cache-max-ttl: 86400
+cache-min-ttl: 0
+
+# Perform prefetching of close to expired message cache entries
+# This only applies to domains that have been frequently queried
+prefetch: yes
+
+# One thread should be sufficient, can be increased on beefy machines
+num-threads: 2
+
+# Ensure kernel buffer is large enough to not lose messages in traffic spikes
+so-rcvbuf: 1m
+
+## Anm.: neue Werte
+# increase cache to utilize more RAM
+msg-cache-size: 256m
+rrset-cache-size: 512m
+
+# serve expired entries (but refresh instantly after serving)
+serve-expired: yes
+
+interface: 127.0.0.1
+interface: 192.168.175.200
+
+# Ensure privacy of local IP ranges
+private-address: 192.168.0.0/16
+private-address: 169.254.0.0/16
+private-address: 172.16.0.0/12
+private-address: 10.0.0.0/8
+private-address: fd00::/8
+private-address: fe80::/10
+
+access-control: 0.0.0.0/0 refuse
+access-control: ::0/0 refuse
+access-control: 127.0.0.0/8 allow
+# If you are using dynamic/changing IP address on your Network Adapter
+# then disable below line
+access-control: 192.168.175.0/16 allow
+access-control: ::1 allow
+
+
+
+# Tor .onion host / Hidden Service(HS) : *.onion hostnames/domains/HS.
+# If you've Installed/using Tor.
+# Block these DNS query leak, by refusing it to query external DNS servr.
+#local-zone: "onion." refuse
+#local-data: ""
+#local-zone: "exit." refuse
+#local-zone: "noconnect." refuse
+domain-insecure: "onion"
+private-domain: "onion"
+do-not-query-localhost: no
+local-zone: "onion." nodefault
+
+# If you are using this DNS Resolver inside a VM (Virtual Machine)
+# dedicated for Tor related Anonymous usage, only then, disable
+# above line, and enable below few lines, and add them
+# below the [STUB ZONES] area:
+forward-zone:
+       name: "stawimedia.local"
+       forward-addr: 192.168.175.254
+       forward-addr: 192.168.175.253
+forward-zone:
+       name: "fritz.box"
+       forward-addr: 192.168.175.254
+       forward-addr: 192.168.175.253
+forward-zone:
+       name: "local"
+       forward-addr: 192.168.175.254
+       forward-addr: 192.168.175.253
+
+forward-zone:
+       name: "onion"
+       forward-addr: 127.0.0.1@5053
+       forward-addr: 127.0.10.1
+#forward-zone:
+#       name: "exit"
+#       forward-addr: 127.0.0.1@5053
+#       forward-addr: 127.0.10.1
+# And then Enable 'Tor DNS' in torrc file on port 54 on 1st Tor,
+# and on port 55 on 2nd Tor (if you use), and so on.
+
+
+
+
+# Local Router. It uses your ISP's DNS servers. Unless you changed to
+# something else, inside the router:
+forward-zone:
+	name: "." # [Root.Zone]
+
+forward-addr: 127.0.10.1
+forward-addr: 127.0.0.1@5053
+#forward-addr: 127.0.0.1@5300 CryptoDNS 
+#forward-addr: 1.1.1.1
+#forward-addr: 1.0.0.1 

@@ -1,0 +1,63 @@
+server:
+    verbosity: 0
+    port: 5353
+    do-ip4: yes
+    do-udp: yes
+    do-tcp: yes
+
+    # May be set to yes if you have IPv6 connectivity
+    do-ip6: no
+
+    # Use this only when you downloaded the list of primary root servers!
+    # Location of root.hints
+    root-hints: "/var/lib/unbound/root.hints"
+
+    # Trust glue only if it is within the servers authority
+    harden-glue: yes
+
+    # Require DNSSEC data for trust-anchored zones, if such data is absent, the zone becomes BOGUS
+    # If you want to disable DNSSEC, set harden-dnssec stripped: no
+    harden-dnssec-stripped: yes
+
+    # Use Capitalization randomization
+    # This is an experimental resilience method which uses upper and lower case letters in the question hostname to obtain randomness.
+    # Two names with the same spelling but different case should be treated as identical.
+    # Attackers hoping to poison a DNS cache must guess the mixed-case encoding of the query.
+    # This increases the difficulty of such an attack significantly
+    use-caps-for-id: no
+    
+    # Reduce EDNS reassembly buffer size.
+    # Suggested by the unbound man page to reduce fragmentation reassembly problems
+    edns-buffer-size: 1472
+
+    # TTL bounds for cache (Domains will be cached for minimum of 3600 seconds)
+    cache-min-ttl: 3600
+    cache-max-ttl: 86400
+
+    # Perform prefetching of close to expired message cache entries
+    # This only applies to domains that have been frequently queried
+    # This flag updates the cached domains
+    prefetch: yes
+
+    # One thread should be sufficient, can be increased on beefy machines
+    num-threads: 1
+    
+    # more cache memory. rrset-cache-size should twice what msg-cache-size is.
+    msg-cache-size: 50m
+    rrset-cache-size: 100m
+    
+    # Faster UDP with multithreading (only on Linux).
+    so-reuseport: yes
+	
+    # Ensure kernel buffer is large enough to not loose messages in traffix spikes
+    so-rcvbuf: 1m
+
+    # Ensure privacy of local IP ranges
+    private-address: 192.168.0.0/16
+    private-address: 169.254.0.0/16
+    private-address: 172.16.0.0/12
+    private-address: 10.0.0.0/8
+    private-address: fd00::/8
+    private-address: fe80::/10
+
+
