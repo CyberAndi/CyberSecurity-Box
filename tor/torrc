@@ -41,7 +41,6 @@
 #Log notice syslog
 ## To send all messages to stderr:
 #Log debug stderr
-
 ## Uncomment this to start the process in the background... or use
 ## --runasdaemon 1 on the command line. This is ignored on Windows;
 ## see the FAQ entry if you want Tor to run as an NT service.
@@ -68,7 +67,6 @@
 ## HiddenServicePort x y:z says to redirect requests on port x to the
 ## address y:z.
 
-#HiddenServiceDir /var/lib/tor/hidden_service/
 #HiddenServicePort 80 127.0.0.1:80
 
 #HiddenServiceDir /var/lib/tor/other_hidden_service/
@@ -188,43 +186,64 @@
 ## mechanisms like https://bridges.torproject.org/. If you want to run
 ## a private bridge, for example because you'll give out your bridge
 ## address manually to your friends, uncomment this line:
-#PublishServerDescriptor 0
 
-Log notice file /var/log/tor/notices.log
-#ControlPort 9051
-#ORPort 4439
-#Nickname usGov10
-RelayBandwidthRate 6000 KB
-RelayBandwidthBurst 12000 KB
-#StrictNodes 1
-#ExitNodes $DC41244B158D1420C98C66F7B5E569C09DCE98FE
-#ExitNodes $9EAD5B2D3DBD96DBC80DCE423B0C345E920A758D
-#ExitNodes $1041213B53CCF586093BB65D9CC4BC0B9656EF17
-#ExitNodes $0111BA9B604669E636FFD5B503F382A4B7AD6E80
-#ExitNodes $AD86CD1A49573D52A7B6F4A35750F161AAD89C88
-#ExitNodes $D529E870E7CCFCDA2CFEE9D317A8DC6E85497FDA
+#PublishServerDescriptor 0
+SocksBindAddress 192.168.175.200:9050
+
+ControlPort 9051
+#SocksPort ist der Port für die Clientverbindung
+SocksPort 0.0.0.0:9050
+#SocksPort 9050
+ORPort 9049
+#ORPort empfängt Daten aus dem Tor Netzwerk im Internet
 #DirPort 9040
-#ExitPolicy reject *.*
-#DisableDebuggerAttachment 0
-AvoidDiskWrites 1
-SocksPort 9050
-SocksListenAddress 192.168.175.200
-#SocksListenAddress 127.0.0.1
+DirPort 9030
+#DirPort zum Spiegeln der Tor-Server-Adressen
+SocksListenAddress 127.0.0.1
+socksListenAddress 192.168.175.200
+HTTPTunnelPort 0.0.0.0:9060
+
+SafeSocks 1
+WarnUnsafeSocks 1
+#Log warn syslog
+#Das Schreiben auf die Disk verringern AvoidDiskWrites 1
+AvoidDiskWrites 1 
+#als Dienst starten
+RunAsDaemon 1
+#DataDirectory /var/lib/tor
+#Sandbox 1
+Nickname EnemyOneEU
+Log notice file /var/log/tor/tor-notices.log
 VirtualAddrNetwork 10.192.0.0/10
+#DNSPort 5053
+DNSPort 127.0.10.1:53
+DNSPort 0.0.0.0:5053
+DNSPort 0.0.0.0:9053
+AutomapHostsSuffixes .onion,.exit
 AutomapHostsOnResolve 1
-#Transparent ProxyPort
-TransPort 9040
-TransListenAddress 192.168.175.200
-#TransListenAddress 127.0.0.1
-DNSPort 53
-DNSPort 853
-#DNSListenAddress 127.0.0.1
-DNSListenAddress 192.168.175.200
-# Ensure resolution of .onion and .exit domains happen through Tor.
-AutomapHostsSuffixes .onion,.exit,.com,.de,.at,.ch,.gov,.mil,.eu,.org,.bund
-AutomapHostsOnResolve 1
-# Only ever run as a client. Do not run as a relay or an exit.
-ClientOnly
-#CacheIPv4DNS
-#CacheIPv6DNS
-#UseDNSCache
+TransPort 0.0.0.0:9040
+ExitPolicy reject *:*
+#ExitPolicy stellt den Node Type ein. Hier Weiterleitung
+RelayBandwidthRate 10000 KB
+RelayBandwidthBurst 20000 KB
+DisableDebuggerAttachment 0
+
+NumCPUs 2
+
+
+#ServerDNSResolvConfFile filename
+#ServerDNSAllowBrokenConfig 0|1
+#ServerDNSSearchDomains 1
+
+#CacheIPv4DNS 1
+
+#HiddenServiceDir /home/pi/hidden_service/
+#HiddenServicePort 80 192.168.175.200:80
+
+#HiddenServiceDir /var/lib/tor/other_hidden_service/
+#HiddenServicePort 80 127.0.0.1:80
+#HiddenServicePort 22 127.0.0.1:22
+
+#Nur sichere Exitnodes Bnautzen
+StrictExitNodes 1
+ExitNodes $9BDF3EEA1D33AA58A2EEA9E6CA58FB8A667288FC, $1A1DA6B9F262699A87F9A4F24EF48B50148EB018, $31A993F413D01E68117F76247E4F242095190B87, $A07FF746D9BA56C3F916BBD404307396BFA862E0, $A3279B1AC705C9F3478947598CF0557B81E12DE1, $AB176BD65735A99DCCB7889184E62EF0B2E35751, $B7BE1D35762155FEB2BC9DAE0A157C706D738FE5, $85D4088148B1A6954C9BFFFCA010E85E0AA88FF0, $39659458160887CC8A46FAE627EE01EEDAAED07F, $0111BA9B604669E636FFD5B503F382A4B7AD6E80, $AD86CD1A49573D52A7B6F4A35750F161AAD89C88, $DC41244B158D1420C98C66F7B5E569C09DCE98FE, $B060482C784788B8A564DECD904E14CB305C8B38, $88487BDD980BF6E72092EE690E8C51C0AA4A538C, $9EAD5B2D3DBD96DBC80DCE423B0C345E920A758D, $95DA61AEF23A6C851028C1AA88AD8593F659E60F, $95DA61AEF23A6C851028C1AA88AD8593F659E60F, $487092BA36F4675F2312AA09AC0393D85DAD6145
