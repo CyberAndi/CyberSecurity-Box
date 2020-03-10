@@ -34,8 +34,8 @@ curl -sSL https://install.pi-hole.net | bash</code></pre>
     <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware, Tracking and Porn) with over 40% blocking rate<br>    
   <pre><code>service pihole-FTL stop
-  service unbound stop
-  service tor stop
+service unbound stop
+service tor stop
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/regex.list > regex.list
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/whitelist_Alexa_Google_Home_Smarthome.txt > whitelist.txt
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/tor/torrc > torrc
