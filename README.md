@@ -35,6 +35,7 @@ curl -sSL https://install.pi-hole.net | bash</code></pre>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware, Tracking and Porn) with over 40% blocking rate<br>    
   <pre><code>service pihole-FTL stop
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/regex.list > regex.list
+curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/whitelist_Alexa_Google_Home_Smarthome.txt > whitelist.txt
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/boxed-bg.jpg > boxed-bg.jpg
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/boxed-bg.png > boxed-bg.png
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/blockingpage.css > blockingpage.css
@@ -42,6 +43,7 @@ curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Versi
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/skin-blue.min.css > skin-blue.min.css
 <br>
 cp regex.list /etc/pihole/regex.list
+cp whitelist.txt /etc/pihole/whitelist.txt
 cp boxed-bg.jpg /var/www/html/admin/img/boxed-bg.jpg
 cp *.css /var/www/html/admin/style/vendor/
 cp blockingpage.css /var/www/html/pihole/
