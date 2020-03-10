@@ -23,7 +23,7 @@ apt-get upgrade -y</code></pre>
   <ol>
     <li>
 <h4>Type for Installation</h4>
-     <pre><code>apt-get install tor unbound privoxy ntopng postfix iptables-persistent
+     <pre><code>apt-get install tor unbound privoxy ntopng postfix iptables-persistent netfilter-persistent -y
 curl -sSL https://install.pi-hole.net | bash</code></pre>
      and follow the messages on the screen.<br>
     </li>
