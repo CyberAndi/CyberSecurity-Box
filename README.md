@@ -42,7 +42,7 @@ curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Versio
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/tor/torrc > torrc
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/unbound/root.hints > root.hints
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/unbound/unbound.conf > unbound.conf
-curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/tree/Version2/unbound/unbound.conf.d > unbound.conf.d
+curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/unbound/unbound.conf.d/test.conf > unbound_tor_pihole.conf
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/privoxy/config > config
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/boxed-bg.jpg > boxed-bg.jpg
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/boxed-bg.png > boxed-bg.png
@@ -54,7 +54,7 @@ cp regex.list /etc/pihole/regex.list
 cp whitelist.txt /etc/pihole/whitelist.txt
 cp root.hints /etc/unbound/root.hints
 cp unbound.conf /etc/unbound/unbound.conf
-cp unbound.conf.d /etc/unbound/unbound.conf.d -r -v
+cp unbound_tor_pihole.conf /etc/unbound/unbound.conf.d/unbound_tor_pihole.conf -r -v
 cp config /etc/privoxy/config
 cp boxed-bg.jpg /var/www/html/admin/img/boxed-bg.jpg
 cp *.css /var/www/html/admin/style/vendor/
