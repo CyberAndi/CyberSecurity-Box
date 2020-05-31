@@ -37,7 +37,6 @@ curl -sSL https://install.pi-hole.net | bash</code></pre>
 service unbound stop
 service privoxy stop
 service tor stop
-curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/regex.list > regex.list
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/whitelist_Alexa_Google_Home_Smarthome.txt > whitelist.txt
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/tor/torrc > torrc
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/unbound/root.hints > root.hints
@@ -50,7 +49,6 @@ curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Versio
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/AdminLTE.min.css > AdminLTE.min.css
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/skin-blue.min.css > skin-blue.min.css
 <br>
-cp regex.list /etc/pihole/regex.list
 cp whitelist.txt /etc/pihole/whitelist.txt
 cp root.hints /etc/unbound/root.hints
 cp unbound.conf /etc/unbound/unbound.conf
