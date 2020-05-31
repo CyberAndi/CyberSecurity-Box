@@ -1,5 +1,5 @@
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/CyberSecurityBox.jpg" alt="Logo" width="300px"></img>
-# CyberSecurity-Box<h3>(inkl. Pi-Hole, UnBound, ntopng and Tor)</h3>
+# CyberSecurity-Box<h3>(inkl. Pi-Hole5 (DB), UnBound, ntopng and Tor)</h3>
 <p>
 <ul><li>
   <h3>Installation CyberSecurityBox</h3>
@@ -42,7 +42,7 @@ curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Versio
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/unbound/root.hints > root.hints
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/unbound/unbound.conf > unbound.conf
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/unbound/unbound.conf.d/test.conf > unbound_tor_pihole.conf
-curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/unbound/unbound.sh > unbound.sh
+curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/unbound.sh > unbound.sh
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/privoxy/config > config
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/boxed-bg.jpg > boxed-bg.jpg
 curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Version2/boxed-bg.png > boxed-bg.png
@@ -53,6 +53,7 @@ curl -sSL --compressed https://github.com/CyberAndi/CyberSecurity-Box/raw/Versio
 cp whitelist.txt /etc/pihole/whitelist.txt
 cp root.hints /etc/unbound/root.hints
 cp unbound.conf /etc/unbound/unbound.conf
+cp unbound.sh /etc/cron.weekly
 cp unbound_tor_pihole.conf /etc/unbound/unbound.conf.d/unbound_tor_pihole.conf -r -v
 cp config /etc/privoxy/config
 cp boxed-bg.jpg /var/www/html/admin/img/boxed-bg.jpg
