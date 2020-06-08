@@ -28,13 +28,15 @@ curl -sSL https://install.pi-hole.net | bash</code></pre>
      and follow the messages on the screen.<br>
     </li>
     <li>
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/pi-hole-teleporter_2020-06-07_09-38-48.tar.gz">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/pi-hole-teleporter_2020-06-07_09-38-48.tar.gz</a></h4>
-    Is the newest Version with PiHole 5.0 Support and the DataBase 
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz</a></h4> inludes White- and Blacklist (Advertisement and Maleware)</li>
+    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/pi-hole-teleporter_2020-06-07_09-38-48.tar.gz">pi-hole-teleporter_2020-06-07_09-38-48.tar.gz</a></h4>
+      Is the newest Version with <b>PiHole 5.0 and DataBase Support</b>. It includes the Porn-, Ad- and Tracking-Blocking.
+    </li>
     <li>
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz</a></h4> inludes White- and Blacklist (Advertisement, Maleware, Tracking and Porn).</li>
+    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz</a></h4> inludes White- and Blacklist (Advertisement and Maleware). <b> Until Pi-Hole 4 and smaller</b></li>
     <li>
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware, Tracking and Porn) with over 40% blocking rate<br>    
+    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz</a></h4> inludes White- and Blacklist (Advertisement, Maleware, Tracking and Porn).<b> Until Pi-Hole 4 and smaller</b></li>
+    <li>
+    <h4>The Pi-Hole 4 <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware, Tracking and Porn) with over 40% blocking rate.<br> In pi-hole-teleporter_2020-06-07_09-38-48.tar.gz is this included for Pi-Hole5.
   <pre><code>service pihole-FTL stop
 service unbound stop
 service privoxy stop
