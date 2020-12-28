@@ -2,7 +2,23 @@
 # CyberSecurity-Box<h3>(inkl. Pi-Hole5 (DB), UnBound, ntopng and Tor)</h3>
 <p>
 <ul><li>
-  <h3>Installation CyberSecurityBox</h3>
+  <h3>Installation on OpenWRT-Router - Alternative 1</h3>
+  use SSH or Putty for Installation and type the following code.<br><br>
+  <pre><code>ssh [ip-address of OpenWRT]</code></pre>
+  User: <i><b>root</b></i>
+  <br>
+  Password: <i><b></b></i><br><br>
+  Change the Password with<br><br>
+  <pre><code>passwd
+[newpassword]
+[newpassword]</code></pre>
+  Don´t forget to note the <i><b>newpassword</b></i>.<br>
+  <br>
+  <pre><code>
+  
+  </code>
+  <//pre>
+  <h3>Installation CyberSecurityBox (RasPi) - Alternative 2</h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian-SD-Card-Image</a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
