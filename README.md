@@ -14,8 +14,8 @@
 [newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>.<br>
   <br>
+  copy the sourcecode from  and insert in ssh.
   <pre><code>
-  
   </code>
   <//pre>
   </li>
