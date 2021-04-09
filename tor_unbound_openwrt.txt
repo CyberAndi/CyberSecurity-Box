@@ -1,6 +1,36 @@
-# Install packages
+#!/bin/sh
+
+clear
+clear
+echo
+echo '########################################################'
+echo '#                                                      #'
+echo '#                     CyberSecurity-Box                #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assisten Smart-TV SmartHome  #'
+echo '#                                                      #'
+echo '########################################################'
+echo 
+uci set system.@system[0]=system
+uci set system.@system[0].ttylogin='0'
+uci set system.@system[0].log_size='64'
+uci set system.@system[0].urandom_seed='0'
+uci set system.@system[0].log_proto='udp'
+uci set system.@system[0].conloglevel='2'
+uci set system.@system[0].cronloglevel='9'
+uci set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
+uci set system.@system[0].zonename='Europe/Berlin'
+uci set system.@system[0].hostname='CyberSecurity-Box'
+uci commit system && reload_config
+
+echo
+echo 'Default Country-Settings'
+echo 
 opkg update
-opkg install nano luci-ssl luci-i18n-wol-de unbound-daemon tor dnsmasq openssh-sftp-server ipset ipset-dns block-mount e2fsprogs kmod-fs-ext4 kmod-usb-storage kmod-usb2 kmod-usb3 tc iptables-mod-ipopt
+opkg install nano luci-ssl unbound-daemon-heavy unbound-anchor unbound-control stubby tor tor-geoip dnsmasq-full bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos git
+echo 
+echo 'Software Packeges installed'
+echo
 
 uci -q delete uhttpd.main.listen_http
 uci add_list uhttpd.main.listen_http="0.0.0.0:8080"
@@ -8,39 +38,3342 @@ uci add_list uhttpd.main.listen_http="[::]:8080"
 uci -q delete uhttpd.main.listen_https
 uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
-uci commit uhttpd
+uci commit uhttpd && reload_config
 /etc/init.d/uhttpd restart
 
-# Enable DNS encryption
-while uci -q delete unbound.@zone[0]; do :; done
-uci set unbound.forward="zone"
-uci set unbound.forward.enabled="1"
-uci set unbound.forward.fallback="0"
-uci set unbound.forward.zone_type="forward_zone"
-uci set unbound.forward.tls_upstream="1"
-uci set unbound.forward.tls_index="dns.cloudflair"
-uci add_list unbound.forward.zone_name="."
-uci add_list unbound.forward.server="2606:4700:4700::1111"
-uci add_list unbound.forward.server="2606:4700:4700::1001"
-uci add_list unbound.forward.server="1.1.1.1"
-uci add_list unbound.forward.server="1.0.0.1"
-uci commit unbound
-/etc/init.d/unbound restart
+echo
+echo 'https activated'
+echo
 
-# Configure Tor client
-cat << EOF > /etc/tor/main
-AutomapHostsOnResolve 1
-VirtualAddrNetworkIPv4 172.16.0.0/12
-VirtualAddrNetworkIPv6 fc00::/7
-DNSPort 0.0.0.0:9053
-DNSPort [::]:9053
-TransPort 0.0.0.0:9040
-TransPort [::]:9040
+cat << EOF > test.txt 
+
+:root {
+    --overflowNone: none;
+    --overflowVisible: visible;
+    --overflowScroll: scroll;
+    --overflowAuto: auto;
+    --overflowHidden: hidden;
+    --buttonHeight: 2em;
+    --buttonHeightTouch: 60px;
+    --show: visible;
+    --unshow: hidden;
+    --hidden: none;
+    --inlineVisible: inline-block;
+    --visible: block;
+    --mainVisible: inline;
+    --mainHeight: 1em;
+    --autoHeight: auto;
+    --autoTop: auto;
+    --drkGreen: #004400;
+    --lightRed: rgba(196,0,0,0.6);
+    --drkGreen: #004400;
+    --xDrkGreen: #001000;
+    --selectColor: rgba(0,0,0,0.4);
+    --main-bg-color: var(--xDrkGreen);
+    --mainTextHeight: 1.2em;
+    --mainPadding: 1em;
+    --drk-bg: #000000;
+    --blackColor: #000000;
+    --whiteTrans: rgba(255,255,255,0.5);
+    --blackTrans: rgba(0,0,0,0.5);
+    --headerHeight: 6em;
+    --headerBgColor: rgba(0,0,0,0.8);
+    --headerItem: 7em;
+    --lightColor: #ffffff;
+    --whiteColor: #ffffff;
+    --gray: #444444;
+    --lightGray: #aaaaaa;
+    --midGray: #888888;
+    --light-bg: #cccccc;
+    --lightgreen: rgb(32,128,0);
+    --alertRed: #cc0000;
+    --popupHoverColorBg: var(--light-bg);
+    --popupActiveColorBg: var(--drk-bg);
+    --inpTxt: #0000aa;
+    --inpFocus-bg: #ffffcc;
+    --inpPadding: 0.25em 0.5em;
+    --inpMarginTop: 0.75em;
+    --inpFill-bg: var(--lightGray);
+    --inpWidth: 92%;
+    --default: 0em;
+    --inpHeight: var(--mainTextHeight);
+    --alertColor: var(--lightRed);
+    --fontLight: #cccccc;
+    --fontXLight: var(--lightColor);
+    --fontXDrk: var(--drk-bg);
+    --fontDark: #222222;
+    --mainColor: #44cc00;
+    --textTop: top;
+    --fontBold: bold;
+    --fontSizeNorm: 1.4vw;
+    --fontSizeMobile: 1.6vw;
+    --fontSize: calc(var(--fontSizeNorm) * 0.98);
+    --fontSizeXXSmall: calc(var(--fontSize) * 0.66);
+    --fontSizeXSmall: calc(var(--fontSize) * 0.75);
+    --fontSizeSmall: calc(var(--fontSize) * 0.84);
+    --fontSizeHead: calc(var(--fontSize) * 0.93);
+    --fontSizeTable: var(--fontSizeXSmall);
+    --fontSizeMenu: var(--fontSizeSmall);
+    --fontSizeIfBox: var(--fontSizeXSmall);
+    --fontSizeIfBoxHead: var(--fontSizeSmall);
+    --inputShadow: inset 1px 1px 3px rgba(0,0,0,0.4);
+    --fontShadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    --fontActiveShadow: var(--fontShadow);
+    --fontSelectShadow: -0.125em 0.2125em 0.125em rgba(224, 224, 224, 0.6);
+    --fontBigShadow: -0.25em 0.425em 0.25em rgba(0, 0, 0, 0.6);
+    --fontNormal: normal;
+    --fontTerminal: var(--mainColor);
+    --AnswerBoxBg: var(--lightRed);
+    --YesNoShadow: -0.25em 0.425em 0.25em rgba(0, 0, 0, 0.6);
+    --YesNoBg: linear-gradient(to bottom, rgba(128,128,128,1), rgba(128,128,128,0.1));
+    --YesNoHoverBg: linear-gradient(to top, rgba(128,128,128,1), rgba(128,128,128,0.1));
+    --YesNoActiveBg: linear-gradient(to top, rgba(128,128,128,1), rgba(128,128,128,0.1));
+    --YesNoBorder: 1px solid #888888;
+    --YesNoActiveBorder: 1px solid rgba(128,128,128,1);
+    --YesNoHoverBorder: 1px solid rgba(255,255,255,1);
+    --YesNoPadding: 0.25em 1em 0.25em 1em;
+    --bgModal: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.3), rgba(0,0,0,1) );
+    --bgGradientDark: linear-gradient(to bottom, rgba(16,96,0,0.8), rgba(16,96,0,0.7), rgba(16,96,0,0));
+    --bgGradientLight: linear-gradient(to bottom, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+    --bgGradientLightActive: linear-gradient(to top, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+    --bgGradientDiagDark: linear-gradient(to bottom left, rgba(16,96,0,0.8), rgba(16,96,0,0.7), rgba(16,96,0,0));
+    --bgGradientDiagLight: linear-gradient(to bottom left, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+    --bgGradientDiagLightActive: linear-gradient(to top right, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+    --boxShadow: -0.5em 0.95em 0.5em rgba(0, 0, 0, 0.6);
+    --boxShadow: 0.25em 0.25em 0.5em var(--blackTrans);
+    --boxBgImage: linear-gradient(to bottom left, rgba(128,128,128,0.8), rgba(128,128,128,0.1));
+    --boxBg: rgba(128,128,128,0.6);
+    --boxBgLight: rgba(204,204,204,0.85);
+    --boxBgDrk: rgba(32,32,32,0.85);
+    --boxPadding: 1em 1.5em;
+    --sizeBg: contain;
+    --posBg: center 4.2em;
+    --dropBgColor: linear-gradient(to bottom left, rgba(224,0,0,0.8), rgba(224,0,0,0.1));
+    --dropShadow: var(--boxShadow);
+    --blockBgColor: linear-gradient(to bottom left, rgba(224,224,0,0.8), rgba(224,224,0,0.1));
+    --transBgColor: linear-gradient(to left bottom, rgba(0,224,224,0.8), rgba(0,224,224,0.1));
+    --acceptBgColor: linear-gradient(to left bottom, rgba(0,128,0,0.8), rgba(0,128,0,0.1));
+    --forwardBgColor: linear-gradient(to left bottom, rgba(0,255,0,0.8), rgba(0,255,0,0.1));
+    --userSselectYes: text;
+    --repeateBg: no-repeat;
+    --stdTerm: 25%;
+    --maxTerm: 70%;
+    --minTerm: 20%;
+    --topTerm: 10em;
+    --leftTerm: 16em;
+    --heightTerm: 31em;
+    --terminalMin: 25%;
+    --terminalMax: 65%;
+    --terminalSelect: text;
+    --terminalH4Top: -0.5em;
+    --terminalPaddingH4: 1.5em;
+    --terminalTop: 4.1em;
+    --terminalThpadding: 0.5em;
+    --tableColor: var(--lightgreen);
+    --terminalMarginLeft: 0.75em;
+    --terminalTopCorrect: -0.5em;
+    --terminalFont: OCR-A,Monaco,Andale Mono,Courier New,Courier,monospace;
+    --tableEven: #000000;
+    --tableOdd: #222222;
+    --tableSelect: #44cc00;
+    --tableFont: Courier;
+    --tablePadding: 0.5em;
+    --tableMargin: 1em --tableMarginH4: 0.75em;
+    --tablePaddingH4: 1.5em;
+    --tableThTop: 4.1em;
+    --startPos: 0px;
+    --centerPos: 50%;
+    --mainFont: "San Francisco","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --mainOverflow: hidden;
+    --mainZoom: 100%;
+    --mainMargin: 0;
+    --mainPadding: 0;
+    --centerMargin: auto;
+    --user-select: none;
+    --noneBorder: none;
+    --borderNone: 1px solid #44cc00;
+    --borderSelect: 1px solid #cccccc;
+    --borderTerminal: 2px solid rgba(68,204,0,0.5);
+    --borderLoader: 2px solid rgb(32,128,0);
+    --borderLoader2: 7px solid #aaaaaa;
+    --borderLoaderRadius: 50%;
+    --borderLoaderTop: 7px solid rgb(32,128,0);
+    --loaderPadding: 30px;
+    --loaderSize: 1.5em;
+    --loaderAnimation: spin 2s linear infinite;
+    --loaderStartAnimation: rotate(0deg);
+    --loaderStopAnimation: rotate(360deg);
+    --noBorder: none;
+    --noShadow: none;
+    --translateCenter: translate(-50%, -50%);
+    --transFX: display visibility width height 0.5s;
+    --opacity: 0.8;
+    --borderRadiusNone: 0;
+    --borderRadiusSmall: 4px;
+    --borderRadiusNormal: 8px;
+    --borderRadiusTouch: 16px;
+    --borderRadius: var(--borderRadiusSmall);
+    --cursorHand: pointer;
+    --cursorWait: wait;
+    --menuBg: var(--bgGradientLight);
+    --menuHoverBg: var(--bgGradientLight);
+    --menuActiveBg: var(--bgGradientLightActive);
+    --menuBorder: 1px solid rgba(0,0,0,0.8);
+    --menuHoverBorder: 1px solid rgba(196,196,196,0.8);
+    --menuActiveBorder: 1px solid rgba(0, 0, 0,0.8);
+    --menuHeight: var(--mainTextHeight);
+    --menuPadding: 0.5em 1em;
+    --menuPadding: 0 0.5em;
+    --menuMargin: 0 0.5em;
+    --menuMinWidth: 6em;
+    --menuBottom: -1.4em;
+    --menuView: 40;
+    --menuBtn: 43;
+    --popupItemBg: transparent;
+    --popupItemMargin: var(--mainMargin);
+    --popupItemPadding: var(--menuPadding);
+    --popupMarginRight: 2em;
+    --popupMarginTop: -0.5em;
+    --popupChildMargin: var(--mainMargin);
+    --popupChildMarginBottom: -1em;
+    --popupChildPadding: 0.5em 1em 0.5em 2em;
+    --popupBg: var(--bgGradientDiagLight);
+    --popupHoverBg: var(--bgGradientLight);
+    --popupActiveBg: var(--bgGradientLightActive);
+    --popupBorder: var(--menuBorder);
+    --popupHoverBorder: var(--menuHoverBorder);
+    --popupActiveBorder: var(--menuActiveBorder);
+    --popupBorder2: 1px solid var(--xDrkGreen);
+    --popupHeight: 33.15em;
+    --popupPosTop: 3em;
+    --popupPosleft: 1em;
+    --popupMinWidth: 6em;
+    --popupMaxWidth: 12em;
+    --popupView: 45;
+    --popupBtn: 48;
+    --configHeight: var(--menuHeight);
+    --configLableMin: var(--popupMinWidth);
+    --configLableMax: var(--popupMaxWidth);
+    --configMax: 40em;
+    --configMin: 6em;
+    --maxHeight: 99%;
+    --modalView: 100;
+    --fwStateDynWidth: 260px;
+    --boxView: 50;
+    --boxBGView: 49;
+    --activeView: -10;
+    --hoverView: 10;
+    --layer2View: 20;
+    --layer3View: 30;
+    --posAbsolute: absolute;
+    --posRelative: relative;
+    --titleHeight: var(--mainTextHeight);
+    --titlePadding: 1em 0.5em;
+    --posTitle: var(--mainTextHeight);
+    --textCenter: center;
+    --textLeft: left;
+    --textRoght: right;
+    --alertTop: 3em;
+    --alertBgColor: var(--lightRed);
+    --msgBoxMin: 15%;
+    --msgBoxMax: 80%;
+    --canLeft: 60%;
+    --canSize: 30em;
+    --transState: translateY(-30%);
+    --transDiagram: translate(-19%, -50%);
+    --msgPadding: 1em;
+    --appearance: none;
+    --thikBorder: 2px;
+    --topFix: sticky;
+    --topFixMoz: -moz-sticky;
+    --topFixWebkit: -webkit-sticky;
+    --footerHeight: 1.5em;
+    --bgBlur: blur(10px);
+}
+
+
 EOF
-uci del_list tor.conf.tail_include="/etc/tor/main"
-uci add_list tor.conf.tail_include="/etc/tor/main"
-uci commit tor
-/etc/init.d/tor restart
+
+cat << EOF > /www/luci-static/bootstrap/mobile.css
+
+@supports (touch-action:manipulation){
+
+    :root {
+        --buttonHeight: 48px;
+        --borderRadius: calc(var(--buttonHeight) / 6);
+        --fontSize: calc(var(--fontSizeNorm) * 1.25);
+
+    }
+    header h3 a,header .brand{display:none!important}
+}
+
+@media screen and (max-device-width: 800px) {
+    header h3 a,header .brand{display:none!important}
+
+    :root{
+        --fontSize: calc(var(--fontSizeNorm) * 3.2);
+    }
+
+    header div > ul a, .nav a {
+        padding: 10px 9px 11px;
+    }
+
+    a.menu:after,.dropdown-toggle:after{
+        display: none;
+    }
+
+    footer {
+        visibility: hidden;
+    }
+
+    header .pull-right {
+        top: 4.5em;
+        right: 1em;
+        position: fixed;
+    }
+    [data-tab-active="true"] {
+         overflow-x: auto;
+         display:flex;
+         width: 100%;
+    }
+
+}
+
+
+EOF
+
+
+cat  /www/luci-static/bootstrap/cascade.css >>  test.txt
+
+cat << EOF > test_2.txt
+
+
+html{
+    width:100% !important;
+    min-height: 100% !important;
+    display: block !important;
+    background-image: var(--bgGradientDiagDark);
+    background-color: var(--main-bg-color);
+    font-family: var(--mainFont) !important;
+    font-size: var(--fontSizeNorm) !important;
+}
+
+body {
+    #width:100% !important;
+    #min-height:100% !important;
+    #display:block !important;
+    #background-image: var(--bgGradientDiagDark);
+    #background-color: var(--main-bg-color);
+    font-family: var(--mainFont);
+    #text-shadow: var(--fontShadow) !important;
+    font-family: var(--mainFont) !important;
+    font-size: var(--fontSizeSmall) !important;
+    color: var(--fontLight) !important;
+}
+
+body.lang_en {
+    background: none !important;
+    font-family: var(--mainFont) !important;
+    font-size: var(--fontSizeSmall) !important;
+
+}
+
+* {
+    #text-shadow: var(--fontShadow) !important;
+    #font-family: var(--mainFont) !important;
+    #font-size: var(--fontSize) !important;
+}
+
+p {
+    color: var(--fontLight);
+}
+
+h1, h2, h3, legend, h4, h5, h6 {
+    color: var(--fontLight)
+}
+
+header {
+    overflow: visible;
+    color: var(--lightColor);
+    display: flex;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--main-bg-color);
+    background-image: var(--bgGradientLight);
+    min-height: var(--buttonHeight);
+    box-shadow: var(--boxShadow);
+    text-shadow: var(--fontShadow);
+    padding:1px;
+    z-index: 800;
+}
+
+header .fill {
+   background:none;
+   box-shadow: none;
+   padding: 0;
+   margin: 0;
+}
+
+header .fill .container {
+    height: 40px;
+    padding: 0;
+    margin: 0;
+}
+
+header .pull-right {
+    right: 1em;
+    position: fixed;
+ }
+
+
+.label, header [data-indicator] {
+    box-shadow: var(--boxShadow)!important;
+    padding: 5px 14px 6px;
+    border: var(--borderSelect) !important;
+    background-color: #446688;
+    border-radius: var(--borderRadius) !important;
+}
+
+header h3 a, header .brand {
+    float: left;
+    display: block;
+    margin-left: -20px;
+    color: var(--lightColor);
+    font-size: calc(var(--fontSize) * 1.4);
+    font-weight: 600;
+    line-height: 1;
+    padding: 8px 20px 12px;
+}
+
+.container {
+   height: var(--buttonHeight);
+   padding: 0;
+}
+
+.brand {
+   font-size: calc(var(--fontSize) * 1.4);
+   text-decoration: none;
+   margin: auto 0.5em;
+   font-weight:600;
+   width:13em;
+}
+
+.nav {
+   display: flex;
+   height: var(--buttonHeight);
+   padding: var(--menuPadding);
+}
+
+header div > ul, .nav {
+    display: block;
+    float: left;
+    position: relative;
+    left: 0;
+    margin: 0 10px 0 0;
+}
+
+header div > ul > li, .nav > li {
+    display: block;
+    float: left;
+    height: 40px;
+}
+
+
+header div > ul a, .nav a {
+    display: block;
+    float: none;
+    line-height: calc(var(--buttonHeight) / 2 + 0.25em);
+    min-height: var(--buttonHeight);
+    text-decoration: none;
+    padding: 10px 10px 11px;
+    font-weight: bolder;
+    font-size: var(--fontSizeMenu);
+}
+
+a.menu {
+    height: 40px;
+}
+
+header div > ul, .nav {
+    display: block;
+    float: left;
+    position: relative;
+    left: 0;
+    margin: 0 10px 0 0;
+}
+
+header ul .menu-dropdown li a, header ul .dropdown-menu li a{
+    padding:7px 15px;
+    font-size: var(--fontSizeMenu);
+}
+
+header div > ul a.menu:hover, .nav a.menu:hover, header div > ul li.open .menu, .nav li.open .menu, header div > ul .dropdown-toggle:hover, .nav .dropdown-toggle:hover, header div > ul .dropdown.open .dropdown-toggle, .nav .dropdown.open .dropdown-toggle, header div > ul .menu-dropdown a.menu.open, .nav .menu-dropdown a.menu.open, header div > ul .dropdown-menu a.menu.open, .nav .dropdown-menu a.menu.open, header div > ul .menu-dropdown .dropdown-toggle.open, .nav .menu-dropdown .dropdown-toggle.open, header div > ul .dropdown-menu .dropdown-toggle.open, .nav .dropdown-menu .dropdown-toggle.open {
+    background-color: var(--boxBgDrk);
+    height: 40px;
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+    border-top-left-radius: var(--borderRadius);
+    border-top-right-radius: var(--borderRadius);
+}
+
+
+a.menu:after,.dropdown-toggle:after{
+     width:0;
+     height:0;
+     display:inline-block;
+     content:" &nbsp; &darr;" !important;
+     text-indent:-99999px;
+     vertical-align:top;
+     margin-top:8px;
+     margin-left:4px;
+     border-left:4px solid transparent;
+     border-right:4px solid transparent;
+     border-top:4px solid #fff;
+     opacity:0.5
+}
+
+header div > ul .menu-dropdown, .nav .menu-dropdown, header div > ul .dropdown-menu, .nav .dropdown-menu {
+    background-color: var(--boxBgDrk);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+    border-bottom-left-radius: var(--borderRadius) !important;
+    border-top-right-radius: var(--borderRadius) !important;
+    border-bottom-right-radius: var(--borderRadius) !important;
+}
+
+header a, header div > ul .menu-dropdown li a, .nav .menu-dropdown li a, header div > ul .dropdown-menu li a, .nav .dropdown-menu li a {
+    color: var(--fontLight);
+    text-shadow: var(--fontShadow);
+}
+
+.menu-dropdown, .dropdown-menu {
+    border-left-color: rgba(255,255,255,0.1);
+    border-top-color: rgba(255,255,255,0.1);
+    border-left-style: thin;
+    border-top-style: thin;
+    border-width: 0.5px 0.5px 0 0;
+    box-shadow: var(--dropShadow);
+    border-bottom-left-radius: var(--borderRadius) !important;
+    border-top-right-radius: var(--borderRadius) !important;
+    border-bottom-right-radius: var(--borderRadius) !important;
+
+}
+
+#view > * {
+    max-width: 100% !important;
+}
+
+.alert-message {
+    box-shadow: var(--boxShadow);
+}
+
+
+var {
+    color: var(--fontDark);
+}
+
+p, .cbi-map-descr, .cbi-section-descr, .table .tr.cbi-section-table-descr .th {
+    font-size: var(--fontSizeXXSmall);
+}
+
+.cbi-value-description {
+    font-size: var(--fontSizeXXSmall);
+}
+
+.ifacebox .ifacebox-body {
+    padding: .25em;
+    font-size: var(--fontSizeIfBox);
+}
+
+.ifacebadge, .zonebadge {
+    color: var(--fontDark);
+    box-shadow: var(--inputShadow);
+    background-color: var(--whiteTrans);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+    max-width: 100%;
+    max-height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    vertical-align: middle;
+}
+
+.ifacebadge.large {
+    display: inline-flex;
+    font-size: var(--fontSizeIfBox);
+}
+
+.ifacebox {
+    box-shadow: var(--boxShadow);
+}
+
+.ifacebox-body {
+    color: var(--fontDark);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+    background-color: var(--whiteTrans);
+}
+
+.ifacebox-head {
+    color: var(--fontDark);
+    font-size: var(--fontSizeIfBoxHead);
+}
+
+
+.ifacebox .ifacebadge {
+    box-shadow: none;
+}
+
+.ifacebox .zonebadge {
+    box-shadow: none;
+}
+
+.table {
+    font-size: var(--fontSizeTable) !important;
+}
+
+.table .tr:first-child .th {
+    color: var(--fontDark);
+}
+
+.table .tr:first-child .th {
+    color: var(--fontLight);
+}
+
+
+.cbi-rowstyle-2, .tr.cbi-section-table-row:nth-chold(even) , .tr.table-titles, .tr.cbi-section-table-titles {
+    background: var(--whiteTrans);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+    color: var(--fontDark);
+
+}
+
+.cbi-rowstyle-2, .tr.cbi-section-table-row:nth-child(even), .tr.table-titles, .tr.cbi-section-table-titles {
+    background: var(--blackTrans);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+    color: var(--fontLighr);
+
+}
+
+
+.cbi-rowstyle-2 {
+    color:var(--fontDark);
+    background-color: var(--whiteTrans);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+}
+
+.cbi-rowstyle-2 {
+    color:var(--fontLight);
+    background-color: var(--blackTrans);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+
+}
+
+.td.cbi-section-actions > * > *, .td.cbi-section-actions > * > form > * {
+    flex: 1 1 4em;
+    margin: 0 5px !important;
+    box-shadow: var(--boxShadow);
+}
+
+.actions, .cbi-page-actions {
+    background: none !important;
+    margin-bottom: 18px;
+    border-top: var(--borderSelect);
+    border-radius: 3px;
+    text-align: right;
+    padding: 17px 20px 0 17px;
+    height: 7.5em;
+ }
+
+input, textarea, .cbi-progressbar, .cbi-input-select, .cbi-input, select.mode, select.htmode, select.channel{
+    transition: border linear 0.2s,box-shadow linear 0.2s;
+    box-shadow: var(--inputShadow) !important;
+    color: var(--fontDark) !important;
+    font-size: var(--fontSizeXSmall) !important;
+}
+
+.cbi-dynlist > .add-item > input, .cbi-dynlist > .add-item > button {
+    margin: 0 !important;
+}
+
+.cbi-progressbar {
+    height: calc(var(--buttonHeight) * .75) ;
+    border-radius: var(--borderRadius);
+}
+
+.cbi-progressbar::after {
+    position: relative;
+    bottom: calc( calc(var(--buttonHeight) / 2) + .25em ); 
+    left: unset !important;
+    top: unset !important;
+    right: unset !important;
+    text-align: center;
+    text-shadow: 0 0 2px #fff;
+    content: attr(title);
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    margin: 0 !important;
+    height: var(--buttonHeight);
+}
+
+.cbi-progressbar > div {
+    background: #90c0e0;
+    height: 100%;
+    transition: width .25s ease-in;
+    width: 0%;
+    border-top-left-radius: var(--borderRadius);
+    border-bottom-left-radius: var(--borderRadius);
+}
+
+.tabs, .cbi-tabmenu {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    background-size: 1px 29px;
+    background-position: left bottom;
+    margin: 0 -5px 18px;
+    padding: 0 2px;
+    border-bottom: rgba(0,0,0,0.4) solid 1px;
+    background: none !important;
+}
+
+.tabs > li , .cbi-tabmenu > li  {
+    font-size: var(--fontSizeMenu) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: inherit;
+    text-decoration: none;
+    border-radius: var(--borderRadius) var(--borderRadius) 0 0;
+    line-height: var(--buttonHeight);
+    height: var(--buttonHeight);
+    outline: none;
+    padding: 4px 6px;
+    position: relative;
+    background: var(--whiteTrans);
+    box-shadow: 0.25em 0.25em 0.5em var(--blackTrans);
+}
+
+.cbi-input-password {
+    width: 21em !important;
+}
+
+.cbi-dynlist > .item {
+    background: var(--whiteColor);
+    border: var(--borderSelect);
+    border-radius: var(--borderRadius);
+    position: relative;
+    pointer-events: none;
+    overflow: hidden;
+    word-break: break-all;
+    padding: 2px 2em 2px 4px;
+    box-shadow: var(--inputShadow);
+    margin: initial !important;
+    margin-bottom: 4px;
+    font-size: 13px;
+    line-heihgt: var(--buttonHeight);
+    left: 2px;
+}
+
+.cbi-dynlist * {
+    margin: 1.5px 0 !important;
+    padding: 0 0.25em !important;
+    font-size: var(--fontSizeXSmall) !important;
+}
+
+.cbi-dynlist > .item span {
+    padding: 0 !important;
+    margin: 0 !important;
+    position: relative;
+    top: -2px;
+}
+
+.cbi-dynlist > .add-item > input {
+    position: relative;
+    left: -2px;
+}
+
+.cbi-dropdown:not(.btn):not(.cbi-button) {
+    background: var(--whiteColor);
+    border: var(--borderSelect);
+    border-radius: 3px;
+    color: var(--blackColor);
+    box-shadow: var(--inputShadow);
+}
+
+
+select {
+    background: var(--whiteColor);
+    box-shadow: var(--inputShadow);
+    padding: initial;
+}
+
+.cbi-tabmenu > li > a, .tab > li > a , .tabs > li > a {
+    color: var(--fontDark);
+    font-weight: bolder;
+
+}
+
+.cbi-tabmenu > li > a:hover, .tab > li > a:hover, .tabs > li > a:hover {
+    color: var(--blackColor);
+}
+
+.cbi-section-table .tr:hover .td, .cbi-section-table .tr:hover .th, .cbi-section-table .tr:hover::before {
+    background-color: var(--whiteTrans);
+    color: var(--blackColor);
+    backdrop-filter:var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+}
+
+#modal_overlay {
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -10000px;
+    right: 10000px;
+    background: rgba(255,255,255,0.1);
+    z-index: 900;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    transition: opacity .125s ease-in;
+    opacity: 0;
+    backdrop-filter:var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+} 
+
+.cbi-value label.cbi-value-title {
+    color: var(--fontLight);
+    font-weight: bolder;
+
+}
+
+#modal_overlay > .modal.uci-dialog, #modal_overlay > .modal.cbi-modal {
+    max-width: 900px;
+    background-color: var(--boxLight);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+    color:var(--fontDark);
+    box-shadow: (--boxShadow);
+    border-radius: var(--borderRadius);
+}
+
+#modal_overlay > .modal.uci-dialog, #modal_overlay > .modal.cbi-modal {
+    max-width: 900px;
+    background-color: var(--boxBgDrk);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+    color:var(--fontLight);
+    box-shadow: var(--boxShadow);
+    border-radius: var(--borderRadius);
+}
+
+#modal_overlay > .modal.uci-dialog > *, #modal_overlay > .modal.cbi-modal > * {
+    max-width: 100% !important;
+}
+
+#modal_overlay > .modal.uci-dialog .cbi-value label.cbi-value-title, #modal_overlay > .modal.cbi-modal .cbi-value label.cbi-value-title{
+    color: var(--fontDark);
+    font-size: var(--fontSizeXSmall);
+}
+
+#modal_overlay > .modal.uci-dialog .cbi-value label.cbi-value-title, #modal_overlay > .modal.cbi-modal .cbi-value label.cbi-value-title{
+    color: var(--fontLight);
+    font-size: var(--fontSizeXSmall);
+}
+
+
+.modal, #modal_overlay > .modal {
+    background-color: var(--boxBgLight);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+    color: var(--fontDark);
+    box-shadow: var(--boxShadow);
+    border-left-color: rgba(255,255,255,0.1);
+    border-top-color: rgba(255,255,255,0.1);
+    border-left-style: thin;
+    border-top-style: thin;
+    border-width: 0.5px 0.5px 0 0;
+    border-radius: var(--borderRadius);
+}
+
+.modal, #modal_overlay > .modal {
+    background-color: var(--boxBgDrk);
+    backdrop-filter: var(--bgBlur);
+    -webkit-backdrop-filter: var(--bgBlur);
+    -moz-backdrop-filter: var(--bgBlur);
+    color: var(--fontLight);
+    box-shadow: var(--boxShadow);
+    border-left-color: rgba(255,255,255,0.1);
+    border-top-color: rgba(255,255,255,0.1);
+    border-left-style: thin;
+    border-top-style: thin;
+    border-width: 0.5px 0.5px 0 0;
+    border-radius: var(--borderRadius);
+}
+code, pre {
+    font-family: var(--terminalFont) !important;
+    font-size: var(--fontSizeXSmall);
+    color: var(--fontTerminal);
+}
+
+code {
+    background-color: #fee9cc;
+    color: rgba(0,0,0,0.75) !important;
+    padding: 1px 3px;
+}
+
+pre {
+    background-color: var(--blackColor);
+    border: var(--borderTerminal);
+    box-shadow: var(--inputShadow);
+}
+
+textarea {
+    color: var(--fontTerminal) !important;
+    font-family: var(--terminalFont) !important;
+    font-size: var(--fontSizeXSmall);
+    background-color: var(--blackColor);
+    border: var(--borderTerminal);
+    box-shadow: var(--inputShadow);
+    overflow: auto;
+}
+
+textarea#syslog {
+    color: var(--fontTerminal) !important;
+    font-family: var(--terminalFont);
+    font-size: var(--fontSizeXSmall);
+    background-color: var(--blackColor);
+    border: var(--borderTerminal);
+    box-shadow: var(--inputShadow);
+    overflow: auto;
+}
+
+
+fieldset legend {
+   color: var(--fontLight);
+   font-weight: bolder;
+}
+
+.uci-change-legend-label {
+    width: 150px;
+    float: left;
+    font-size: var(--fontSizeXSmall);
+}
+
+.cbi-dynlist {
+    color: var(--fontDark);
+}
+
+#view svg {
+    background: rgba(0,64,0,0.5)!important;
+    border: none !important;
+    box-shadow: var(--inputShadow);
+}
+
+.table .tr:hover {
+   # background-color: var(--whiteTrans);
+   # color: var(--fontDark);
+   # backdrop-filter: var(--bgBlur);
+   # -webkit-backdrop-filter: var(--bgBlur);
+}
+
+.uci-change-list var, .uci-change-legend-label var, .uci-change-list del, .uci-change-legend-label del, .uci-change-list ins, .uci-change-legend-label ins {
+    color: var(--fontDark);
+    font-size: var(--fontSizeXSmall);
+}
+
+.cbi-value label.cbi-value-title {
+    font-size: var(--fontSizeXSmall);
+}
+
+button.btn.cbi-button {
+}
+
+input[type="text"] + .cbi-button, input[type="password"] + .cbi-button, select + .cbi-button {
+    border-radius: 0 var(--borderRadius)  var(--borderRadius) 0;
+    margin-left: -2px;
+    vertical-align: top;
+    height: 30px;
+    font-size: 14px;
+    line-height: var(--buttonHeight);
+    border-color: #ccc;
+    padding: 0 6px;
+}
+
+.td.cbi-section-actions > * > *, .td.cbi-section-actions > * > form > * {
+    flex: 1 1 4em;
+    padding: calc(var(--buttonHeight) / 2 - 0.75em) 0.5em !important;
+    margin: 0 5px !important;
+    min-width: 5em;
+   # box-shadow: var(--boxShadow);
+}
+
+.btn, .cbi-button, button, .button, .item, input, select, select.mode, select.channel, select.htmode, cbi-button-neutral, .cbi-button-neutral, .cbi-button-add, .cbi-button-del, .cbi-button-delete, .cbi-button-reset, .cbi-input-select, input[type="text"], input[type="password"], input[type=checkbox], input[type=radio], .item::after, .btn::after, .cbi-button::after, button::after, .button::after, input::after, select::after, select.mode::after, select.channel::after, select.htmode::after, cbi-button-neutral, .cbi-button-neutral::after, .cbi-button-add::after, .cbi-button-del::after, .cbi-button-delete::after, .cbi-button-reset::after, .cbi-input-select::after {
+    margin: auto 3px !important;
+    padding: calc(var(--buttonHeight) / 2 - 0.75em) 0.5em !important;
+    box-sizing:border-box !important;
+    height: var(--buttonHeight) !important;
+    width: auto !important;
+    overflow: hidden !important;
+    vertical-align: middle !important;
+    border-radius: var(--borderRadius) !important;
+    border: 1px solid transparent !important;
+}
+
+.btn, .cbi-button, button, .button, .cbi-button-neutral, .cbi-button-add, .cbi-button-del, .cbi-button-delete, .cbi-button-reset {
+    box-sizing:border-box !important;
+    width: auto !important;
+    background-color: #fff;
+    border-color: #000 !important;
+    box-shadow: var(--boxShadow) !important;
+    font-weight: bolder;
+    font-size: var(--fontSizeSmall);
+}
+
+.item::after, .btn::after, .cbi-button::after, button::after, .button::after, input::after, select::after, select.mode::after, select.channel::after, select.htmode::after, .cbi-button-neutral::after, .cbi-button-add::after, .cbi-button-del::after, .cbi-button-delete::after, .cbi-button-reset::after, .cbi-input-select::after, input[type="text"] + .cbi-button, input[type="password"] + .cbi-button, select + .cbi-button, input[type=checkbox], input[type=radio] {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    position: relative !important;
+    border: transparent !important;
+    text-align: right !important;
+    font-weight: 700 !important;
+    font-size: var(--fontSizeXSmall) !important;
+}
+
+.cbi-dropdown > ul.dropdown > li, .cbi-dropdown:not(.btn):not(.cbi-button) > ul > li {
+    min-height: 20px;
+    color: #404040;
+    padding: .25em;
+    font-size: var(--fontsizeXSmall);
+}
+
+.cbi-button-neutral {
+    left: -22px !important;
+}
+
+.cbi-button-add {
+    content: "+";
+    left: -16px !important;
+    font-weight: 700; 
+}
+
+
+input[type=checkbox], input[type=radio] {
+    transition: border linear 0.2s,box-shadow linear 0.2s;
+    box-shadow: var(--inputShadow) !important;
+    color: var(--fontDark) !important;
+    height: auto !important;
+}
+
+.btn.danger, .alert-message.danger, .btn.error, .alert-message.error, .cbi-tooltip.error {
+    background: linear-gradient(to bottom,#ee5f5b,#c43c35) repeat-x;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+    border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+    font-size: var(--fontSizeXSmall);
+}
+
+input[type="text"] + .cbi-button, input[type="password"] + .cbi-button, select + .cbi-button {
+   content: "*";
+   color: #0000ff;
+   font-weight: 700; 
+   position: relative !important;
+   text-align: center !important;
+}
+
+#.cbi-button-action {
+#    left: -57px;
+#}
+
+button.btn.cbi-button {
+    background-color: var(--whiteColor) !important;
+    box-shadow: var(--boxShadow) !important;
+}
+
+.cbi-dynlist > .item::after {
+    content: "X";
+    position: absolute !important;
+    right:0.25em;
+    color: #ff0000;
+    font-weight: 700; 
+ }
+
+.cbi-dropdown > ul {
+    overflow: hidden;
+}
+
+button.cbi-button.cbi-button-edit {
+    background-color: #0000ee !important;
+    color: var(--lightColor);
+}
+
+
+
+.cbi-dropdown > ul {
+    list-style: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0;
+}
+
+.cbi-dropdown > ul.dropdown > li, .cbi-dropdown:not(.btn):not(.cbi-button) > ul > li {
+    min-height: 20px;
+    color: #404040;
+    padding: 0 0 0 .5em;
+    font-size: var(--fontsizeXSmall);
+}
+
+.cbi-dropdown:not(.btn):not(.cbi-button) {
+    background: var(--whiteColor);
+    border: var(--borderSelect);
+    border-radius: var(--borderRadius);
+    color: var(--blackColor);
+    height: var(--buttonHeight);
+    box-shadow: var(--inputShadow);
+    position: relative;
+    left: 2px;
+}
+
+fieldset {
+    margin-bottom: 9px;
+    padding-top: 9px;
+    border: none;
+    #box-shadow: var(--boxShadow);
+    border-raddius: var(--borderRadius) !important;
+}
+
+footer {
+  position:fixed;
+  bottom:0em;
+  display:block;
+  left:0em;
+  width:100%;
+  background: var(--main-bg-color);
+  background-image: var(--bgGradientLight);
+  min-height:2.3em;
+  padding:0.5em;
+  box-shadow: var(--YesNoShadow);
+  text-shadow: var(--fontShadow);
+  margin-top:0.5em;
+  border: none;
+  z-index:50;
+}
+
+footer a {
+    color: var(--fontLight);
+    text-decoration: underline
+}
+
+
+EOF
+
+cat test_2.txt >>  test.txt
+
+cp test.txt /www/luci-static/bootstrap/cascade.css
+
+rm test.txt
+rm test_2.txt
+
+echo
+echo 'optical Style installed'
+echo
+echo '########################################################'
+echo '#                   Network Definitions                #'
+echo '########################################################'
+echo 
+
+#!/bin/sh
+uci -q delete network
+uci delete network.lan
+
+uci set network.loopback=interface
+uci set network.loopback.ifname='lo'
+uci set network.loopback.proto='static'
+uci set network.loopback.ipaddr='127.0.0.1'
+uci set network.loopback.netmask='255.0.0.0'
+
+uci set network.globals=globals
+uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
+
+uci add network interface
+uci rename network.@interface[-1]='VOICE'
+uci commit network
+uci set network.VOICE.proto='static'
+uci set network.VOICE.type='bridge'
+uci set network.VOICE.ipaddr='192.168.190.1'
+uci set network.VOICE.netmask='255.255.255.0'
+uci set network.VOICE.ip6assign='56'
+uci set network.VOICE.broadcast='192.168.190.255'
+uci set network.VOICE.igmp_snooping='1'
+uci set network.VOICE.gateway='192.168.175.254'
+uci set network.VOICE.ifname='eth0.105'
+uci set network.VOICE.dns='192.168.190.1'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='ENTERTAIN'
+uci commit network
+uci set network.ENTERTAIN.proto='static'
+uci set network.ENTERTAIN.type='bridge'
+uci set network.ENTERTAIN.ipaddr='192.168.187.1'
+uci set network.ENTERTAIN.netmask='255.255.255.0'
+uci set network.ENTERTAIN.ip6assign='56'
+uci set network.ENTERTAIN.broadcast='192.168.187.255'
+uci set network.ENTERTAIN.igmp_snooping='1'
+uci set network.ENTERTAIN.gateway='192.168.175.254'
+uci set network.ENTERTAIN.ifname='eth0.106'
+uci set network.ENTERTAIN.dns='192.168.187.1'
+uci commit network
+
+uci set network.VOICE.proto='static'
+uci set network.VOICE.type='bridge'
+uci set network.VOICE.ipaddr='192.168.190.1'
+uci set network.VOICE.netmask='255.255.255.0'
+uci set network.VOICE.ip6assign='56'
+uci set network.VOICE.broadcast='192.168.190.255'
+uci set network.VOICE.igmp_snooping='1'
+uci set network.VOICE.gateway='192.168.175.254'
+uci set network.VOICE.ifname='eth0.105'
+uci set nezwork.VOICE.dns='192.168.190.1'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='GUEST'
+uci commit network
+uci set network.GUEST.proto='static'
+uci set network.GUEST.type='bridge'
+uci set network.GUEST.ipaddr='192.168.188.1'
+uci set network.GUEST.netmask='255.255.255.0'
+uci set network.GUEST.ip6assign='56'
+uci set network.GUEST.broadcast='192.168.188.255'
+uci set network.GUEST.igmp_snooping='1'
+uci set network.GUEST.gateway='192.168.175.254'
+#uci set network.GUEST.ifname='eth0.105'
+uci set network.GUEST.dns='192.168.188.1'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='SERVER'
+uci commit network
+uci set network.SERVER.proto='static'
+uci set network.SERVER.type='bridge'
+uci set network.SERVER.ipaddr='192.168.66.254'
+uci set network.SERVER.netmask='255.255.255.0'
+uci set network.SERVER.ip6assign='56'
+uci set network.SERVER.broadcast='192.168.66.255'
+uci set network.SERVER.igmp_snooping='1'
+uci set network.SERVER.gateway='192.168.175.254'
+uci set network.SERVER.ifname='eth0.101'
+uci set network.SERVER.dns='192.168.66.254'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='ONION_CLIENTS'
+uci commit network
+uci set network.ONION_CLIENTS.proto='static'
+uci set network.ONION_CLIENTS.type='bridge'
+uci set network.ONION_CLIENTS.ipaddr='192.168.189.1'
+uci set network.ONION_CLIENTS.netmask='255.255.255.0'
+uci set network.ONION_CLIENTS.ip6assign='56'
+uci set network.ONION_CLIENTS.broadcast='192.168.189.255'
+uci set network.ONION_CLIENTS.igmp_snooping='1'
+uci set network.ONION_CLIENTS.gateway='192.168.175.254'
+uci set network.ONION_CLIENTS.ifname='eth0.104'
+uci set network.ONION_CLIENTS.dns='192.168.189.1'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='CONTROL'
+uci commit network
+uci set network.CONTROL.proto='static'
+uci set network.CONTROL.type='bridge'
+uci set network.CONTROL.ipaddr='192.168.71.254'
+uci set network.CONTROL.netmask='255.255.255.0'
+uci set network.CONTROL.ip6assign='56'
+uci set network.CONTROL.broadcast='192.168.71.255'
+uci set network.CONTROL.igmp_snooping='1'
+uci set network.CONTROL.gateway='192.168.175.254'
+uci set network.CONTROL.ifname='eth0.103'
+uci set network.CONTROL.dns='192.168.71.254'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='HCONTROL'
+uci commit network
+uci set network.HCONTROL.proto='static'
+uci set network.HCONTROL.type='bridge'
+uci set network.HCONTROL.ipaddr='192.168.70.254'
+uci set network.HCONTROL.netmask='255.255.255.0'
+uci set network.HCONTROL.ip6assign='56'
+uci set network.HCONTROL.broadcast='192.168.70.255'
+uci set network.HCONTROL.igmp_snooping='1'
+uci set network.HCONTROL.gateway='192.168.175.254'
+uci set network.HCONTROL.ifname='eth0.102'
+uci set network.HCONTROL.dns='192.168.70.254'
+uci commit network
+
+#uci add network interface
+#uci rename network.@interface[-1]='INTERNET'
+#uci commit network
+#uci set network.INTERNET=interface
+#uci set network.INTERNET.proto='static'
+#uci set network.INTERNET.netmask='255.255.255.0'
+#uci set network.INTERNET.ip6assign='60'
+#uci set network.INTERNET.gateway='192.168.175.254'
+#uci set network.INTERNET.dns='192.168.175.254'
+#uci set network.INTERNET.ifname='eth1'
+#uci set network.INTERNET.ipaddr='192.168.175.250'
+#uci commit network
+
+#uci add network interface
+#uci rename network.@interface[-1]='INTERNET6'
+#uci commit network
+#uci set network.INTERNET6.proto='dhcpv6'
+#uci set network.INTERNET6.reqaddress='try'
+#uci set network.INTERNET6.reqprefix='auto'
+#uci set network.INTERNET6.ifname='eth1'
+#uci commit network
+
+uci set network.@switch[0]=switch
+uci set network.@switch[0].name='switch0'
+uci set network.@switch[0].reset='1'
+uci set network.@switch[0].enable_vlan='1'
+uci commit network
+
+uci set network.@switch_vlan[0]=switch_vlan
+uci set network.@switch_vlan[0].device='switch0'
+uci set network.@switch_vlan[0].vlan='101'
+uci set network.@switch_vlan[0].vid='101'
+uci set network.@switch_vlan[0].ports='0t 1t 2 3t 4t 5t'
+uci commit network
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='102'
+uci set network.@switch_vlan[-1].vid='102'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3 4t 5t'
+uci commit network
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vLan='103'
+uci set network.@switch_vlan[-1].vid='103'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci commit network
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='104'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='104'
+uci commit network
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='105'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='105'
+uci commit network
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='106'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='106'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='SWITCH_Port'
+uci commit network
+uci set network.SWITCH_Port.ifname='eth0'
+uci set network.SWITCH_Port.proto='none'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='SWITCH_P101'
+uci commit network
+uci set network.SWITCH_P101.ifname='eth0.101'
+uci set network.SWITCH_P101.proto='none'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='SWITCH_P102'
+uci commit network
+uci set network.SWITCH_P102.ifname='eth0.102'
+uci set network.SWITCH_P102.proto='none'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='SWITCH_P103'
+uci commit network
+uci set network.SWITCH_P103.ifname='eth0.103'
+uci set network.SWITCH_P103.proto='none'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='SWITCH_P104'
+uci commit network
+uci set network.SWITCH_P104.ifname='eth0.104'
+uci set network.SWITCH_P104.proto='none'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='SWITCH_P105'
+uci commit network
+uci set network.SWITCH_P105.ifname='eth0.105'
+uci set network.SWITCH_P105.proto='none'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='SWITCH_P106'
+uci commit network
+uci set network.SWITCH_P106.ifname='eth0.106'
+uci set network.SWITCH_P106.proto='none'
+uci commit network
+
+uci add network interface
+uci rename network.@interface[-1]='REPEATER'
+uci commit network
+uci set network.REPEATER.proto='none'
+uci commit network
+
+
+uci -q delete wireless
+
+uci set wireless.radio0=wifi-device
+uci set wireless.radio0.type='mac80211'
+uci set wireless.radio0.path='platform/soc/a000000.wifi'
+uci set wireless.radio0.htmode='HT20'
+uci set wireless.radio0.country='DE'
+uci set wireless.radio0.channel='6'
+uci set wireless.radio0.hwmode='11n'
+
+uci delete wireless.default_radio0
+uci set wireless.default_radio0=wifi-iface
+uci set wireless.default_radio0.device='radio0'
+uci set wireless.default_radio0.mode='ap'
+uci set wireless.default_radio0.key='Cyber,Sec9ox'
+uci set wireless.default_radio0.ssid='Voice-CyberSecBox'
+uci set wireless.default_radio0.encryption='psk2'
+uci set wireless.default_radio0.network='VOICE'
+
+uci delete wireless.wifinet1
+uci set wireless.wifinet1=wifi-iface
+uci set wireless.wifinet1.ssid='HControl-CyberSecBox'
+uci set wireless.wifinet1.encryption='psk2'
+uci set wireless.wifinet1.device='radio0'
+uci set wireless.wifinet1.mode='ap'
+uci set wireless.wifinet1.network='HCONTROL'
+uci set wireless.wifinet1.key='Cyber,Sec9ox'
+
+uci delete wireless.wifinet2
+uci set wireless.wifinet2=wifi-iface
+uci set wireless.wifinet2.ssid='Control-CyberSecBox'
+uci set wireless.wifinet2.device='radio0'
+uci set wireless.wifinet2.mode='ap'
+uci set wireless.wifinet2.network='CONTROL'
+uci set wireless.wifinet2.key='Cyber,Sec9ox'
+uci set wireless.wifinet2.encryption='psk2'
+
+uci delete wireless.wifinet3
+uci set wireless.wifinet3=wifi-iface
+uci set wireless.wifinet3.ssid='iNet-CyberSecBox'
+uci set wireless.wifinet3.encryption='psk2'
+uci set wireless.wifinet3.device='radio0'
+uci set wireless.wifinet3.mode='ap'
+uci set wireless.wifinet3.network='ONION_CLIENTS'
+uci set wireless.wifinet3.key='Cyber,Sec9ox'
+
+uci delete wireless.wifinet4
+uci set wireless.wifinet4=wifi-iface
+uci set wireless.wifinet4.ssid='Entertain-CyberSecBox'
+uci set wireless.wifinet4.encryption='psk2'
+uci set wireless.wifinet4.device='radio0'
+uci set wireless.wifinet4.mode='ap'
+uci set wireless.wifinet4.network='ENTERTAIN'
+uci set wireless.wifinet4.key='Cyber,Sec9ox'
+
+uci delete wireless.wifinet5
+uci set wireless.wifinet5=wifi-iface
+uci set wireless.wifinet5.ssid='CyberSecBox'
+uci set wireless.wifinet5.encryption='psk2'
+uci set wireless.wifinet5.device='radio0'
+uci set wireless.wifinet5.mode='ap'
+uci set wireless.wifinet5.network='REPEATER'
+uci set wireless.wifinet5.key='Cyber,Sec9ox'
+
+uci delete wireless.wifinet6
+uci set wireless.wifinet6=wifi-iface
+uci set wireless.wifinet6.ssid='Guest-CyberSecBox'
+uci set wireless.wifinet6.encryption='psk2'
+uci set wireless.wifinet6.device='radio0'
+uci set wireless.wifinet6.mode='ap'
+uci set wireless.wifinet6.network='GUEST'
+uci set wireless.wifinet6.key='Cyber,Sec9ox'
+
+uci set wireless.radio1=wifi-device
+uci set wireless.radio1.type='mac80211'
+uci set wireless.radio1.channel='36'
+uci set wireless.radio1.hwmode='11a'
+uci set wireless.radio1.path='platform/soc/a800000.wifi'
+uci set wireless.radio1.htmode='VHT80'
+uci set wireless.radio1.country='DE'
+
+uci delete wireless.default_radio1
+uci set wireless.default_radio1=wifi-iface
+uci set wireless.default_radio1.device='radio1'
+uci set wireless.default_radio1.mode='ap'
+uci set wireless.default_radio1.key='Cyber,Sec9ox'
+uci set wireless.default_radio1.ssid='Voice-CyberSecBox'
+uci set wireless.default_radio1.encryption='psk2'
+uci set wireless.default_radio1.network='VOICE'
+
+uci delete wireless.wifinet7
+uci set wireless.wifinet7=wifi-iface
+uci set wireless.wifinet7.ssid='iNet-CyberSecBox'
+uci set wireless.wifinet7.encryption='psk2'
+uci set wireless.wifinet7.device='radio1'
+uci set wireless.wifinet7.mode='ap'
+uci set wireless.wifinet7.network='ONION_CLIENTS'
+uci set wireless.wifinet7.key='Cyber,Sec9ox'
+
+uci delete wireless.wifinet8
+uci set wireless.wifinet8=wifi-iface
+uci set wireless.wifinet8.ssid='Entertain-CyberSecBox'
+uci set wireless.wifinet8.encryption='psk2'
+uci set wireless.wifinet8.device='radio1'
+uci set wireless.wifinet8.mode='ap'
+uci set wireless.wifinet8.network='ENTERTAIN'
+uci set wireless.wifinet8.key='Cyber,Sec9ox'
+
+uci delete wireless.wifinet9
+uci set wireless.wifinet9=wifi-iface
+uci set wireless.wifinet9.device='radio1'
+uci set wireless.wifinet9.mode='ap'
+uci set wireless.wifinet9.ssid='CyberSecBox'
+uci set wireless.wifinet9.encryption='psk2'
+uci set wireless.wifinet9.key='Cyber,Sec9ox'
+uci set wireless.wifinet9.network='REPEATER'
+
+uci delete wireless.wifinet10
+uci set wireless.wifinet10=wifi-iface
+uci set wireless.wifinet10.encryption='psk2'
+uci set wireless.wifinet10.device='radio1'
+uci set wireless.wifinet10.mode='ap'
+uci set wireless.wifinet10.key='Cyber,Sec9ox'
+uci set wireless.wifinet10.network='REPEATER'
+uci set wireless.wifinet10.ssid='Guest-CyberSecBox'
+
+uci delete wireless.radio0.disabled
+uci delete wireless.radio1.disabled
+
+uci delete wireless.wifinet11
+uci delete wireless.wifinet12
+uci delete wireless.wifinet13
+uci delete wireless.wifinet14
+uci delete wireless.wifinet15
+uci delete wireless.wifinet16
+
+uci commit wireless
+
+echo
+echo 'Networks Settings defined'
+echo
+
+uci -q delete dhcp
+uci delete dhcp.@dnsmasq[0]
+uci delete dhcp.@dnsmasq[1]
+uci delete dhcp.@dnsmasq[2]
+uci delete dhcp.@dnsmasq[3]
+uci delete dhcp.@dnsmasq[4]
+uci delete dhcp.@dnsmasq[5]
+uci delete dhcp.lan
+uci commit dhcp
+
+uci set dhcp.BlacklistSERVER=dnsmasq
+uci set dhcp.BlacklistSERVER.port='53'
+uci set dhcp.BlacklistSERVER.domainneeded='1'
+uci set dhcp.BlacklistSERVER.localise_queries='1'
+uci set dhcp.BlacklistSERVER.rebind_protection='1'
+uci set dhcp.BlacklistSERVER.rebind_localhost='1'
+uci set dhcp.BlacklistSERVER.filterwin2k='1'
+uci set dhcp.BlacklistSERVER.local='/server.stawimedia.local/'
+uci set dhcp.BlacklistSERVER.expandhosts='1'
+uci set dhcp.BlacklistSERVER.authoritative='1'
+uci set dhcp.BlacklistSERVER.readethers='1'
+uci set dhcp.BlacklistSERVER.leasefile='/tmp/dhcp.blacklistserver.leases'
+uci set dhcp.BlacklistSERVER.resolvfile='/tmp/resolv.blacklistserver.conf.auto'
+uci set dhcp.BlacklistSERVER.localservice='1'
+uci set dhcp.BlacklistSERVER.cachesize='1500'
+uci set dhcp.BlacklistSERVER.confdir='/etc/dnsmasq.d/Blacklist'
+uci set dhcp.BlacklistSERVER.logqueries='0'
+uci set dhcp.BlacklistSERVER.logfacility='/var/log/dnsmasq.blacklistserver.log'
+uci add_list dhcp.BlacklistSERVER.notinterface='VOICE'
+uci add_list dhcp.BlacklistSERVER.notinterface='GUEST' 
+uci add_list dhcp.BlacklistSERVER.notinterface='ENTERTAIN'
+#uci set dhcp.BlacklistSERVER.interface='SERVER'
+
+uci set dhcp.SERVER=dhcp
+uci set dhcp.SERVER.start='1'
+uci set dhcp.SERVER.limit='250'
+uci set dhcp.SERVER.interface='SERVER'
+uci set dhcp.SERVER.leasetime='24h'
+uci set dhcp.SERVER.dhcpv6='server'
+uci set dhcp.SERVER.dhcpv4='server'
+uci set dhcp.SERVER.ra='server'
+uci set dhcp.SERVER.ra_management='1'
+uci set dhcp.SERVER.instance='BlacklistSERVER'
+#uci set dhcp.SERVER.confdir='/etc/dnsmasq.d/Blacklist'
+
+
+uci set dhcp.BlacklistINET=dnsmasq
+uci set dhcp.BlacklistINET.port='53'
+uci set dhcp.BlacklistINET.domainneeded='1'
+uci set dhcp.BlacklistINET.localise_queries='1'
+uci set dhcp.BlacklistINET.rebind_protection='1'
+uci set dhcp.BlacklistINET.rebind_localhost='1'
+uci set dhcp.BlacklistINET.filterwin2k='1'
+uci set dhcp.BlacklistINET.local='/inet.stawimedia.local/'
+uci set dhcp.BlacklistINET.expandhosts='1'
+uci set dhcp.BlacklistINET.authoritative='1'
+uci set dhcp.BlacklistINET.readethers='1'
+uci set dhcp.BlacklistINET.leasefile='/tmp/dhcp.blacklistinet.leases'
+uci set dhcp.BlacklistINET.resolvfile='/tmp/resolv.blacklistinet.conf.auto'
+uci set dhcp.BlacklistINET.localservice='1'
+uci set dhcp.BlacklistINET.cachesize='1500'
+uci set dhcp.BlacklistINET.confdir='/etc/dnsmasq.d/Blacklist'
+uci set dhcp.BlacklistINET.logqueries='0'
+uci set dhcp.BlacklistINET.logfacility='/var/log/dnsmasq.blacklistinet.log'
+uci add_list dhcp.BlacklistINET.notinterface='VOICE'
+uci add_list dhcp.BlacklistINET.notinterface='GUEST' 
+uci add_list dhcp.BlacklistINET.notinterface='ENTERTAIN'
+#uci set dhcp.BlacklistINET.interface='ONION_CLIENTS'
+
+
+uci set dhcp.ONION_CLIENTS=dhcp
+uci set dhcp.ONION_CLIENTS.start='1'
+uci set dhcp.ONION_CLIENTS.limit='250'
+uci set dhcp.ONION_CLIENTS.interface='ONION_CLIENTS'
+uci set dhcp.ONION_CLIENTS.leasetime='24h'
+uci set dhcp.ONION_CLIENTS.dhcpv6='server'
+uci set dhcp.ONION_CLIENTS.dhcpv4='server'
+uci set dhcp.ONION_CLIENTS.ra='server'
+uci set dhcp.ONION_CLIENTS.ra_management='1'
+uci set dhcp.ONION_CLIENTS.instance='BlacklistINET'
+#uci set dhcp.ONION_CLIENTS.confdir='/etc/dnsmasq.d/Blacklist'
+
+
+uci set dhcp.BlacklistHCONTROL=dnsmasq
+uci set dhcp.BlacklistHCONTROL.port='53'
+uci set dhcp.BlacklistHCONTROL.domainneeded='1'
+uci set dhcp.BlacklistHCONTROL.localise_queries='1'
+uci set dhcp.BlacklistHCONTROL.rebind_protection='1'
+uci set dhcp.BlacklistHCONTROL.rebind_localhost='1'
+uci set dhcp.BlacklistHCONTROL.filterwin2k='1'
+uci set dhcp.BlacklistHCONTROL.local='/hcontrol.stawimedia.local/'
+uci set dhcp.BlacklistHCONTROL.expandhosts='1'
+uci set dhcp.BlacklistHCONTROL.authoritative='1'
+uci set dhcp.BlacklistHCONTROL.readethers='1'
+uci set dhcp.BlacklistHCONTROL.leasefile='/tmp/dhcp.blacklisthcontrol.leases'
+uci set dhcp.BlacklistHCONTROL.resolvfile='/tmp/resolv.blacklisthcontrol.conf.auto'
+uci set dhcp.BlacklistHCONTROL.localservice='1'
+uci set dhcp.BlacklistHCONTROL.cachesize='1500'
+uci set dhcp.BlacklistHCONTROL.confdir='/etc/dnsmasq.d/Blacklist'
+uci set dhcp.BlacklistHCONTROL.logqueries='0'
+uci set dhcp.BlacklistHCONTROL.logfacility='/var/log/dnsmasq.blacklisthcontrol.log'
+uci add_list dhcp.BlacklistHCONTROL.notinterface='VOICE'
+uci add_list dhcp.BlacklistHCONTROL.notinterface='GUEST' 
+uci add_list dhcp.BlacklistHCONTROL.notinterface='ENTERTAIN'
+#uci set dhcp.BlacklistHCONTROL.interface='HCONTROL'
+
+uci set dhcp.HCONTROL=dhcp
+uci set dhcp.HCONTROL.start='1'
+uci set dhcp.HCONTROL.limit='250'
+uci set dhcp.HCONTROL.interface='HCONTROL'
+uci set dhcp.HCONTROL.leasetime='24h'
+uci set dhcp.HCONTROL.dhcpv6='server'
+uci set dhcp.HCONTROL.dhcpv4='server'
+uci set dhcp.HCONTROL.ra='server'
+uci set dhcp.HCONTROL.ra_management='1'
+uci set dhcp.HCONTROL.instance='BlacklistHCONTROL'
+#uci set dhcp.HCONTROL.confdir='/etc/dnsmasq.d/Blacklist'
+
+
+uci set dhcp.BlacklistCONTROL=dnsmasq
+uci set dhcp.BlacklistCONTROL.port='53'
+uci set dhcp.BlacklistCONTROL.domainneeded='1'
+uci set dhcp.BlacklistCONTROL.localise_queries='1'
+uci set dhcp.BlacklistCONTROL.rebind_protection='1'
+uci set dhcp.BlacklistCONTROL.rebind_localhost='1'
+uci set dhcp.BlacklistCONTROL.filterwin2k='1'
+uci set dhcp.BlacklistCONTROL.local='/control.stawimedia.local/'
+uci set dhcp.BlacklistCONTROL.expandhosts='1'
+uci set dhcp.BlacklistCONTROL.authoritative='1'
+uci set dhcp.BlacklistCONTROL.readethers='1'
+uci set dhcp.BlacklistCONTROL.leasefile='/tmp/dhcp.blacklistcontrol.leases'
+uci set dhcp.BlacklistCONTROL.resolvfile='/tmp/resolv.blacklistcontrol.conf.auto'
+uci set dhcp.BlacklistCONTROL.localservice='1'
+uci set dhcp.BlacklistCONTROL.cachesize='1500'
+uci set dhcp.BlacklistCONTROL.confdir='/etc/dnsmasq.d/Blacklist'
+uci set dhcp.BlacklistCONTROL.logqueries='0'
+uci set dhcp.BlacklistCONTROL.logfacility='/var/log/dnsmasq.blacklistcontrol.log'
+uci add_list dhcp.BlacklistCONTROL.notinterface='VOICE'
+uci add_list dhcp.BlacklistCONTROL.notinterface='GUEST' 
+uci add_list dhcp.BlacklistCONTROL.notinterface='ENTERTAIN'
+#uci set dhcp.BlacklistCONTROL.interface='CONTROL'
+
+uci set dhcp.CONTROL=dhcp
+uci set dhcp.CONTROL.start='1'
+uci set dhcp.CONTROL.limit='250'
+uci set dhcp.CONTROL.interface='CONTROL'
+uci set dhcp.CONTROL.leasetime='24h'
+uci set dhcp.CONTROL.dhcpv6='server'
+uci set dhcp.CONTROL.dhcpv4='server'
+uci set dhcp.CONTROL.ra='server'
+uci set dhcp.CONTROL.ra_management='1'
+uci set dhcp.CONTROL.instance='BlacklistCONTROL'
+#uci set dhcp.CONTROL.confdir='/etc/dnsmasq.d/Blacklist'
+
+
+uci set dhcp.WhitelistVOICE=dnsmasq
+uci set dhcp.WhitelistVOICE.port='53'
+uci set dhcp.WhitelistVOICE.domainneeded='1'
+uci set dhcp.WhitelistVOICE.localise_queries='1'
+uci set dhcp.WhitelistVOICE.rebind_protection='1'
+uci set dhcp.WhitelistVOICE.rebind_localhost='1'
+uci set dhcp.WhitelistVOICE.filterwin2k='1'
+uci set dhcp.WhitelistVOICE.local='/voice.local/'
+uci set dhcp.WhitelistVOICE.expandhosts='1'
+uci set dhcp.WhitelistVOICE.authoritative='1'
+uci set dhcp.WhitelistVOICE.readethers='1'
+uci set dhcp.WhitelistVOICE.leasefile='/tmp/dhcp.whitelistvoice.leases'
+uci set dhcp.WhitelistVOICE.resolvfile='/tmp/resolv.whitelistvoice.conf.auto'
+uci set dhcp.WhitelistVOICE.localservice='1'
+uci set dhcp.WhitelistVOICE.cachesize='1500'
+uci set dhcp.WhitelistVOICE.confdir='/etc/dnsmasq.d/Whitelist'
+uci set dhcp.WhitelistVOICE.logqueries='0'
+uci set dhcp.WhitelistVOICE.logfacility='/var/log/dnsmasq.whitelistvoice.log'
+#uci set dhcp.WhitelistVOICE.interface='VOICE'
+uci add_list dhcp.WhitelistVOICE.notinterface='ONION_CLIENTS'
+uci add_list dhcp.WhitelistVOICE.notinterface='HCONTROL'
+uci add_list dhcp.WhitelistVOICE.notinterface='CONTROL' 
+uci add_list dhcp.WhitelistVOICE.notinterface='SERVER'
+
+uci set dhcp.VOICE=dhcp
+uci set dhcp.VOICE.start='1'
+uci set dhcp.VOICE.limit='250'
+uci set dhcp.VOICE.interface='VOICE'
+uci set dhcp.VOICE.leasetime='24h'
+uci set dhcp.VOICE.dhcpv6='server'
+uci set dhcp.VOICE.dhcpv4='server'
+uci set dhcp.VOICE.ra='server'
+uci set dhcp.VOICE.ra_management='1'
+uci set dhcp.VOICE.instance='WhitelistVOICE'
+#uci set dhcp.VOICE.confdir='/etc/dnsmasq.d/Whitelist'
+
+uci set dhcp.WhitelistENTERTAIN=dnsmasq
+uci set dhcp.WhitelistENTERTAIN.port='53'
+uci set dhcp.WhitelistENTERTAIN.domainneeded='1'
+uci set dhcp.WhitelistENTERTAIN.localise_queries='1'
+uci set dhcp.WhitelistENTERTAIN.rebind_protection='1'
+uci set dhcp.WhitelistENTERTAIN.rebind_localhost='1'
+uci set dhcp.WhitelistENTERTAIN.filterwin2k='1'
+uci set dhcp.WhitelistENTERTAIN.local='/entertain.local/'
+uci set dhcp.WhitelistENTERTAIN.expandhosts='1'
+uci set dhcp.WhitelistENTERTAIN.authoritative='1'
+uci set dhcp.WhitelistENTERTAIN.readethers='1'
+uci set dhcp.WhitelistENTERTAIN.leasefile='/tmp/dhcp.whitelistentertain.leases'
+uci set dhcp.WhitelistENTERTAIN.resolvfile='/tmp/resolv.whitelistentertain.conf.auto'
+uci set dhcp.WhitelistENTERTAIN.localservice='1'
+uci set dhcp.WhitelistENTERTAIN.cachesize='1500'
+uci set dhcp.WhitelistENTERTAIN.confdir='/etc/dnsmasq.d/Whitelist'
+uci set dhcp.WhitelistENTERTAIN.logqueries='0'
+uci set dhcp.WhitelistENTERTAIN.logfacility='/var/log/dnsmasq.whitelistentertain.log'
+#uci set dhcp.WhitelistENTERTAIN.interface='ENTERTAIN'
+uci add_list dhcp.WhitelistENTERTAIN.notinterface='ONION_CLIENTS'
+uci add_list dhcp.WhitelistENTERTAIN.notinterface='HCONTROL'
+uci add_list dhcp.WhitelistENTERTAIN.notinterface='CONTROL' 
+uci add_list dhcp.WhitelistENTERTAIN.notinterface='SERVER'
+
+uci set dhcp.ENTERTAIN=dhcp
+uci set dhcp.ENTERTAIN.start='1'
+uci set dhcp.ENTERTAIN.limit='250'
+uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
+uci set dhcp.ENTERTAIN.leasetime='24h'
+uci set dhcp.ENTERTAIN.dhcpv6='server'
+uci set dhcp.ENTERTAIN.dhcpv4='server'
+uci set dhcp.ENTERTAIN.ra='server'
+uci set dhcp.ENTERTAIN.ra_management='1'
+uci set dhcp.ENTERTAIN.instance='WhitelistENTERTAIN'
+#uci set dhcp.ENTERTAIN.confdir='/etc/dnsmasq.d/Whitelist'
+
+uci set dhcp.WhitelistGUEST=dnsmasq
+uci set dhcp.WhitelistGUEST.port='53'
+uci set dhcp.WhitelistGUEST.domainneeded='1'
+uci set dhcp.WhitelistGUEST.localise_queries='1'
+uci set dhcp.WhitelistGUEST.rebind_protection='1'
+uci set dhcp.WhitelistGUEST.rebind_localhost='1'
+uci set dhcp.WhitelistGUEST.filterwin2k='1'
+uci set dhcp.WhitelistGUEST.local='/guest.local/'
+uci set dhcp.WhitelistGUEST.expandhosts='1'
+uci set dhcp.WhitelistGUEST.authoritative='1'
+uci set dhcp.WhitelistGUEST.readethers='1'
+uci set dhcp.WhitelistGUEST.leasefile='/tmp/dhcp.whitelistguest.leases'
+uci set dhcp.WhitelistGUEST.resolvfile='/tmp/resolv.whitelistguest.conf.auto'
+uci set dhcp.WhitelistGUEST.localservice='1'
+uci set dhcp.WhitelistGUEST.cachesize='1500'
+uci set dhcp.WhitelistGUEST.confdir='/etc/dnsmasq.d/Whitelist'
+uci set dhcp.WhitelistGUEST.logqueries='0'
+uci set dhcp.WhitelistGUEST.logfacility='/var/log/dnsmasq.whitelistguest.log'
+#uci set dhcp.WhitelistGUEST.interface='GUEST'
+uci add_list dhcp.WhitelistGUEST.notinterface='ONION_CLIENTS'
+uci add_list dhcp.WhitelistGUEST.notinterface='HCONTROL'
+uci add_list dhcp.WhitelistGUEST.notinterface='CONTROL' 
+uci add_list dhcp.WhitelistGUEST.notinterface='SERVER'
+
+uci set dhcp.GUEST=dhcp
+uci set dhcp.GUEST.start='100'
+uci set dhcp.GUEST.limit='150'
+uci set dhcp.GUEST.interface='GUEST'
+uci set dhcp.GUEST.leasetime='24h'
+uci set dhcp.GUEST.dhcpv6='server'
+uci set dhcp.GUEST.dhcpv4='server'
+uci set dhcp.GUEST.ra='server'
+uci set dhcp.GUEST.ra_management='1'
+uci set dhcp.GUEST.confdir='/etc/dnsmasq.d/Whitelist'
+#uci set dhcp.GUEST.instance='WhitelistGUEST'
+
+
+uci set dhcp.AllowAll=dnsmasq
+uci set dhcp.AllowAll.port='53'
+uci set dhcp.AllowAll.domainneeded='1'
+uci set dhcp.AllowAll.localise_queries='1'
+uci set dhcp.AllowAll.rebind_protection='1'
+uci set dhcp.AllowAll.rebind_localhost='1'
+uci set dhcp.AllowAll.filterwin2k='1'
+uci set dhcp.AllowAll.expandhosts='1'
+uci set dhcp.AllowAll.authoritative='1'
+uci set dhcp.AllowAll.readethers='1'
+uci set dhcp.AllowAll.leasefile='/tmp/dhcp.allowall.leases'
+uci set dhcp.AllowAll.resolvfile='/tmp/resolv.allowall.conf.auto'
+uci set dhcp.AllowAll.localservice='1'
+uci set dhcp.AllowAll.cachesize='1500'
+uci set dhcp.AllowAll.confdir='/etc/dnsmasq.d/AllowAll/'
+uci set dhcp.AllowAll.logqueries='0'
+uci set dhcp.AllowAll.logfacility='/var/log/dnsmasq.allowall.log'
+uci set dhcp.AllowAll.boguspriv='1'
+#uci set dhcp.AllowAll.dnssec='1'
+#uci set dhcp.AllowAll.dnsseccheckunsigned='1'
+
+uci set dhcp.BlockAll=dnsmasq
+uci set dhcp.BlockAll.port='53'
+uci set dhcp.BlockAll.domainneeded='1'
+uci set dhcp.BlockAll.localise_queries='1'
+uci set dhcp.BlockAll.rebind_protection='1'
+uci set dhcp.BlockAll.rebind_localhost='1'
+uci set dhcp.BlockAll.filterwin2k='1'
+uci set dhcp.BlockAll.expandhosts='1'
+uci set dhcp.BlockAll.authoritative='1'
+uci set dhcp.BlockAll.readethers='1'
+uci set dhcp.BlockAll.leasefile='/tmp/dhcp.blockall.leases'
+uci set dhcp.BlockAll.resolvfile='/tmp/resolv.blockall.conf.auto'
+uci set dhcp.BlockAll.localservice='1'
+uci set dhcp.BlockAll.cachesize='1500'
+uci set dhcp.BlockAll.confdir='/etc/dnsmasq.d/BlockAll/'
+uci set dhcp.BlockAll.logqueries='0'
+uci set dhcp.BlockAll.logfacility='/var/log/dnsmasq.blockall.log'
+uci set dhcp.BlockAll.boguspriv='1'
+#uci set dhcp.BlockAll.dnssec='1'
+#uci set dhcp.BlockAll.dnsseccheckunsigned='1'
+
+uci set dhcp.wan=dhcp
+uci set dhcp.wan.interface='wan'
+uci set dhcp.wan.ignore='1'
+
+mkdir /etc/dnsmasq.d 
+mkdir /etc/dnsmasq.d/Blacklist
+mkdir /etc/dnsmasq.d/Whitelist
+mkdir /etc/dnsmasq.d/BlockAll
+mkdir /etc/dnsmasq.d/AllowAll
+
+uci commit dhcp && reload_config
+
+/etc/init.d/dnsmasq restart
+
+# Configure Black and Whitelsit
+cat << EOF > /etc/dnsmasq.d/Blacklist/z_all_allow
+server=/#/127.0.0.1#5353
+EOF
+
+cat << EOF > /etc/dnsmasq.d/AllowAll/all_allow
+server=/#/127.0.0.1#5353
+EOF
+
+cat << EOF > /etc/dnsmasq.d/BlockAll/block_all
+address=/#/
+EOF
+
+cat << EOF > /etc/dnsmasq.d/Blacklist/agency
+address=/.gov/
+address=/.goverment/
+address=/.mil/
+address=/.cia/
+address=/.nsa/
+address=/.fbi/
+address=/.bka/
+address=/.lka/
+address=/.bnd/
+address=/.mad/
+address=/.bavsa/
+address=/.bvs/
+EOF
+
+cat << EOF > /etc/dnsmasq.d/Whitelist/z_block_all
+address=/#/
+EOF
+
+cat << EOF > /etc/dnsmasq.d/Blacklist/contrys
+address=/.ac/
+address=/.ad/
+address=/.ae/
+address=/.af/
+address=/.ag/
+address=/.ai/
+address=/.al/
+address=/.am/
+address=/.an/
+address=/.ao/
+address=/.aq/
+address=/.ar/
+address=/.as/
+address=/.au/
+address=/.aw/
+address=/.ax/
+address=/.az/
+address=/.ba/
+address=/.bb/
+address=/.bd/
+address=/.bf/
+address=/.bg/
+address=/.bh/
+address=/.bi/
+address=/.bj/
+address=/.bl/
+address=/.bm/
+address=/.bn/
+address=/.bo/
+address=/.bq/
+address=/.br/
+address=/.bs/
+address=/.bt/
+address=/.bv/
+address=/.bw/
+address=/.by/
+address=/.bz/
+address=/.cc/
+address=/.cd/
+address=/.cf/
+address=/.cg/
+address=/.ci/
+address=/.ck/
+address=/.cl/
+address=/.cm/
+address=/.cn/
+address=/.co/
+address=/.cr/
+address=/.cu/
+address=/.cv/
+address=/.cw/
+address=/.cx/
+address=/.cy/
+address=/.cz/
+address=/.dj/
+address=/.dm/
+address=/.do/
+address=/.dz/
+address=/.ec/
+address=/.ee/
+address=/.eg/
+address=/.eh/
+address=/.er/
+address=/.es/
+address=/.et/
+address=/.fi/
+address=/.fj/
+address=/.fk/
+address=/.fm/
+address=/.fo/
+address=/.fr/
+address=/.ga/
+address=/.gb/
+address=/.gd/
+address=/.ge/
+address=/.gf/
+address=/.gg/
+address=/.gh/
+address=/.gi/
+address=/.gl/
+address=/.gm/
+address=/.gn/
+address=/.gp/
+address=/.gq/
+address=/.gr/
+address=/.gs/
+address=/.gt/
+address=/.gu/
+address=/.gw/
+address=/.gy/
+address=/.hk/
+address=/.hm/
+address=/.hn/
+address=/.hr/
+address=/.ht/
+address=/.hu/
+address=/.id/
+address=/.ie/
+address=/.il/
+address=/.im/
+address=/.in/
+address=/.io/
+address=/.iq/
+address=/.ir/
+address=/.is/
+address=/.it/
+address=/.je/
+address=/.jm/
+address=/.jo/
+address=/.ke/
+address=/.kg/
+address=/.kh/
+address=/.ki/
+address=/.km/
+address=/.kn/
+address=/.kp/
+address=/.kr/
+address=/.kw/
+address=/.ky/
+address=/.kz/
+address=/.la/
+address=/.lb/
+address=/.lc/
+address=/.lk/
+address=/.lr/
+address=/.ls/
+address=/.lt/
+address=/.lu/
+address=/.lv/
+address=/.ly/
+address=/.ma/
+address=/.mc/
+address=/.md/
+address=/.me/
+address=/.mf/
+address=/.mg/
+address=/.mh/
+address=/.mk/
+address=/.ml/
+address=/.mm/
+address=/.mn/
+address=/.mo/
+address=/.mp/
+address=/.mq/
+address=/.mr/
+address=/.ms/
+address=/.mt/
+address=/.mu/
+address=/.mv/
+address=/.mw/
+address=/.mx/
+address=/.my/
+address=/.mz/
+address=/.na/
+address=/.nc/
+address=/.ne/
+address=/.nf/
+address=/.ng/
+address=/.ni/
+address=/.no/
+address=/.np/
+address=/.nr/
+address=/.nu/
+address=/.nz/
+address=/.om/
+address=/.pa/
+address=/.pe/
+address=/.pf/
+address=/.pg/
+address=/.ph/
+address=/.pk/
+address=/.pl/
+address=/.pm/
+address=/.pn/
+address=/.pr/
+address=/.ps/
+address=/.pt/
+address=/.pw/
+address=/.py/
+address=/.qa/
+address=/.re/
+address=/.ro/
+address=/.rs/
+address=/.ru/
+address=/.rw/
+address=/.sa/
+address=/.sb/
+address=/.sc/
+address=/.sd/
+address=/.se/
+address=/.sg/
+address=/.sh/
+address=/.si/
+address=/.sj/
+address=/.sk/
+address=/.sl/
+address=/.sm/
+address=/.sn/
+address=/.so/
+address=/.sr/
+address=/.ss/
+address=/.st/
+address=/.su/
+address=/.sv/
+address=/.sx/
+address=/.sy/
+address=/.sz/
+address=/.tc/
+address=/.td/
+address=/.tf/
+address=/.tg/
+address=/.th/
+address=/.tj/
+address=/.tk/
+address=/.tl/
+address=/.tm/
+address=/.tn/
+address=/.to/
+address=/.tp/
+address=/.tr/
+address=/.tt/
+address=/.tz/
+address=/.ua/
+address=/.ug/
+address=/.um/
+address=/.uy/
+address=/.uz/
+address=/.va/
+address=/.vc/
+address=/.ve/
+address=/.vg/
+address=/.vi/
+address=/.vn/
+address=/.vu/
+address=/.wf/
+address=/.ws/
+address=/.ye/
+address=/.yt/
+address=/.za/
+address=/.zm/
+address=/.zw/
+EOF
+
+cat << EOF > /etc/dnsmasq.d/Blacklist/ads
+address=/360.cn/
+address=/safe360.com/
+address=/360safe.com/
+address=/cashimashi.de/
+address=/cashimashi.com/
+address=/1.f.ix.de/
+address=/2fuck.com/
+address=/80asehdb/
+address=/80aswg/
+address=/ad1mat.de/
+address=/ad2mat.de/
+address=/ad3mat.de/
+address=/ad4mat.de/
+address=/adclick.de/
+address=/adclick.net/
+address=/adfarm.com/
+address=/adfarm.de/
+address=/adfarm.mediaplex.com/
+address=/adfarm.net/
+address=/adfarm1.com/
+address=/adfarm1.net/
+address=/adfarm2.com/
+address=/adfarm2.net/
+address=/adfarm3.com/
+address=/adfarm3.de/
+address=/adfarm3.net/
+address=/adfarm4.com/
+address=/adfarm4.de/
+address=/adfarm4.net/
+address=/adfarmonline.com/
+address=/adfarmonline.de/
+address=/adfarmonline.net/
+address=/adform.com/
+address=/adform.de/
+address=/adform.net/
+address=/adfram.net/
+address=/adfram1.de/
+address=/adfram2.de/
+address=/adfrom.com/
+address=/adfrom.de/
+address=/adfrom.net/
+address=/adidas-deutschland.com/
+address=/adition.com/
+address=/adition.de/
+address=/ad-js.bild.de/
+address=/ad-js.chip.de/
+address=/ad-js.focus.de/
+address=/ad-js.welt.de/
+address=/adnxs.com/
+address=/adsense.com/
+address=/adsense.de/
+address=/adservices.google.com/
+address=/adspirit.de/
+address=/adtech.de/
+address=/advolution.com/
+address=/advolution.de/
+address=/adx.bild.de/
+address=/adx.chip.de/
+address=/adx.chip.de/
+address=/adx.focus.de/
+address=/adx.welt.de/
+address=/affinity.com/
+address=/agof.de/
+address=/airmaxschuheoutlet.com/
+address=/akamaized.net/
+address=/akameiterchnologies.net/
+address=/akamaized.com/
+address=/akameiterchnologies.com/
+address=/akamaized.de/
+address=/akameiterchnologies.de/
+address=/akku-laden.at/
+address=/aladel.net/
+address=/altrk.net/
+address=/amazon-adsystem.com/
+address=/analdin.com/
+address=/anycracks.com/
+address=/aos.prf.hn/click/
+address=/api.adrtx.net/
+address=/appliedsemantics.com/
+address=/apps5.oingo.com/
+address=/banner.t-online.de/
+address=/bbjacke.de/
+address=/biallo.de/
+address=/bigpoint.com/
+address=/bilano.de/
+address=/bild.ivwbox.de/
+address=/billalo.de/
+address=/billiger.de/common/modules/api/
+address=/biohazard.xz.cz/
+address=/block.opendns.com/
+address=/bestcheck.de/
+address=/bpwhamburgorchardpark.org/
+address=/cdn.flashtalking.com/
+address=/centgebote.tv/
+address=/chaturbate.com/
+address=/coqnu.com/
+address=/cuponation.de/
+address=/de.mediaplex.com/
+address=/dntrax.com/
+address=/dns.google/
+address=/doubleclick.com/
+address=/doubleclick.de/
+address=/doubleclick.net/
+address=/download-service.de/
+address=/download-sofort.com/
+address=/ds.serving-sys.com/
+address=/easycracks.net/
+address=/emediate.eu/
+address=/endlookup.com/
+address=/etracker.de/
+address=/exoclick.com/
+address=/fancy.com/
+address=/fancy.de/
+address=/fapdu.com/
+address=/fapmaps.com/
+address=/franzis-sportswear.de/
+address=/g.msn.com/AIPRIV/
+address=/g4u.me/
+address=/gemini.yahoo.com/
+address=/google.com/adsense/
+address=/googleadservices.com/
+address=/googleadservices.de/
+address=/google-analytics.com/
+address=/google-analytics.de/
+address=/googlesyndication.com/
+address=/googletagmanager.com/
+address=/grosshandel-angebote.de/
+address=/guruads.de/
+address=/gutscheine\./
+address=/gutscheine.bild.de/
+address=/gutscheine.chip.de/
+address=/gutscheine.focus.de/
+address=/gutscheine.welt.de/
+address=/hackpalace.com/
+address=/heise.de\/mediadaten\/
+address=/heise.de\/mediadaten\/online/
+address=/hookupsonline.com/
+address=/hsrd.yahoo.com/
+address=/intelligent.com/
+address=/intellitext.de/
+address=/intellitxt.com/
+address=/intellitxt.de/
+address=/ioam.de/
+address=/iomoio.com/
+address=/iqm.de/
+address=/ivw-online.de/
+address=/jjhouse.com/
+address=/keygen.us/
+address=/keygenguru.com/
+address=/keygens.pro/
+address=/kingfamilyphotoalbum.com/
+address=/kinox.to/
+address=/kleinanzeige.chip.de/
+address=/kleinanzeige.focus.de/
+address=/kleinanzeige.welt.de/
+address=/kleinanzeige.bild.de/
+address=/kleinanzeige.stern.de/
+address=/kliktrek.com/
+address=/ktxtr.com/
+address=/liebelib.com/
+address=/lockerdome.com/
+address=/macerkopf.de/go/
+address=/madbid.com/
+address=/mainstoreonline.com/
+address=/mediaplex.com/
+address=/mega-einkaufsquellen.de/
+address=/movie4k.to/
+address=/mp3fiesta.com/
+address=/mp3sugar.com/
+address=/mp3va.com/
+address=/msads.net/
+address=/musicmp3.ru/
+address=/mypass.de/
+address=/na.ads.yahoo.com/
+address=/ngbc5azd/
+address=/onlinefilme.tv/
+address=/online-tests.de/
+address=/onlineticketexpress.com/
+address=/outbrain.com/
+address=/outbrain.de/
+address=/outbrain.net/
+address=/taboola.net/
+address=/partners.webmasterplan.com/
+address=/pixel.bild.de/
+address=/pixel.mathtag.com/
+address=/plista.com/
+address=/taboola.com/
+address=/taboola.de/
+address=/profi-kochrezepte.de/
+address=/profiwin.de/
+address=/qservz.com/
+address=/quibids.com/
+address=/rapidape.com/
+address=/redintelligence.net/
+address=/rotten.com/
+address=/rotten.de/
+address=/royalgames.com/
+address=/script.ioam.de/
+address=/serials.ws/
+address=/serienjunkies.org/
+address=/serienstream.to/
+address=/service.urchin.com/
+address=/shooshtime.com/
+address=/smartadserver.com/
+address=/smartadserver.de/
+address=/smartadserver.net/
+address=/smokerland.net/
+address=/sudoku.de/
+address=/swoggi.de/
+address=/systemcdn.net/
+address=/t.ktxtr.com/
+address=/trusted.de/
+address=/tradedoubler.com/
+address=/trafficreps.com/
+address=/truste/
+address=/twiago.com/
+address=/unister-adserver.de/
+address=/unup4y/
+address=/urbandictionary.com/
+address=/video-stats.video.google.com/
+address=/vivime.net.fr/
+address=/vodafone-affiliate.de/
+address=/voluumtrk.com/
+address=/vx.org.ua/
+address=/winantivirus.com/
+address=/aax-eu.amazon-adsystem.com/
+address=/gravatar.com/
+address=/optimizely.com/
+address=/outbrain.com/
+address=/ioam.de/
+address=/permutive.com/
+address=/adnxs.com/
+address=/amazon-adsystem.com/
+address=/amazon-adsystem.de/
+address=/xplosion.de/
+address=/xplosion.com/
+address=/criteo.com/
+address=/criteo.de/
+address=/yieldlab.net/
+address=/yieldlab.com/
+address=/yieldlab.de/
+address=/smartadserver.com/
+address=/smartadserver.de/
+address=/casalemedia.com/
+address=/casalemedia.de/
+address=/casalemedia.net/
+address=/openx.net/
+address=/openx.de/
+address=/openx.com/
+address=/scorecardresearch.com/
+address=/scorecardresearch.de/
+address=/teads.tv/
+address=/teads.de/
+address=/teads.com/
+address=/met.vgwort.de/
+address=/kameleoon.eu/
+address=/mateti.net/
+address=/usercentrics.eu/
+address=/pressekompass.net/
+address=/upscore.de/
+address=/upscore.com/
+address=/upscore.eu/
+address=/mediadaten.heise.de/
+address=/brandmetrics.com/
+address=/brandmetrics.de/
+address=/openx.net/
+address=/js-sec.indexww.com/
+address=/sstatic.net/
+address=/jsdelivr.net/
+address=/stats.wp.com/
+address=/pixel.wp.com/
+address=/adtelligent.com/
+address=/technoratimedia.com/
+address=/sync.rtk.io/
+address=/google-analytics.com/
+address=/googlesyndication.com/
+address=/googlesyndication.de/
+address=/ndcaidemh.com/
+address=/awin1.com/
+address=/awin1.de/
+address=/adwin.de/
+address=/adwin.com/
+address=/consentmanager.net/
+address=/consentmanager.com/
+address=/consentmanager.de/
+address=/gewinnspiel.focus.de/
+address=/gewinnspiel.chip.de/
+address=/gewinnspiel.bild.de/
+address=/gewinnspiel.stern.de/
+address=/gewinnspiel.welt.de/
+address=/service.focus.de/
+address=/service.chip.de/
+address=/service.bild.de/
+address=/service.stern.de/
+address=/service.welt.de/
+address=/shopping.focus.de/
+address=/shopping.chip.de/
+address=/shopping.bild.de/
+address=/shopping.stern.de/
+address=/shopping.welt.de/
+address=/deals.focus.de/
+address=/deals.chip.de/
+address=/deals.bild.de/
+address=/deals.stern.de/
+address=/deals.welt.de/
+address=/shop.focus.de/
+address=/shop.chip.de/
+address=/shop.bild.de/
+address=/shop.stern.de/
+address=/shop.welt.de/
+address=/tarif.focus.de/
+address=/tarif.chip.de/
+address=/tarif.bild.de/
+address=/tarif.stern.de/
+address=/tarif.welt.de/
+address=/kuendigen.focus.de/
+address=/kuendigen.chip.de/
+address=/kuendigen.bild.de/
+address=/kuendigen.stern.de/
+address=/kuendigen.welt.de/
+address=/rechnerportal.focus.de/
+address=/rechnerportal.chip.de/
+address=/rechnerportal.bild.de/
+address=/rechnerportal.stern.de/
+address=/rechnerportal.welt.de/
+address=/vergleich.focus.de/
+address=/vergleich.chip.de/
+address=/vergleich.bild.de/
+address=/vergleich.stern.de/
+address=/vergleich.welt.de/
+address=/games.focus.de/
+address=/games.chip.de/
+address=/games.bild.de/
+address=/games.stern.de/
+address=/games.welt.de/
+address=/prospekte.focus.de/
+address=/prospekte.chip.de/
+address=/prospekte.bild.de/
+address=/prospekte.stern.de/
+address=/prospekte.welt.de/
+address=/x.focus.de/
+address=/x.chip.de/
+address=/x.bild.de/
+address=/x.stern.de/
+address=/x.welt.de/
+address=/amazon-adsystem.com/
+address=/amazon-adsystem.eu/
+address=/amazon-adsystem.de/
+address=/amazon-adsystem.co.uk/
+address=/amazon-adsystem.net/
+address=/investor-praemien.de/
+address=/glomex.com/
+
+address=/.bing/
+address=/.bingo/
+address=/.ads/
+address=/.pocker/
+address=/.promo/
+address=/.qvcs/
+address=/.sale/
+address=/.vegas/
+EOF
+
+cat << EOF > /etc/dnsmasq.d/Blacklist/porn
+address=/sex.com/
+address=/sex.net/
+address=/sex.de/
+address=/porn.com/
+address=/porn.net/
+address=/porn.de/
+address=/porno.de/
+address=/porno.com/
+address=/porno.net/
+address=/inthevip.com/
+address=/inthevip.net/
+address=/inthevip.de/
+address=/intellitxt.com/
+address=/intellitxt.net/
+address=/intellitxt.de/
+address=/outbrain.com/
+address=/outbrain.net/
+address=/outbrain.de/
+address=/efahrer\.[a-z]*\.com/
+address=/efahrer\.*[a-z]*\.de/
+address=/efahrer.chip.de/
+address=/efahrer.de/
+address=/allporntubes.net/
+address=/allsexclips.com/
+address=/beateuhse.com/
+address=/beate-uhse.com/
+address=/beate-uhse.de/
+address=/bordell.com/
+address=/bordell.de/
+address=/bpwhamburgorchardpark.org/
+address=/bundesporno.com/
+address=/bundesporno.net/
+address=/burningangle.com/
+address=/burningangle.de/
+address=/burningangles.com/
+address=/burningangles.de/
+address=/centgebote.tv/
+address=/chaturbate.com/
+address=/chumshot.com/
+address=/chumshot.de/
+address=/collectionofbestporn.com/
+address=/cyberotic.com/
+address=/cyberotic.de/
+address=/cyberotic.mobi/
+address=/de.mediaplex.com/
+address=/deutschepornos.xyz/
+address=/deutschsexvideos.com/
+address=/einfachporno.com/
+address=/einfachporno.de/
+address=/emediate.eu/
+address=/emohotties.com/
+address=/endloseporno.com/
+address=/erotica.com/
+address=/fancy.com/
+address=/fancy.de/
+address=/fapdu.com/
+address=/fatpornfuck.com/
+address=/ficken.com/
+address=/ficken.de/
+address=/firstporno.com/
+address=/firstporno.de/
+address=/fotze.com/
+address=/fotze.de/
+address=/fotzen.com/
+address=/fotzen.de/
+address=/freeporn.com/
+address=/freeporn.de/
+address=/geilemaedchen.com/
+address=/geiltube.com/
+address=/german-porno-deutsch.com/
+address=/girlsavenue.com/
+address=/girlsavenue.de/
+address=/girldorado.com/
+address=/girldorado.de/
+address=/girldorado.net/
+address=/girldorado.tv/
+address=/girldorado.org/
+address=/gratispornosfilm.com/
+address=/guterporn.com/
+address=/guterporn.de/
+address=/hclips.com/
+address=/hellporno.com/
+address=/hellporno.de/
+address=/hotntubes.com/
+address=/hotntubes.de/
+address=/hustler.com/
+address=/hustler.de/
+address=/iporntv.com/
+address=/iporntv.net/
+address=/jjhouse.com/
+address=/justporno.com/
+address=/justporno.de/
+address=/justporno.tv/
+address=/literotica.com/
+address=/livejasmin.com/
+address=/livejasmin.de/
+address=/lockerdome.com/
+address=/lupoporno.com/
+address=/lustdays.com/
+address=/lustparkplatz.com/
+address=/moese.com/
+address=/moese.de/
+address=/movie4k.to/
+address=/mp3fiesta.com/
+address=/mp3sugar.com/
+address=/mp3va.com/
+address=/msads.net/
+address=/nudevista.com/
+address=/nudevista.tv/
+address=/nursexfilme.com/
+address=/penis.com/
+address=/penis.de/
+address=/prno.de/
+address=/prno.com/
+address=/porn.de/
+address=/porn.com/
+address=/pornburst.com/
+address=/porndoe.com/
+address=/pornhub.com/
+address=/pornhub.de/
+address=/pornodoe.com/
+address=/pornoente.com/
+address=/pornoente.de/
+address=/pornoente.net/
+address=/pornofi.com/
+address=/porno-himmel.net/
+address=/pornohirsch.com/
+address=/pornokonig.com/
+address=/pornoleeuw.com/
+address=/pornoorzel.com/
+address=/pornos-kostenlos.tv/
+address=/pornostunde.com/
+address=/puff.com/
+address=/puff.de/
+address=/pussyspace.com/
+address=/realetykings.com/
+address=/realetykings.de/
+address=/realitykings.com/
+address=/realitykings.de/
+address=/redporn.com/
+address=/redtube.com/
+address=/redtube.de/
+address=/rk.com/
+address=/rk.de/
+address=/schwanz.com/
+address=/schwanz.de/
+address=/script.ioam.de/
+address=/selbstbefriedigung.com/
+address=/selbstbefriedigung.de/
+address=/sexhubhd.com/
+address=/sexhubhd.de/
+address=/sexhubhd.net/
+address=/spermswap.com/
+address=/spermswap.de/
+address=/spermswap.us/
+address=/starshows.de/
+address=/starshows.com/
+address=/starshows.org/
+address=/toroporno.com/
+address=/toys4you.com/
+address=/toys4you.de/
+address=/tubelibre.com/
+address=/tubepatrol.net/
+address=/tubesafari.com/
+address=/tubevintageporn.com/
+address=/urbandictionary.com/
+address=/vagina.com/
+address=/vagina.de/
+address=/vivatube.com/
+address=/whitexxxtube.com/
+address=/wichsen.com/
+address=/wichsen.de/
+address=/wildesporno.com/
+address=/wixen.com/
+address=/wixen.de/
+address=/xhamster.com/
+address=/xhamster.de/
+address=/xhamsterdeutsch.biz/
+address=/youporn.com/
+address=/youporn.de/
+address=/yourporn.com/
+address=/yourporn.de/
+address=/xvideo.de/
+address=/xvideo.com/
+address=/xvideos.de/
+address=/xvideos.com/
+address=/xnxx.com/
+address=/xnxx.de/
+address=/fundorado.de/
+address=/fundorado.com/
+address=/starshows.de/
+address=/starshows.com/
+address=/youjizz.com/
+address=/youjizz.de/
+address=/tube8.com/
+address=/tube8.de/
+address=/bestandfree.com/
+address=/bestandfree.de/
+address=/sexgirls.de/
+address=/sexstories.de/
+address=/sexstorys.de/
+address=/sexstrories.com/
+address=/sexstorys.com/
+address=/sexstories.net/
+address=/sexstorys.net/
+address=/anysex.com/
+address=/anysex.de/
+address=/apornostories.com/
+address=/apornstories.de/
+address=/apornostories.de/
+address=/apornstories.com/
+address=/apornstory.com/
+address=/apornstory.de/
+address=/emogirlsfuck.com/
+address=/emogirlfuck.com/
+address=/emogirlsfuck.de/
+address=/emogirlfuck.de/
+address=/emogirls.com/
+address=/emogirl.com/
+address=/emogirls.de/
+address=/emogirl.de/
+address=/bongacams.com/
+address=/bongacams.de/
+address=/bongacam.com/
+address=/bongacam.de/
+address=/bongaporn.com/
+address=/bongaporn.de/
+address=/bongaporno.com/
+address=/bongaporno.de/
+address=/bongasex.de/
+address=/bongasex.com/
+address=/tubesplash.com/
+address=/tubesplash.de/
+address=/txxx.com/
+address=/txxx.de/
+address=/.porn/
+address=/.porno/
+address=/.xxx/
+address=/.sex/
+address=/.adult/
+address=/.girl/
+address=/.girls/
+address=/.dating/
+address=/.gay/
+address=/.pink/
+address=/.sexy/
+address=/.tube/
+address=/.xyz/
+EOF
+
+
+cat << EOF > /etc/dnsmasq.d/Blacklist/white
+
+server=/3sat.de/127.0.0.1#5353
+server=/7tv.com/127.0.0.1#5353
+server=/7tv.de/127.0.0.1#5353
+server=/accuweather.com/127.0.0.1#5353
+server=/accuweather.comde/127.0.0.1#5353
+server=/aio-control.com/127.0.0.1#5353
+server=/aio-control.de/127.0.0.1#5353
+server=/aio-controls.com/127.0.0.1#5353
+server=/aio-controls.de/127.0.0.1#5353
+server=/akamaihd.net/127.0.0.1#5353
+server=/alexasounds.com/127.0.0.1#5353
+server=/alice.de/127.0.0.1#5353
+server=/alice.net/127.0.0.1#5353
+server=/alice-dsl.de/127.0.0.1#5353
+server=/alice-dsl.net/127.0.0.1#5353
+server=/amazon.co.uk/127.0.0.1#5353
+server=/amazon.com/127.0.0.1#5353
+server=/amazonsilk.com/127.0.0.1#5353
+server=/amazon.de/127.0.0.1#5353
+server=/amazon.eu/127.0.0.1#5353
+server=/amazonaws.co.uk/127.0.0.1#5353
+server=/.amazon/127.0.0.1#5353
+server=/mlis.amazon.eu/127.0.0.1#5353
+server=/spectrum.s3.amazonaws.com/127.0.0.1#5353
+server=/amazonaws.com/127.0.0.1#5353
+server=/amazonaws.de/127.0.0.1#5353
+server=/a2z.com/127.0.0.1#5353
+server=/images-amazon.com/127.0.0.1#5353
+server=/andreas-stawinski.de/127.0.0.1#5353
+server=/android.clients.google.com/127.0.0.1#5353
+server=/antenne.de/127.0.0.1#5353
+server=/api.amazonalexa.com/127.0.0.1#5353
+server=/api.co.uk.amazonalexa.com/127.0.0.1#5353
+server=/api.crittercism.com/127.0.0.1#5353
+server=/api.eu.amazonalexa.com/127.0.0.1#5353
+server=/amazonvideo.com/127.0.0.1#5353
+server=/api-global.netflix.com/127.0.0.1#5353
+server=/openwrt.org/127.0.0.1#5353
+server=/raspbery.org/127.0.0.1#5353
+
+
+server=/apple.com/127.0.0.1#5353
+server=/mzstatic.com/127.0.0.1#5353
+server=/apple.de/127.0.0.1#5353
+
+server=/ard.de/127.0.0.1#5353
+server=/ardmediathek.de/127.0.0.1#5353
+server=/arte.de/127.0.0.1#5353
+server=/avm.de/127.0.0.1#5353
+server=/bing.de/127.0.0.1#5353
+server=/br.de/127.0.0.1#5353
+server=/br24.com/127.0.0.1#5353
+server=/br-24.com/127.0.0.1#5353
+server=/br24.de/127.0.0.1#5353
+server=/br-24.de/127.0.0.1#5353
+server=/cddbp.net/127.0.0.1#5353
+server=/chip.de/127.0.0.1#5353
+server=/chip.smarttv.cellular.de/127.0.0.1#5353
+server=/cinepass.com/127.0.0.1#5353
+server=/cinepass.de/127.0.0.1#5353
+server=/cloud.mediola.com/127.0.0.1#5353
+server=/cloudfront.net/127.0.0.1#5353
+server=/cloudflare-dns.com/127.0.0.1#5353
+server=/cloudflare.com/127.0.0.1#5353
+server=/connectors.yonomi.co/127.0.0.1#5353
+server=/connectors.yonomi.com/127.0.0.1#5353
+server=/content.dhg.myharmony.com/127.0.0.1#5353
+server=/ct.de/127.0.0.1#5353
+server=/cyberandi.blog/127.0.0.1#5353
+server=/cyberandi.com/127.0.0.1#5353
+server=/cyberandi.de/127.0.0.1#5353
+server=/cyberandi.eu/127.0.0.1#5353
+server=/daserste.de/127.0.0.1#5353
+server=/deutschewelle.com/127.0.0.1#5353
+server=/deutschewelle.de/127.0.0.1#5353
+server=/directions.com/127.0.0.1#5353
+server=/directions.de/127.0.0.1#5353
+server=/dnssec-or-not.com/127.0.0.1#5353
+server=/dnssec.vs.uni-due.de/127.0.0.1#5353
+server=/dw.com/127.0.0.1#5353
+server=/dw.de/127.0.0.1#5353
+server=/elasticbeanstalk.com/127.0.0.1#5353
+server=/elasticbeanstalk.com/127.0.0.1#5353
+server=/epg.corio.com/127.0.0.1#5353
+server=/erf.de/127.0.0.1#5353
+server=/erf1.de/127.0.0.1#5353
+server=/erste.de/127.0.0.1#5353
+server=/filmstarts.de/127.0.0.1#5353
+server=/focus.de/127.0.0.1#5353
+server=/fireoscaptiveportal.com/127.0.0.1#5353
+server=/freestream.nmdn.net/127.0.0.1#5353
+server=/fritz.box/127.0.0.1#5353
+server=/flip.it/127.0.0.1#5353
+server=/ftp.stawimedia.de/127.0.0.1#5353
+server=/github.io/127.0.0.1#5353
+server=/github.de/127.0.0.1#5353
+server=/github.com/127.0.0.1#5353
+server=/galileo.de/127.0.0.1#5353
+server=/gallileo.com/127.0.0.1#5353
+server=/geonames.org/127.0.0.1#5353
+server=/getinvoked.com/127.0.0.1#5353
+server=/ggpht.com/127.0.0.1#5353
+server=/googleapis.com/127.0.0.1#5353
+server=/google.com/127.0.0.1#5353
+server=/googlevideo.com/127.0.0.1#5353
+server=/gracenote.com/127.0.0.1#5353
+server=/gvt1.com/127.0.0.1#5353
+server=/harmonyremote.com/127.0.0.1#5353
+server=/harmony-remote.com/127.0.0.1#5353
+server=/harmonyremote.de/127.0.0.1#5353
+server=/harmony-remote.de/127.0.0.1#5353
+server=/hbbtv.*/127.0.0.1#5353
+server=/heise.de/127.0.0.1#5353
+server=/heise-online.de/127.0.0.1#5353
+server=/heute.de/127.0.0.1#5353
+server=/hinter.bibeltv.de/127.0.0.1#5353
+server=/home.stawimedia.de/127.0.0.1#5353
+server=/hotmail.com/127.0.0.1#5353
+server=/hotmail.de/127.0.0.1#5353
+server=/ichnaea.netflix.com/127.0.0.1#5353
+server=/icloud.com/127.0.0.1#5353
+server=/icloud.de/127.0.0.1#5353
+server=/ifttt.com/127.0.0.1#5353
+server=/ihealthlabs.com/127.0.0.1#5353
+server=/imdb.com/127.0.0.1#5353
+server=/imdb.de/127.0.0.1#5353
+server=/invokedapps.com/127.0.0.1#5353
+server=/invokedapps.org/127.0.0.1#5353
+server=/ipleak.net/127.0.0.1#5353
+server=/ipv4_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#5353
+server=/ipv6_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#5353
+server=/ism/127.0.0.1#5353
+server=/it-business.com/127.0.0.1#5353
+server=/it-business.de/127.0.0.1#5353
+server=/itunes.com/127.0.0.1#5353
+server=/ix.de/127.0.0.1#5353
+server=/ix.nflxvideo.net/127.0.0.1#5353
+server=/ix.nflxvideo.net/127.0.0.1#5353
+
+server=/joyn.de/127.0.0.1#5353
+server=/api.segment.io/127.0.0.1#5353
+server=/seventv.com/127.0.0.1#5353
+server=/route71.net/127.0.0.1#5353
+server=/ak-t1p-vod-playout-prod.akamaized.net/127.0.0.1#5353
+server=/prosieben-ctr.live.ott.irdeto.com/127.0.0.1#5353
+server=/p7s1video.net/127.0.0.1#5353
+server=/joyn.net/127.0.0.1#5353
+server=/joyn.tv/127.0.0.1#5353
+server=/joyn.com/127.0.0.1#5353
+server=/kabeleins.de/127.0.0.1#5353
+
+server=/laut.fm/127.0.0.1#5353
+server=/live.com/127.0.0.1#5353
+server=/live.de/127.0.0.1#5353
+server=/llnwd.net/127.0.0.1#5353
+server=/llnwd.net/127.0.0.1#5353
+server=/logging.dhg.myharmony.com/127.0.0.1#5353
+server=/m.media-amazon.com/127.0.0.1#5353
+server=/m.tvinfo.de/127.0.0.1#5353
+server=/macandi.de/127.0.0.1#5353
+server=/mediola.com/127.0.0.1#5353
+server=/mediola.de/127.0.0.1#5353
+server=/members.harmonyremote.com/127.0.0.1#5353
+server=/metafilegenerator.de/127.0.0.1#5353
+server=/microsoft.com/127.0.0.1#5353
+server=/microsoft.de/127.0.0.1#5353
+server=/mobile.chip.de/127.0.0.1#5353
+server=/myfritz.net/127.0.0.1#5353
+server=/myharmony.com/127.0.0.1#5353
+server=/myharmony.de/127.0.0.1#5353
+server=/myharmony.net/127.0.0.1#5353
+server=/myremotesetup.com/127.0.0.1#5353
+server=/mytvscout.de/127.0.0.1#5353
+server=/n24.de/127.0.0.1#5353
+server=/push.prod.netflix.com/127.0.0.1#5353
+server=/nccp.netflix.com/127.0.0.1#5353
+server=/uiboot.netflix.com/127.0.0.1#5353
+server=/secure.netflix.com/127.0.0.1#5353
+server=/customerevents.netflix.com/127.0.0.1#5353
+server=/netflix.com/127.0.0.1#5353
+server=/netflix.de/127.0.0.1#5353
+server=/nflximg.com/127.0.0.1#5353
+server=/nflximg.net/127.0.0.1#5353
+server=/nflxvideo.com/127.0.0.1#5353
+server=/nflxvideo.de/127.0.0.1#5353
+server=/nflxvideo.net/127.0.0.1#5353
+server=/nflxso.net/127.0.0.1#5353
+server=/nfximg.net/127.0.0.1#5353
+server=/nflxso.com/127.0.0.1#5353
+server=/nfximg.com/127.0.0.1#5353
+server=/nflxso.de/127.0.0.1#5353
+server=/nfximg.de/127.0.0.1#5353
+server=/nodejs.org/127.0.0.1#5353
+server=/no-ip.biz/127.0.0.1#5353
+server=/nokia.com/127.0.0.1#5353
+server=/nokia.de/127.0.0.1#5353
+server=/npmjs.com/127.0.0.1#5353
+server=/ntp.org/127.0.0.1#5353
+server=/n-tv.de/127.0.0.1#5353
+server=/o2.box/127.0.0.1#5353
+server=/office.com/127.0.0.1#5353
+server=/office.de/127.0.0.1#5353
+server=/office365.com/127.0.0.1#5353
+server=/office365.de/127.0.0.1#5353
+server=/onlinewetter.com/127.0.0.1#5353
+server=/onlinewetter.de/127.0.0.1#5353
+server=/opendns.com/127.0.0.1#5353
+server=/openstreetmap.com/127.0.0.1#5353
+server=/openstreetmap.de/127.0.0.1#5353
+server=/openstreetmap.org/127.0.0.1#5353
+server=/outlook.com/127.0.0.1#5353
+server=/outlook.de/127.0.0.1#5353
+server=/outlook.live.com/127.0.0.1#5353
+server=/pcwelt.de/127.0.0.1#5353
+server=/pc-welt.de/127.0.0.1#5353
+server=/philips.com/127.0.0.1#5353
+server=/philips.de/127.0.0.1#5353
+server=/philips.nl/127.0.0.1#5353
+server=/phobos.apple.com/127.0.0.1#5353
+server=/phobos.apple.com.edgesuite.net/127.0.0.1#5353
+server=/photos.apple.de/127.0.0.1#5353
+server=/photos.apple.com.edgesuite.net/127.0.0.1#5353
+server=/pionieer.com/127.0.0.1#5353
+server=/play.google.com/127.0.0.1#5353
+server=/playstation.com/127.0.0.1#5353
+server=/prosieben.de/127.0.0.1#5353
+server=/ps3.com/127.0.0.1#5353
+server=/pubsub.pubnub.com/127.0.0.1#5353
+server=/pubnub.com/127.0.0.1#5353
+server=/radio.de/127.0.0.1#5353
+server=/radiogong.de/127.0.0.1#5353
+server=/radiotime.com/127.0.0.1#5353
+server=/remotes.aio-control.com/127.0.0.1#5353
+server=/remotes.aio-control.de/127.0.0.1#5353
+server=/remotes.aio-controls.com/127.0.0.1#5353
+server=/remotes.aio-controls.de/127.0.0.1#5353
+server=/remotesneo.aio-control.com/127.0.0.1#5353
+server=/resolver1.opendns.com/127.0.0.1#5353
+server=/resolver2.opendns.com/127.0.0.1#5353
+server=/resolver3.opendns.com/127.0.0.1#5353
+server=/resolver4.opendns.com/127.0.0.1#5353
+server=/rtl.de/127.0.0.1#5353
+server=/rtl2.de/127.0.0.1#5353
+server=/s3-directional-w.amazonaws.com/127.0.0.1#5353
+server=/samsung.com/127.0.0.1#5353
+server=/sat1.de/127.0.0.1#5353
+server=/script.ioam.de/127.0.0.1#5353
+server=/shoutcast.com/127.0.0.1#5353
+server=/sony.com/127.0.0.1#5353
+server=/spn.com/127.0.0.1#5353
+server=/startpage.com/127.0.0.1#5353
+server=/startpage.de/127.0.0.1#5353
+server=/startpage.nl/127.0.0.1#5353
+server=/stawimedia.de/127.0.0.1#5353
+server=/stawimedia.eu/127.0.0.1#5353
+server=/stawimedia.local/127.0.0.1#5353
+server=/stream.erf.de/127.0.0.1#5353
+server=/streamfarm.net/127.0.0.1#5353
+server=/sus.dhg.myharmony.com/127.0.0.1#5353
+server=/svcs.myharmony.com/127.0.0.1#5353
+server=/t3n.de/127.0.0.1#5353
+server=/telegram.org/127.0.0.1#5353
+server=/t.me/127.0.0.1#5353
+server=/tagesschau.de/127.0.0.1#5353
+server=/tagesschau24.de/127.0.0.1#5353
+server=/time.nist.gov/127.0.0.1#5353
+server=/time.windows.com/127.0.0.1#5353
+server=/torproject.org/127.0.0.1#5353
+server=/tumblr.com/127.0.0.1#5353
+server=/tumblr.de/127.0.0.1#5353
+server=/tumblr.org/127.0.0.1#5353
+server=/tune_in.com/127.0.0.1#5353
+server=/tune_in.de/127.0.0.1#5353
+server=/tunein.com/127.0.0.1#5353
+server=/tune-in.com/127.0.0.1#5353
+server=/tunein.de/127.0.0.1#5353
+server=/tune-in.de/127.0.0.1#5353
+server=/tvnow.com/127.0.0.1#5353
+server=/tvnow.de/127.0.0.1#5353
+server=/twitter.de/127.0.0.1#5353
+server=/twitter.com/127.0.0.1#5353
+server=/t.co/127.0.0.1#5353
+server=/tvtv.de/127.0.0.1#5353
+server=/unifiedlayer.com/127.0.0.1#5353
+server=/vevo.com/127.0.0.1#5353
+server=/vevo.de/127.0.0.1#5353
+server=/video.google.com/127.0.0.1#5353
+server=/videobuster.com/127.0.0.1#5353
+server=/videobuster.de/127.0.0.1#5353
+server=/videociety.com/127.0.0.1#5353
+server=/videociety.de/127.0.0.1#5353
+server=/vimeo.com/127.0.0.1#5353
+server=/vimeo.de/127.0.0.1#5353
+server=/wbsapi.withings.net/127.0.0.1#5353
+server=/waipu.tv/127.0.0.1#5353
+server=/waipu.de/127.0.0.1#5353
+server=/waipu.com/127.0.0.1#5353
+server=/whatismyip.com/127.0.0.1#5353
+server=/wpstr.tv/127.0.0.1#5353
+server=/waipu.ch/127.0.0.1#5353
+server=/weather.com/127.0.0.1#5353
+server=/weather.de/127.0.0.1#5353
+server=/welt.de/127.0.0.1#5353
+server=/wetter.com/127.0.0.1#5353
+server=/wetter.de/127.0.0.1#5353
+server=/wetteronline.de/127.0.0.1#5353
+server=/wetter-online.de/127.0.0.1#5353
+server=/wikimedia.org/127.0.0.1#5353
+server=/wikipedia.de/127.0.0.1#5353
+server=/wikipedia.org/127.0.0.1#5353
+server=/wikipedia.com/127.0.0.1#5353
+server=/withings.com/127.0.0.1#5353
+server=/withings.net/127.0.0.1#5353
+server=/ws.withings.net/127.0.0.1#5353
+server=/wunderlist.com/127.0.0.1#5353
+server=/y2u.be/127.0.0.1#5353
+server=/yelp.co.uk/127.0.0.1#5353
+server=/yelp.com/127.0.0.1#5353
+server=/yelp.de/127.0.0.1#5353
+server=/yelp.org/127.0.0.1#5353
+server=/yelpcdn.com/127.0.0.1#5353
+server=/yonomi.co/127.0.0.1#5353
+server=/yonomi.com/127.0.0.1#5353
+server=/youtu.be/127.0.0.1#5353
+server=/youtube.com/127.0.0.1#5353
+server=/youtube-nocookie.com/127.0.0.1#5353
+server=/ytimg.com/127.0.0.1#5353
+
+server=/zattoo.ch/127.0.0.1#5353
+server=/zattoo.co.uk/127.0.0.1#5353
+server=/zattoo.com/127.0.0.1#5353
+server=/zattoo.de/127.0.0.1#5353
+server=/zattic.com/127.0.0.1#5353
+server=/zahs.tv/127.0.0.1#5353
+server=/zattoo.eu/127.0.0.1#5353
+
+server=/zdf.de/127.0.0.1#5353
+server=/zdf-cdn.live.cellular.de/127.0.0.1#5353
+
+server=/dlive.com/127.0.0.1#5353
+server=/dlive.tv/127.0.0.1#5353
+
+server=/twitch.de/127.0.0.1#5353
+server=/twitch.com/127.0.0.1#5353
+server=/twitch.org/127.0.0.1#5353
+server=/twitchcdn.net/127.0.0.1#5353
+server=/ttvnw.net/127.0.0.1#5353
+server=/jtvnw.net/127.0.0.1#5353
+server=/twitch.tv/127.0.0.1#5353
+
+server=/disneyplus.de/127.0.0.1#5353
+server=/disney+.de/127.0.0.1#5353
+server=/disneyplus.com/127.0.0.1#5353
+server=/disney+.com/127.0.0.1#5353
+server=/disneyplus.tv/127.0.0.1#5353
+server=/bamgrid.com/127.0.0.1#5353
+server=/bam.nr-data.net/127.0.0.1#5353
+server=/cdn.registerdisney.go.com/127.0.0.1#5353
+server=/cws.convia.com/127.0.0.1#5353
+server=/d9.flashtalking.com/127.0.0.1#5353
+server=/disney-portal.my.onetrust.com/127.0.0.1#5353
+server=/disneyplus.bn5x.net/127.0.0.1#5353
+server=/js-agent.newrelic.com/127.0.0.1#5353
+server=/disney-plus.net/127.0.0.1#5353
+server=/dssott.com/127.0.0.1#5353
+server=/adobedtm.com/127.0.0.1#5353
+server=/disney+.tv/127.0.0.1#5353
+
+server=/pluto.de/127.0.0.1#5353
+server=/pluto.com/127.0.0.1#5353
+server=/pluto.tv/127.0.0.1#5353
+server=/tvnow.de/127.0.0.1#5353
+server=/tvnow.com/127.0.0.1#5353
+server=/tvnow.tv/127.0.0.1#5353
+server=/duckduck.go/127.0.0.1#5353
+server=/duckduckgo.de/127.0.0.1#5353
+server=/duckduckgo.com/127.0.0.1#5353
+
+server=/fireoscaptiveportal.com/127.0.0.1#5353
+
+server=/bitchute.com/127.0.0.1#5353
+server=/bitchute.tv/127.0.0.1#5353
+server=/instagram.de/127.0.0.1#5353
+server=/instagram.com/127.0.0.1#5353
+server=/pinterest.com/127.0.0.1#5353
+server=/pinterest.de/127.0.0.1#5353
+server=/pinterest.org/127.0.0.1#5353
+server=/flickr.com/127.0.0.1#5353
+server=/flickr.de/127.0.0.1#5353
+server=/flickr.org/127.0.0.1#5353
+server=/imdb.tv/127.0.0.1#5353
+server=/imdb.com/127.0.0.1#5353
+server=/imdb.de/127.0.0.1#5353
+server=/imdb.org/127.0.0.1#5353
+server=/you2.be/127.0.0.1#5353
+server=/youtu.be/127.0.0.1#5353
+
+server=/spotify.com/127.0.0.1#5353
+server=/spotify.de/127.0.0.1#5353
+server=/spotify.net/127.0.0.1#5353
+
+server=/.skype/127.0.0.1#5353
+server=/.youtube/127.0.0.1#5353
+server=/.office/127.0.0.1#5353
+server=/.exit/127.0.0.1#9053
+server=/.onion/127.0.0.1#9053
+EOF
+
+
+cat << EOF > /etc/dnsmasq.d/Blacklist/banking
+
+server=/.banking/127.0.0.1#5453
+server=/unicredit.de/127.0.0.1#5453
+server=/hvb.de/127.0.0.1#5453
+server=/unicredit.net/127.0.0.1#5453
+server=/hvb.net/127.0.0.1#5453
+server=/hypovereinsbak.net/127.0.0.1#5453
+server=/hypovereinsbank.de/127.0.0.1#5453
+server=/comdirekt.de/127.0.0.1#5453
+server=/comdirect.de/127.0.0.1#5453
+server=/comdirect.net/127.0.0.1#5453
+server=/postbank.de/127.0.0.1#5453
+server=/satander.de/127.0.0.1#5453
+server=/n26.de/127.0.0.1#5453
+server=/deutschebank.de/127.0.0.1#5453
+server=/reiba.de/127.0.0.1#5453
+server=/sparkasse.de/127.0.0.1#5453
+server=/sskm.de/127.0.0.1#5453
+server=/commerzbank.de/127.0.0.1#5453
+EOF
+
+cp /etc/dnsmasq.d/Blacklist/ads /etc/dnsmasq.d/Whitelist/ads
+cp /etc/dnsmasq.d/Blacklist/agency /etc/dnsmasq.d/Whitelist/agency
+cp /etc/dnsmasq.d/Blacklist/banking /etc/dnsmasq.d/Whitelist/banking
+cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys
+cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn
+cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white
+
+/etc/init.d/dnsmasq restart
+
+echo
+echo ' AD- and Porn-Filter installed'
+echo
+
+uci set firewall.@zone[0]=zone
+uci set firewall.@zone[0].name="REPEATER"
+uci set firewall.@zone[0].input="ACCEPT"
+uci set firewall.@zone[0].network="REPEATER"
+uci set firewall.@zone[0].output="ACCEPT"
+uci set firewall.@zone[0].forward="ACCEPT"
+uci commit firewall
+uci add firewall forwarding
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="REPEATER"
+uci commit firewall 
+
+uci add firewall zone
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="CONTROL"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="CONTROL"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci commit firewall
+uci add firewall forwarding
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="CONTROL"
+uci commit firewall
+
+uci add firewall zone
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="HCONTROL"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="HCONTROL"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci commit firewall
+uci add firewall forwarding
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="HCONTROL"
+uci commit firewall
+
+uci add firewall zone
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="SERVER"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="SERVER"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci commit firewall
+uci add firewall forwarding
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="SERVER"
+uci commit firewall
+
+uci add firewall zone
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="INET"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="ONION_CLIENTS"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci commit firewall
+uci add firewall forwarding
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="INET"
+uci commit firewall
+
+uci add firewall zone
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="GUEST"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="GUEST"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci commit firewall
+uci add firewall forwarding
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="GUEST"
+uci commit firewall
+
+uci add firewall zone
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="VOICE"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="VOICE"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci commit firewall
+uci add firewall forwarding
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="VOICE"
+uci commit firewall
+
+uci add firewall zone
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="ENTERTAIN"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="ENTERTAIN"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci commit firewall
+uci add firewall forwarding
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="ENTERTAIN"
+uci commit firewall && reload_config
 
 # Intercept SSH, HTTP and HTTPS traffic
 uci -q delete firewall.ssh_int
@@ -50,13 +3383,15 @@ uci set firewall.ssh_int.src="INET"
 uci set firewall.ssh_int.src_dport="22"
 uci set firewall.ssh_int.proto="tcp"
 uci set firewall.ssh_int.target="DNAT"
+
 uci -q delete firewall.http_int
-#uci set firewall.http_int="redirect"
-#uci set firewall.http_int.name="Intercept-HTTP"
-#uci set firewall.http_int.src="INET"
-#uci set firewall.http_int.src_dport="8080"
-#uci set firewall.http_int.proto="tcp"
-#uci set firewall.http_int.target="DNAT"
+uci set firewall.http_int="redirect"
+uci set firewall.http_int.name="Intercept-HTTP"
+uci set firewall.http_int.src="INET"
+uci set firewall.http_int.src_dport="8080"
+uci set firewall.http_int.proto="tcp"
+uci set firewall.http_int.target="DNAT"
+
 uci -q delete firewall.https_int
 uci set firewall.https_int="redirect"
 uci set firewall.https_int.name="Intercept-HTTPS"
@@ -64,551 +3399,342 @@ uci set firewall.https_int.src="INET"
 uci set firewall.https_int.src_dport="8443"
 uci set firewall.https_int.proto="tcp"
 uci set firewall.https_int.target="DNAT"
-uci -q delete firewall.local_lan_int
-uci set firewall.local_lan_int="redirect"
-uci set firewall.local_lan_int.name="local_lan"
-uci set firewall.local_lan_int.src="INET"
-uci set firewall.local_lan_int.proto="tcp udp"
-uci set firewall.local_lan_int.dest="192.168.0.0/16"
-uci set firewall.local_lan_int.target="DNAT"
- 
+
+uci commit firewall && reload_config
+/etc/init.d/firewall restart
+
 # Intercept DNS and TCP traffic
-uci -q delete firewall.dns_int
-uci set firewall.dns_int="redirect"
-uci set firewall.dns_int.name="Intercept-tor-DNS"
-uci set firewall.dns_int.src="INET"
-uci set firewall.dns_int.src_dport="53"
-uci set firewall.dns_int.dest_port="9053"
-uci set firewall.dns_int.proto="udp"
-uci set firewall.dns_int.target="DNAT"
-uci -q delete firewall.tcp_int
-uci set firewall.tcp_int="redirect"
-uci set firewall.tcp_int.name="Intercept-tor-TCP"
-uci set firewall.tcp_int.src="INET"
-uci set firewall.tcp_int.dest_port="9040"
-uci set firewall.tcp_int.proto="tcp"
-uci set firewall.tcp_int.extra="--syn"
-uci set firewall.tcp_int.target="DNAT"
 
-# Intercept DNS traffic
-uci -q delete firewall.dns_int
-uci set firewall.dns_int="redirect"
-uci set firewall.dns_int.name="Intercept-DNS"
-uci set firewall.dns_int.src="lan"
-uci set firewall.dns_int.src_dport="53"
-uci set firewall.dns_int.proto="tcp udp"
-uci set firewall.dns_int.target="DNAT"
-uci commit firewall
+uci -q delete firewall.tcp_tor1_int
+uci set firewall.tcp_tor1_int="redirect"
+uci set firewall.tcp_tor1_int.name="Intercept-tor-https"
+uci set firewall.tcp_tor1_int.src="INET"
+uci set firewall.tcp_tor1_int.dest_port="9040"
+uci set firewall.tcp_tor1_int.src_dip="!192.168.0.0/16"
+uci set firewall.tcp_tor1_int.proto="tcp"
+uci set firewall.tcp_tor1_int.extra="--syn"
+uci set firewall.tcp_tor1_int.target="DNAT"
+
+uci commit firewall && reload_config
+
 /etc/init.d/firewall restart
-
-cat << "EOF" > /etc/firewall.nat6
-iptables-save -t nat \
-| sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
-| ip6tables-restore -T nat
-EOF
-uci -q delete firewall.nat6
-uci set firewall.nat6="include"
-uci set firewall.nat6.path="/etc/firewall.nat6"
-uci set firewall.nat6.reload="1"
- 
-# Disable LAN to WAN forwarding
-uci rename firewall.@forwarding[0]="lan_wan"
-uci set firewall.lan_wan.enabled="0"
-uci commit firewall
-/etc/init.d/firewall restart
-
-# Configure IP sets
-uci -q delete firewall.filter
-uci set firewall.filter="ipset"
-uci set firewall.filter.name="filter"
-uci set firewall.filter.family="ipv4"
-uci set firewall.filter.storage="hash"
-uci set firewall.filter.match="ip"
-uci -q delete firewall.filter6
-uci set firewall.filter6="ipset"
-uci set firewall.filter6.name="filter6"
-uci set firewall.filter6.family="ipv6"
-uci set firewall.filter6.storage="hash"
-uci set firewall.filter6.match="ip"
- 
-# Filter LAN client traffic with IP sets
-uci -q delete firewall.filter_fwd
-uci set firewall.filter_fwd="rule"
-uci set firewall.filter_fwd.name="Filter-IPset-DNS-Forward"
-uci set firewall.filter_fwd.src="lan"
-uci set firewall.filter_fwd.dest="wan"
-uci set firewall.filter_fwd.ipset="filter dest"
-uci set firewall.filter_fwd.family="ipv4"
-uci set firewall.filter_fwd.proto="all"
-uci set firewall.filter_fwd.target="REJECT"
-uci -q delete firewall.filter6_fwd
-uci set firewall.filter6_fwd="rule"
-uci set firewall.filter6_fwd.name="Filter-IPset-DNS-Forward"
-uci set firewall.filter6_fwd.src="lan"
-uci set firewall.filter6_fwd.dest="wan"
-uci set firewall.filter6_fwd.ipset="filter6 dest"
-uci set firewall.filter6_fwd.family="ipv6"
-uci set firewall.filter6_fwd.proto="all"
-uci set firewall.filter6_fwd.target="REJECT"
-uci commit firewall
-/etc/init.d/firewall restart
- 
-# Configure ipset-dns
-uci set ipset-dns.@ipset-dns[0].ipset="filter"
-uci set ipset-dns.@ipset-dns[0].ipset6="filter6"
-uci commit ipset-dns
-/etc/init.d/ipset-dns restart
- 
-# Resolve race conditions for ipset-dns
-cat << "EOF" > /etc/firewall.ipsetdns
-/etc/init.d/ipset-dns restart
-EOF
-cat << "EOF" >> /etc/sysupgrade.conf
-/etc/firewall.ipsetdns
-EOF
-uci -q delete firewall.ipsetdns
-uci set firewall.ipsetdns="include"
-uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns"
-uci set firewall.ipsetdns.reload="1"
-uci commit firewall
-/etc/init.d/firewall restart
- 
-# Configure domains to filter
-uci add_list dhcp.@dnsmasq[0].server="/sex.com/"
-uci add_list dhcp.@dnsmasq[0].server="/sex.net/"
-uci add_list dhcp.@dnsmasq[0].server="/sex.de/"
-uci add_list dhcp.@dnsmasq[0].server="/porno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/porno.net/"
-uci add_list dhcp.@dnsmasq[0].server="/porno.de/"
-uci add_list dhcp.@dnsmasq[0].server="/porn.com/"
-uci add_list dhcp.@dnsmasq[0].server="/porn.net/"
-uci add_list dhcp.@dnsmasq[0].server="/porn.de/"
-uci add_list dhcp.@dnsmasq[0].server="/inthevip.com/"
-uci add_list dhcp.@dnsmasq[0].server="/inthevip.net/"
-uci add_list dhcp.@dnsmasq[0].server="/inthevip.de/"
-uci add_list dhcp.@dnsmasq[0].server="/intellitxt.com/"
-uci add_list dhcp.@dnsmasq[0].server="/intellitxt.net/"
-uci add_list dhcp.@dnsmasq[0].server="/intellitxt.de/"
-uci add_list dhcp.@dnsmasq[0].server="/outbrain.com/"
-uci add_list dhcp.@dnsmasq[0].server="/outbrain.net/"
-uci add_list dhcp.@dnsmasq[0].server="/outbrain.de/"
-uci add_list dhcp.@dnsmasq[0].server="/efahrer.com/"
-uci add_list dhcp.@dnsmasq[0].server="/efahrer.net/"
-uci add_list dhcp.@dnsmasq[0].server="/efahrer.de/"
-# Porno 
-uci add_list dhcp.@dnsmasq[0].server="/sex.com/"
-uci add_list dhcp.@dnsmasq[0].server="/sex.net/"
-uci add_list dhcp.@dnsmasq[0].server="/sex.de/"
-uci add_list dhcp.@dnsmasq[0].server="/porn.com/"
-uci add_list dhcp.@dnsmasq[0].server="/porn.net/"
-uci add_list dhcp.@dnsmasq[0].server="/porn.de/"
-uci add_list dhcp.@dnsmasq[0].server="/porno.de/"
-uci add_list dhcp.@dnsmasq[0].server="/porno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/porno.net/"
-uci add_list dhcp.@dnsmasq[0].server="/inthevip.com/"
-uci add_list dhcp.@dnsmasq[0].server="/inthevip.net/"
-uci add_list dhcp.@dnsmasq[0].server="/inthevip.de/"
-uci add_list dhcp.@dnsmasq[0].server="/intellitxt.com/"
-uci add_list dhcp.@dnsmasq[0].server="/intellitxt.net/"
-uci add_list dhcp.@dnsmasq[0].server="/intellitxt.de/"
-uci add_list dhcp.@dnsmasq[0].server="/outbrain.com/"
-uci add_list dhcp.@dnsmasq[0].server="/outbrain.net/"
-uci add_list dhcp.@dnsmasq[0].server="/outbrain.de/"
-uci add_list dhcp.@dnsmasq[0].server="/efahrer\.[a-z]*\.com/"
-uci add_list dhcp.@dnsmasq[0].server="/efahrer\.*[a-z]*\.de/"
-uci add_list dhcp.@dnsmasq[0].server="/efahrer.chip.de/"
-uci add_list dhcp.@dnsmasq[0].server="/efahrer.de/"
-uci add_list dhcp.@dnsmasq[0].server="/allporntubes.net/"
-uci add_list dhcp.@dnsmasq[0].server="/allsexclips.com/"
-uci add_list dhcp.@dnsmasq[0].server="/beateuhse.com/"
-uci add_list dhcp.@dnsmasq[0].server="/beate-uhse.com/"
-uci add_list dhcp.@dnsmasq[0].server="/beate-uhse.de/"
-uci add_list dhcp.@dnsmasq[0].server="/bordell.com/"
-uci add_list dhcp.@dnsmasq[0].server="/bordell.de/"
-uci add_list dhcp.@dnsmasq[0].server="/bpwhamburgorchardpark.org/"
-uci add_list dhcp.@dnsmasq[0].server="/bundesporno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/bundesporno.net/"
-uci add_list dhcp.@dnsmasq[0].server="/burningangle.com/"
-uci add_list dhcp.@dnsmasq[0].server="/burningangle.de/"
-uci add_list dhcp.@dnsmasq[0].server="/burningangles.com/"
-uci add_list dhcp.@dnsmasq[0].server="/burningangles.de/"
-uci add_list dhcp.@dnsmasq[0].server="/centgebote.tv/"
-uci add_list dhcp.@dnsmasq[0].server="/chaturbate.com/"
-uci add_list dhcp.@dnsmasq[0].server="/chumshot.com/"
-uci add_list dhcp.@dnsmasq[0].server="/chumshot.de/"
-uci add_list dhcp.@dnsmasq[0].server="/collectionofbestporn.com/"
-uci add_list dhcp.@dnsmasq[0].server="/cyberotic.com/"
-uci add_list dhcp.@dnsmasq[0].server="/cyberotic.de/"
-uci add_list dhcp.@dnsmasq[0].server="/cyberotic.mobi/"
-uci add_list dhcp.@dnsmasq[0].server="/de.mediaplex.com/"
-uci add_list dhcp.@dnsmasq[0].server="/deutschepornos.xyz/"
-uci add_list dhcp.@dnsmasq[0].server="/deutschsexvideos.com/"
-uci add_list dhcp.@dnsmasq[0].server="/einfachporno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/einfachporno.de/"
-uci add_list dhcp.@dnsmasq[0].server="/emediate.eu/"
-uci add_list dhcp.@dnsmasq[0].server="/emohotties.com/"
-uci add_list dhcp.@dnsmasq[0].server="/endloseporno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/erotica.com/"
-uci add_list dhcp.@dnsmasq[0].server="/fancy.com/"
-uci add_list dhcp.@dnsmasq[0].server="/fancy.de/"
-uci add_list dhcp.@dnsmasq[0].server="/fapdu.com/"
-uci add_list dhcp.@dnsmasq[0].server="/fatpornfuck.com/"
-uci add_list dhcp.@dnsmasq[0].server="/ficken.com/"
-uci add_list dhcp.@dnsmasq[0].server="/ficken.de/"
-uci add_list dhcp.@dnsmasq[0].server="/firstporno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/firstporno.de/"
-uci add_list dhcp.@dnsmasq[0].server="/fotze.com/"
-uci add_list dhcp.@dnsmasq[0].server="/fotze.de/"
-uci add_list dhcp.@dnsmasq[0].server="/fotzen.com/"
-uci add_list dhcp.@dnsmasq[0].server="/fotzen.de/"
-uci add_list dhcp.@dnsmasq[0].server="/freeporn.com/"
-uci add_list dhcp.@dnsmasq[0].server="/freeporn.de/"
-uci add_list dhcp.@dnsmasq[0].server="/geilemaedchen.com/"
-uci add_list dhcp.@dnsmasq[0].server="/geiltube.com/"
-uci add_list dhcp.@dnsmasq[0].server="/german-porno-deutsch.com/"
-uci add_list dhcp.@dnsmasq[0].server="/girlsavenue.com/"
-uci add_list dhcp.@dnsmasq[0].server="/girlsavenue.de/"
-uci add_list dhcp.@dnsmasq[0].server="/gratispornosfilm.com/"
-uci add_list dhcp.@dnsmasq[0].server="/guterporn.com/"
-uci add_list dhcp.@dnsmasq[0].server="/guterporn.de/"
-uci add_list dhcp.@dnsmasq[0].server="/hclips.com/"
-uci add_list dhcp.@dnsmasq[0].server="/hellporno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/hellporno.de/"
-uci add_list dhcp.@dnsmasq[0].server="/hotntubes.com/"
-uci add_list dhcp.@dnsmasq[0].server="/hotntubes.de/"
-uci add_list dhcp.@dnsmasq[0].server="/hustler.com/"
-uci add_list dhcp.@dnsmasq[0].server="/hustler.de/"
-uci add_list dhcp.@dnsmasq[0].server="/iporntv.com/"
-uci add_list dhcp.@dnsmasq[0].server="/iporntv.net/"
-uci add_list dhcp.@dnsmasq[0].server="/jjhouse.com/"
-uci add_list dhcp.@dnsmasq[0].server="/justporno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/justporno.de/"
-uci add_list dhcp.@dnsmasq[0].server="/justporno.tv/"
-uci add_list dhcp.@dnsmasq[0].server="/literotica.com/"
-uci add_list dhcp.@dnsmasq[0].server="/livejasmin.com/"
-uci add_list dhcp.@dnsmasq[0].server="/livejasmin.de/"
-uci add_list dhcp.@dnsmasq[0].server="/lockerdome.com/"
-uci add_list dhcp.@dnsmasq[0].server="/lupoporno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/lustdays.com/"
-uci add_list dhcp.@dnsmasq[0].server="/lustparkplatz.com/"
-uci add_list dhcp.@dnsmasq[0].server="/moese.com/"
-uci add_list dhcp.@dnsmasq[0].server="/moese.de/"
-uci add_list dhcp.@dnsmasq[0].server="/movie4k.to/"
-uci add_list dhcp.@dnsmasq[0].server="/mp3fiesta.com/"
-uci add_list dhcp.@dnsmasq[0].server="/mp3sugar.com/"
-uci add_list dhcp.@dnsmasq[0].server="/mp3va.com/"
-uci add_list dhcp.@dnsmasq[0].server="/msads.net/"
-uci add_list dhcp.@dnsmasq[0].server="/nudevista.com/"
-uci add_list dhcp.@dnsmasq[0].server="/nudevista.tv/"
-uci add_list dhcp.@dnsmasq[0].server="/nursexfilme.com/"
-uci add_list dhcp.@dnsmasq[0].server="/penis.com/"
-uci add_list dhcp.@dnsmasq[0].server="/penis.de/"
-uci add_list dhcp.@dnsmasq[0].server="/pornburst.com/"
-uci add_list dhcp.@dnsmasq[0].server="/porndoe.com/"
-uci add_list dhcp.@dnsmasq[0].server="/pornhub.com/"
-uci add_list dhcp.@dnsmasq[0].server="/pornhub.de/"
-uci add_list dhcp.@dnsmasq[0].server="/pornodoe.com/"
-uci add_list dhcp.@dnsmasq[0].server="/pornoente.com/"
-uci add_list dhcp.@dnsmasq[0].server="/pornoente.de/"
-uci add_list dhcp.@dnsmasq[0].server="/pornoente.net/"
-uci add_list dhcp.@dnsmasq[0].server="/pornofi.com/"
-uci add_list dhcp.@dnsmasq[0].server="/porno-himmel.net/"
-uci add_list dhcp.@dnsmasq[0].server="/pornohirsch.com/"
-uci add_list dhcp.@dnsmasq[0].server="/pornokonig.com/"
-uci add_list dhcp.@dnsmasq[0].server="/pornoleeuw.com/"
-uci add_list dhcp.@dnsmasq[0].server="/pornoorzel.com/"
-uci add_list dhcp.@dnsmasq[0].server="/pornos-kostenlos.tv/"
-uci add_list dhcp.@dnsmasq[0].server="/pornostunde.com/"
-uci add_list dhcp.@dnsmasq[0].server="/puff.com/"
-uci add_list dhcp.@dnsmasq[0].server="/puff.de/"
-uci add_list dhcp.@dnsmasq[0].server="/pussyspace.com/"
-uci add_list dhcp.@dnsmasq[0].server="/realetykings.com/"
-uci add_list dhcp.@dnsmasq[0].server="/realetykings.de/"
-uci add_list dhcp.@dnsmasq[0].server="/realitykings.com/"
-uci add_list dhcp.@dnsmasq[0].server="/realitykings.de/"
-uci add_list dhcp.@dnsmasq[0].server="/redporn.com/"
-uci add_list dhcp.@dnsmasq[0].server="/redtube.com/"
-uci add_list dhcp.@dnsmasq[0].server="/redtube.de/"
-uci add_list dhcp.@dnsmasq[0].server="/rk.com/"
-uci add_list dhcp.@dnsmasq[0].server="/rk.de/"
-uci add_list dhcp.@dnsmasq[0].server="/schwanz.com/"
-uci add_list dhcp.@dnsmasq[0].server="/schwanz.de/"
-uci add_list dhcp.@dnsmasq[0].server="/script.ioam.de/"
-uci add_list dhcp.@dnsmasq[0].server="/selbstbefriedigung.com/"
-uci add_list dhcp.@dnsmasq[0].server="/selbstbefriedigung.de/"
-uci add_list dhcp.@dnsmasq[0].server="/sexhubhd.com/"
-uci add_list dhcp.@dnsmasq[0].server="/sexhubhd.de/"
-uci add_list dhcp.@dnsmasq[0].server="/sexhubhd.net/"
-uci add_list dhcp.@dnsmasq[0].server="/spermswap.com/"
-uci add_list dhcp.@dnsmasq[0].server="/spermswap.de/"
-uci add_list dhcp.@dnsmasq[0].server="/spermswap.us/"
-uci add_list dhcp.@dnsmasq[0].server="/toroporno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/toys4you.com/"
-uci add_list dhcp.@dnsmasq[0].server="/toys4you.de/"
-uci add_list dhcp.@dnsmasq[0].server="/tubelibre.com/"
-uci add_list dhcp.@dnsmasq[0].server="/tubepatrol.net/"
-uci add_list dhcp.@dnsmasq[0].server="/tubesafari.com/"
-uci add_list dhcp.@dnsmasq[0].server="/tubevintageporn.com/"
-uci add_list dhcp.@dnsmasq[0].server="/urbandictionary.com/"
-uci add_list dhcp.@dnsmasq[0].server="/vagina.com/"
-uci add_list dhcp.@dnsmasq[0].server="/vagina.de/"
-uci add_list dhcp.@dnsmasq[0].server="/vivatube.com/"
-uci add_list dhcp.@dnsmasq[0].server="/whitexxxtube.com/"
-uci add_list dhcp.@dnsmasq[0].server="/wichsen.com/"
-uci add_list dhcp.@dnsmasq[0].server="/wichsen.de/"
-uci add_list dhcp.@dnsmasq[0].server="/wildesporno.com/"
-uci add_list dhcp.@dnsmasq[0].server="/wixen.com/"
-uci add_list dhcp.@dnsmasq[0].server="/wixen.de/"
-uci add_list dhcp.@dnsmasq[0].server="/xhamster.com/"
-uci add_list dhcp.@dnsmasq[0].server="/xhamster.de/"
-uci add_list dhcp.@dnsmasq[0].server="/xhamsterdeutsch.biz/"
-uci add_list dhcp.@dnsmasq[0].server="/youporn.com/"
-uci add_list dhcp.@dnsmasq[0].server="/youporn.de/"
-uci add_list dhcp.@dnsmasq[0].server="/yourporn.com/"
-uci add_list dhcp.@dnsmasq[0].server="/yourporn.de/"
-uci add_list dhcp.@dnsmasq[0].server="/xvideo.de/"
-uci add_list dhcp.@dnsmasq[0].server="/xvideo.com/"
-uci add_list dhcp.@dnsmasq[0].server="/xvideos.de/"
-uci add_list dhcp.@dnsmasq[0].server="/xvideos.com/"
-uci add_list dhcp.@dnsmasq[0].server="/xnxx.com/"
-uci add_list dhcp.@dnsmasq[0].server="/xnxx.de/"
-uci add_list dhcp.@dnsmasq[0].server="/fundorado.de/"
-uci add_list dhcp.@dnsmasq[0].server="/fundorado.com/"
-uci add_list dhcp.@dnsmasq[0].server="/starshows.de/"
-uci add_list dhcp.@dnsmasq[0].server="/starshows.com/"
-uci add_list dhcp.@dnsmasq[0].server="/youjizz.com/"
-uci add_list dhcp.@dnsmasq[0].server="/youjizz.de/"
-uci add_list dhcp.@dnsmasq[0].server="/tube8.com/"
-uci add_list dhcp.@dnsmasq[0].server="/tube8.de/"
-uci add_list dhcp.@dnsmasq[0].server="/bestandfree.com/"
-uci add_list dhcp.@dnsmasq[0].server="/bestandfree.de/"
-
-# advertisment
-
-uci add_list dhcp.@dnsmasq[0].server="/cashimashi.de/"
-uci add_list dhcp.@dnsmasq[0].server="/cashimashi.com/"
-uci add_list dhcp.@dnsmasq[0].server="/1.f.ix.de/"
-uci add_list dhcp.@dnsmasq[0].server="/2fuck.com/"
-uci add_list dhcp.@dnsmasq[0].server="/80asehdb/"
-uci add_list dhcp.@dnsmasq[0].server="/80aswg/"
-uci add_list dhcp.@dnsmasq[0].server="/ad1mat.de/"
-uci add_list dhcp.@dnsmasq[0].server="/ad2mat.de/"
-uci add_list dhcp.@dnsmasq[0].server="/ad3mat.de/"
-uci add_list dhcp.@dnsmasq[0].server="/ad4mat.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adclick.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adclick.net/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm.mediaplex.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm.net/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm1.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm1.net/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm2.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm2.net/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm3.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm3.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm3.net/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm4.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm4.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarm4.net/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarmonline.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarmonline.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adfarmonline.net/"
-uci add_list dhcp.@dnsmasq[0].server="/adform.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adform.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adform.net/"
-uci add_list dhcp.@dnsmasq[0].server="/adfram.net/"
-uci add_list dhcp.@dnsmasq[0].server="/adfram1.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adfram2.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adfrom.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adfrom.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adfrom.net/"
-uci add_list dhcp.@dnsmasq[0].server="/adidas-deutschland.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adition.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adition.de/"
-uci add_list dhcp.@dnsmasq[0].server="/ad-js.bild.de/"
-uci add_list dhcp.@dnsmasq[0].server="/ad-js.chip.de/"
-uci add_list dhcp.@dnsmasq[0].server="/ad-js.focus.de/"
-uci add_list dhcp.@dnsmasq[0].server="/ad-js.welt.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adnxs.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adsense.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adsense.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adservices.google.com/"
-uci add_list dhcp.@dnsmasq[0].server="/adspirit.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adtech.de/"
-uci add_list dhcp.@dnsmasq[0].server="/advolution.com/"
-uci add_list dhcp.@dnsmasq[0].server="/advolution.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adx.bild.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adx.chip.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adx.chip.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adx.focus.de/"
-uci add_list dhcp.@dnsmasq[0].server="/adx.welt.de/"
-uci add_list dhcp.@dnsmasq[0].server="/affinity.com/"
-uci add_list dhcp.@dnsmasq[0].server="/agof.de/"
-uci add_list dhcp.@dnsmasq[0].server="/airmaxschuheoutlet.com/"
-uci add_list dhcp.@dnsmasq[0].server="/akamaized.net/"
-uci add_list dhcp.@dnsmasq[0].server="/akku-laden.at/"
-uci add_list dhcp.@dnsmasq[0].server="/aladel.net/"
-uci add_list dhcp.@dnsmasq[0].server="/altrk.net/"
-uci add_list dhcp.@dnsmasq[0].server="/amazon-adsystem.com/"
-uci add_list dhcp.@dnsmasq[0].server="/analdin.com/"
-uci add_list dhcp.@dnsmasq[0].server="/anycracks.com/"
-uci add_list dhcp.@dnsmasq[0].server="/aos.prf.hn/click/"
-uci add_list dhcp.@dnsmasq[0].server="/api.adrtx.net/"
-uci add_list dhcp.@dnsmasq[0].server="/appliedsemantics.com/"
-uci add_list dhcp.@dnsmasq[0].server="/apps5.oingo.com/"
-uci add_list dhcp.@dnsmasq[0].server="/banner.t-online.de/"
-uci add_list dhcp.@dnsmasq[0].server="/bbjacke.de/"
-uci add_list dhcp.@dnsmasq[0].server="/bg/"
-uci add_list dhcp.@dnsmasq[0].server="/biallo.de/"
-uci add_list dhcp.@dnsmasq[0].server="/bigpoint.com/"
-uci add_list dhcp.@dnsmasq[0].server="/bilano.de/"
-uci add_list dhcp.@dnsmasq[0].server="/bild.ivwbox.de/"
-uci add_list dhcp.@dnsmasq[0].server="/billalo.de/"
-uci add_list dhcp.@dnsmasq[0].server="/billiger.de/common/modules/api/"
-uci add_list dhcp.@dnsmasq[0].server="/biohazard.xz.cz/"
-uci add_list dhcp.@dnsmasq[0].server="/block.opendns.com/"
-uci add_list dhcp.@dnsmasq[0].server="/bestcheck.de/"
-uci add_list dhcp.@dnsmasq[0].server="/bpwhamburgorchardpark.org/"
-uci add_list dhcp.@dnsmasq[0].server="/bu/"
-uci add_list dhcp.@dnsmasq[0].server="/by/"
-uci add_list dhcp.@dnsmasq[0].server="/cdn.flashtalking.com/"
-uci add_list dhcp.@dnsmasq[0].server="/centgebote.tv/"
-uci add_list dhcp.@dnsmasq[0].server="/chaturbate.com/"
-uci add_list dhcp.@dnsmasq[0].server="/coqnu.com/"
-uci add_list dhcp.@dnsmasq[0].server="/cs/"
-uci add_list dhcp.@dnsmasq[0].server="/cuponation.de/"
-uci add_list dhcp.@dnsmasq[0].server="/de.mediaplex.com/"
-uci add_list dhcp.@dnsmasq[0].server="/dntrax.com/"
-uci add_list dhcp.@dnsmasq[0].server="/doubleclick.com/"
-uci add_list dhcp.@dnsmasq[0].server="/doubleclick.de/"
-uci add_list dhcp.@dnsmasq[0].server="/doubleclick.net/"
-uci add_list dhcp.@dnsmasq[0].server="/download-service.de/"
-uci add_list dhcp.@dnsmasq[0].server="/download-sofort.com/"
-uci add_list dhcp.@dnsmasq[0].server="/ds.serving-sys.com/"
-uci add_list dhcp.@dnsmasq[0].server="/easycracks.net/"
-uci add_list dhcp.@dnsmasq[0].server="/emediate.eu/"
-uci add_list dhcp.@dnsmasq[0].server="/endlookup.com/"
-uci add_list dhcp.@dnsmasq[0].server="/etracker.de/"
-uci add_list dhcp.@dnsmasq[0].server="/exoclick.com/"
-uci add_list dhcp.@dnsmasq[0].server="/fancy.com/"
-uci add_list dhcp.@dnsmasq[0].server="/fancy.de/"
-uci add_list dhcp.@dnsmasq[0].server="/fapdu.com/"
-uci add_list dhcp.@dnsmasq[0].server="/fapmaps.com/"
-uci add_list dhcp.@dnsmasq[0].server="/focus.de/ajax/"
-uci add_list dhcp.@dnsmasq[0].server="/franzis-sportswear.de/"
-uci add_list dhcp.@dnsmasq[0].server="/g.msn.com/AIPRIV/"
-uci add_list dhcp.@dnsmasq[0].server="/g4u.me/"
-uci add_list dhcp.@dnsmasq[0].server="/gemini.yahoo.com/"
-uci add_list dhcp.@dnsmasq[0].server="/google.com/adsense/"
-uci add_list dhcp.@dnsmasq[0].server="/googleadservices.com/"
-uci add_list dhcp.@dnsmasq[0].server="/googleadservices.com/"
-uci add_list dhcp.@dnsmasq[0].server="/google-analytics.com/"
-uci add_list dhcp.@dnsmasq[0].server="/google-analytics.com/"
-uci add_list dhcp.@dnsmasq[0].server="/googlesyndication.com/"
-uci add_list dhcp.@dnsmasq[0].server="/googletagmanager.com/"
-uci add_list dhcp.@dnsmasq[0].server="/grosshandel-angebote.de/"
-uci add_list dhcp.@dnsmasq[0].server="/guruads.de/"
-uci add_list dhcp.@dnsmasq[0].server="/gutscheine\./"
-uci add_list dhcp.@dnsmasq[0].server="/gutscheine.bild.de/"
-uci add_list dhcp.@dnsmasq[0].server="/gutscheine.chip.de/"
-uci add_list dhcp.@dnsmasq[0].server="/gutscheine.focus.de/"
-uci add_list dhcp.@dnsmasq[0].server="/gutscheine.welt.de/"
-uci add_list dhcp.@dnsmasq[0].server="/hackpalace.com/"
-uci add_list dhcp.@dnsmasq[0].server="/heise.de/mediadaten/"
-uci add_list dhcp.@dnsmasq[0].server="/heise.de/mediadaten/online/"
-uci add_list dhcp.@dnsmasq[0].server="/hookupsonline.com/"
-uci add_list dhcp.@dnsmasq[0].server="/hsrd.yahoo.com/"
-uci add_list dhcp.@dnsmasq[0].server="/intelligent.com/"
-uci add_list dhcp.@dnsmasq[0].server="/intellitext.de/"
-uci add_list dhcp.@dnsmasq[0].server="/intellitxt.com/"
-uci add_list dhcp.@dnsmasq[0].server="/intellitxt.de/"
-uci add_list dhcp.@dnsmasq[0].server="/ioam.de/"
-uci add_list dhcp.@dnsmasq[0].server="/iomoio.com/"
-uci add_list dhcp.@dnsmasq[0].server="/iqm.de/"
-uci add_list dhcp.@dnsmasq[0].server="/ivw-online.de/"
-uci add_list dhcp.@dnsmasq[0].server="/jjhouse.com/"
-uci add_list dhcp.@dnsmasq[0].server="/keygen.us/"
-uci add_list dhcp.@dnsmasq[0].server="/keygenguru.com/"
-uci add_list dhcp.@dnsmasq[0].server="/keygens.pro/"
-uci add_list dhcp.@dnsmasq[0].server="/kingfamilyphotoalbum.com/"
-uci add_list dhcp.@dnsmasq[0].server="/kinox.to/"
-uci add_list dhcp.@dnsmasq[0].server="/kleinanzeige.chip.de/"
-uci add_list dhcp.@dnsmasq[0].server="/kleinanzeige.focus.de/"
-uci add_list dhcp.@dnsmasq[0].server="/kleinanzeige.welt.de/"
-uci add_list dhcp.@dnsmasq[0].server="/kliktrek.com/"
-uci add_list dhcp.@dnsmasq[0].server="/ktxtr.com/"
-uci add_list dhcp.@dnsmasq[0].server="/liebelib.com/"
-uci add_list dhcp.@dnsmasq[0].server="/lockerdome.com/"
-uci add_list dhcp.@dnsmasq[0].server="/macerkopf.de/go/"
-uci add_list dhcp.@dnsmasq[0].server="/madbid.com/"
-uci add_list dhcp.@dnsmasq[0].server="/mainstoreonline.com/"
-uci add_list dhcp.@dnsmasq[0].server="/me/"
-uci add_list dhcp.@dnsmasq[0].server="/mediaplex.com/"
-uci add_list dhcp.@dnsmasq[0].server="/mega-einkaufsquellen.de/"
-uci add_list dhcp.@dnsmasq[0].server="/movie4k.to/"
-uci add_list dhcp.@dnsmasq[0].server="/mp3fiesta.com/"
-uci add_list dhcp.@dnsmasq[0].server="/mp3sugar.com/"
-uci add_list dhcp.@dnsmasq[0].server="/mp3va.com/"
-uci add_list dhcp.@dnsmasq[0].server="/msads.net/"
-uci add_list dhcp.@dnsmasq[0].server="/musicmp3.ru/"
-uci add_list dhcp.@dnsmasq[0].server="/mypass.de/"
-uci add_list dhcp.@dnsmasq[0].server="/na.ads.yahoo.com/"
-uci add_list dhcp.@dnsmasq[0].server="/ngbc5azd/"
-uci add_list dhcp.@dnsmasq[0].server="/onlinefilme.tv/"
-uci add_list dhcp.@dnsmasq[0].server="/online-tests.de/"
-uci add_list dhcp.@dnsmasq[0].server="/onlineticketexpress.com/"
-uci add_list dhcp.@dnsmasq[0].server="/outbrain.com/"
-uci add_list dhcp.@dnsmasq[0].server="/outbrain.com/"
-uci add_list dhcp.@dnsmasq[0].server="/partners.webmasterplan.com/"
-uci add_list dhcp.@dnsmasq[0].server="/pixel.bild.de/"
-uci add_list dhcp.@dnsmasq[0].server="/pixel.mathtag.com/"
-uci add_list dhcp.@dnsmasq[0].server="/plista.com/"
-uci add_list dhcp.@dnsmasq[0].server="/popup.taboola.com/"
-uci add_list dhcp.@dnsmasq[0].server="/profi-kochrezepte.de/"
-uci add_list dhcp.@dnsmasq[0].server="/profiwin.de/"
-uci add_list dhcp.@dnsmasq[0].server="/qservz.com/"
-uci add_list dhcp.@dnsmasq[0].server="/quibids.com/"
-uci add_list dhcp.@dnsmasq[0].server="/rapidape.com/"
-uci add_list dhcp.@dnsmasq[0].server="/redintelligence.net/"
-uci add_list dhcp.@dnsmasq[0].server="/ro/"
-uci add_list dhcp.@dnsmasq[0].server="/rotten.com/"
-uci add_list dhcp.@dnsmasq[0].server="/rotten.de/"
-uci add_list dhcp.@dnsmasq[0].server="/royalgames.com/"
-uci add_list dhcp.@dnsmasq[0].server="/rs/"
-uci add_list dhcp.@dnsmasq[0].server="/ru/"
-uci add_list dhcp.@dnsmasq[0].server="/script.ioam.de/"
-uci add_list dhcp.@dnsmasq[0].server="/serials.ws/"
-uci add_list dhcp.@dnsmasq[0].server="/serienjunkies.org/"
-uci add_list dhcp.@dnsmasq[0].server="/serienstream.to/"
-uci add_list dhcp.@dnsmasq[0].server="/service.urchin.com/"
-uci add_list dhcp.@dnsmasq[0].server="/shooshtime.com/"
-uci add_list dhcp.@dnsmasq[0].server="/smartadserver.com/"
-uci add_list dhcp.@dnsmasq[0].server="/smartadserver.de/"
-uci add_list dhcp.@dnsmasq[0].server="/smartadserver.net/"
-uci add_list dhcp.@dnsmasq[0].server="/smokerland.net/"
-uci add_list dhcp.@dnsmasq[0].server="/su/"
-uci add_list dhcp.@dnsmasq[0].server="/sudoku.de/"
-uci add_list dhcp.@dnsmasq[0].server="/swoggi.de/"
-uci add_list dhcp.@dnsmasq[0].server="/systemcdn.net/"
-uci add_list dhcp.@dnsmasq[0].server="/t.ktxtr.com/"
-uci add_list dhcp.@dnsmasq[0].server="/trusted.de/"
-uci add_list dhcp.@dnsmasq[0].server="/tradedoubler.com/"
-uci add_list dhcp.@dnsmasq[0].server="/trafficreps.com/"
-uci add_list dhcp.@dnsmasq[0].server="/truste/"
-uci add_list dhcp.@dnsmasq[0].server="/twiago.com/"
-uci add_list dhcp.@dnsmasq[0].server="/unister-adserver.de/"
-uci add_list dhcp.@dnsmasq[0].server="/unup4y/"
-uci add_list dhcp.@dnsmasq[0].server="/urbandictionary.com/"
-uci add_list dhcp.@dnsmasq[0].server="/video-stats.video.google.com/"
-uci add_list dhcp.@dnsmasq[0].server="/vivime.net.fr/"
-uci add_list dhcp.@dnsmasq[0].server="/vodafone-affiliate.de/"
-uci add_list dhcp.@dnsmasq[0].server="/voluumtrk.com/"
-uci add_list dhcp.@dnsmasq[0].server="/vx.org.ua/"
-uci add_list dhcp.@dnsmasq[0].server="/winantivirus.com/"
-uci add_list dhcp.@dnsmasq[0].server="/aax-eu.amazon-adsystem.com/"
-uci add_list dhcp.@dnsmasq[0].server="/gravatar.com/"
-
-uci commit dhcp
 /etc/init.d/dnsmasq restart
+/etc/init.d/network restart
+
+echo
+echo 'Firewall-Rules activated'
+echo
+
+
+# Configure Tor client
+cat << EOF > /etc/tor/main
+AutomapHostsOnResolve 1
+VirtualAddrNetworkIPv4 172.16.0.0/12
+VirtualAddrNetworkIPV4 10.192.0.0/10
+VirtualAddrNetworkIPv6 fc00::/7
+
+DNSPort 192.168.187.1:9053
+DNSPort 192.168.188.1:9053
+DNSPort 192.168.189.1:9053
+DNSPort 192.168.190.1:9053
+DNSPort 192.168.66.254:9053
+DNSPort 192.168.70.254:9053
+DNSPort 192.168.71.254:9053
+
+DNSPort 192.168.187.1:9153
+DNSPort 192.168.188.1:9153
+DNSPort 192.168.189.1:9153
+DNSPort 192.168.190.1:9153
+DNSPort 192.168.66.254:9153
+DNSPort 192.168.70.254:9153
+DNSPort 192.168.71.254:9153
+
+DNSPort 192.168.187.1:54
+DNSPort 192.168.188.1:54
+DNSPort 192.168.189.1:54
+DNSPort 192.168.190.1:54
+DNSPort 192.168.66.254:54
+DNSPort 192.168.70.254:54
+DNSPort 192.168.71.254:54
+
+DNSPort 127.0.0.1:9053
+DNSPort 127.0.0.1:9153
+DNSPort 127.0.0.1:853
+DNSPort 127.0.10.1:53
+DNSPort 127.0.0.1:54
+
+TransPort 192.168.187.1:9040
+TransPort 192.168.188.1:9040
+TransPort 192.168.189.1:9040
+TransPort 192.168.190.1:9040
+TransPort 192.168.66.254:9040
+TransPort 192.168.70.254:9040
+TransPort 192.168.71.254:9040
+TransPort 127.0.0.1:9040
+
+SocksPort 192.168.187.1:9050
+SocksPort 192.168.188.1:9050
+SocksPort 192.168.189.1:9050
+SocksPort 192.168.190.1:9050
+SocksPort 192.168.66.254:9050
+SocksPort 192.168.70.254:9050
+SocksPort 192.168.71.254:9050
+SocksPort 127.0.0.1:9050
+
+SocksPort 192.168.187.1:9150
+SocksPort 192.168.188.1:9150
+SocksPort 192.168.189.1:9150
+SocksPort 192.168.190.1:9150
+SocksPort 192.168.66.254:9150
+SocksPort 192.168.70.254:9150
+SocksPort 192.168.71.254:9150
+SocksPort 127.0.0.1:9150
+
+#ORPort 9049
+#DirPort 9030
+
+HTTPTunnelPort 192.168.187.1:9060
+HTTPTunnelPort 192.168.188.1:9060
+HTTPTunnelPort 192.168.189.1:9060
+HTTPTunnelPort 192.168.190.1:9060
+HTTPTunnelPort 192.168.66.254:9060
+HTTPTunnelPort 192.168.70.254:9060
+HTTPTunnelPort 192.168.71.254:9060
+HTTPTunnelPort 127.0.0.1:9060
+
+
+#Nur sichere Exitnodes Benutzen
+StrictExitNodes 1 # war aktiv
+
+ExitNodes {LI}, {AT}, {CH}, {NL}, {UK}, {US} 
+
+AvoidDiskWrites 1
+RunAsDaemon 1
+Nickname EnemyOneEU
+#Log notice file /var/log/tor/tor-notices.log
+DataDirectory /var/lib/tor
+User tor
+
+EOF
+
+
+uci del_list tor.conf.tail_include="/etc/tor/main"
+uci add_list tor.conf.tail_include="/etc/tor/main"
+uci commit tor && reload_config
+
+/etc/init.d/tor restart
+
+echo 
+echo 'Tor-Onion-Services activated'
+echo
+
+
+#Configure stubby
+cat << EOF > /etc/config/stubby
+config stubby 'global'
+       option manual '0'
+       option trigger 'ONION_CLIENTS'
+       option trigger 'HCONTROL'
+       option trigger 'CONTROL'
+       option trigger 'SERVER'
+       option trigger 'ENTERTAIN'
+       option trigger 'VOICE'
+       option trigger 'GUEST'
+
+       # option triggerdelay '2'
+       list dns_transport 'GETDNS_TRANSPORT_TLS'
+       option tls_authentication '1'
+       option tls_query_padding_blocksize '128'
+       # option tls_connection_retries '2'
+       # option tls_backoff_time '3600'
+       # option timeout '5000'
+       # option dnssec_return_status '0'
+       option appdata_dir '/var/lib/stubby'
+       # option trust_anchors_backoff_time 2500
+       # option dnssec_trust_anchors '/var/lib/stubby/getdns-root.key'
+       option edns_client_subnet_private '1'
+       option idle_timeout '10000'
+       option round_robin_upstreams '1'
+       list listen_address '127.0.0.1@5453'
+       list listen_address '192.168.187.1@5453'
+       list listen_address '192.168.188.1@5453'
+       list listen_address '192.168.189.1@5453'
+       list listen_address '192.168.190.1@5453'
+       list listen_address '192.168.66.254@5453'
+       list listen_address '192.168.70.254@5453'
+       list listen_address '192.168.71.254@5453'
+
+       list listen_address '0::1@5453'
+       # option log_level '7'
+       # option command_line_arguments ''
+       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
+       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
+       # option tls_min_version '1.2'
+       # option tls_max_version '1.3'
+
+# Upstream resolvers are specified using 'resolver' sections.
+config resolver
+       option address '2606:4700:4700::1111'
+       option tls_auth_name 'cloudflare-dns.com'
+       # option tls_port 853
+       # list spki 'sha256/yioEpqeR4WtDwE9YxNVnCEkTxIjx6EEIwFSQW+lJsbc='
+       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
+       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
+       # option tls_min_version '1.2'
+       # option tls_max_version '1.3'
+
+config resolver
+       option address '2606:4700:4700::1001'
+       option tls_auth_name 'cloudflare-dns.com'
+       # option tls_port 853
+       # list spki 'sha256/yioEpqeR4WtDwE9YxNVnCEkTxIjx6EEIwFSQW+lJsbc='
+       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
+       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
+       # option tls_min_version '1.2'
+       # option tls_max_version '1.3'
+
+config resolver
+       option address '1.1.1.1'
+       option tls_auth_name 'cloudflare-dns.com'
+       # option tls_port 853
+       # list spki 'sha256/yioEpqeR4WtDwE9YxNVnCEkTxIjx6EEIwFSQW+lJsbc='
+       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
+       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
+       # option tls_min_version '1.2'
+       # option tls_max_version '1.3'
+
+config resolver
+       option address '1.0.0.1'
+       option tls_auth_name 'cloudflare-dns.com'
+       # option tls_port 853
+       # list spki 'sha256/yioEpqeR4WtDwE9YxNVnCEkTxIjx6EEIwFSQW+lJsbc='
+       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
+       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
+       # option tls_min_version '1.2'
+       # option tls_max_version '1.3'
+
+EOF
+
+/etc/init.d/stubby restart
+# Configure unbound client
+
+echo
+echo ' Stubby Pivaticy over cloudflair.com'
+echo
+
+cat << EOF > /etc/config/unbound
+config unbound
+	option add_extra_dns '0'
+	option add_local_fqdn '1'
+	option add_wan_fqdn '0'
+	option dhcp_link 'none'
+	option dhcp4_slaac6 '0'
+	option do_ip4 'yes'
+	option do_ip6 'yes'
+	option do_tcp 'yes'
+	option do_udp 'yes'
+	option domain 'local'
+	option domain_type 'static'
+	option edns_size '1280'
+	option extended_stats '0'
+	option hide_binddata '1'
+	option interface_auto '1'
+	option listen_port '5353'
+	option localservice '1'
+	option manual_conf '0'
+	option num_threads '1'
+	option protocol 'default'
+	option query_minimize '0'
+	option query_min_strict '0'
+	option rate_limit '0'
+	option rebind_localhost '0'
+	option rebind_protection '1'
+	option recursion 'default'
+	option resource 'default'
+	option root_hints '/var/lib/unbound/root.hints'
+	option root_age '9'
+	option ttl_min '120'
+	option unbound_control '0'
+	option validator '1'
+	option validator_ntp '1'
+	option verbosity '0'
+	list trigger_interface 'CONTROL'
+	list trigger_interface 'HCONTROL'
+	list trigger_interface 'ONION_CLIENTS'
+	list trigger_interface 'SERVER'
+	list trigger_interface 'VOICE'
+	list trigger_interface 'ENTERTAIN'
+	list trigger_interface 'GUEST'
+	list trigger_interface 'wan'
+	list domain_insecure '192.168.175.254'
+	list outgoing_port_permit '853'
+	list outgoing_port_permit '9050'
+	list outgoing_port_permit '9150'
+	list outgoing_port_permit '9053'
+	list outgoing_port_permit '9153'
+	list outgoing_port_permit '10240-65335'
+
+config zone 'forward'
+	option fallback '1'
+	option zone_type 'forward_zone'
+	option tls_upstream '1'
+	option tls_index 'dns.cloudflair'
+	option tls_cert_bundle '/etc/unbound/ca-certificates.crt'
+	option name '.'
+	option forward_addr 'dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @9050'
+#config zone 'forward'
+#	option fallback '0'
+#	option zone_type 'forward_zone'
+#	option name 'inet.stawimedia.local'
+#	option forward_addr '192.168.189.1'
+#config zone 'forward'
+#	option fallback '0'
+#	option zone_type 'forward_zone'
+#	option name 'hcontrol.stawimedia.local'
+#	option forward_addr '192.168.70.254'
+#config zone 'forward'
+#	option fallback '0'
+#	option zone_type 'forward_zone'
+#	option name 'control.stawimedia.local'
+#	option forward_addr '192.168.71.254'
+#config zone 'forward'
+#	option fallback '0'
+#	option zone_type 'forward_zone'
+#	option name 'server.stawimedia.local'
+#	option forward_addr '192.168.66.254'
+#config zone 'forward'
+#	option fallback '0'
+#	option zone_type 'forward_zone'
+#	option name 'voice.local'
+#	option forward_addr '192.168.190.1'
+#config zone 'forward'
+#	option fallback '0'
+#	option zone_type 'forward_zone'
+#	option name 'guest.local'
+#	option forward_addr '192.168.188.1'
+#config zone 'forward'
+#	option fallback '0'
+#	option zone_type 'forward_zone'
+#	option name 'entertain.local'
+#	option forward_addr '192.168.187.1'
+	
+EOF
+uci commit unbound
+
+echo
+echo 'Unbound lokal DNS-Resolver with lokal root-files'
+/etc/init.d/odhcpd disable
+/etc/init.d/odhcpd stop
+
+echo
+echo 'Thanx for waiting'
+echo 
+echo 'for more Privacy install Brave-Browser https://brave.com/download/ on your machine'
+echo 
+echo 'I will restart in 5 Seconds. After you can work private and secure on all private Natworks'
+echo
+
+read -t 5 -n -p -s
+
+reboot
 
