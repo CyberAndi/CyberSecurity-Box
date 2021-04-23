@@ -18,7 +18,7 @@
   <br>
    After the reboot you will have following Networks:<br>
     <li>REPEATER for internal Communication between Router and Repeater for all of this Networks</li>
-    <li>VOICE for Amazon Alexa, Google Assisten or other Voice Assisten-Systems</li>
+    <li>VOICE for Amazon Alexa, Google Assistent or other Voice Assistent-Systems</li>
     <li>CONTROL for IR/RF-Controlling like Logitech Harmony, Broadlink etc. </li> 
     <li>HCONTROL for Homeautomation or Smarthome (Heating, Cooling, Dor-, Window-Contacts, Power-Switches etc.)</li>
     <li>ENTERTAIN for TVs, PlayStation, X-Box, Mediaplayer, DVD-Player and BlueRay-Player etc.</li>
