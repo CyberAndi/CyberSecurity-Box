@@ -22,8 +22,8 @@
     <li>ENTERTAIN for TVs, PlayStation, X-Boxe, Mediaplayer, DVD-Player and BlueRay-Playere etc.</li>
     <li>DMZ for NAS, Network Storage, PLEX-Seerver, DLNA-Servers, Database-Servers, Mail-Server and Web-Server etc.</li>
     <li>TOR for Clients with .onion and Tor-Network Access</li>
-    <li>GUEST for your Gests only</li>
-  All of this have the WiFi-Password / -Key <pr>Cyber,Sec9ox</pr><br>
+    <li>GUEST for your Gests only</li><br>
+  All of this have the WiFi-Password / -Key <i><b>Cyber,Sec9ox</b></i><br><br>
   For each of this Networks you will have an <b>VLAN</b> on the Switch-/Output-Ethernet-Ports of the Router between VLAN_ID 101 and VLAN_ID 106.
   <br>
   </li>
