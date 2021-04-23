@@ -24,7 +24,7 @@
     <li>TOR for Clients with .onion and Tor-Network Access</li>
     <li>GUEST for your Gests only</li><br>
   All of this have the WiFi-Password / -Key <i><b>Cyber,Sec9ox</b></i><br><br>
-  For each of this Networks you will have an <b>VLAN</b> on the Switch-/Output-Ethernet-Ports of the Router between VLAN_ID 101 and VLAN_ID 106.
+  For each of this separated Networks you will have a <b>VLAN</b> on the Switch-/Output-Ethernet-Ports of the Router between <b>VLAN_ID 101</b> and <b>VLAN_ID 106</b>.
   <br>
   </li>
   <li>
