@@ -17,13 +17,15 @@
   copy the sourcecode from <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a> and insert and run in ssh.
   <br>
    After the reboot you will have following Networks:<br>
+    <li>REPEATER for internal Communication between Router and Repeater for all of this Networks</li>
     <li>VOICE for Amazon Alexa, Google Assisten or other Voice Assisten-Systems</li>
-    <li>HCONTROL for Homeautomation or Smarthome</li>
-    <li>ENTERTAIN for TVs, PlayStation, X-Boxe, Mediaplayer, DVD-Player and BlueRay-Playere etc.</li>
-    <li>DMZ for NAS, Network Storage, PLEX-Seerver, DLNA-Servers, Database-Servers, Mail-Server and Web-Server etc.</li>
+    <li>CONTROL for IR/RF-Controlling like Logitech Harmony, Broadlink etc. </li> 
+    <li>HCONTROL for Homeautomation or Smarthome (Heating, Cooling, Dor-, Window-Contacts, Power-Switches etc.)</li>
+    <li>ENTERTAIN for TVs, PlayStation, X-Box, Mediaplayer, DVD-Player and BlueRay-Player etc.</li>
+    <li>DMZ for NAS, Network Storage, PLEX-Server, UPNP/DLNA-Servers, Database-Servers, Mail-Server and Web-Server etc.</li>
     <li>TOR for Clients with .onion and Tor-Network Access</li>
     <li>GUEST for your Gests only</li><br>
-  All of this have the WiFi-Password / -Key <i><b>Cyber,Sec9ox</b></i><br><br>
+  All of this have the WiFi-Password/-Key: <i><b>Cyber,Sec9ox</b></i><br><br>
   For each of this separated Networks you will have a <b>VLAN</b> on the Switch-/Output-Ethernet-Ports of the Router between <b>VLAN_ID 101</b> and <b>VLAN_ID 106</b>.
   <br>
   </li>
