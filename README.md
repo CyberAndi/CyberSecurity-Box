@@ -16,13 +16,16 @@
   <br>
   copy the sourcecode from <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a> and insert and run in ssh.
   <br>
-   After the reboot you will have following Networks:
+   After the reboot you will have following Networks:<br>
     <li>VOICE for Amazon Alexa, Google Assisten or other Voice Assisten-Systems</li>
     <li>HCONTROL for Homeautomation or Smarthome</li>
     <li>ENTERTAIN for TVs, PlayStation, X-Boxe, Mediaplayer, DVD-Player and BlueRay-Playere etc.</li>
     <li>DMZ for NAS, Network Storage, PLEX-Seerver, DLNA-Servers, Database-Servers, Mail-Server and Web-Server etc.</li>
     <li>TOR for Clients with .onion and Tor-Network Access</li>
     <li>GUEST for your Gests only</li>
+  All of this have the WiFi-Password / -Key <pr>Cyber,Sec9ox</pr><br>
+  For each of this Networks you will have an <b>VLAN</b> on the Switch-/Output-Ethernet-Ports of the Router between VLAN_ID 101 and VLAN_ID 106.
+  <br>
   </li>
   <li>
   <h3>Installation CyberSecurityBox (RasPi) - Alternative 2</h3>
