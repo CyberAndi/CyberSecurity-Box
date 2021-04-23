@@ -15,7 +15,7 @@
   <br>
   copy the sourcecode from <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a> and insert and run in ssh.
   <br><br>
-   After the reboot you will have following Networks:<br>
+   After the reboot you will have following Networks:<br><b>
     <ul>
     <li><b>REPEATER</b> for internal Communication between Router and Repeater for all of this Networks</li>
       <li><b>VOICE</b> for Amazon Alexa, Google Assistent or other Voice Assistent-Systems</li>
@@ -24,7 +24,7 @@
     <li><b>ENTERTAIN</b> for TVs, PlayStation, X-Box, Mediaplayer, DVD-Player and BlueRay-Player etc.</li>
     <li><b>DMZ</b> for NAS, Network Storage, PLEX-Server, UPNP/DLNA-Servers, Database-Servers, Mail-Server and Web-Server etc.</li>
     <li><b>TOR</b> for Clients with .onion and Tor-Network Access</li>
-    <li><b>GUEST</b> for your Gests only</li>
+    <li><b>GUEST</b> for your Guests only</li>
   </ul><br>
   All of this have the WiFi-Password/-Key: <i><b>Cyber,Sec9ox</b></i><br><br>
   For each of this separated Networks you will have a <b>VLAN</b> on the Switch-/Output-Ethernet-Ports of the Router between <b>VLAN_ID 101</b> and <b>VLAN_ID 106</b>.
