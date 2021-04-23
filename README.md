@@ -15,7 +15,7 @@
   <br>
   copy the sourcecode from <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a> and insert and run in ssh.
   <br><br>
-   After the reboot you will have following Networks:<br><b>
+   After the reboot you will have following Networks:<br><br>
     <ul>
     <li><b>REPEATER</b> for internal Communication between Router and Repeater for all of this Networks</li>
       <li><b>VOICE</b> for Amazon Alexa, Google Assistent or other Voice Assistent-Systems</li>
