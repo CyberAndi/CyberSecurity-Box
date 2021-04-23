@@ -1,11 +1,9 @@
-#!/bin/sh
-
 clear
 clear
 echo
 echo '########################################################'
 echo '#                                                      #'
-echo '#                     CyberSecurity-Box                #'
+echo '#                 CyberSecurity-Box                    #'
 echo '#                                                      #'
 echo '# local Privacy for Voice-Assisten Smart-TV SmartHome  #'
 echo '#                                                      #'
@@ -21,26 +19,31 @@ uci set system.@system[0].cronloglevel='9'
 uci set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
 uci set system.@system[0].zonename='Europe/Berlin'
 uci set system.@system[0].hostname='CyberSecurity-Box'
-uci commit system && reload_config
-
-echo
-echo 'Default Country-Settings'
-echo 
-opkg update
-opkg install nano luci-ssl unbound-daemon-heavy unbound-anchor unbound-control stubby tor tor-geoip dnsmasq-full bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos git
-echo 
-echo 'Software Packeges installed'
-echo
-
+uci set uhttpd.defaults.country='DE'
+uci set uhttpd.defaults.state=''
+uci set uhttpd.defaults.location='DMZ'
+uci set uhttpd.defaults.commonname='192.168.189.1'
 uci -q delete uhttpd.main.listen_http
 uci add_list uhttpd.main.listen_http="0.0.0.0:8080"
 uci add_list uhttpd.main.listen_http="[::]:8080"
 uci -q delete uhttpd.main.listen_https
 uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
-uci commit uhttpd && reload_config
+uci commit  && reload_config
 /etc/init.d/uhttpd restart
 
+echo
+echo 'Default Country-Settings'
+echo 
+opkg update
+opkg remove odhcp6c odhcpd-ipv6only
+opkg update
+opkg upgrade $(opkg list-upgradable | awk '{print $1}')
+opkg update
+opkg install nano git wget curl luci-ssl unbound-daemon-heavy unbound-anchor unbound-control stubby tor tor-geoip dnsmasq-full bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos
+echo 
+echo 'Software Packeges installed'
+echo
 echo
 echo 'https activated'
 echo
@@ -384,6 +387,10 @@ body.lang_en {
     #font-size: var(--fontSize) !important;
 }
 
+a, a:hover, a:active {
+    color: var(--fontLight);
+}
+
 p {
     color: var(--fontLight);
 }
@@ -575,6 +582,11 @@ header a, header div > ul .menu-dropdown li a, .nav .menu-dropdown li a, header 
 
 var {
     color: var(--fontDark);
+}
+
+.btn.primary, .cbi-button-action.important, .cbi-page-actions .cbi-button-apply, .cbi-section-actions .cbi-button-edit {
+    color: var(--fontXLight) !important;
+    text-shadow: var(--fontShadow) !important;
 }
 
 p, .cbi-map-descr, .cbi-section-descr, .table .tr.cbi-section-table-descr .th {
@@ -961,6 +973,19 @@ textarea {
     overflow: auto;
 }
 
+
+textarea[readonly] {
+    pointer-events: auto;
+    cursor: auto;
+    color: var(--fontTerminal) !important;
+    font-family: var(--terminalFont) !important;
+    font-size: var(--fontSizeXSmall) !important;
+    background-color: var(--blackColor) !important;
+    border: var(--borderTerminal) !important;
+    box-shadow: var(--inputShadow) !important;
+    overflow: auto;
+}
+
 textarea#syslog {
     color: var(--fontTerminal) !important;
     font-family: var(--terminalFont);
@@ -1294,18 +1319,18 @@ uci set network.SERVER.dns='192.168.66.254'
 uci commit network
 
 uci add network interface
-uci rename network.@interface[-1]='ONION_CLIENTS'
+uci rename network.@interface[-1]='TOR_CLIENTS'
 uci commit network
-uci set network.ONION_CLIENTS.proto='static'
-uci set network.ONION_CLIENTS.type='bridge'
-uci set network.ONION_CLIENTS.ipaddr='192.168.189.1'
-uci set network.ONION_CLIENTS.netmask='255.255.255.0'
-uci set network.ONION_CLIENTS.ip6assign='56'
-uci set network.ONION_CLIENTS.broadcast='192.168.189.255'
-uci set network.ONION_CLIENTS.igmp_snooping='1'
-uci set network.ONION_CLIENTS.gateway='192.168.175.254'
-uci set network.ONION_CLIENTS.ifname='eth0.104'
-uci set network.ONION_CLIENTS.dns='192.168.189.1'
+uci set network.TOR_CLIENTS.proto='static'
+uci set network.TOR_CLIENTS.type='bridge'
+uci set network.TOR_CLIENTS.ipaddr='192.168.189.1'
+uci set network.TOR_CLIENTS.netmask='255.255.255.0'
+uci set network.TOR_CLIENTS.ip6assign='56'
+uci set network.TOR_CLIENTS.broadcast='192.168.189.255'
+uci set network.TOR_CLIENTS.igmp_snooping='1'
+uci set network.TOR_CLIENTS.gateway='192.168.175.254'
+uci set network.TOR_CLIENTS.ifname='eth0.104'
+uci set network.TOR_CLIENTS.dns='192.168.189.1'
 uci commit network
 
 uci add network interface
@@ -1503,11 +1528,11 @@ uci set wireless.wifinet2.encryption='psk2'
 
 uci delete wireless.wifinet3
 uci set wireless.wifinet3=wifi-iface
-uci set wireless.wifinet3.ssid='iNet-CyberSecBox'
+uci set wireless.wifinet3.ssid='TOR-CyberSecBox'
 uci set wireless.wifinet3.encryption='psk2'
 uci set wireless.wifinet3.device='radio0'
 uci set wireless.wifinet3.mode='ap'
-uci set wireless.wifinet3.network='ONION_CLIENTS'
+uci set wireless.wifinet3.network='TOR_CLIENTS'
 uci set wireless.wifinet3.key='Cyber,Sec9ox'
 
 uci delete wireless.wifinet4
@@ -1521,7 +1546,7 @@ uci set wireless.wifinet4.key='Cyber,Sec9ox'
 
 uci delete wireless.wifinet5
 uci set wireless.wifinet5=wifi-iface
-uci set wireless.wifinet5.ssid='CyberSecBox'
+uci set wireless.wifinet5.ssid='DMZ-CyberSecBox'
 uci set wireless.wifinet5.encryption='psk2'
 uci set wireless.wifinet5.device='radio0'
 uci set wireless.wifinet5.mode='ap'
@@ -1556,11 +1581,11 @@ uci set wireless.default_radio1.network='VOICE'
 
 uci delete wireless.wifinet7
 uci set wireless.wifinet7=wifi-iface
-uci set wireless.wifinet7.ssid='iNet-CyberSecBox'
+uci set wireless.wifinet7.ssid='TOR-CyberSecBox'
 uci set wireless.wifinet7.encryption='psk2'
 uci set wireless.wifinet7.device='radio1'
 uci set wireless.wifinet7.mode='ap'
-uci set wireless.wifinet7.network='ONION_CLIENTS'
+uci set wireless.wifinet7.network='TOR_CLIENTS'
 uci set wireless.wifinet7.key='Cyber,Sec9ox'
 
 uci delete wireless.wifinet8
@@ -1576,7 +1601,7 @@ uci delete wireless.wifinet9
 uci set wireless.wifinet9=wifi-iface
 uci set wireless.wifinet9.device='radio1'
 uci set wireless.wifinet9.mode='ap'
-uci set wireless.wifinet9.ssid='CyberSecBox'
+uci set wireless.wifinet9.ssid='DMZ-CyberSecBox'
 uci set wireless.wifinet9.encryption='psk2'
 uci set wireless.wifinet9.key='Cyber,Sec9ox'
 uci set wireless.wifinet9.network='REPEATER'
@@ -1593,18 +1618,291 @@ uci set wireless.wifinet10.ssid='Guest-CyberSecBox'
 uci delete wireless.radio0.disabled
 uci delete wireless.radio1.disabled
 
-uci delete wireless.wifinet11
-uci delete wireless.wifinet12
-uci delete wireless.wifinet13
-uci delete wireless.wifinet14
-uci delete wireless.wifinet15
-uci delete wireless.wifinet16
+#uci delete wireless.wifinet11
+#uci delete wireless.wifinet12
+#uci delete wireless.wifinet13
+#uci delete wireless.wifinet14
+#uci delete wireless.wifinet15
+#uci delete wireless.wifinet16
 
 uci commit wireless
 
 echo
 echo 'Networks Settings defined'
 echo
+
+
+# Configure Tor client
+cat << EOF > /etc/tor/main
+AutomapHostsOnResolve 1
+VirtualAddrNetworkIPV4 10.192.0.0/10
+VirtualAddrNetworkIPv6 fc00::/7
+
+
+DNSPort 127.0.0.1:9053
+DNSPort 127.0.0.1:9153
+DNSPort 127.0.0.1:853
+DNSPort 127.0.10.1:53
+DNSPort 127.0.0.1:54
+DNSPort [0::1]:9053
+DNSPort [0::1]:9153
+DNSPort [0::1]:853
+DNSPort [0::1]:54
+
+
+DNSPort 192.168.187.1:9053
+DNSPort 192.168.188.1:9053
+DNSPort 192.168.189.1:9053
+DNSPort 192.168.190.1:9053
+DNSPort 192.168.66.254:9053
+DNSPort 192.168.70.254:9053
+DNSPort 192.168.71.254:9053
+
+
+DNSPort 192.168.187.1:9153
+DNSPort 192.168.188.1:9153
+DNSPort 192.168.189.1:9153
+DNSPort 192.168.190.1:9153
+DNSPort 192.168.66.254:9153
+DNSPort 192.168.70.254:9153
+DNSPort 192.168.71.254:9153
+
+DNSPort 192.168.187.1:54
+DNSPort 192.168.188.1:54
+DNSPort 192.168.189.1:54
+DNSPort 192.168.190.1:54
+DNSPort 192.168.66.254:54
+DNSPort 192.168.70.254:54
+DNSPort 192.168.71.254:54
+
+
+TransPort 192.168.187.1:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 192.168.188.1:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 192.168.189.1:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 192.168.190.1:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 192.168.66.254:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 192.168.70.254:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 192.168.71.254:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 127.0.0.1:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort [0::1]:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+
+SocksPort 192.168.187.1:9050
+SocksPort 192.168.188.1:9050
+SocksPort 192.168.189.1:9050
+SocksPort 192.168.190.1:9050
+SocksPort 192.168.66.254:9050
+SocksPort 192.168.70.254:9050
+SocksPort 192.168.71.254:9050
+SocksPort 127.0.0.1:9050
+SocksPort [0::1]:9050
+
+SocksPort 192.168.187.1:9150
+SocksPort 192.168.188.1:9150
+SocksPort 192.168.189.1:9150
+SocksPort 192.168.190.1:9150
+SocksPort 192.168.66.254:9150
+SocksPort 192.168.70.254:9150
+SocksPort 192.168.71.254:9150
+SocksPort 127.0.0.1:9150
+SocksPort [0::1]:9150
+
+#ORPort 9049
+#DirPort 9030
+
+HTTPTunnelPort 192.168.187.1:9060
+HTTPTunnelPort 192.168.188.1:9060
+HTTPTunnelPort 192.168.189.1:9060
+HTTPTunnelPort 192.168.190.1:9060
+HTTPTunnelPort 192.168.66.254:9060
+HTTPTunnelPort 192.168.70.254:9060
+HTTPTunnelPort 192.168.71.254:9060
+HTTPTunnelPort 127.0.0.1:9060
+HTTPTunnelPort [0::1]:9060
+
+#Nur sichere Exitnodes Benutzen
+StrictExitNodes 1 # war aktiv
+
+ExitNodes {LI}, {AT}, {CH}, {NL}, {UK}, {US} 
+
+AvoidDiskWrites 1
+RunAsDaemon 1
+Nickname EnemyOneEU
+#Log notice file /var/log/tor/tor-notices.log
+DataDirectory /var/lib/tor
+User tor
+
+EOF
+
+
+uci del_list tor.conf.tail_include="/etc/tor/main"
+uci add_list tor.conf.tail_include="/etc/tor/main"
+uci commit tor && reload_config
+
+/etc/init.d/tor restart
+
+echo 
+echo 'Tor-Onion-Services activated'
+echo
+
+
+#Configure stubby
+uci set stubby.global=stubby
+uci set stubby.global.manual='0'
+uci add_list stubby.global.trigger='GUEST'
+uci add_list stubby.global.trigger='VOICE'
+uci add_list stubby.global.trigger='ENTERTAIN'
+uci add_list stubby.global.trigger='TOR_CLIENTS'
+uci add_list stubby.global.trigger='HCONTROL'
+uci add_list stubby.global.trigger='CONTROL'
+uci add_list stubby.global.trigger='SERVER'
+uci add_list stubby.global.trigger='wan'
+uci add_list stubby.global.trigger='wan6'
+uci set stubby.global.dns_transport='GETDNS_TRANSPORT_TLS'
+uci set stubby.global.tls_authentication='1'
+uci set stubby.global.tls_query_padding_blocksize='128'
+uci set stubby.global.appdata_dir='/var/lib/stubby'
+uci set stubby.global.edns_client_subnet_private='1'
+uci set stubby.global.idle_timeout='10000'
+uci set stubby.global.round_robin_upstreams='1'
+uci add_list stubby.global.listen_address='127.0.0.1@5453'
+uci add_list stubby.global.listen_address='192.168.187.1@5453'
+uci add_list stubby.global.listen_address='192.168.188.1@5453'
+uci add_list stubby.global.listen_address='192.168.189.1@5453'
+uci add_list stubby.global.listen_address='192.168.190.1@5453'
+uci add_list stubby.global.listen_address='192.168.66.254@5453'
+uci add_list stubby.global.listen_address='192.168.70.254@5453'
+uci add_list stubby.global.listen_address='192.168.71.254@5453'
+uci add_list stubby.global.listen_address='0::1@5453'
+#uci add stubby resolver
+#uci set stubby.@resolver[-1]=resolver
+#uci set stubby.@resolver[-1].address='0::1'
+#uci set stubby.@resolver[-1].tls_port='9053'
+#uci set stubby.@resolver[-1].tls_auth_name='cloudflare-dns.com'
+#uci add stubby resolver
+#uci set stubby.@resolver[-1]=resolver
+#uci set stubby.@resolver[-1].address='127.0.0.1'
+#uci set stubby.@resolver[-1].tls_port='9053'
+#uci set stubby.@resolver[-1].tls_auth_name='cloudflare-dns.com'
+uci add stubby resolver
+uci set stubby.@resolver[-1]=resolver
+uci set stubby.@resolver[-1].address='192.168.175.254'
+uci set stubby.@resolver[-1].tls_auth_name='cloudflare-dns.com'
+uci add stubby resolver
+uci set stubby.@resolver[-1]=resolver
+uci set stubby.@resolver[-1].tls_port='853'
+uci set stubby.@resolver[-1].address='2606:4700:4700::1111'
+uci set stubby.@resolver[-1].tls_auth_name='cloudflare-dns.com'
+uci add stubby resolver
+uci set stubby.@resolver[-1]=resolver
+uci set stubby.@resolver[-1].tls_port='853'
+uci set stubby.@resolver[-1].address='2606:4700:4700::1001'
+uci set stubby.@resolver[-1].tls_auth_name='cloudflare-dns.com'
+uci add stubby resolver
+uci set stubby.@resolver[-1]=resolver
+uci set stubby.@resolver[-1].tls_port='853'
+uci set stubby.@resolver[-1].address='1.1.1.1'
+uci set stubby.@resolver[-1].tls_auth_name='cloudflare-dns.com'
+uci add stubby resolver
+uci set stubby.@resolver[-1]=resolver
+uci set stubby.@resolver[-1].tls_port='853'
+uci set stubby.@resolver[-1].address='1.0.0.1'
+uci set stubby.@resolver[-1].tls_auth_name='cloudflare-dns.com'
+
+
+/etc/init.d/stubby restart
+# Configure unbound client
+
+echo
+echo 'Stubby Pivaticy over cloudflair.com'
+echo
+mkdir /etc/unbound/unbound.conf.d
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
+curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
+
+
+uci set unbound.@unbound[0]=unbound
+uci set unbound.@unbound[0].include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
+uci set unbound.@unbound[0].tls_cert_bundle='/etc/unbound/ca-certificates.crt'
+uci set unbound.@unbound[0].add_extra_dns='0'
+uci set unbound.@unbound[0].add_local_fqdn='1'
+uci set unbound.@unbound[0].add_wan_fqdn='0'
+uci set unbound.@unbound[0].dhcp_link='none'
+uci set unbound.@unbound[0].dhcp4_slaac6='0'
+uci set unbound.@unbound[0].do_ip4='yes'
+uci set unbound.@unbound[0].do_ip6='no'
+uci set unbound.@unbound[0].do_tcp='yes'
+uci set unbound.@unbound[0].do_udp='yes'
+uci set unbound.@unbound[0].domain='local'
+uci set unbound.@unbound[0].domain_type='static'
+uci set unbound.@unbound[0].edns_size='1280'
+uci set unbound.@unbound[0].extended_stats='0'
+uci set unbound.@unbound[0].hide_binddata='1'
+uci set unbound.@unbound[0].interface_auto='1'
+uci set unbound.@unbound[0].listen_port='5353'
+uci set unbound.@unbound[0].localservice='1'
+uci set unbound.@unbound[0].manual_conf='0'
+uci set unbound.@unbound[0].num_threads='1'
+uci set unbound.@unbound[0].protocol='default'
+uci set unbound.@unbound[0].query_minimize='0'
+uci set unbound.@unbound[0].query_min_strict='0'
+uci set unbound.@unbound[0].rate_limit='0'
+uci set unbound.@unbound[0].rebind_localhost='0'
+uci set unbound.@unbound[0].rebind_protection='1'
+uci set unbound.@unbound[0].recursion='default'
+uci set unbound.@unbound[0].resource='default'
+uci set unbound.@unbound[0].root_hints='/var/lib/unbound/root.hints'
+uci set unbound.@unbound[0].root_age='9'
+uci set unbound.@unbound[0].ttl_min='120'
+uci set unbound.@unbound[0].unbound_control='0'
+uci set unbound.@unbound[0].prefetch='yes'
+uci set unbound.@unbound[0].validator='1'
+uci set unbound.@unbound[0].validator_ntp='1'
+uci set unbound.@unbound[0].verbosity='0'
+uci set unbound.@unbound[0].hide_identity='yes'
+uci set unbound.@unbound[0].hide_version='yes'
+uci set unbound.@unbound[0].harden_glue='yes'
+uci set unbound.@unbound[0].harden_dnssec_stripped='yes'
+uci set unbound.@unbound[0].harden_large_queries='yes'
+uci set unbound.@unbound[0].harden_short_bufsize='yes'
+uci set unbound.@unbound[0].use_aps_for_id='yes'
+uci set unbound.@unbound[0].so_reuseport='yes'
+uci set unbound.@unbound[0].msg_cache_slabs='2'
+uci set unbound.@unbound[0].rrset_cache_slabs='2'
+uci set unbound.@unbound[0].infra_cache_slabs='2'
+uci set unbound.@unbound[0].key_cache_slabs='2'
+uci set unbound.@unbound[0].qname_minimisation='yes'
+uci set unbound.@unbound[0].rrset_roundrobin='yes'
+uci add_list unbound.@unbound[0].trigger_interface='CONTROL'
+uci add_list unbound.@unbound[0].trigger_interface='HCONTROL'
+uci add_list unbound.@unbound[0].trigger_interface='TOR_CLIENTS'
+uci add_list unbound.@unbound[0].trigger_interface='SERVER'
+uci add_list unbound.@unbound[0].trigger_interface='VOICE'
+uci add_list unbound.@unbound[0].trigger_interface='ENTERTAIN'
+uci add_list unbound.@unbound[0].trigger_interface='GUEST'
+uci add_list unbound.@unbound[0].trigger_interface='wan'
+uci add_list unbound.@unbound[0].trigger_interface='wan6'
+uci set unbound.@unbound[0].domain_insecure='192.168.175.254'
+uci add_list unbound.@unbound[0].outgoing_port_permit='853'
+uci add_list unbound.@unbound[0].outgoing_port_permit='9050'
+uci add_list unbound.@unbound[0].outgoing_port_permit='9150'
+uci add_list unbound.@unbound[0].outgoing_port_permit='9053'
+uci add_list unbound.@unbound[0].outgoing_port_permit='9153'
+uci add_list unbound.@unbound[0].outgoing_port_permit='10240-65335'
+uci set unbound.forward=zone
+uci set unbound.forward.fallback='1'
+uci set unbound.forward.zone_type='forward_zone'
+uci set unbound.forward.tls_upstream='1'
+uci set unbound.forward.tls_index='dns.cloudflair'
+uci set unbound.forward.name='.'
+uci set unbound.forward.forward_tls_upstream='yes'
+uci set unbound.forward.forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @9050'
+
+uci commit unbound
+
+echo
+echo 'Unbound lokal DNS-Resolver with lokal root-files'
+
+
 
 uci -q delete dhcp
 uci delete dhcp.@dnsmasq[0]
@@ -1623,7 +1921,7 @@ uci set dhcp.BlacklistSERVER.localise_queries='1'
 uci set dhcp.BlacklistSERVER.rebind_protection='1'
 uci set dhcp.BlacklistSERVER.rebind_localhost='1'
 uci set dhcp.BlacklistSERVER.filterwin2k='1'
-uci set dhcp.BlacklistSERVER.local='/server.local/'
+uci set dhcp.BlacklistSERVER.local='/server.stawimedia.local/'
 uci set dhcp.BlacklistSERVER.expandhosts='1'
 uci set dhcp.BlacklistSERVER.authoritative='1'
 uci set dhcp.BlacklistSERVER.readethers='1'
@@ -1659,7 +1957,7 @@ uci set dhcp.BlacklistINET.localise_queries='1'
 uci set dhcp.BlacklistINET.rebind_protection='1'
 uci set dhcp.BlacklistINET.rebind_localhost='1'
 uci set dhcp.BlacklistINET.filterwin2k='1'
-uci set dhcp.BlacklistINET.local='/inet.local/'
+uci set dhcp.BlacklistINET.local='/inet.stawimedia.local/'
 uci set dhcp.BlacklistINET.expandhosts='1'
 uci set dhcp.BlacklistINET.authoritative='1'
 uci set dhcp.BlacklistINET.readethers='1'
@@ -1673,20 +1971,20 @@ uci set dhcp.BlacklistINET.logfacility='/var/log/dnsmasq.blacklistinet.log'
 uci add_list dhcp.BlacklistINET.notinterface='VOICE'
 uci add_list dhcp.BlacklistINET.notinterface='GUEST' 
 uci add_list dhcp.BlacklistINET.notinterface='ENTERTAIN'
-#uci set dhcp.BlacklistINET.interface='ONION_CLIENTS'
+#uci set dhcp.BlacklistINET.interface='TOR_CLIENTS'
 
 
-uci set dhcp.ONION_CLIENTS=dhcp
-uci set dhcp.ONION_CLIENTS.start='1'
-uci set dhcp.ONION_CLIENTS.limit='250'
-uci set dhcp.ONION_CLIENTS.interface='ONION_CLIENTS'
-uci set dhcp.ONION_CLIENTS.leasetime='24h'
-uci set dhcp.ONION_CLIENTS.dhcpv6='server'
-uci set dhcp.ONION_CLIENTS.dhcpv4='server'
-uci set dhcp.ONION_CLIENTS.ra='server'
-uci set dhcp.ONION_CLIENTS.ra_management='1'
-uci set dhcp.ONION_CLIENTS.instance='BlacklistINET'
-#uci set dhcp.ONION_CLIENTS.confdir='/etc/dnsmasq.d/Blacklist'
+uci set dhcp.TOR_CLIENTS=dhcp
+uci set dhcp.TOR_CLIENTS.start='1'
+uci set dhcp.TOR_CLIENTS.limit='250'
+uci set dhcp.TOR_CLIENTS.interface='TOR_CLIENTS'
+uci set dhcp.TOR_CLIENTS.leasetime='24h'
+uci set dhcp.TOR_CLIENTS.dhcpv6='server'
+uci set dhcp.TOR_CLIENTS.dhcpv4='server'
+uci set dhcp.TOR_CLIENTS.ra='server'
+uci set dhcp.TOR_CLIENTS.ra_management='1'
+uci set dhcp.TOR_CLIENTS.instance='BlacklistINET'
+#uci set dhcp.TOR_CLIENTS.confdir='/etc/dnsmasq.d/Blacklist'
 
 
 uci set dhcp.BlacklistHCONTROL=dnsmasq
@@ -1696,7 +1994,7 @@ uci set dhcp.BlacklistHCONTROL.localise_queries='1'
 uci set dhcp.BlacklistHCONTROL.rebind_protection='1'
 uci set dhcp.BlacklistHCONTROL.rebind_localhost='1'
 uci set dhcp.BlacklistHCONTROL.filterwin2k='1'
-uci set dhcp.BlacklistHCONTROL.local='/hcontrol.local/'
+uci set dhcp.BlacklistHCONTROL.local='/hcontrol.stawimedia.local/'
 uci set dhcp.BlacklistHCONTROL.expandhosts='1'
 uci set dhcp.BlacklistHCONTROL.authoritative='1'
 uci set dhcp.BlacklistHCONTROL.readethers='1'
@@ -1732,7 +2030,7 @@ uci set dhcp.BlacklistCONTROL.localise_queries='1'
 uci set dhcp.BlacklistCONTROL.rebind_protection='1'
 uci set dhcp.BlacklistCONTROL.rebind_localhost='1'
 uci set dhcp.BlacklistCONTROL.filterwin2k='1'
-uci set dhcp.BlacklistCONTROL.local='/control.local/'
+uci set dhcp.BlacklistCONTROL.local='/control.stawimedia.local/'
 uci set dhcp.BlacklistCONTROL.expandhosts='1'
 uci set dhcp.BlacklistCONTROL.authoritative='1'
 uci set dhcp.BlacklistCONTROL.readethers='1'
@@ -1780,7 +2078,7 @@ uci set dhcp.WhitelistVOICE.confdir='/etc/dnsmasq.d/Whitelist'
 uci set dhcp.WhitelistVOICE.logqueries='0'
 uci set dhcp.WhitelistVOICE.logfacility='/var/log/dnsmasq.whitelistvoice.log'
 #uci set dhcp.WhitelistVOICE.interface='VOICE'
-uci add_list dhcp.WhitelistVOICE.notinterface='ONION_CLIENTS'
+uci add_list dhcp.WhitelistVOICE.notinterface='TOR_CLIENTS'
 uci add_list dhcp.WhitelistVOICE.notinterface='HCONTROL'
 uci add_list dhcp.WhitelistVOICE.notinterface='CONTROL' 
 uci add_list dhcp.WhitelistVOICE.notinterface='SERVER'
@@ -1816,7 +2114,7 @@ uci set dhcp.WhitelistENTERTAIN.confdir='/etc/dnsmasq.d/Whitelist'
 uci set dhcp.WhitelistENTERTAIN.logqueries='0'
 uci set dhcp.WhitelistENTERTAIN.logfacility='/var/log/dnsmasq.whitelistentertain.log'
 #uci set dhcp.WhitelistENTERTAIN.interface='ENTERTAIN'
-uci add_list dhcp.WhitelistENTERTAIN.notinterface='ONION_CLIENTS'
+uci add_list dhcp.WhitelistENTERTAIN.notinterface='TOR_CLIENTS'
 uci add_list dhcp.WhitelistENTERTAIN.notinterface='HCONTROL'
 uci add_list dhcp.WhitelistENTERTAIN.notinterface='CONTROL' 
 uci add_list dhcp.WhitelistENTERTAIN.notinterface='SERVER'
@@ -1852,7 +2150,7 @@ uci set dhcp.WhitelistGUEST.confdir='/etc/dnsmasq.d/Whitelist'
 uci set dhcp.WhitelistGUEST.logqueries='0'
 uci set dhcp.WhitelistGUEST.logfacility='/var/log/dnsmasq.whitelistguest.log'
 #uci set dhcp.WhitelistGUEST.interface='GUEST'
-uci add_list dhcp.WhitelistGUEST.notinterface='ONION_CLIENTS'
+uci add_list dhcp.WhitelistGUEST.notinterface='TOR_CLIENTS'
 uci add_list dhcp.WhitelistGUEST.notinterface='HCONTROL'
 uci add_list dhcp.WhitelistGUEST.notinterface='CONTROL' 
 uci add_list dhcp.WhitelistGUEST.notinterface='SERVER'
@@ -2203,21 +2501,258 @@ address=/.zw/
 EOF
 
 cat << EOF > /etc/dnsmasq.d/Blacklist/ads
-address=/360.cn/
-address=/safe360.com/
-address=/360safe.com/
-address=/cashimashi.de/
-address=/cashimashi.com/
 address=/1.f.ix.de/
-address=/2fuck.com/
+address=/101com.com/
+address=/101order.com/
+address=/1-1ads.com/
+address=/123freeavatars.com/
+address=/180hits.de/
+address=/180searchassistant.com/
+address=/1rx.io/
+address=/207.net/
+address=/247media.com/
+address=/24log.com/
+address=/24log.de/
+address=/24pm-affiliation.com/
+address=/2mdn.net/
+address=/2o7.net/
+address=/2znp09oa.com/
+address=/30ads.com/
+address=/3337723.com/
+address=/33across.com/
+address=/360yield.com/
+address=/3lift.com/
+address=/4affiliate.net/
+address=/4d5.net/
+address=/4info.com/
+address=/4jnzhl0d0.com/
+address=/50websads.com/
+address=/518ad.com/
+address=/51yes.com/
+address=/5ijo.01net.com/
+address=/5mcwl.pw/
+address=/6ldu6qa.com/
+address=/6sc.co/
+address=/777partner.com/
+address=/77tracking.com/
+address=/7bpeople.com/
+address=/7search.com/
 address=/80asehdb/
 address=/80aswg/
+address=/82o9v830.com/
+address=/a.aproductmsg.com/
+address=/a.consumer.net/
+address=/a.mktw.net/
+address=/a.muloqot.uz/
+address=/a.pub.network/
+address=/a.sakh.com/
+address=/a.ucoz.net/
+address=/a.ucoz.ru/
+address=/a.vartoken.com/
+address=/a.vfghd.com/
+address=/a.vfgtb.com/
+address=/a.xanga.com/
+address=/a135.wftv.com/
+address=/a5.overclockers.ua/
+address=/a8a8altrk.com/
+address=/aaddzz.com/
+address=/a-ads.com/
+address=/aa-metrics.beauty.hotpepper.jp/
+address=/aa-metrics.recruit-card.jp/
+address=/aa-metrics.trip-ai.jp/
+address=/aaxads.com/
+address=/aaxdetect.com/
+address=/aax-eu.amazon-adsystem.com/
+address=/aax-eu-dub.amazon.com/
+address=/abacho.net/
+address=/abackchain.com/
+address=/abandonedaction.com/
+address=/abc-ads.com/
+address=/aboardlevel.com/
+address=/aboutads.gr/
+address=/abruptroad.com/
+address=/absentstream.com/
+address=/absoluteclickscom.com/
+address=/absorbingband.com/
+address=/absurdwater.com/
+address=/abtasty.com/
+address=/abz.com/
+address=/ac.rnm.ca/
+address=/acbsearch.com/
+address=/acceptable.a-ads.com/
+address=/acid-adserver.click/
+address=/acridtwist.com/
+address=/actionsplash.com/
+address=/actonsoftware.com/
+address=/actualdeals.com/
+address=/actuallysheep.com/
+address=/actuallysnake.com/
+address=/acuityads.com/
+address=/acuityplatform.com/
+address=/ad.100.tbn.ru/
+address=/ad.71i.de/
+address=/ad.a8.net/
+address=/ad.a-ads.com/
+address=/ad.abcnews.com/
+address=/ad.abctv.com/
+address=/ad.aboutwebservices.com/
+address=/ad.abum.com/
+address=/ad.admitad.com/
+address=/ad.allboxing.ru/
+address=/ad.allstar.cz/
+address=/ad.altervista.org/
+address=/ad.amgdgt.com/
+address=/ad.anuntis.com/
+address=/ad.auditude.com/
+address=/ad.bitmedia.io/
+address=/ad.bizo.com/
+address=/ad.bnmla.com/
+address=/ad.bondage.com/
+address=/ad.caradisiac.com/
+address=/ad.centrum.cz/
+address=/ad.cgi.cz/
+address=/ad.choiceradio.com/
+address=/ad.clix.pt/
+address=/ad.cooks.com/
+address=/ad.digitallook.com/
+address=/ad.domainfactory.de/
+address=/ad.eurosport.com/
+address=/ad.exyws.org/
+address=/ad.flurry.com/
+address=/ad.foxnetworks.com/
+address=/ad.freecity.de/
+address=/ad.grafika.cz/
+address=/ad.gt/
+address=/ad.hbv.de/
+address=/ad.hodomobile.com/
+address=/ad.hyena.cz/
+address=/ad.iinfo.cz/
+address=/ad.ilove.ch/
+address=/ad.infoseek.com/
+address=/ad.intl.xiaomi.com/
+address=/ad.jacotei.com.br/
+address=/ad.jamba.net/
+address=/ad.jamster.co.uk/
+address=/ad.jetsoftware.com/
+address=/ad.keenspace.com/
+address=/ad.liveinternet.ru/
+address=/ad.lupa.cz/
+address=/ad.media-servers.net/
+address=/ad.mediastorm.hu/
+address=/ad.mg/
+address=/ad.mobstazinc.cn/
+address=/ad.musicmatch.com/
+address=/ad.myapple.pl/
+address=/ad.mynetreklam.com.streamprovider.net/
+address=/ad.nachtagenten.de/
+address=/ad.nozonedata.com/
+address=/ad.nttnavi.co.jp/
+address=/ad.nwt.cz/
+address=/ad.pandora.tv/
+address=/ad.period-calendar.com/
+address=/ad.preferances.com/
+address=/ad.profiwin.de/
+address=/ad.prv.pl/
+address=/ad.reunion.com/
+address=/ad.sensismediasmart.com.au/
+address=/ad.simflight.com/
+address=/ad.simgames.net/
+address=/ad.style/
+address=/ad.tapthislink.com/
+address=/ad.tbn.ru/
+address=/ad.technoratimedia.com/
+address=/ad.thewheelof.com/
+address=/ad.turn.com/
+address=/ad.tv2.no/
+address=/ad.universcine.com/
+address=/ad.usatoday.com/
+address=/ad.virtual-nights.com/
+address=/ad.wavu.hu/
+address=/ad.way.cz/
+address=/ad.weatherbug.com/
+address=/ad.wsod.com/
+address=/ad.wz.cz/
+address=/ad.xiaomi.com/
+address=/ad.xmovies8.si/
+address=/ad.xrea.com/
+address=/ad.yadro.ru/
+address=/ad.zanox.com/
+address=/ad0.bigmir.net/
+address=/ad01.mediacorpsingapore.com/
+address=/ad1.emule-project.org/
+address=/ad1.eventmanager.co.kr/
+address=/ad1.kde.cz/
+address=/ad1.pamedia.com.au/
 address=/ad1mat.de/
+address=/ad2.iinfo.cz/
+address=/ad2.lupa.cz/
+address=/ad2.netriota.hu/
+address=/ad2.nmm.de/
+address=/ad2.xrea.com/
 address=/ad2mat.de/
+address=/ad3.iinfo.cz/
+address=/ad3.pamedia.com.au/
+address=/ad3.xrea.com/
 address=/ad3mat.de/
+address=/ad4game.com/
+address=/ad4mat.com/
 address=/ad4mat.de/
+address=/ad4mat.net/
+address=/adabra.com/
+address=/adaction.de/
+address=/adadvisor.net/
+address=/adalliance.io/
+address=/adap.tv/
+address=/adapt.tv/
+address=/adaranth.com/
+address=/ad-balancer.at/
+address=/ad-balancer.net/
+address=/adbilty.me/
+address=/adblade.com/
+address=/adblade.org/
+address=/adblockanalytics.com/
+address=/adbooth.net/
+address=/adbot.com/
+address=/adbrite.com/
+address=/adbrn.com/
+address=/adbroker.de/
+address=/adbunker.com/
+address=/adbutler.com/
+address=/adbuyer.com/
+address=/adbuyer3.lycos.com/
+address=/adcampo.com/
+address=/adcannyads.com/
+address=/adcash.com/
+address=/adcast.deviantart.com/
+address=/adcell.de/
+address=/adcenter.net/
+address=/adcentriconline.com/
+address=/adclick.com/
 address=/adclick.de/
 address=/adclick.net/
+address=/adclient1.tucows.com/
+address=/adcolony.com/
+address=/adcomplete.com/
+address=/adconion.com/
+address=/adcontent.gamespy.com/
+address=/adcontrolsolutions.net/
+address=/ad-cupid.com/
+address=/adcycle.com/
+address=/add.newmedia.cz/
+address=/ad-delivery.net/
+address=/addfreestats.com/
+address=/addme.com/
+address=/adecn.com/
+address=/adeimptrck.com/
+address=/ademails.com/
+address=/adengage.com/
+address=/adetracking.com/
+address=/adexc.net/
+address=/adexchangegate.com/
+address=/adexchangeprediction.com/
+address=/adexpose.com/
+address=/adext.inkclub.com/
+address=/adf.ly/
 address=/adfarm.com/
 address=/adfarm.de/
 address=/adfarm.mediaplex.com/
@@ -2235,259 +2770,3533 @@ address=/adfarm4.net/
 address=/adfarmonline.com/
 address=/adfarmonline.de/
 address=/adfarmonline.net/
+address=/adflight.com/
+address=/adforce.com/
 address=/adform.com/
 address=/adform.de/
 address=/adform.net/
+address=/adformdsp.net/
 address=/adfram.net/
 address=/adfram1.de/
 address=/adfram2.de/
 address=/adfrom.com/
 address=/adfrom.de/
 address=/adfrom.net/
+address=/adfs.senacrs.com.br/
+address=/adgardener.com/
+address=/adgoto.com/
+address=/adhaven.com/
+address=/adhese.be/
+address=/adhese.com/
+address=/adhigh.net/
+address=/adhoc4.net/
+address=/adhunter.media/
 address=/adidas-deutschland.com/
+address=/adimage.guardian.co.uk/
+address=/adimages.been.com/
+address=/adimages.carsoup.com/
+address=/adimages.go.com/
+address=/adimages.homestore.com/
+address=/adimages.omroepzeeland.nl/
+address=/adimages.sanomawsoy.fi/
+address=/adimg.com.com/
+address=/adimg.uimserv.net/
+address=/adimg1.chosun.com/
+address=/adimgs.sapo.pt/
+address=/adinjector.net/
+address=/adinterax.com/
+address=/adisfy.com/
 address=/adition.com/
 address=/adition.de/
+address=/adition.net/
+address=/adizio.com/
+address=/adjix.com/
+address=/ad-js.*/
 address=/ad-js.bild.de/
 address=/ad-js.chip.de/
 address=/ad-js.focus.de/
 address=/ad-js.welt.de/
+address=/adjug.com/
+address=/adjuggler.com/
+address=/adjuggler.yourdictionary.com/
+address=/adjustnetwork.com/
+address=/adk2.co/
+address=/adk2.com/
+address=/adland.ru/
+address=/adledge.com/
+address=/adlegend.com/
+address=/adlightning.com/
+address=/adlog.com.com/
+address=/adloox.com/
+address=/adlooxtracking.com/
+address=/adlure.net/
+address=/adm.fwmrm.net/
+address=/admagnet.net/
+address=/admailtiser.com/
+address=/adman.gr/
+address=/adman.otenet.gr/
+address=/admanagement.ch/
+address=/admanager.btopenworld.com/
+address=/admanager.carsoup.com/
+address=/admanmedia.com/
+address=/admantx.com/
+address=/admarketplace.net/
+address=/admarvel.com/
+address=/admaster.com.cn/
+address=/admatchly.com/
+address=/admax.nexage.com/
+address=/admedia.com/
+address=/admeld.com/
+address=/admeridianads.com/
+address=/admeta.com/
+address=/admex.com/
+address=/admidadsp.com/
+address=/adminder.com/
+address=/adminshop.com/
+address=/admix.in/
+address=/admixer.net/
+address=/admized.com/
+address=/admob.com/
+address=/admonitor.com/
+address=/admotion.com.ar/
+address=/adn.lrb.co.uk/
+address=/adnet.asahi.com/
+address=/adnet.biz/
+address=/adnet.de/
+address=/adnet.ru/
+address=/adnetinteractive.com/
+address=/adnetwork.net/
+address=/adnetworkperformance.com/
+address=/adnews.maddog2000.de/
+address=/adnium.com/
 address=/adnxs.com/
+address=/adocean.pl/
+address=/adonspot.com/
+address=/adoric-om.com/
+address=/adorigin.com/
+address=/adotmob.com/
+address=/ad-pay.de/
+address=/adpenguin.biz/
+address=/adpepper.dk/
+address=/adpepper.nl/
+address=/adperium.com/
+address=/adpia.vn/
+address=/adplus.co.id/
+address=/adplxmd.com/
+address=/adprofits.ru/
+address=/adrazzi.com/
+address=/adreactor.com/
+address=/adreclaim.com/
+address=/adrecover.com/
+address=/adrecreate.com/
+address=/adremedy.com/
+address=/adreporting.com/
+address=/adrevolver.com/
+address=/adriver.ru/
+address=/adrolays.de/
+address=/adrotate.de/
+address=/ad-rotator.com/
+address=/adrotic.girlonthenet.com/
+address=/adrta.com/
+address=/ads.365.mk/
+address=/ads.4tube.com/
+address=/ads.5ci.lt/
+address=/ads.5min.at/
+address=/ads.73dpi.com/
+address=/ads.aavv.com/
+address=/ads.abovetopsecret.com/
+address=/ads.aceweb.net/
+address=/ads.acpc.cat/
+address=/ads.acrosspf.com/
+address=/ads.activestate.com/
+address=/ads.ad-center.com/
+address=/ads.adfox.ru/
+address=/ads.administrator.de/
+address=/ads.adred.de/
+address=/ads.adstream.com.ro/
+address=/ads.adultfriendfinder.com/
+address=/ads.advance.net/
+address=/ads.adverline.com/
+address=/ads.affiliates.match.com/
+address=/ads.alive.com/
+address=/ads.alt.com/
+address=/ads.amdmb.com/
+address=/ads.amigos.com/
+address=/ads.annabac.com/
+address=/ads.aol.co.uk/
+address=/ads.apn.co.nz/
+address=/ads.appsgeyser.com/
+address=/ads.apteka254.ru/
+address=/ads.as4x.tmcs.net/
+address=/ads.as4x.tmcs.ticketmaster.com/
+address=/ads.asiafriendfinder.com/
+address=/ads.aspalliance.com/
+address=/ads.avazu.net/
+address=/ads.bb59.ru/
+address=/ads.belointeractive.com/
+address=/ads.betfair.com/
+address=/ads.bigchurch.com/
+address=/ads.bigfoot.com/
+address=/ads.bing.com/
+address=/ads.bittorrent.com/
+address=/ads.biz.tr/
+address=/ads.blog.com/
+address=/ads.bloomberg.com/
+address=/ads.bluemountain.com/
+address=/ads.boerding.com/
+address=/ads.bonniercorp.com/
+address=/ads.boylesports.com/
+address=/ads.brabys.com/
+address=/ads.brazzers.com/
+address=/ads.bumq.com/
+address=/ads.businessweek.com/
+address=/ads.canalblog.com/
+address=/ads.casinocity.com/
+address=/ads.casumoaffiliates.com/
+address=/ads.cbc.ca/
+address=/ads.cc/
+address=/ads.cc-dt.com/
+address=/ads.centraliprom.com/
+address=/ads.channel4.com/
+address=/ads.cheabit.com/
+address=/ads.citymagazine.si/
+address=/ads.clasificadox.com/
+address=/ads.clearchannel.com/
+address=/ads.co.com/
+address=/ads.colombiaonline.com/
+address=/ads.com.com/
+address=/ads.comeon.com/
+address=/ads.contactmusic.com/
+address=/ads.contentabc.com/
+address=/ads.contextweb.com/
+address=/ads.crakmedia.com/
+address=/ads.creative-serving.com/
+address=/ads.cybersales.cz/
+address=/ads.dada.it/
+address=/ads.dailycamera.com/
+address=/ads.datingyes.com/
+address=/ads.delfin.bg/
+address=/ads.deltha.hu/
+address=/ads.dennisnet.co.uk/
+address=/ads.desmoinesregister.com/
+address=/ads.detelefoongids.nl/
+address=/ads.deviantart.com/
+address=/ads.devmates.com/
+address=/ads.digital-digest.com/
+address=/ads.digitalmedianet.com/
+address=/ads.digitalpoint.com/
+address=/ads.directionsmag.com/
+address=/ads.domain.com/
+address=/ads.domeus.com/
+address=/ads.dtpnetwork.biz/
+address=/ads.eagletribune.com/
+address=/ads.easy-forex.com/
+address=/ads.economist.com/
+address=/ads.edbindex.dk/
+address=/ads.egrana.com.br/
+address=/ads.elcarado.com/
+address=/ads.electrocelt.com/
+address=/ads.elitetrader.com/
+address=/ads.emdee.ca/
+address=/ads.emirates.net.ae/
+address=/ads.epi.sk/
+address=/ads.epltalk.com/
+address=/ads.eu.msn.com/
+address=/ads.exactdrive.com/
+address=/ads.expat-blog.biz/
+address=/ads.fairfax.com.au/
+address=/ads.fastcomgroup.it/
+address=/ads.fasttrack-ignite.com/
+address=/ads.faxo.com/
+address=/ads.femmefab.nl/
+address=/ads.ferianc.com/
+address=/ads.filmup.com/
+address=/ads.financialcontent.com/
+address=/ads.flooble.com/
+address=/ads.fool.com/
+address=/ads.footymad.net/
+address=/ads.forbes.net/
+address=/ads.formit.cz/
+address=/ads.fortunecity.com/
+address=/ads.fotosidan.se/
+address=/ads.foxnetworks.com/
+address=/ads.freecity.de/
+address=/ads.friendfinder.com/
+address=/ads.gamecity.net/
+address=/ads.gamershell.com/
+address=/ads.gamespyid.com/
+address=/ads.gamigo.de/
+address=/ads.gaming1.com/
+address=/ads.gaming-universe.de/
+address=/ads.gawker.com/
+address=/ads.gaypoint.hu/
+address=/ads.geekswithblogs.net/
+address=/ads.getlucky.com/
+address=/ads.gld.dk/
+address=/ads.glispa.com/
+address=/ads.gmodules.com/
+address=/ads.goyk.com/
+address=/ads.gplusmedia.com/
+address=/ads.gradfinder.com/
+address=/ads.grindinggears.com/
+address=/ads.groupewin.fr/
+address=/ads.gsmexchange.com/
+address=/ads.gsm-exchange.com/
+address=/ads.guardian.co.uk/
+address=/ads.guardianunlimited.co.uk/
+address=/ads.guru3d.com/
+address=/ads.harpers.org/
+address=/ads.hbv.de/
+address=/ads.hearstmags.com/
+address=/ads.heartlight.org/
+address=/ads.heias.com/
+address=/ads.hollywood.com/
+address=/ads.horsehero.com/
+address=/ads.horyzon-media.com/
+address=/ads.ibest.com.br/
+address=/ads.ibryte.com/
+address=/ads.icq.com/
+address=/ads.ign.com/
+address=/ads.imagistica.com/
+address=/ads.img.co.za/
+address=/ads.imgur.com/
+address=/ads.independent.com.mt/
+address=/ads.infi.net/
+address=/ads.internic.co.il/
+address=/ads.ipowerweb.com/
+address=/ads.isoftmarketing.com/
+address=/ads.itv.com/
+address=/ads.iwon.com/
+address=/ads.jewishfriendfinder.com/
+address=/ads.jiwire.com/
+address=/ads.joaffs.com/
+address=/ads.jobsite.co.uk/
+address=/ads.jpost.com/
+address=/ads.junctionbox.com/
+address=/ads.justhungry.com/
+address=/ads.kabooaffiliates.com/
+address=/ads.kaktuz.net/
+address=/ads.kelbymediagroup.com/
+address=/ads.kinobox.cz/
+address=/ads.kinxxx.com/
+address=/ads.kompass.com/
+address=/ads.krawall.de/
+address=/ads.lapalingo.com/
+address=/ads.larryaffiliates.com/
+address=/ads.leovegas.com/
+address=/ads.lesbianpersonals.com/
+address=/ads.liberte.pl/
+address=/ads.lifethink.net/
+address=/ads.linkedin.com/
+address=/ads.livenation.com/
+address=/ads.lordlucky.com/
+address=/ads.ma7.tv/
+address=/ads.mail.bg/
+address=/ads.mariuana.it/
+address=/ads.massinfra.nl/
+address=/ads.mcafee.com/
+address=/ads.mediaodyssey.com/
+address=/ads.mediasmart.es/
+address=/ads.medienhaus.de/
+address=/ads.meetcelebs.com/
+address=/ads.metaplug.com/
+address=/ads.mgnetwork.com/
+address=/ads.miarroba.com/
+address=/ads.mic.com/
+address=/ads.mmania.com/
+address=/ads.mobilebet.com/
+address=/ads.mopub.com/
+address=/ads.motor-forum.nl/
+address=/ads.msn.com/
+address=/ads.multimania.lycos.fr/
+address=/ads.muslimehelfen.org/
+address=/ads.mvscoelho.com/
+address=/ads.myadv.org/
+address=/ads.nccwebs.com/
+address=/ads.ncm.com/
+address=/ads.ndtv1.com/
+address=/ads.networksolutions.com/
+address=/ads.newgrounds.com/
+address=/ads.newmedia.cz/
+address=/ads.newsint.co.uk/
+address=/ads.newsquest.co.uk/
+address=/ads.ninemsn.com.au/
+address=/ads.nj.com/
+address=/ads.nola.com/
+address=/ads.nordichardware.com/
+address=/ads.nordichardware.se/
+address=/ads.nyi.net/
+address=/ads.nytimes.com/
+address=/ads.nyx.cz/
+address=/ads.nzcity.co.nz/
+address=/ads.o2.pl/
+address=/ads.oddschecker.com/
+address=/ads.okcimg.com/
+address=/ads.ole.com/
+address=/ads.oneplace.com/
+address=/ads.opensubtitles.org/
+address=/ads.optusnet.com.au/
+address=/ads.outpersonals.com/
+address=/ads.oxyshop.cz/
+address=/ads.passion.com/
+address=/ads.pennet.com/
+address=/ads.pfl.ua/
+address=/ads.phpclasses.org/
+address=/ads.pinterest.com/
+address=/ads.planet.nl/
+address=/ads.pni.com/
+address=/ads.pof.com/
+address=/ads.powweb.com/
+address=/ads.ppvmedien.de/
+address=/ads.praguetv.cz/
+address=/ads.primissima.it/
+address=/ads.printscr.com/
+address=/ads.prisacom.com/
+address=/ads.privatemedia.co/
+address=/ads.program3.com/
+address=/ads.programattik.com/
+address=/ads.psd2html.com/
+address=/ads.pushplay.com/
+address=/ads.quoka.de/
+address=/ads.radialserver.com/
+address=/ads.radio1.lv/
+address=/ads.rcncdn.de/
+address=/ads.rcs.it/
+address=/ads.recoletos.es/
+address=/ads.rediff.com/
+address=/ads.redlightcenter.com/
+address=/ads.revjet.com/
+address=/ads.satyamonline.com/
+address=/ads.saymedia.com/
+address=/ads.schmoozecom.net/
+address=/ads.scifi.com/
+address=/ads.seniorfriendfinder.com/
+address=/ads.servebom.com/
+address=/ads.sexgratuit.tv/
+address=/ads.sexinyourcity.com/
+address=/ads.shizmoo.com/
+address=/ads.shopstyle.com/
+address=/ads.sift.co.uk/
+address=/ads.silverdisc.co.uk/
+address=/ads.simplyhired.com/
+address=/ads.sjon.info/
+address=/ads.smartclick.com/
+address=/ads.socapro.com/
+address=/ads.socialtheater.com/
+address=/ads.soft32.com/
+address=/ads.soweb.gr/
+address=/ads.space.com/
+address=/ads.stackoverflow.com/
+address=/ads.sun.com/
+address=/ads.suomiautomaatti.com/
+address=/ads.supplyframe.com/
+address=/ads.syscdn.de/
+address=/ads.tahono.com/
+address=/ads.themovienation.com/
+address=/ads.thestar.com/
+address=/ads.thrillsaffiliates.com/
+address=/ads.tiktok.com/
+address=/ads.tmcs.net/
+address=/ads.todoti.com.br/
+address=/ads.toplayaffiliates.com/
+address=/ads.totallyfreestuff.com/
+address=/ads.townhall.com/
+address=/ads.travelaudience.com/
+address=/ads.tremorhub.com/
+address=/ads.trinitymirror.co.uk/
+address=/ads.tripod.com/
+address=/ads.tripod.lycos.co.uk/
+address=/ads.tripod.lycos.de/
+address=/ads.tripod.lycos.es/
+address=/ads.tripod.lycos.it/
+address=/ads.tripod.lycos.nl/
+address=/ads.tso.dennisnet.co.uk/
+address=/ads.twitter.com/
+address=/ads.twojatv.info/
+address=/ads.uknetguide.co.uk/
+address=/ads.ultimate-guitar.com/
+address=/ads.uncrate.com/
+address=/ads.undertone.com/
+address=/ads.unison.bg/
+address=/ads.usatoday.com/
+address=/ads.uxs.at/
+address=/ads.verticalresponse.com/
+address=/ads.vgchartz.com/
+address=/ads.videosz.com/
+address=/ads.viksaffiliates.com/
+address=/ads.virtual-nights.com/
+address=/ads.virtuopolitan.com/
+address=/ads.v-lazer.com/
+address=/ads.vnumedia.com/
+address=/ads.walkiberia.com/
+address=/ads.waps.cn/
+address=/ads.wapx.cn/
+address=/ads.watson.ch/
+address=/ads.weather.ca/
+address=/ads.web.de/
+address=/ads.webinak.sk/
+address=/ads.webmasterpoint.org/
+address=/ads.websiteservices.com/
+address=/ads.whoishostingthis.com/
+address=/ads.wiezoekje.nl/
+address=/ads.wikia.nocookie.net/
+address=/ads.wineenthusiast.com/
+address=/ads.wwe.biz/
+address=/ads.xhamster.com/
+address=/ads.xtra.co.nz/
+address=/ads.yahoo.com/
+address=/ads.yap.yahoo.com/
+address=/ads.yimg.com/
+address=/ads.yldmgrimg.net/
+address=/ads.yourfreedvds.com/
+address=/ads.youtube.com/
+address=/ads.yumenetworks.com/
+address=/ads.zmarsa.com/
+address=/ads.ztod.com/
+address=/ads1.mediacapital.pt/
+address=/ads1.msn.com/
+address=/ads1.rne.com/
+address=/ads1.virtual-nights.com/
+address=/ads10.speedbit.com/
+address=/ads180.com/
+address=/ads1-adnow.com/
+address=/ads2.brazzers.com/
+address=/ads2.clearchannel.com/
+address=/ads2.contentabc.com/
+address=/ads2.femmefab.nl/
+address=/ads2.gamecity.net/
+address=/ads2.net-communities.co.uk/
+address=/ads2.oneplace.com/
+address=/ads2.opensubtitles.org/
+address=/ads2.rne.com/
+address=/ads2.techads.info/
+address=/ads2.virtual-nights.com/
+address=/ads2.webdrive.no/
+address=/ads2.xnet.cz/
+address=/ads2004.treiberupdate.de/
+address=/ads24h.net/
+address=/ads3.contentabc.com/
+address=/ads3.gamecity.net/
+address=/ads3.virtual-nights.com/
+address=/ads3-adnow.com/
+address=/ads4.clearchannel.com/
+address=/ads4.gamecity.net/
+address=/ads4.virtual-nights.com/
+address=/ads4homes.com/
+address=/ads5.virtual-nights.com/
+address=/ads6.gamecity.net/
+address=/ads7.gamecity.net/
+address=/adsafeprotected.com/
+address=/adsatt.abc.starwave.com/
+address=/adsatt.abcnews.starwave.com/
+address=/adsatt.espn.go.com/
+address=/adsatt.espn.starwave.com/
+address=/adsatt.go.starwave.com/
+address=/adsby.bidtheatre.com/
+address=/adsbydelema.com/
+address=/adscale.de/
+address=/adscholar.com/
+address=/adscience.nl/
+address=/ads-click.com/
+address=/adsco.re/
+address=/ad-score.com/
+address=/adscpm.com/
+address=/adsdaq.com/
+address=/ads-dev.pinterest.com/
+address=/adsend.de/
 address=/adsense.com/
 address=/adsense.de/
+address=/adsensecustomsearchads.com/
+address=/adserve.ams.rhythmxchange.com/
+address=/adserve.gkeurope.de/
+address=/adserve.io/
+address=/adserve.jbs.org/
+address=/adserver.71i.de/
+address=/adserver.adultfriendfinder.com/
+address=/adserver.adverty.com/
+address=/adserver.anawe.cz/
+address=/adserver.aol.fr/
+address=/adserver.ariase.org/
+address=/adserver.bdoce.cl/
+address=/adserver.betandwin.de/
+address=/adserver.bing.com/
+address=/adserver.bizedge.com/
+address=/adserver.bizhat.com/
+address=/adserver.break-even.it/
+address=/adserver.cams.com/
+address=/adserver.cdnstream.com/
+address=/adserver.com/
+address=/adserver.diariodosertao.com.br/
+address=/adserver.digitoday.com/
+address=/adserver.echdk.pl/
+address=/adserver.ekokatu.com/
+address=/adserver.freecity.de/
+address=/adserver.friendfinder.com/
+address=/ad-server.gulasidorna.se/
+address=/adserver.html.it/
+address=/adserver.hwupgrade.it/
+address=/adserver.ilango.de/
+address=/adserver.info7.mx/
+address=/adserver.irishwebmasterforum.com/
+address=/adserver.janes.com/
+address=/adserver.lecool.com/
+address=/adserver.libero.it/
+address=/adserver.madeby.ws/
+address=/adserver.mobi/
+address=/adserver.msmb.biz/
+address=/adserver.news.com.au/
+address=/adserver.nydailynews.com/
+address=/adserver.o2.pl/
+address=/adserver.oddschecker.com/
+address=/adserver.omroepzeeland.nl/
+address=/adserver.otthonom.hu/
+address=/adserver.pampa.com.br/
+address=/adserver.pl/
+address=/adserver.portugalmail.net/
+address=/adserver.pressboard.ca/
+address=/adserver.sanomawsoy.fi/
+address=/adserver.sciflicks.com/
+address=/adserver.scr.sk/
+address=/adserver.sharewareonline.com/
+address=/adserver.theonering.net/
+address=/adserver.trojaner-info.de/
+address=/adserver.twitpic.com/
+address=/adserver.virginmedia.com/
+address=/adserver.yahoo.com/
+address=/adserver01.de/
+address=/adserver1.backbeatmedia.com/
+address=/adserver1.mindshare.de/
+address=/adserver1-images.backbeatmedia.com/
+address=/adserver2.mindshare.de/
+address=/adserverplus.com/
+address=/adserverpub.com/
+address=/adserversolutions.com/
+address=/adserverxxl.de/
+address=/adservice.google.com/
+address=/adservice.google.com.mt/
 address=/adservices.google.com/
+address=/adserving.unibet.com/
+address=/adservingfront.com/
+address=/adsfac.eu/
+address=/adsfac.net/
+address=/adsfac.us/
+address=/adsfactor.net/
+address=/adsfeed.brabys.com/
+address=/ads-game-187f4.firebaseapp.com/
+address=/adshrink.it/
+address=/adside.com/
+address=/adsiduous.com/
+address=/adskeeper.co.uk/
+address=/ads-kesselhaus.com/
+address=/adsklick.de/
+address=/adskpak.com/
+address=/adsmart.com/
+address=/adsmart.net/
+address=/adsmogo.com/
+address=/adsnative.com/
+address=/adsoftware.com/
+address=/adsoldier.com/
+address=/adsolut.in/
+address=/ad-space.net/
+address=/adspeed.net/
 address=/adspirit.de/
+address=/adsponse.de/
+address=/adspsp.com/
+address=/adsroller.com/
+address=/adsrv.deviantart.com/
+address=/adsrv.eacdn.com/
+address=/adsrv.iol.co.za/
+address=/adsrv.moebelmarkt.tv/
+address=/adsrv.swidnica24.pl/
+address=/adsrv2.swidnica24.pl/
+address=/adsrvr.org/
+address=/adsrvus.com/
+address=/adstacks.in/
+address=/adstage.io/
+address=/adstanding.com/
+address=/adstat.4u.pl/
+address=/adstest.weather.com/
+address=/ads-trk.vidible.tv/
+address=/ads-twitter.com/
+address=/adsupply.com/
+address=/adswizz.com/
+address=/adsxyz.com/
+address=/adsymptotic.com/
+address=/adsynergy.com/
+address=/adsys.townnews.com/
+address=/adsystem.simplemachines.org/
+address=/adtech.com/
+address=/ad-tech.com/
 address=/adtech.de/
+address=/adtech-digital.ru/
+address=/adtechjp.com/
+address=/adtechus.com/
+address=/adtegrity.net/
+address=/adthis.com/
+address=/adthrive.com/
+address=/adthurst.com/
+address=/adtiger.de/
+address=/adtilt.com/
+address=/adtng.com/
+address=/adtology.com/
+address=/adtoma.com/
+address=/adtrace.org/
+address=/adtrade.net/
+address=/adtrak.net/
+address=/adtriplex.com/
+address=/adult/
+address=/adultadvertising.com/
+address=/ad-up.com/
+address=/adv.cooperhosting.net/
+address=/adv.donejty.pl/
+address=/adv.freeonline.it/
+address=/adv.hwupgrade.it/
+address=/adv.livedoor.com/
+address=/adv.mezon.ru/
+address=/adv.mpvc.it/
+address=/adv.nexthardware.com/
+address=/adv.webmd.com/
+address=/adv.wp.pl/
+address=/adv.yo.cz/
+address=/adv-adserver.com/
+address=/advangelists.com/
+address=/advariant.com/
+address=/adv-banner.libero.it/
+address=/adventory.com/
+address=/advert.bayarea.com/
+address=/advert.dyna.ultraweb.hu/
+address=/adverticum.com/
+address=/adverticum.net/
+address=/adverticus.de/
+address=/advertise.com/
+address=/advertiseireland.com/
+address=/advertisementafterthought.com/
+address=/advertiserurl.com/
+address=/advertising.com/
+address=/advertisingbanners.com/
+address=/advertisingbox.com/
+address=/advertmarket.com/
+address=/advertmedia.de/
+address=/advertpro.ya.com/
+address=/advertserve.com/
+address=/advertstream.com/
+address=/advertwizard.com/
+address=/advideo.uimserv.net/
+address=/adview.com/
+address=/advisormedia.cz/
+address=/adviva.net/
+address=/advnt.com/
 address=/advolution.com/
 address=/advolution.de/
+address=/adwebone.com/
+address=/adwhirl.com/
+address=/adwordsecommerce.com.br/
+address=/adworldnetwork.com/
+address=/adworx.at/
+address=/adworx.nl/
+address=/adx.allstar.cz/
+address=/adx.atnext.com/
 address=/adx.bild.de/
 address=/adx.chip.de/
-address=/adx.chip.de/
 address=/adx.focus.de/
+address=/adx.gayboy.at/
+address=/adx.relaksit.ru/
 address=/adx.welt.de/
+address=/adxpansion.com/
+address=/adxpose.com/
+address=/adxvalue.com/
+address=/adyea.com/
+address=/adyoulike.com/
+address=/adz.rashflash.com/
+address=/adz2you.com/
+address=/adzbazar.com/
+address=/adzerk.net/
+address=/adzerk.s3.amazonaws.com/
+address=/adzestocp.com/
+address=/adzone.temp.co.za/
+address=/adzones.com/
+address=/aerserv.com/
+address=/af-ad.co.uk/
+address=/affec.tv/
+address=/affili.net/
+address=/affiliate.1800flowers.com/
+address=/affiliate.doubleyourdating.com/
+address=/affiliate.dtiserv.com/
+address=/affiliate.gamestop.com/
+address=/affiliate.mogs.com/
+address=/affiliate.offgamers.com/
+address=/affiliate.rusvpn.com/
+address=/affiliate.travelnow.com/
+address=/affiliate.treated.com/
+address=/affiliatefuture.com/
+address=/affiliates.allposters.com/
+address=/affiliates.babylon.com/
+address=/affiliates.digitalriver.com/
+address=/affiliates.globat.com/
+address=/affiliates.rozetka.com.ua/
+address=/affiliates.streamray.com/
+address=/affiliates.thinkhost.net/
+address=/affiliates.thrixxx.com/
+address=/affiliates.ultrahosting.com/
+address=/affiliatetracking.com/
+address=/affiliatetracking.net/
+address=/affiliatewindow.com/
+address=/affiliation-france.com/
 address=/affinity.com/
+address=/afftracking.justanswer.com/
+address=/agkn.com/
 address=/agof.de/
+address=/agreeablestew.com/
+address=/ahalogy.com/
+address=/aheadday.com/
+address=/ah-ha.com/
+address=/aim4media.com/
 address=/airmaxschuheoutlet.com/
+address=/airpush.com/
+address=/aistat.net/
+address=/ak0gsh40.com/
 address=/akamaized.net/
-address=/akameiterchnologies.net/
-address=/akamaized.com/
-address=/akameiterchnologies.com/
-address=/akamaized.de/
-address=/akameiterchnologies.de/
 address=/akku-laden.at/
+address=/aktrack.pubmatic.com/
 address=/aladel.net/
+address=/alchemist.go2cloud.org/
+address=/alclick.com/
+address=/alenty.com/
+address=/alert.com.mt/
+address=/alexametrics.com/
+address=/alexa-sitestats.s3.amazonaws.com/
+address=/algorix.co/
+address=/alipromo.com/
+address=/all4spy.com/
+address=/allosponsor.com/
+address=/aloofvest.com/
+address=/alphonso.tv/
+address=/als-svc.nytimes.com/
 address=/altrk.net/
+address=/amazingcounters.com/
+address=/amazon.dedp/
 address=/amazon-adsystem.com/
+address=/ambiguousquilt.com/
+address=/ambitiousagreement.com/
+address=/americash.com/
+address=/amplitude.com/
+address=/amung.us/
 address=/analdin.com/
+address=/analytics.adpost.org/
+address=/analytics.bitrix.info/
+address=/analytics.cloudron.io/
+address=/analytics.cohesionapps.com/
+address=/analytics.dnsfilter.com/
+address=/analytics.ext.go-tellm.com/
+address=/analytics.fkz.re/
+address=/analytics.google.com/
+address=/analytics.htmedia.in/
+address=/analytics.icons8.com/
+address=/analytics.inlinemanual.com/
+address=/analytics.jst.ai/
+address=/analytics.justuno.com/
+address=/analytics.live.com/
+address=/analytics.mailmunch.co/
+address=/analytics.myfinance.com/
+address=/analytics.mytvzion.pro/
+address=/analytics.ostr.io/
+address=/analytics.phando.com/
+address=/analytics.picsart.com/
+address=/analytics.poolshool.com/
+address=/analytics.posttv.com/
+address=/analytics.samdd.me/
+address=/analytics.siliconexpert.com/
+address=/analytics.swiggy.com/
+address=/analytics.xelondigital.com/
+address=/analytics.yahoo.com/
+address=/analyticsapi.happypancake.net/
+address=/analytics-production.hapyak.com/
+address=/aniview.com/
+address=/annonser.dagbladet.no/
+address=/annoyedairport.com/
+address=/anrdoezrs.net/
+address=/anstrex.com/
+address=/anuncios.edicaoms.com.br/
+address=/anxiousapples.com/
 address=/anycracks.com/
-address=/aos.prf.hn/click/
+address=/aos.prf.hnclick/
+address=/apathetictheory.com/
 address=/api.adrtx.net/
+address=/api.intensifier.de/
+address=/api.kameleoon.com/
+address=/apolloprogram.io/
+address=/app.pendo.io/
+address=/app-analytics.snapchat.com/
+address=/appboycdn.com/
 address=/appliedsemantics.com/
 address=/apps5.oingo.com/
+address=/appsflyer.com/
+address=/aps.hearstnp.com/
+address=/apsalar.com/
+address=/apture.com/
+address=/apu.samsungelectronics.com/
+address=/aquaticowl.com/
+address=/ar1nvz5.com/
+address=/aralego.com/
+address=/arc1.msn.com/
+address=/archswimming.com/
+address=/ard.xxxblackbook.com/
+address=/argyresthia.com/
+address=/aromamirror.com/
+address=/as.webmd.com/
+address=/as2.adserverhd.com/
+address=/aserv.motorsgate.com/
+address=/asewlfjqwlflkew.com/
+address=/assets1.exgfnetwork.com/
+address=/assoc-amazon.com/
+address=/aswpapius.com/
+address=/aswpsdkus.com/
+address=/at-adserver.alltop.com/
+address=/atdmt.com/
+address=/athena-ads.wikia.com/
+address=/ato.mx/
+address=/at-o.net/
+address=/attractiveafternoon.com/
+address=/attribution.report/
+address=/attributiontracker.com/
+address=/atwola.com/
+address=/auctionads.com/
+address=/auctionads.net/
+address=/audience.media/
+address=/audience2media.com/
+address=/audienceinsights.com/
+address=/audit.median.hu/
+address=/audit.webinform.hu/
+address=/augur.io/
+address=/auto-bannertausch.de/
+address=/automaticflock.com/
+address=/avazutracking.net/
+address=/avenuea.com/
+address=/avocet.io/
+address=/avpa.javalobby.org/
+address=/awakebird.com/
+address=/awempire.com/
+address=/awin1.com/
+address=/awzbijw.com/
+address=/axiomaticalley.com/
+address=/axonix.com/
+address=/aztracking.net/
+address=/b-1st.com/
+address=/ba.afl.rakuten.co.jp/
+address=/babs.tv2.dk/
+address=/backbeatmedia.com/
+address=/balloontexture.com/
+address=/banik.redigy.cz/
+address=/banner.ad.nu/
+address=/banner.ambercoastcasino.com/
+address=/banner.buempliz-online.ch/
+address=/banner.casino.net/
+address=/banner.casinodelrio.com/
+address=/banner.cotedazurpalace.com/
+address=/banner.coza.com/
+address=/banner.cz/
+address=/banner.easyspace.com/
+address=/banner.elisa.net/
+address=/banner.eurogrand.com/
+address=/banner.finzoom.ro/
+address=/banner.goldenpalace.com/
+address=/banner.icmedia.eu/
+address=/banner.img.co.za/
+address=/banner.inyourpocket.com/
+address=/banner.kiev.ua/
+address=/banner.linux.se/
+address=/banner.media-system.de/
+address=/banner.mindshare.de/
+address=/banner.nixnet.cz/
+address=/banner.noblepoker.com/
+address=/banner.northsky.com/
+address=/banner.orb.net/
+address=/banner.penguin.cz/
+address=/banner.rbc.ru/
+address=/banner.reinstil.de/
+address=/banner.relcom.ru/
+address=/banner.tanto.de/
+address=/banner.titan-dsl.de/
 address=/banner.t-online.de/
+address=/banner.vadian.net/
+address=/banner.webmersion.com/
+address=/banner10.zetasystem.dk/
+address=/bannerads.de/
+address=/bannerboxes.com/
+address=/bannerconnect.com/
+address=/bannerconnect.net/
+address=/banner-exchange-24.de/
+address=/bannergrabber.internet.gr/
+address=/bannerimage.com/
+address=/bannerlandia.com.ar/
+address=/bannermall.com/
+address=/bannermanager.bnr.bg/
+address=/bannermarkt.nl/
+address=/bannerpower.com/
+address=/banners.adultfriendfinder.com/
+address=/banners.amigos.com/
+address=/banners.asiafriendfinder.com/
+address=/banners.babylon-x.com/
+address=/banners.bol.com.br/
+address=/banners.cams.com/
+address=/banners.clubseventeen.com/
+address=/banners.czi.cz/
+address=/banners.dine.com/
+address=/banners.direction-x.com/
+address=/banners.friendfinder.com/
+address=/banners.getiton.com/
+address=/banners.golfasian.com/
+address=/banners.iq.pl/
+address=/banners.isoftmarketing.com/
+address=/banners.linkbuddies.com/
+address=/banners.passion.com/
+address=/banners.payserve.com/
+address=/banners.resultonline.com/
+address=/banners.sys-con.com/
+address=/banners.thomsonlocal.com/
+address=/banners.videosz.com/
+address=/banners.virtuagirlhd.com/
+address=/bannerserver.com/
+address=/bannersgomlm.com/
+address=/bannershotlink.perfectgonzo.com/
+address=/bannersng.yell.com/
+address=/bannerspace.com/
+address=/bannerswap.com/
+address=/bannertesting.com/
+address=/bannertrack.net/
+address=/bannery.cz/
+address=/bannieres.acces-contenu.com/
+address=/bannieres.wdmedia.net/
+address=/bans.bride.ru/
+address=/barbarousnerve.com/
+address=/barnesandnoble.bfast.com/
+address=/basebanner.com/
+address=/baskettexture.com/
+address=/bat.bing.com/
+address=/batbuilding.com/
+address=/bawdybeast.com/
+address=/baypops.com/
+address=/bbelements.com/
 address=/bbjacke.de/
+address=/bbn.img.com.ua/
+address=/beachfront.com/
+address=/beacon.gu-web.net/
+address=/beamincrease.com/
+address=/bebi.com/
+address=/beemray.com/
+address=/begun.ru/
+address=/behavioralengine.com/
+address=/belstat.com/
+address=/belstat.nl/
+address=/berp.com/
+address=/bestboundary.com/
+address=/bestcheck.de/
+address=/bestsearch.net/
+address=/bewilderedblade.com/
+address=/bfmio.com/
+address=/bg/
+address=/bhcumsc.com/
 address=/biallo.de/
+address=/bidbarrel.cbsnews.com/
+address=/bidclix.com/
+address=/bidclix.net/
+address=/bidr.io/
+address=/bidsopt.com/
+address=/bidswitch.net/
+address=/bidtellect.com/
+address=/bidvertiser.com/
+address=/big-bang-ads.com/
+address=/bigbangmedia.com/
+address=/bigclicks.com/
 address=/bigpoint.com/
+address=/bigreal.org/
 address=/bilano.de/
 address=/bild.ivwbox.de/
 address=/billalo.de/
-address=/billiger.de/common/modules/api/
+address=/billboard.cz/
+address=/billiger.decommonmodulesapi/
 address=/biohazard.xz.cz/
-address=/block.opendns.com/
-address=/bestcheck.de/
+address=/biosda.com/
+address=/bitmedianetwork.com/
+address=/bizad.nikkeibp.co.jp/
+address=/bizible.com/
+address=/bizographics.com/
+address=/bizrate.com/
+address=/bizzclick.com/
+address=/bkrtx.com/
+address=/blingbucks.com/
+address=/blis.com/
+address=/blockadblock.com/
+address=/blockthrough.com/
+address=/blogads.com/
+address=/blogcounter.de/
+address=/blogherads.com/
+address=/blogtoplist.se/
+address=/blogtopsites.com/
+address=/blueadvertise.com/
+address=/blueconic.com/
+address=/blueconic.net/
+address=/bluekai.com/
+address=/bluelithium.com/
+address=/bluewhaleweb.com/
+address=/blushingbeast.com/
+address=/blushingboundary.com/
+address=/bm.annonce.cz/
+address=/bn.bfast.com/
+address=/bnnrrv.qontentum.de/
+address=/bnrs.ilm.ee/
+address=/boffoadsapi.com/
+address=/boilingbeetle.com/
+address=/boilingumbrella.com/
+address=/bongacash.com/
+address=/boomads.com/
+address=/boomtrain.com/
+address=/boost-my-pr.de/
+address=/boredcrown.com/
+address=/boringcoat.com/
+address=/boudja.com/
+address=/bounceads.net/
+address=/bounceexchange.com/
+address=/bowie-cdn.fathomdns.com/
+address=/box.anchorfree.net/
+address=/bpath.com/
+address=/bpu.samsungelectronics.com/
 address=/bpwhamburgorchardpark.org/
+address=/braincash.com/
+address=/brand-display.com/
+address=/brandreachsys.com/
+address=/breaktime.com.tw/
+address=/brealtime.com/
+address=/bridgetrack.com/
+address=/brightcom.com/
+address=/brightinfo.com/
+address=/brightmountainmedia.com/
+address=/british-banners.com/
+address=/broadboundary.com/
+address=/broadcastbed.com/
+address=/broaddoor.com/
+address=/browser-http-intake.logs.datadoghq.com/
+address=/browser-http-intake.logs.datadoghq.eu/
+address=/bs.yandex.ru/
+address=/btez8.xyz/
+address=/btrll.com/
+address=/bttrack.com/
+address=/bu/
+address=/bucketbean.com/
+address=/bullseye.backbeatmedia.com/
+address=/businessbells.com/
+address=/bustlinganimal.com/
+address=/buysellads.com/
+address=/buzzonclick.com/
+address=/bwp.download.com/
+address=/by/
+address=/c.bigmir.net/
+address=/c1.nowlinux.com/
+address=/c1exchange.com/
+address=/calculatingcircle.com/
+address=/calculatingtoothbrush.com/
+address=/calculatorcamera.com/
+address=/callousbrake.com/
+address=/callrail.com/
+address=/calmcactus.com/
+address=/campaign.bharatmatrimony.com/
+address=/caniamedia.com/
+address=/cannads.urgrafix.com/
+address=/capablecows.com/
+address=/captainbicycle.com/
+address=/carambo.la/
+address=/carbonads.com/
+address=/carbonads.net/
+address=/casalemedia.com/
+address=/casalmedia.com/
+address=/cash4members.com/
+address=/cash4popup.de/
+address=/cashcrate.com/
+address=/cashengines.com/
+address=/cashfiesta.com/
+address=/cashpartner.com/
+address=/cashstaging.me/
+address=/casinopays.com/
+address=/casinorewards.com/
+address=/casinotraffic.com/
+address=/causecherry.com/
+address=/cbanners.virtuagirlhd.com/
+address=/cdn.bannerflow.com/
+address=/cdn.branch.io/
 address=/cdn.flashtalking.com/
+address=/cdn.freefarcy.com/
+address=/cdn.freshmarketer.com/
+address=/cdn.heapanalytics.com/
+address=/cdn.keywee.co/
+address=/cdn.onesignal.com/
+address=/cdn.segment.com/
+address=/cdn1.spiegel.deimages/
+address=/cecash.com/
+address=/cedato.com/
+address=/celtra.com/
+address=/centerpointmedia.com/
 address=/centgebote.tv/
-address=/chaturbate.com/
+address=/ceskydomov.alias.ngs.modry.cz/
+address=/cetrk.com/
+address=/cgicounter.puretec.de/
+address=/chairscrack.com/
+address=/chameleon.ad/
+address=/channelintelligence.com/
+address=/chardwardse.club/
+address=/chart.dk/
+address=/chartbeat.com/
+address=/chartbeat.net/
+address=/chartboost.com/
+address=/checkm8.com/
+address=/checkstat.nl/
+address=/cheerfulrange.com/
+address=/chewcoat.com/
+address=/chickensstation.com/
+address=/chinsnakes.com/
+address=/chitika.net/
+address=/cision.com/
+address=/cityads.telus.net/
+address=/cj.com/
+address=/cjbmanagement.com/
+address=/cjlog.com/
+address=/cl0udh0st1ng.com/
+address=/claria.com/
+address=/clevernt.com/
+address=/click/
+address=/click.a-ads.com/
+address=/click.cartsguru.io/
+address=/click.email.bbc.com/
+address=/click.email.sonos.com/
+address=/click.fool.com/
+address=/click.kmindex.ru/
+address=/click.negociosdigitaisnapratica.com.br/
+address=/click.redditmail.com/
+address=/click.twcwigs.com/
+address=/click2freemoney.com/
+address=/clickability.com/
+address=/clickadz.com/
+address=/clickagents.com/
+address=/clickbank.com/
+address=/clickbooth.com/
+address=/clickboothlnk.com/
+address=/clickbrokers.com/
+address=/clickcompare.co.uk/
+address=/clickdensity.com/
+address=/clickedyclick.com/
+address=/clickfuse.com/
+address=/clickhereforcellphones.com/
+address=/clickhouse.com/
+address=/clickhype.com/
+address=/clicklink.jp/
+address=/clickmate.io/
+address=/clickonometrics.pl/
+address=/clicks.equantum.com/
+address=/clicks.mods.de/
+address=/clickserve.cc-dt.com/
+address=/clicktag.de/
+address=/clickthruserver.com/
+address=/clickthrutraffic.com/
+address=/clicktrace.info/
+address=/clicktrack.ziyu.net/
+address=/clicktracks.com/
+address=/clicktrade.com/
+address=/clickwith.bid/
+address=/clickxchange.com/
+address=/clickyab.com/
+address=/clickz.com/
+address=/clientmetrics-pa.googleapis.com/
+address=/clikerz.net/
+address=/cliksolution.com/
+address=/clixgalore.com/
+address=/clk1005.com/
+address=/clk1011.com/
+address=/clk1015.com/
+address=/clkrev.com/
+address=/clksite.com/
+address=/cloisteredhydrant.com/
+address=/cloudcoins.biz/
+address=/clrstm.com/
+address=/cluster.adultworld.com/
+address=/clustrmaps.com/
+address=/cmp.dmgmediaprivacy.co.uk/
+address=/cmvrclicks000.com/
+address=/cnomy.com/
+address=/cnt.spbland.ru/
+address=/cnt1.pocitadlo.cz/
+address=/cny.yoyo.org/
+address=/codeadnetwork.com/
+address=/code-server.biz/
+address=/cognitiv.ai/
+address=/cognitiveadscience.com/
+address=/coinhive.com/
+address=/coin-hive.com/
+address=/cointraffic.io/
+address=/colonize.com/
+address=/comclick.com/
+address=/comfortablecheese.com/
+address=/commindo-media-ressourcen.de/
+address=/commissionmonster.com/
+address=/commonswing.com/
+address=/compactbanner.com/
+address=/completecabbage.com/
+address=/complextoad.com/
+address=/comprabanner.it/
+address=/concernedcondition.com/
+address=/conductrics.com/
+address=/connatix.com/
+address=/connectad.io/
+address=/connextra.com/
+address=/consciouschairs.com/
+address=/consensad.com/
+address=/consensu.org/
+address=/contadores.miarroba.com/
+address=/contaxe.de/
+address=/content.acc-hd.de/
+address=/content.ad/
+address=/content22.online.citi.com/
+address=/contextweb.com/
+address=/converge-digital.com/
+address=/conversantmedia.com/
+address=/conversionbet.com/
+address=/conversionruler.com/
+address=/convertingtraffic.com/
+address=/convrse.media/
+address=/cookies.cmpnet.com/
+address=/coordinatedcub.com/
+address=/cootlogix.com/
+address=/copperchickens.com/
+address=/copycarpenter.com/
+address=/copyrightaccesscontrols.com/
 address=/coqnu.com/
+address=/coremetrics.com/
+address=/cormast.com/
+address=/cosmopolitads.com/
+address=/count.rin.ru/
+address=/count.west263.com/
+address=/counted.com/
+address=/counter.bloke.com/
+address=/counter.cnw.cz/
+address=/counter.cz/
+address=/counter.dreamhost.com/
+address=/counter.mirohost.net/
+address=/counter.mojgorod.ru/
+address=/counter.nowlinux.com/
+address=/counter.rambler.ru/
+address=/counter.search.bg/
+address=/counter.snackly.co/
+address=/counter.sparklit.com/
+address=/counter.yadro.ru/
+address=/counters.honesty.com/
+address=/counting.kmindex.ru/
+address=/coupling-media.de/
+address=/coxmt.com/
+address=/cp.abbp1.pw/
+address=/cpalead.com/
+address=/cpays.com/
+address=/cpmstar.com/
+address=/cpu.samsungelectronics.com/
+address=/cpx.to/
+address=/cpxinteractive.com/
+address=/cqcounter.com/
+address=/crabbychin.com/
+address=/crakmedia.com/
+address=/craktraffic.com/
+address=/crawlability.com/
+address=/crawlclocks.com/
+address=/crazyegg.com/
+address=/crazypopups.com/
+address=/creafi-online-media.com/
+address=/creatives.livejasmin.com/
+address=/criteo.com/
+address=/criteo.net/
+address=/critictruck.com/
+address=/croissed.info/
+address=/crowdgravity.com/
+address=/crsspxl.com/
+address=/crta.dailymail.co.uk/
+address=/crtv.mate1.com/
+address=/crwdcntrl.net/
+address=/crypto-loot.org/
+address=/cs/
+address=/ctnetwork.hu/
+address=/cubics.com/
+address=/cuii.info/
+address=/culturedcrayon.com/
+address=/cumbersomecloud.com/
 address=/cuponation.de/
+address=/curtaincows.com/
+address=/custom.plausible.io/
+address=/customad.cnn.com/
+address=/customers.kameleoon.com/
+address=/cutecushion.com/
+address=/cuteturkey.com/
+address=/cxense.com/
+address=/cyberbounty.com/
+address=/d.adroll.com/
+address=/d2cmedia.ca/
+address=/dabiaozhi.com/
+address=/dacdn.visualwebsiteoptimizer.com/
+address=/dakic-ia-300.com/
+address=/damdoor.com/
+address=/dancemistake.com/
+address=/dapper.net/
+address=/dashbida.com/
+address=/dashingdirt.com/
+address=/dashingsweater.com/
+address=/data.namesakeoscilloscopemarquis.com/
+address=/data8a8altrk.com/
+address=/dbbsrv.com/
+address=/dc-storm.com/
 address=/de.mediaplex.com/
+address=/de17a.com/
+address=/deadpantruck.com/
+address=/dealdotcom.com/
+address=/debonairway.com/
+address=/debtbusterloans.com/
+address=/decenterads.com/
+address=/decisivedrawer.com/
+address=/decisiveducks.com/
+address=/decknetwork.net/
+address=/decoycreation.com/
+address=/deepintent.com/
+address=/defectivesun.com/
+address=/delegatediscussion.com/
+address=/deloo.de/
+address=/deloplen.com/
+address=/deloton.com/
+address=/demandbase.com/
+address=/demdex.net/
+address=/deployads.com/
+address=/desertedbreath.com/
+address=/desertedrat.com/
+address=/detailedglue.com/
+address=/detailedgovernment.com/
+address=/detectdiscovery.com/
+address=/dev.visualwebsiteoptimizer.com/
+address=/dianomi.com/
+address=/didtheyreadit.com/
+address=/digital-ads.s3.amazonaws.com/
+address=/digitalmerkat.com/
+address=/directaclick.com/
+address=/direct-events-collector.spot.im/
+address=/directivepub.com/
+address=/directleads.com/
+address=/directorym.com/
+address=/directtrack.com/
+address=/direct-xxx-access.com/
+address=/discountclick.com/
+address=/discreetfield.com/
+address=/dispensablestranger.com/
+address=/displayadsmedia.com/
+address=/disqusads.com/
+address=/dist.belnk.com/
+address=/distillery.wistia.com/
+address=/districtm.ca/
+address=/districtm.io/
+address=/dk4ywix.com/
+address=/dmp.mall.tv/
+address=/dmtracker.com/
+address=/dmtracking.alibaba.com/
+address=/dmtracking2.alibaba.com/
+address=/dnsdelegation.io/
 address=/dntrax.com/
-address=/dns.google/
+address=/docksalmon.com/
+address=/dogcollarfavourbluff.com/
+address=/do-global.com/
+address=/domaining.in/
+address=/domainsponsor.com/
+address=/domainsteam.de/
+address=/domdex.com/
+address=/dotmetrics.net/
 address=/doubleclick.com/
 address=/doubleclick.de/
 address=/doubleclick.net/
+address=/doublepimp.com/
+address=/doubleverify.com/
+address=/doubtfulrainstorm.com/
+address=/downloadr.xyz/
 address=/download-service.de/
 address=/download-sofort.com/
+address=/dpbolvw.net/
+address=/dpu.samsungelectronics.com/
+address=/dq95d35.com/
+address=/drabsize.com/
+address=/dragzebra.com/
+address=/drumcash.com/
+address=/drydrum.com/
 address=/ds.serving-sys.com/
+address=/dsp.colpirio.com/
+address=/dsp.io/
+address=/dstillery.com/
+address=/dyntrk.com/
+address=/e.kde.cz/
+address=/eadexchange.com/
+address=/e-adimages.scrippsnetworks.com/
+address=/earthquakescarf.com/
+address=/earthycopy.com/
+address=/eas.almamedia.fi/
 address=/easycracks.net/
+address=/easyhits4u.com/
+address=/ebayadvertising.com/
+address=/ebuzzing.com/
+address=/ecircle-ag.com/
+address=/ecleneue.com/
+address=/eclick.vn/
+address=/eclkmpbn.com/
+address=/eclkspbn.com/
+address=/economicpizzas.com/
+address=/ecoupons.com/
+address=/edaa.eu/
+address=/efahrer.chip.de/
+address=/efahrer.de/
+address=/efahrer.fokus.de/
+address=/effectivemeasure.com/
+address=/effectivemeasure.net/
+address=/efficaciouscactus.com/
+address=/eiv.baidu.com/
+address=/ejyymghi.com/
+address=/elasticchange.com/
+address=/elderlyscissors.com/
+address=/elderlytown.com/
+address=/elephantqueue.com/
+address=/elitedollars.com/
+address=/elitetoplist.com/
+address=/elthamely.com/
+address=/e-m.fr/
+address=/emarketer.com/
+address=/emebo.com/
+address=/emebo.io/
 address=/emediate.eu/
-address=/endlookup.com/
+address=/emerse.com/
+address=/emetriq.de/
+address=/emjcd.com/
+address=/emltrk.com/
+address=/emodoinc.com/
+address=/emptyescort.com/
+address=/emxdigital.com/
+address=/en25.com/
+address=/encouragingwilderness.com/
+address=/endurableshop.com/
+address=/energeticladybug.com/
+address=/engage.dnsfilter.com/
+address=/engagebdr.com/
+address=/engine.espace.netavenir.com/
+address=/enginenetwork.com/
+address=/enormousearth.com/
+address=/enquisite.com/
+address=/ensighten.com/
+address=/entercasino.com/
+address=/enthusiasticdad.com/
+address=/entrecard.s3.amazonaws.com/
+address=/enviousthread.com/
+address=/e-planning.net/
+address=/epom.com/
+address=/epp.bih.net.ba/
+address=/eqads.com/
+address=/erne.co/
+address=/ero-advertising.com/
+address=/espn.com.ssl.sc.omtrdc.net/
+address=/estat.com/
+address=/esty.com/
+address=/et.nytimes.com/
+address=/etahub.com/
+address=/etargetnet.com/
+address=/etracker.com/
 address=/etracker.de/
+address=/eu1.madsone.com/
+address=/eu-adcenter.net/
+address=/eule1.pmu.fr/
+address=/eulerian.net/
+address=/eurekster.com/
+address=/euros4click.de/
+address=/eusta.de/
+address=/evadav.com/
+address=/evadavdsp.pro/
+address=/everestads.net/
+address=/everesttech.net/
+address=/evergage.com/
+address=/eversales.space/
+address=/evidon.com/
+address=/evyy.net/
+address=/ewebcounter.com/
+address=/exchangead.com/
+address=/exchangeclicksonline.com/
+address=/exchange-it.com/
+address=/exclusivebrass.com/
+address=/exelate.com/
+address=/exelator.com/
+address=/exit76.com/
+address=/exitexchange.com/
+address=/exitfuel.com/
 address=/exoclick.com/
+address=/exosrv.com/
+address=/experianmarketingservices.digital/
+address=/explorads.com/
+address=/exponea.com/
+address=/exponential.com/
+address=/express-submit.de/
+address=/extreme-dm.com/
+address=/extremetracking.com/
+address=/eyeblaster.com/
+address=/eyeota.net/
+address=/eyereturn.com/
+address=/eyeviewads.com/
+address=/eyewonder.com/
+address=/ezula.com/
+address=/f7ds.liberation.fr/
+address=/facilitategrandfather.com/
+address=/fadedprofit.com/
+address=/fadedsnow.com/
+address=/fallaciousfifth.com/
+address=/famousquarter.com/
 address=/fancy.com/
 address=/fancy.de/
 address=/fapdu.com/
 address=/fapmaps.com/
+address=/faracoon.com/
+address=/farethief.com/
+address=/farmergoldfish.com/
+address=/fascinatedfeather.com/
+address=/fastclick.com/
+address=/fastclick.com.edgesuite.net/
+address=/fastclick.net/
+address=/fastgetsoftware.com/
+address=/fastly-insights.com/
+address=/fast-redirecting.com/
+address=/faultycanvas.com/
+address=/faultyfowl.com/
+address=/fc.webmasterpro.de/
+address=/feathr.co/
+address=/feebleshock.com/
+address=/feedbackresearch.com/
+address=/feedjit.com/
+address=/feedmob.com/
+address=/ffxcam.fairfax.com.au/
+address=/fimserve.com/
+address=/findcommerce.com/
+address=/findepended.com/
+address=/findyourcasino.com/
+address=/fineoffer.net/
+address=/fingahvf.top/
+address=/first.nova.cz/
+address=/firstlightera.com/
+address=/fixel.ai/
+address=/flairadscpc.com/
+address=/flakyfeast.com/
+address=/flashtalking.com/
+address=/fleshlightcash.com/
+address=/flexbanner.com/
+address=/flimsycircle.com/
+address=/floodprincipal.com/
+address=/flowgo.com/
+address=/flurry.com/
+address=/fly-analytics.com/
+address=/focus.deajax/
+address=/foo.cosmocode.de/
+address=/foresee.com/
+address=/forex-affiliate.net/
+address=/forkcdn.com/
+address=/fourarithmetic.com/
+address=/fpctraffic.com/
+address=/fpctraffic2.com/
+address=/fpjs.io/
+address=/fqtag.com/
+address=/frailoffer.com/
 address=/franzis-sportswear.de/
-address=/g.msn.com/AIPRIV/
+address=/freebanner.com/
+address=/free-banners.com/
+address=/free-counter.co.uk/
+address=/free-counters.co.uk/
+address=/freecounterstat.com/
+address=/freelogs.com/
+address=/freeonlineusers.com/
+address=/freepay.com/
+address=/freeskreen.com/
+address=/freestats.com/
+address=/freestats.tv/
+address=/freewebcounter.com/
+address=/freewheel.com/
+address=/freewheel.tv/
+address=/frightenedpotato.com/
+address=/frtyj.com/
+address=/frtyk.com/
+address=/fukc69xo.us/
+address=/fullstory.com/
+address=/functionalcrown.com/
+address=/funklicks.com/
+address=/fusionads.net/
+address=/fusionquest.com/
+address=/futuristicapparatus.com/
+address=/futuristicfairies.com/
+address=/fuzzybasketball.com/
+address=/fuzzyflavor.com/
+address=/fuzzyweather.com/
+address=/fxstyle.net/
+address=/g.msn.comAIPRIV/
 address=/g4u.me/
+address=/ga.clearbit.com/
+address=/ga87z2o.com/
+address=/gadsbee.com/
+address=/galaxien.com/
+address=/game-advertising-online.com/
+address=/gamehouse.com/
+address=/gamesites100.net/
+address=/gamesites200.com/
+address=/gammamaximum.com/
+address=/gearwom.de/
+address=/gekko.spiceworks.com/
 address=/gemini.yahoo.com/
-address=/google.com/adsense/
+address=/geo.digitalpoint.com/
+address=/geobanner.adultfriendfinder.com/
+address=/georiot.com/
+address=/geovisite.com/
+address=/getclicky.com/
+address=/getintent.com/
+address=/getmyads.com/
+address=/giddycoat.com/
+address=/globalismedia.com/
+address=/globaltakeoff.net/
+address=/globus-inter.com/
+address=/glossysense.com/
+address=/gloyah.net/
+address=/gmads.net/
+address=/gml.email/
+address=/go2affise.com/
+address=/go-clicks.de/
+address=/goingplatinum.com/
+address=/goldstats.com/
+address=/go-mpulse.net/
+address=/gondolagnome.com/
+address=/google.comadsense/
+address=/google.comurl?q=*/
 address=/googleadservices.com/
-address=/googleadservices.de/
+address=/googleanalytics.com/
 address=/google-analytics.com/
-address=/google-analytics.de/
 address=/googlesyndication.com/
 address=/googletagmanager.com/
+address=/googletagservices.com/
+address=/go-rank.de/
+address=/gorgeousground.com/
+address=/gostats.com/
+address=/gothamads.com/
+address=/gotraffic.net/
+address=/gp.dejanews.com/
+address=/gracefulsock.com/
+address=/graizoah.com/
+address=/grandioseguide.com/
+address=/grapeshot.co.uk/
+address=/greetzebra.com/
+address=/greyinstrument.com/
+address=/greystripe.com/
 address=/grosshandel-angebote.de/
+address=/groundtruth.com/
+address=/gscontxt.net/
+address=/gtop100.com/
+address=/guardedschool.com/
+address=/gunggo.com/
 address=/guruads.de/
-address=/gutscheine\./
 address=/gutscheine.bild.de/
 address=/gutscheine.chip.de/
 address=/gutscheine.focus.de/
 address=/gutscheine.welt.de/
+address=/h0.t.hubspotemail.net/
+address=/h78xb.pw/
+address=/habitualhumor.com/
 address=/hackpalace.com/
-address=/heise.de\/mediadaten\/
-address=/heise.de\/mediadaten\/online/
+address=/hadskiz.com/
+address=/haltingbadge.com/
+address=/hammerhearing.com/
+address=/handyfield.com/
+address=/hardtofindmilk.com/
+address=/harrenmedia.com/
+address=/harrenmedianetwork.com/
+address=/havamedia.net/
+address=/hb.afl.rakuten.co.jp/
+address=/hbb.afl.rakuten.co.jp/
+address=/h-bid.com/
+address=/hdscout.com/
+address=/heap.com/
+address=/heias.com/
+address=/heise.demediadaten/
+address=/heise.demediadatenheise-online/
+address=/heise.demediadatenonline/
+address=/hellobar.com/
+address=/hentaicounter.com/
+address=/herbalaffiliateprogram.com/
+address=/hexcan.com/
+address=/hexusads.fluent.ltd.uk/
+address=/heyos.com/
+address=/hfc195b.com/
+address=/hgads.com/
+address=/highfalutinroom.com/
+address=/hightrafficads.com/
+address=/hilariouszinc.com/
+address=/hilltopads.net/
+address=/histats.com/
+address=/historicalrequest.com/
+address=/hit.bg/
+address=/hit.ua/
+address=/hit.webcentre.lycos.co.uk/
+address=/hitbox.com/
+address=/hitcounters.miarroba.com/
+address=/hitfarm.com/
+address=/hitiz.com/
+address=/hitlist.ru/
+address=/hitlounge.com/
+address=/hitometer.com/
+address=/hit-parade.com/
+address=/hits.europuls.eu/
+address=/hits.informer.com/
+address=/hits.puls.lv/
+address=/hits.theguardian.com/
+address=/hits4me.com/
+address=/hits-i.iubenda.com/
+address=/hitslink.com/
+address=/hittail.com/
+address=/hlok.qertewrt.com/
+address=/hocgeese.com/
+address=/hollps.win/
+address=/homepageking.de/
+address=/honeygoldfish.com/
+address=/honorablehall.com/
+address=/honorableland.com/
 address=/hookupsonline.com/
+address=/hostedads.realitykings.com/
+address=/hotjar.com/
+address=/hotkeys.com/
+address=/hotlog.ru/
+address=/hotrank.com.tw/
+address=/hoverowl.com/
+address=/hsadspixel.net/
+address=/hs-analytics.net/
+address=/hs-banner.com/
 address=/hsrd.yahoo.com/
+address=/htlbid.com/
+address=/httpool.com/
+address=/hubadnetwork.com/
+address=/hueads.com/
+address=/hueadsortb.com/
+address=/hueadsxml.com/
+address=/hurricanedigitalmedia.com/
+address=/hurtteeth.com/
+address=/hydramedia.com/
+address=/hyperbanner.net/
+address=/hypertracker.com/
+address=/hyprmx.com/
+address=/hystericalhelp.com/
+address=/i1img.com/
+address=/i1media.no/
+address=/ia.iinfo.cz/
+address=/iad.anm.co.uk/
+address=/iadnet.com/
+address=/iasds01.com/
+address=/ibillboard.com/
+address=/i-clicks.net/
+address=/iconadserver.com/
+address=/iconpeak2trk.com/
+address=/icptrack.com/
+address=/id5-sync.com/
+address=/idealadvertising.net/
+address=/identads.com/
+address=/idevaffiliate.com/
+address=/idtargeting.com/
+address=/ientrymail.com/
+address=/iesnare.com/
+address=/ifa.tube8live.com/
+address=/i-i.lt/
+address=/ilbanner.com/
+address=/ilead.itrack.it/
+address=/illfatedsnail.com/
+address=/illustriousoatmeal.com/
+address=/imagecash.net/
+address=/images-pw.secureserver.net/
+address=/imarketservices.com/
+address=/img.prohardver.hu/
+address=/imgpromo.easyrencontre.com/
+address=/imgs.chip.de/
+address=/immensehoney.com/
+address=/imonitor.nethost.cz/
+address=/imonomy.com/
+address=/importedincrease.com/
+address=/impossibleexpansion.com/
+address=/imprese.cz/
+address=/impressionmedia.cz/
+address=/impressionmonster.com/
+address=/impressionz.co.uk/
+address=/improvedigital.com/
+address=/impulsehands.com/
+address=/imrworldwide.com/
+address=/inaccused.com/
+address=/incentaclick.com/
+address=/inclk.com/
+address=/incognitosearches.com/
+address=/incoming.telemetry.mozilla.org/
+address=/indexexchange.com/
+address=/indexstats.com/
+address=/indexww.com/
+address=/indieclick.com/
+address=/industrybrains.com/
+address=/inetlog.ru/
+address=/infinite-ads.com/
+address=/infinityads.com/
+address=/infolinks.com/
+address=/information.com/
+address=/inmobi.com/
+address=/inner-active.com/
+address=/innocentwax.com/
+address=/innovid.com/
+address=/inquisitiveinvention.com/
+address=/inringtone.com/
+address=/insgly.net/
+address=/insightexpress.com/
+address=/insightexpressai.com/
+address=/inskinad.com/
+address=/inspectlet.com/
+address=/install.365-stream.com/
+address=/instantmadness.com/
+address=/insticator.com/
+address=/instinctiveads.com/
+address=/instrumentsponge.com/
+address=/intelliads.com/
 address=/intelligent.com/
 address=/intellitext.de/
 address=/intellitxt.com/
 address=/intellitxt.de/
+address=/interactive.forthnet.gr/
+address=/intergi.com/
+address=/internetfuel.com/
+address=/interreklame.de/
+address=/intnotif.club/
+address=/inventionpassenger.com/
+address=/invitesugar.com/
 address=/ioam.de/
 address=/iomoio.com/
+address=/ip.ro/
+address=/ip193.cn/
+address=/iperceptions.com/
+address=/iporntv.com/
+address=/iporntv.net/
+address=/ipredictive.com/
+address=/ipro.com/
+address=/ipstack.com/
 address=/iqm.de/
+address=/irchan.com/
+address=/ireklama.cz/
+address=/is-tracking-pixel-api-prod.appspot.com/
+address=/itfarm.com/
+address=/itop.cz/
+address=/itsptp.com/
+address=/its-that-easy.com/
+address=/ivwbox.de/
 address=/ivw-online.de/
+address=/ivykiosk.com/
+address=/iyfnzgb.com/
+address=/j93557g.com/
+address=/jadeitite.com/
+address=/jads.co/
+address=/jaizouji.com/
+address=/jauchuwa.net/
+address=/jcount.com/
+address=/jdoqocy.com/
+address=/jinkads.de/
 address=/jjhouse.com/
+address=/joetec.net/
+address=/js.users.51.la/
+address=/js-agent.newrelic.com/
+address=/jsecoin.com/
+address=/jsrdn.com/
+address=/juicyads.com/
+address=/juicyads.me/
+address=/jumptap.com/
+address=/jungroup.com/
+address=/justicejudo.com/
+address=/justpremium.com/
+address=/justrelevant.com/
+address=/k.iinfo.cz/
+address=/kameleoon.eu/
+address=/kanoodle.com/
+address=/kargo.com/
+address=/karonty.com/
 address=/keygen.us/
 address=/keygenguru.com/
 address=/keygens.pro/
-address=/kingfamilyphotoalbum.com/
+address=/keymedia.hu/
+address=/kindads.com/
 address=/kinox.to/
+address=/kissmetrics.com/
+address=/klclick.com/
+address=/klclick1.com/
+address=/kleinanzaige.spiegel,de/
+address=/kleinanzeige.bild,de/
 address=/kleinanzeige.chip.de/
 address=/kleinanzeige.focus.de/
 address=/kleinanzeige.welt.de/
-address=/kleinanzeige.bild.de/
-address=/kleinanzeige.stern.de/
+address=/kliks.nl/
 address=/kliktrek.com/
+address=/klsdee.com/
+address=/kmpiframe.keepmeposted.com.mt/
+address=/knorex.com/
+address=/komoona.com/
+address=/kompasads.com/
+address=/kontera.com/
+address=/kost.tv/
+address=/kpu.samsungelectronics.com/
+address=/krxd.net/
+address=/kt5850pjz0.com/
+address=/ktu.sv2.biz/
 address=/ktxtr.com/
-address=/liebelib.com/
+address=/kubient.com/
+address=/l1.britannica.com/
+address=/l6b587txj1.com/
+address=/ladsreds.com/
+address=/ladsup.com/
+address=/lakequincy.com/
+address=/lameletters.com/
+address=/lanistaads.com/
+address=/larati.net/
+address=/laughablecopper.com/
+address=/laughcloth.com/
+address=/launchbit.com/
+address=/layer-ad.de/
+address=/layer-ads.de/
+address=/lbn.ru/
+address=/lead-analytics.nl/
+address=/leadboltads.net/
+address=/leadclick.com/
+address=/leadingedgecash.com/
+address=/leadplace.fr/
+address=/leady.com/
+address=/leadzupc.com/
+address=/leaplunchroom.com/
+address=/leedsads.com/
+address=/lemmatechnologies.com/
+address=/lettucelimit.com/
+address=/levelrate.de/
+address=/lfeeder.com/
+address=/lfstmedia.com/
+address=/li.alibris.com/
+address=/li.azstarnet.com/
+address=/li.dailycaller.com/
+address=/li.gatehousemedia.com/
+address=/li.gq.com/
+address=/li.hearstmags.com/
+address=/li.livingsocial.com/
+address=/li.mw.drhinternet.net/
+address=/li.onetravel.com/
+address=/li.patheos.com/
+address=/li.pmc.com/
+address=/li.purch.com/
+address=/li.realtor.com/
+address=/li.walmart.com/
+address=/li.ziffimages.com/
+address=/liadm.com/
+address=/lifeimpressions.net/
+address=/liftdna.com/
+address=/ligatus.com/
+address=/ligatus.de/
+address=/lightcast.leadscoringcenter.com/
+address=/lightcushion.com/
+address=/lightspeedcash.com/
+address=/lijit.com/
+address=/line.jzs001.cn/
+address=/link4ads.com/
+address=/linkadd.de/
+address=/link-booster.de/
+address=/linkbuddies.com/
+address=/linkexchange.com/
+address=/linkprice.com/
+address=/linkrain.com/
+address=/linkreferral.com/
+address=/linkshighway.com/
+address=/links-ranking.de/
+address=/linkstorms.com/
+address=/linkswaper.com/
+address=/linktarget.com/
+address=/liquidad.narrowcastmedia.com/
+address=/litix.io/
+address=/liveadexchanger.com/
+address=/liveintent.com/
+address=/liverail.com/
+address=/lizardslaugh.com/
+address=/lkqd.com/
+address=/lnks.gd/
+address=/loading321.com/
+address=/locked4.com/
 address=/lockerdome.com/
-address=/macerkopf.de/go/
+address=/log.btopenworld.com/
+address=/log.logrocket.io/
+address=/log.pinterest.com/
+address=/log.videocampaign.co/
+address=/logger.snackly.co/
+address=/logs.roku.com/
+address=/logs.spilgames.com/
+address=/logsss.com/
+address=/logua.com/
+address=/longinglettuce.com/
+address=/look.djfiln.com/
+address=/look.ichlnk.com/
+address=/look.opskln.com/
+address=/look.udncoeln.com/
+address=/look.ufinkln.com/
+address=/loopme.com/
+address=/lop.com/
+address=/loudlunch.com/
+address=/lp3tdqle.com/
+address=/lucidmedia.com/
+address=/lucklayed.info/
+address=/lytics.io/
+address=/lzjl.com/
+address=/m.trb.com/
+address=/m\\303\\266se/
+address=/m\\303\\266se.com/
+address=/m\\303\\266se.de/
+address=/m1.webstats4u.com/
+address=/m2.ai/
+address=/m32.media/
+address=/m4n.nl/
+address=/m6r.eu/
+address=/macerkopf.dego/
+address=/mackeeperapp.mackeeper.com/
 address=/madbid.com/
+address=/madclient.uimserv.net/
+address=/madcpms.com/
+address=/madinad.com/
+address=/madisonavenue.com/
+address=/madvertise.de/
+address=/magicadz.co/
+address=/magnificentmist.com/
+address=/mail-ads.google.com/
 address=/mainstoreonline.com/
+address=/malaysia-online-bank-kasino.com/
+address=/manageadv.cblogs.eu/
+address=/marchex.com/
+address=/marinsm.com/
+address=/markedcrayon.com/
+address=/markedpail.com/
+address=/market-buster.com/
+address=/marketing.888.com/
+address=/marketing.hearstmagazines.nl/
+address=/marketing.net.brillen.de/
+address=/marketing.net.home24.de/
+address=/marketing.nyi.net/
+address=/marketing.osijek031.com/
+address=/marketingsolutions.yahoo.com/
+address=/marketo.com/
+address=/mas.sector.sk/
+address=/massivemark.com/
+address=/matchcraft.com/
+address=/materialmoon.com/
+address=/matheranalytics.com/
+address=/mathtag.com/
+address=/matomo.activate.cz/
+address=/matomo.hdweb.ru/
+address=/matomo.kmkb.ru/
+address=/mautic.com/
+address=/max.i12.de/
+address=/maximiser.net/
+address=/maximumcash.com/
+address=/maxonclick.com/
+address=/mbs.megaroticlive.com/
+address=/mcdlks.com/
+address=/me/
+address=/measure.office.com/
+address=/measuremap.com/
+address=/media.funpic.de/
+address=/media.net/
+address=/media01.eu/
+address=/media6degrees.com/
+address=/media-adrunner.mycomputer.com/
+address=/mediaarea.eu/
+address=/mediabridge.cc/
+address=/mediacharger.com/
+address=/mediageneral.com/
+address=/mediaiqdigital.com/
+address=/mediamath.com/
+address=/mediamgr.ugo.com/
+address=/mediaplazza.com/
 address=/mediaplex.com/
+address=/mediascale.de/
+address=/mediaserver.bwinpartypartners.it/
+address=/media-servers.net/
+address=/mediasmart.io/
+address=/mediatext.com/
+address=/mediavine.com/
+address=/mediavoice.com/
+address=/mediax.angloinfo.com/
+address=/mediaz.angloinfo.com/
+address=/medleyads.com/
+address=/medyanetads.com/
+address=/meetrics.net/
+address=/megacash.de/
 address=/mega-einkaufsquellen.de/
+address=/megapu.sh/
+address=/megastats.com/
+address=/megawerbung.de/
+address=/mellowads.com/
+address=/memorizeneck.com/
+address=/memorycobweb.com/
+address=/messagenovice.com/
+address=/metadsp.co.uk/
+address=/metaffiliation.com/
+address=/metanetwork.com/
+address=/methodcash.com/
+address=/metrics.api.drift.com/
+address=/metrics.cnn.com/
+address=/metrics.consumerreports.org/
+address=/metrics.ctv.ca/
+address=/metrics.foxnews.com/
+address=/metrics.getrockerbox.com/
+address=/metrics.gfycat.com/
+address=/metrics.govexec.com/
+address=/metrics-logger.spot.im/
+address=/metrilo.com/
+address=/mfadsrvr.com/
+address=/mg2connext.com/
+address=/mgid.com/
+address=/microstatic.pl/
+address=/microticker.com/
+address=/militaryverse.com/
+address=/milotree.com/
+address=/minewhat.com/
+address=/minormeeting.com/
+address=/mintegral.com/
+address=/mixedreading.com/
+address=/mixpanel.com/
+address=/mkto-ab410147.com/
+address=/mktoresp.com/
+address=/ml314.com/
+address=/mlm.de/
+address=/mltrk.io/
+address=/mmismm.com/
+address=/mmstat.com/
+address=/mmtro.com/
+address=/moartraffic.com/
+address=/moat.com/
+address=/moatads.com/
+address=/moatpixel.com/
+address=/mobclix.com/
+address=/mobfox.com/
+address=/mobileanalytics.us-east-1.amazonaws.com/
+address=/mobilefuse.com/
+address=/mobileiconnect.com/
+address=/mobperads.net/
+address=/modernpricing.com/
+address=/modifyeyes.com/
+address=/moldyicicle.com/
+address=/mon.byteoversea.com/
+address=/monarchads.com/
+address=/monetate.net/
+address=/monetizer101.com/
+address=/moneyexpert.co.uk/
+address=/monsterpops.com/
+address=/mookie1.com/
+address=/mopub.com/
+address=/motionspots.com/
+address=/mouseflow.com/
+address=/mousestats.com/
+address=/movad.net/
 address=/movie4k.to/
+address=/mowfruit.com/
 address=/mp3fiesta.com/
 address=/mp3sugar.com/
 address=/mp3va.com/
+address=/mparticle.com/
+address=/mpstat.us/
+address=/mr-rank.de/
+address=/mrskincash.com/
 address=/msads.net/
+address=/mstrlytcs.com/
+address=/mtrcs.samba.tv/
+address=/mtree.com/
+address=/munchkin.marketo.net/
+address=/musiccounter.ru/
 address=/musicmp3.ru/
+address=/muwmedia.com/
+address=/mxptint.net/
+address=/myads.company/
+address=/myads.net/
+address=/myads.telkomsel.com/
+address=/myaffiliateprogram.com/
+address=/mybestmv.com/
+address=/mybetterdl.com/
+address=/mybloglog.com/
+address=/mybuys.com/
+address=/mycounter.ua/
+address=/mydas.mobi/
+address=/mylink-today.com/
+address=/mymoneymakingapp.com/
+address=/mypagerank.net/
+address=/mypagerank.ru/
 address=/mypass.de/
+address=/mypowermall.com/
+address=/mysafeads.com/
+address=/mystat.pl/
+address=/mystat-in.net/
+address=/mysteriousmonth.com/
+address=/mytop-in.net/
+address=/myvisualiq.net/
+address=/n69.com/
 address=/na.ads.yahoo.com/
-address=/ngbc5azd/
+address=/naj.sk/
+address=/naradxb.com/
+address=/nastydollars.com/
+address=/nativeroll.tv/
+address=/naturalbid.com/
+address=/navegg.com/
+address=/navigator.io/
+address=/navrcholu.cz/
+address=/nbjmp.com/
+address=/ncaudienceexchange.com/
+address=/ndparking.com/
+address=/nedstatbasic.net/
+address=/neighborlywatch.com/
+address=/nend.net/
+address=/neocounter.neoworx-blog-tools.net/
+address=/nervoussummer.com/
+address=/netaffiliation.com/
+address=/netagent.cz/
+address=/netclickstats.com/
+address=/netcommunities.com/
+address=/netdirect.nl/
+address=/net-filter.com/
+address=/netincap.com/
+address=/netmng.com/
+address=/netpool.netbookia.net/
+address=/netshelter.net/
+address=/networkadvertising.org/
+address=/neudesicmediagroup.com/
+address=/newads.bangbros.com/
+address=/newbie.com/
+address=/newnet.qsrch.com/
+address=/newnudecash.com/
+address=/newopenx.detik.com/
+address=/newsadsppush.com/
+address=/newsletter-link.com/
+address=/newstarads.com/
+address=/newt1.adultadworld.com/
+address=/newt1.adultworld.com/
+address=/nexac.com/
+address=/nexage.com/
+address=/ng3.ads.warnerbros.com/
+address=/nhpfvdlbjg.com/
+address=/nitratory.com/
+address=/nitroclicks.com/
+address=/noiselessplough.com/
+address=/nondescriptcrowd.com/
+address=/nondescriptsmile.com/
+address=/nondescriptstocking.com/
+address=/novem.pl/
+address=/npttech.com/
+address=/nr-data.net/
+address=/ns1p.net/
+address=/ntv.io/
+address=/ntvk1.ru/
+address=/nuggad.net/
+address=/nuseek.com/
+address=/nuttyorganization.com/
+address=/nzaza.com/
+address=/o0bc.com/
+address=/o333o.com/
+address=/oafishobservation.com/
+address=/oas.benchmark.fr/
+address=/oas.repubblica.it/
+address=/oas.roanoke.com/
+address=/oas.toronto.com/
+address=/oas.uniontrib.com/
+address=/oas.villagevoice.com/
+address=/oascentral.chicagobusiness.com/
+address=/oascentral.fortunecity.com/
+address=/oascentral.register.com/
+address=/obscenesidewalk.com/
+address=/observantice.com/
+address=/oclasrv.com/
+address=/odbierz-bony.ovp.pl/
+address=/oewa.at/
+address=/offaces-butional.com/
+address=/offer.fyber.com/
+address=/offer.sponsorpay.com/
+address=/offerforge.com/
+address=/offermatica.com/
+address=/offerzone.click/
+address=/oglasi.posjetnica.com/
+address=/ogury.com/
+address=/oingo.com/
+address=/omnijay.com/
+address=/omniscientspark.com/
+address=/omniture.com/
+address=/omtrdc.net/
+address=/onaudience.com/
+address=/onclasrv.com/
+address=/onclickads.net/
+address=/oneandonlynetwork.com/
+address=/onenetworkdirect.com/
+address=/onestat.com/
+address=/onestatfree.com/
+address=/online.miarroba.com/
+address=/onlinecash.com/
 address=/onlinefilme.tv/
+address=/online-metrix.net/
+address=/onlinerewardcenter.com/
 address=/online-tests.de/
 address=/onlineticketexpress.com/
+address=/onscroll.com/
+address=/onthe.io/
+address=/opads.us/
+address=/open.oneplus.net/
+address=/openad.tf1.fr/
+address=/openad.travelnow.com/
+address=/openads.friendfinder.com/
+address=/openads.org/
+address=/openadsnetwork.com/
+address=/opentag-stats.qubit.com/
+address=/openx.actvtech.com/
+address=/openx.angelsgroup.org.uk/
+address=/openx.cairo360.com/
+address=/openx.kgmedia.eu/
+address=/openx.net/
+address=/openx.skinet.cz/
+address=/openx.smcaen.fr/
+address=/openx2.kytary.cz/
+address=/operationkettle.com/
+address=/opienetwork.com/
+address=/opmnstr.com/
+address=/optimallimit.com/
+address=/optimizely.com/
+address=/optimize-stats.voxmedia.com/
+address=/optimost.com/
+address=/optmd.com/
+address=/optmnstr.com/
+address=/optmstr.com/
+address=/optnmstr.com/
+address=/ota.cartrawler.com/
+address=/otto-images.developershed.com/
+address=/ouh3igaeb.com/
 address=/outbrain.com/
-address=/outbrain.de/
-address=/outbrain.net/
-address=/taboola.net/
+address=/overconfidentfood.com/
+address=/overture.com/
+address=/owebanalytics.com/
+address=/owebmoney.ru/
+address=/owlsr.us/
+address=/owneriq.net/
+address=/ox1.shopcool.com.tw/
+address=/oxado.com/
+address=/oxcash.com/
+address=/oxen.hillcountrytexas.com/
+address=/p.nag.ru/
+address=/p2r14.com/
+address=/padsbrown.com/
+address=/padssup.com/
+address=/pagead.l.google.com/
+address=/pagefair.com/
+address=/pagefair.net/
+address=/pagerank4you.com/
+address=/pagerank-ranking.de/
+address=/pageranktop.com/
+address=/paleleaf.com/
+address=/panickycurtain.com/
+address=/paradoxfactor.com/
+address=/parchedangle.com/
+address=/parketsy.pro/
+address=/parsely.com/
+address=/parsimoniouspolice.com/
+address=/partner.pelikan.cz/
+address=/partnerad.l.google.com/
+address=/partner-ads.com/
+address=/partnerads.ysm.yahoo.com/
+address=/partnercash.de/
+address=/partnernet.amazon.de/
+address=/partners.priceline.com/
 address=/partners.webmasterplan.com/
+address=/passeura.com/
+address=/passion-4.net/
+address=/paycounter.com/
+address=/paypopup.com/
+address=/pbnet.ru/
+address=/pbterra.com/
+address=/pcash.imlive.com/
+address=/pctracking.net/
+address=/peep-auktion.de/
+address=/peer39.com/
+address=/pennyweb.com/
+address=/pepperjamnetwork.com/
+address=/perceivequarter.com/
+address=/percentmobile.com/
+address=/perfectaudience.com/
+address=/perfiliate.com/
+address=/performancerevenue.com/
+address=/performancerevenues.com/
+address=/performancing.com/
+address=/permutive.com/
+address=/personagraph.com/
+address=/petiteumbrella.com/
+address=/pgl.example.com/
+address=/pgl.example0101/
+address=/pgmediaserve.com/
+address=/pgpartner.com/
+address=/pheedo.com/
+address=/phoenix-adrunner.mycomputer.com/
+address=/photographpan.com/
+address=/phpadsnew.new.natuurpark.nl/
+address=/pi.pardot.com/
+address=/piano.io/
+address=/picadmedia.com/
+address=/piet2eix3l.com/
+address=/pietexture.com/
+address=/pilotaffiliate.com/
+address=/pimproll.com/
+address=/ping.ublock.org/
+address=/pipedream.wistia.com/
+address=/pippio.com/
+address=/piquantpigs.com/
+address=/pix.spot.im/
+address=/pixel.adsafeprotected.com/
 address=/pixel.bild.de/
+address=/pixel.condenastdigital.com/
+address=/pixel.digitru.st/
+address=/pixel.keywee.co/
 address=/pixel.mathtag.com/
+address=/pixel.mtrcs.samba.tv/
+address=/pixel.sojern.com/
+address=/pixel.watch/
+address=/pixel.yabidos.com/
+address=/pl/
+address=/placed.com/
+address=/play4traffic.com/
+address=/playhaven.com/
+address=/pleasantpump.com/
 address=/plista.com/
-address=/taboola.com/
-address=/taboola.de/
+address=/plotrabbit.com/
+address=/plugrush.com/
+address=/p-n.io/
+address=/pocketmath.com/
+address=/podtraff.com/
+address=/podtraft.com/
+address=/pointroll.com/
+address=/pokkt.com/
+address=/popads.net/
+address=/popcash.net/
+address=/popmyads.com/
+address=/popub.com/
+address=/popunder.ru/
+address=/popup.msn.com/
+address=/popup.taboola.com/
+address=/popupmoney.com/
+address=/popupnation.com/
+address=/popups.infostart.com/
+address=/popuptraffic.com/
+address=/porngraph.com/
+address=/porntrack.com/
+address=/possessivebucket.com/
+address=/possibleboats.com/
+address=/post.spmailtechno.com/
+address=/postback.iqm.com/
+address=/postrelease.com/
+address=/praddpro.de/
+address=/prchecker.info/
+address=/prebid.org/
+address=/predictad.com/
+address=/premium-offers.com/
+address=/presetrabbits.com/
+address=/previousplayground.com/
+address=/previouspotato.com/
+address=/primetime.net/
+address=/privatecash.com/
+address=/prmtracking.com/
+address=/pro-advertising.com/
+address=/prodtraff.com/
+address=/producecopy.com/
+address=/producer.getwisdom.io/
+address=/proext.com/
+address=/profero.com/
 address=/profi-kochrezepte.de/
+address=/profitrumour.com/
 address=/profiwin.de/
+address=/programattik.com/
+address=/projectwonderful.com/
+address=/pro-market.net/
+address=/promo.badoink.com/
+address=/promo.ulust.com/
+address=/promobenef.com/
+address=/promos.bwin.it/
+address=/promos.fling.com/
+address=/promote.pair.com/
+address=/promotions-884485.c.cdn77.org/
+address=/pronetadvertising.com/
+address=/proof-x.com/
+address=/propellerads.com/
+address=/propellerclick.com/
+address=/proper.io/
+address=/props.id/
+address=/prosper.on-line-casino.ca/
+address=/protectcrev.com/
+address=/protectsubrev.com/
+address=/proton-tm.com/
+address=/protraffic.com/
+address=/provexia.com/
+address=/prsaln.com/
+address=/prsitecheck.com/
+address=/pr-star.de/
+address=/ps7894.com/
+address=/pstmrk.it/
+address=/ptoushoa.com/
+address=/pub.chez.com/
+address=/pub.club-internet.fr/
+address=/pub.hardware.fr/
+address=/pub.network/
+address=/pub.realmedia.fr/
+address=/pubdirecte.com/
+address=/publicidad.elmundo.es/
+address=/publicidees.com/
+address=/pubmatic.com/
+address=/pubmine.com/
+address=/pubnative.net/
+address=/puffyloss.com/
+address=/puffypaste.com/
+address=/puffypull.com/
+address=/puffypurpose.com/
+address=/pushame.com/
+address=/pushance.com/
+address=/pushazer.com/
+address=/pushengage.com/
+address=/pushno.com/
+address=/pushtrack.co/
+address=/pushwhy.com/
+address=/px.ads.linkedin.com/
+address=/px.dynamicyield.com/
+address=/px.gfycat.com/
+address=/px.spiceworks.com/
+address=/pxl.iqm.com/
+address=/pymx5.com/
+address=/q.azcentral.com/
+address=/q1connect.com/
+address=/qcontentdelivery.info/
+address=/qctop.com/
+address=/qnsr.com/
 address=/qservz.com/
+address=/quacksquirrel.com/
+address=/quaintcan.com/
+address=/quantcast.com/
+address=/quantcount.com/
+address=/quantserve.com/
+address=/quantummetric.com/
+address=/quarterbean.com/
+address=/quarterserver.de/
+address=/questaffiliates.net/
 address=/quibids.com/
+address=/quicksandear.com/
+address=/quietknowledge.com/
+address=/quinst.com/
+address=/quisma.com/
+address=/quizzicalzephyr.com/
+address=/r.logrocket.io/
+address=/r.msn.com/
+address=/r.scoota.co/
+address=/radar.cedexis.com/
+address=/radarurl.com/
+address=/radiate.com/
+address=/rads.alfamedia.pl/
+address=/rads.realadmin.pl/
+address=/railwayrainstorm.com/
+address=/railwayreason.com/
+address=/rampidads.com/
+address=/rankchamp.de/
+address=/rankingchart.de/
+address=/ranking-charts.de/
+address=/ranking-hits.de/
+address=/ranking-links.de/
+address=/ranking-liste.de/
+address=/rankingscout.com/
+address=/rank-master.com/
+address=/rankyou.com/
 address=/rapidape.com/
-address=/redintelligence.net/
+address=/rapidcounter.com/
+address=/rapidkittens.com/
+address=/raresummer.com/
+address=/rate.ru/
+address=/ratings.lycos.com/
+address=/rayjump.com/
+address=/reachjunction.com/
+address=/reactx.com/
+address=/readgoldfish.com/
+address=/readingguilt.com/
+address=/readingopera.com/
+address=/readserver.net/
+address=/readymoon.com/
+address=/realcastmedia.com/
+address=/realclever.com/
+address=/realclix.com/
+address=/realmedia-a800.d4p.net/
+address=/realsrv.com/
+address=/realtechnetwork.com/
+address=/realtracker.com/
+address=/rebelsubway.com/
+address=/receptiveink.com/
+address=/receptivereaction.com/
+address=/recoco.it/
+address=/record.affiliates.karjalakasino.com/
+address=/record.bonniergaming.com/
+address=/record.mrwin.com/
+address=/redirectingat.com/
+address=/re-directme.com/
+address=/redirectvoluum.com/
+address=/redshell.io/
+address=/reduxmedia.com/
+address=/referralware.com/
+address=/referrer.disqus.com/
+address=/reflectivereward.com/
+address=/reforge.in/
+address=/regnow.com/
+address=/regularplants.com/
+address=/reklam.rfsl.se/
+address=/reklama.mironet.cz/
+address=/reklama.reflektor.cz/
+address=/reklamcsere.hu/
+address=/reklamdsp.com/
+address=/reklame.unwired-i.net/
+address=/relevanz10.de/
+address=/relmaxtop.com/
+address=/remistrainew.club/
+address=/remox.com/
+address=/republika.onet.pl/
+address=/research.de.com/
+address=/resolutekey.com/
+address=/resonantbrush.com/
+address=/resonate.com/
+address=/responsiveads.com/
+address=/retargeter.com/
+address=/revcatch.com/
+address=/revcontent.com/
+address=/reveal.clearbit.com/
+address=/revenue.net/
+address=/revenuedirect.com/
+address=/revenuehits.com/
+address=/revive.docmatic.org/
+address=/revive.dubcnm.com/
+address=/revive.haskovo.net/
+address=/revive.netriota.hu/
+address=/revive.plays.bg/
+address=/revlift.io/
+address=/revprotect.com/
+address=/revsci.net/
+address=/revstats.com/
+address=/reyden-x.com/
+address=/rhombusads.com/
+address=/rhythmone.com/
+address=/richmails.com/
+address=/richmedia.yimg.com/
+address=/richstring.com/
+address=/richwebmaster.com/
+address=/rightstats.com/
+address=/rinconpx.net/
+address=/ringsrecord.com/
+address=/ritzykey.com/
+address=/rlcdn.com/
+address=/rle.ru/
+address=/rmads.msn.com/
+address=/rmedia.boston.com/
+address=/rmgserving.com/
+address=/ro/
+address=/roar.com/
+address=/robotreplay.com/
+address=/rockabox.co/
+address=/roia.biz/
+address=/rok.com.com/
+address=/roq.ad/
+address=/rose.ixbt.com/
+address=/rotabanner.com/
 address=/rotten.com/
 address=/rotten.de/
+address=/roughroll.com/
+address=/roxr.net/
 address=/royalgames.com/
+address=/rs/
+address=/rs6.net/
+address=/rta.dailymail.co.uk/
+address=/rtb.gumgum.com/
+address=/rtbadzesto.com/
+address=/rtbflairads.com/
+address=/rtbidhost.com/
+address=/rtbplatform.net/
+address=/rtbpop.com/
+address=/rtbpopd.com/
+address=/rtbsbengine.com/
+address=/rtbtradein.com/
+address=/rtmark.net/
+address=/rtpdn11.com/
+address=/rtxplatform.com/
+address=/ru/
+address=/ru4.com/
+address=/rubiconproject.com/
+address=/rum-http-intake.logs.datadoghq.com/
+address=/rum-http-intake.logs.datadoghq.eu/
+address=/runads.com/
+address=/rundsp.com/
+address=/ruthlessrobin.com/
+address=/s.adroll.com/
+address=/s1-adfly.com/
+address=/s20dh7e9dh.com/
+address=/s24hc8xzag.com/
+address=/s2d6.com/
+address=/sa.api.intl.miui.com/
+address=/sabio.us/
+address=/sageanalyst.net/
+address=/sail-horizon.com/
+address=/samsungacr.com/
+address=/samsungads.com/
+address=/saysidewalk.com/
+address=/sbx.pagesjaunes.fr/
+address=/scambiobanner.aruba.it/
+address=/sc-analytics.appspot.com/
+address=/scanscout.com/
+address=/scarcesign.com/
+address=/scatteredheat.com/
+address=/scintillatingscissors.com/
+address=/scintillatingspace.com/
+address=/scoobyads.com/
+address=/scopelight.com/
+address=/scorecardresearch.com/
+address=/scratch2cash.com/
+address=/screechingfurniture.com/
 address=/script.ioam.de/
+address=/scripte-monster.de/
+address=/scrubswim.com/
+address=/sdkfjxjertertry.com/
+address=/seadform.net/
+address=/searching-place.com/
+address=/searchmarketing.com/
+address=/searchramp.com/
+address=/secretivecub.com/
+address=/secretspiders.com/
+address=/secure.webconnect.net/
+address=/securedopen-bp.com/
+address=/securemetrics.apple.com/
+address=/sedoparking.com/
+address=/sedotracker.com/
+address=/segmetrics.io/
+address=/selectivesummer.com/
+address=/semasio.net/
+address=/sendmepixel.com/
+address=/sensismediasmart.com.au/
+address=/separatesilver.com/
 address=/serials.ws/
 address=/serienjunkies.org/
 address=/serienstream.to/
+address=/serv0.com/
+address=/servads.net/
+address=/servadsdisrupt.com/
+address=/servedbyadbutler.com/
+address=/servedby-buysellads.com/
+address=/servedbyopenx.com/
+address=/servethis.com/
 address=/service.urchin.com/
+address=/services.hearstmags.com/
+address=/servingmillions.com/
+address=/serving-sys.com/
+address=/sessioncam.com/
+address=/sexcounter.com/
+address=/sexinyourcity.com/
+address=/sexlist.com/
+address=/sextracker.com/
+address=/shakesea.com/
+address=/shakesuggestion.com/
+address=/shakytaste.com/
+address=/shallowsmile.com/
+address=/shareadspace.com/
+address=/shareasale.com/
+address=/sharethrough.com/
+address=/sharppatch.com/
+address=/sher.index.hu/
+address=/shermore.info/
+address=/shinystat.com/
+address=/shinystat.it/
+address=/shockinggrass.com/
 address=/shooshtime.com/
+address=/shoppingads.com/
+address=/sicksmash.com/
+address=/sidebar.angelfire.com/
+address=/silkysquirrel.com/
+address=/sillyscrew.com/
+address=/silvalliant.info/
+address=/silvermob.com/
+address=/simpleanalytics.io/
+address=/simplehitcounter.com/
+address=/simpli.fi/
+address=/sincerebuffalo.com/
+address=/sinoa.com/
+address=/sitedataprocessing.com/
+address=/siteimproveanalytics.com/
+address=/siteimproveanalytics.io/
+address=/siteintercept.qualtrics.com/
+address=/sitemeter.com/
+address=/sixscissors.com/
+address=/sixsigmatraffic.com/
+address=/sizesidewalk.com/
+address=/sizmek.com/
+address=/skimresources.com/
+address=/skylink.vn/
+address=/sleepcartoon.com/
+address=/slipperysack.com/
+address=/slopeaota.com/
+address=/smaato.com/
+address=/smallbeginner.com/
+address=/smart4ads.com/
 address=/smartadserver.com/
 address=/smartadserver.de/
 address=/smartadserver.net/
+address=/smartclip.net/
+address=/smartlook.com/
+address=/smartstream.tv/
+address=/smart-traffik.com/
+address=/smart-traffik.io/
+address=/smartyads.com/
+address=/smashsurprise.com/
+address=/smetrics.10daily.com.au/
+address=/smetrics.bestbuy.com/
+address=/smetrics.ctv.ca/
+address=/smetrics.foxnews.com/
+address=/smetrics.walgreens.com/
+address=/smetrics.washingtonpost.com/
+address=/smilingwaves.com/
 address=/smokerland.net/
-address=/sudoku.de/
-address=/swoggi.de/
-address=/systemcdn.net/
-address=/t.ktxtr.com/
-address=/trusted.de/
-address=/tradedoubler.com/
-address=/trafficreps.com/
-address=/truste/
-address=/twiago.com/
-address=/unister-adserver.de/
-address=/unup4y/
-address=/urbandictionary.com/
-address=/video-stats.video.google.com/
-address=/vivime.net.fr/
-address=/vodafone-affiliate.de/
-address=/voluumtrk.com/
-address=/vx.org.ua/
-address=/winantivirus.com/
-address=/aax-eu.amazon-adsystem.com/
-address=/gravatar.com/
-address=/optimizely.com/
-address=/outbrain.com/
-address=/ioam.de/
-address=/permutive.com/
-address=/adnxs.com/
-address=/amazon-adsystem.com/
-address=/amazon-adsystem.de/
-address=/xplosion.de/
-address=/xplosion.com/
-address=/criteo.com/
-address=/criteo.de/
-address=/yieldlab.net/
-address=/yieldlab.com/
-address=/yieldlab.de/
-address=/smartadserver.com/
-address=/smartadserver.de/
-address=/casalemedia.com/
-address=/casalemedia.de/
-address=/casalemedia.net/
-address=/openx.net/
-address=/openx.de/
-address=/openx.com/
-address=/scorecardresearch.com/
-address=/scorecardresearch.de/
-address=/teads.tv/
-address=/teads.de/
-address=/teads.com/
-address=/met.vgwort.de/
-address=/kameleoon.eu/
-address=/mateti.net/
-address=/usercentrics.eu/
-address=/pressekompass.net/
-address=/upscore.de/
-address=/upscore.com/
-address=/upscore.eu/
-address=/mediadaten.heise.de/
-address=/brandmetrics.com/
-address=/brandmetrics.de/
-address=/openx.net/
-address=/js-sec.indexww.com/
-address=/sstatic.net/
-address=/jsdelivr.net/
+address=/smrtb.com/
+address=/snapads.com/
+address=/sneakystamp.com/
+address=/snoobi.com/
+address=/socialspark.com/
+address=/softclick.com.br/
+address=/sombersea.com/
+address=/sombersquirrel.com/
+address=/sombersurprise.com/
+address=/somniture.stuff.co.nz/
+address=/somoaudience.com/
+address=/sonobi.com/
+address=/sortable.com/
+address=/sourcepoint.vice.com/
+address=/sovrn.com/
+address=/spacash.com/
+address=/spaceleadster.com/
+address=/sparkstudios.com/
+address=/specially4u.net/
+address=/specificmedia.co.uk/
+address=/specificpop.com/
+address=/speedomizer.com/
+address=/speedshiftmedia.com/
+address=/spezialreporte.de/
+address=/spidersboats.com/
+address=/spiegel.deimages/
+address=/spiffymachine.com/
+address=/spinbox.techtracker.com/
+address=/spinbox.versiontracker.com/
+address=/spirebaboon.com/
+address=/sponsorads.de/
+address=/sponsorpro.de/
+address=/sponsors.thoughtsmedia.com/
+address=/sportsad.net/
+address=/spot.fitness.com/
+address=/spotscenered.info/
+address=/spotx.tv/
+address=/spotxchange.com/
+address=/springaftermath.com/
+address=/springserve.com/
+address=/spulse.net/
+address=/spurioussteam.com/
+address=/spykemediatrack.com/
+address=/spylog.com/
+address=/spywarelabs.com/
+address=/spywords.com/
+address=/squirrelhands.com/
+address=/srvmath.com/
+address=/srvtrck.com/
+address=/srwww1.com/
+address=/st.dynamicyield.com/
+address=/stackadapt.com/
+address=/stack-sonar.com/
+address=/stakingscrew.com/
+address=/stakingslope.com/
+address=/stalesummer.com/
+address=/standingnest.com/
+address=/starffa.com/
+address=/start.freeze.com/
+address=/startapp.com/
+address=/stat.cliche.se/
+address=/stat.dyna.ultraweb.hu/
+address=/stat.pl/
+address=/stat.webmedia.pl/
+address=/stat.xiaomi.com/
+address=/stat.zenon.net/
+address=/stat24.com/
+address=/stat24.meta.ua/
+address=/statcounter.com/
+address=/statdynamic.com/
+address=/static.a-ads.com/
+address=/static.fmpub.net/
+address=/static.itrack.it/
+address=/static.kameleoon.com/
+address=/staticads.btopenworld.com/
+address=/statistik-gallup.net/
+address=/statm.the-adult-company.com/
+address=/stats.blogger.com/
+address=/stats.hyperinzerce.cz/
+address=/stats.merriam-webster.com/
+address=/stats.mirrorfootball.co.uk/
+address=/stats.nextgen-email.com/
+address=/stats.olark.com/
+address=/stats.pusher.com/
+address=/stats.rdphv.net/
+address=/stats.self.com/
+address=/stats.townnews.com/
+address=/stats.unwired-i.net/
+address=/stats.wordpress.com/
 address=/stats.wp.com/
-address=/pixel.wp.com/
-address=/adtelligent.com/
-address=/technoratimedia.com/
-address=/sync.rtk.io/
-address=/google-analytics.com/
-address=/googlesyndication.com/
-address=/googlesyndication.de/
-address=/ndcaidemh.com/
-address=/awin1.com/
-address=/awin1.de/
-address=/adwin.de/
-address=/adwin.com/
-address=/consentmanager.net/
-address=/consentmanager.com/
-address=/consentmanager.de/
+address=/stats.x14.eu/
+address=/stats2.self.com/
+address=/stats4all.com/
+address=/statserv.net/
+address=/statsie.com/
+address=/stat-track.com/
+address=/statxpress.com/
+address=/steadfastsound.com/
+address=/steadfastsystem.com/
+address=/steelhouse.com/
+address=/steelhousemedia.com/
+address=/stepplane.com/
+address=/stickssheep.com/
+address=/stickyadstv.com/
+address=/stiffgame.com/
+address=/storesurprise.com/
+address=/storetail.io/
+address=/stormyachiever.com/
+address=/storygize.net/
+address=/stoveseashore.com/
+address=/straightnest.com/
+address=/stream.useriq.com/
+address=/stripedburst.com/
+address=/strivesidewalk.com/
+address=/structurerod.com/
+address=/stupendoussleet.com/
+address=/su/
+address=/subscribe.hearstmags.com/
+address=/succeedscene.com/
+address=/suddensidewalk.com/
+address=/sudoku.de/
+address=/sugarcurtain.com/
+address=/sugoicounter.com/
+address=/sulkybutter.com/
+address=/summerhamster.com/
+address=/summerobject.com/
+address=/sumo.com/
+address=/sumome.com/
+address=/superclix.de/
+address=/superficialsquare.com/
+address=/supersonicads.com/
+address=/superstats.com/
+address=/supertop.ru/
+address=/supertop100.com/
+address=/supertracking.net/
+address=/supply.colossusssp.com/
+address=/surfmusik-adserver.de/
+address=/surveygizmobeacon.s3.amazonaws.com/
+address=/sw88.espn.com/
+address=/swan-swan-goose.com/
+address=/swimslope.com/
+address=/swoggi.de/
+address=/swordfishdc.com/
+address=/swordgoose.com/
+address=/systemcdn.net/
+address=/t.bawafx.com/
+address=/t.eloqua.com/
+address=/t.firstpromoter.com/
+address=/t.insigit.com/
+address=/t.irtyd.com/
+address=/t.ktxtr.com/
+address=/taboola.com/
+address=/tag.links-analytics.com/
+address=/tagan.adlightning.com/
+address=/tagcommander.com/
+address=/tagger.opecloud.com/
+address=/tags.tiqcdn.com/
+address=/tagular.com/
+address=/tailsweep.com/
+address=/tailsweep.se/
+address=/takethatad.com/
+address=/takru.com/
+address=/talentedsteel.com/
+address=/tamgrt.com/
+address=/tangerinenet.biz/
+address=/tangibleteam.com/
+address=/tapad.com/
+address=/tapfiliate.com/
+address=/tapinfluence.com/
+address=/tapjoy.com/
+address=/tappx.com/
+address=/targad.de/
+address=/target.microsoft.com/
+address=/targeting.api.drift.com/
+address=/targeting.nzme.arcpublishing.com/
+address=/targeting.voxus.tv/
+address=/targetingnow.com/
+address=/targetnet.com/
+address=/targetpoint.com/
+address=/tastefulsongs.com/
+address=/tatsumi-sys.jp/
+address=/tawdryson.com/
+address=/tcads.net/
+address=/teads.tv/
+address=/tealeaf.com/
+address=/tealium.cbsnews.com/
+address=/tealium.com/
+address=/tealiumiq.com/
+address=/techclicks.net/
+address=/tedioustooth.com/
+address=/teenrevenue.com/
+address=/teenyvolcano.com/
+address=/teethfan.com/
+address=/telaria.com/
+address=/telemetry.dropbox.com/
+address=/telemetry.v.dropbox.com/
+address=/temelio.com/
+address=/tendertest.com/
+address=/tercept.com/
+address=/terriblethumb.com/
+address=/textad.sexsearch.com/
+address=/textads.biz/
+address=/text-link-ads.com/
+address=/textlinks.com/
+address=/tfag.de/
+address=/theadex.com/
+address=/theadhost.com/
+address=/thebugs.ws/
+address=/theclickads.com/
+address=/themoneytizer.com/
+address=/the-ozone-project.com/
+address=/therapistla.com/
+address=/thinkablerice.com/
+address=/thirdrespect.com/
+address=/thirstytwig.com/
+address=/thomastorch.com/
+address=/threechurch.com/
+address=/throattrees.com/
+address=/throtle.io/
+address=/thruport.com/
+address=/ti.domainforlite.com/
+address=/tia.timeinc.net/
+address=/ticketaunt.com/
+address=/ticklesign.com/
+address=/ticksel.com/
+address=/tidaltv.com/
+address=/tidint.pro/
+address=/tinybar.com/
+address=/tkbo.com/
+address=/tls.telemetry.swe.quicinc.com/
+address=/tlvmedia.com/
+address=/tnkexchange.com/
+address=/tns-counter.ru/
+address=/tntclix.co.uk/
+address=/toecircle.com/
+address=/toothbrushnote.com/
+address=/top.list.ru/
+address=/top.mail.ru/
+address=/top.proext.com/
+address=/top100.mafia.ru/
+address=/top100-images.rambler.ru/
+address=/top123.ro/
+address=/top20free.com/
+address=/top90.ro/
+address=/topbucks.com/
+address=/top-casting-termine.de/
+address=/topforall.com/
+address=/topgamesites.net/
+address=/toplist.cz/
+address=/toplist.pornhost.com/
+address=/toplista.mw.hu/
+address=/toplistcity.com/
+address=/topping.com.ua/
+address=/toprebates.com/
+address=/topsir.com/
+address=/topsite.lv/
+address=/top-site-list.com/
+address=/topsites.com.br/
+address=/topstats.com/
+address=/totemcash.com/
+address=/touchclarity.com/
+address=/touchclarity.natwest.com/
+address=/tour.brazzers.com/
+address=/track.addevent.com/
+address=/track.adform.net/
+address=/track.anchorfree.com/
+address=/track.contently.com/
+address=/track.effiliation.com/
+address=/track.flexlinks.com/
+address=/track.flexlinkspro.com/
+address=/track.freemmo2017.com/
+address=/track.game18click.com/
+address=/track.gawker.com/
+address=/track.hexcan.com/
+address=/track.mailerlite.com/
+address=/track.nuxues.com/
+address=/track.themaccleanup.info/
+address=/track.tkbo.com/
+address=/track.ultravpn.com/
+address=/track.undressingpics.work/
+address=/track.unear.net/
+address=/track.vcdc.com/
+address=/track.viewdeos.com/
+address=/track1.viewdeos.com/
+address=/trackalyzer.com/
+address=/trackedlink.net/
+address=/trackedweb.net/
+address=/tracker.bannerflow.com/
+address=/tracker.cdnbye.com/
+address=/tracker.comunidadmarriott.com/
+address=/tracker.icerocket.com/
+address=/tracker.mmdlv.it/
+address=/tracker.samplicio.us/
+address=/tracker.vgame.us/
+address=/tracker-pm2.spilleren.com/
+address=/tracking.1-a1502-bi.co.uk/
+address=/tracking.1-kv015-ap.co.uk/
+address=/tracking.21-a4652-bi.co.uk/
+address=/tracking.39-bb4a9-osm.co.uk/
+address=/tracking.42-01pr5-osm-secure.co.uk/
+address=/tracking.5-47737-bi.co.uk/
+address=/tracking.epicgames.com/
+address=/tracking.gajmp.com/
+address=/tracking.hyros.com/
+address=/tracking.ibxlink.com/
+address=/tracking.internetstores.de/
+address=/tracking.intl.miui.com/
+address=/tracking.jiffyworld.com/
+address=/tracking.lenddom.com/
+address=/tracking.markethero.io/
+address=/tracking.miui.com/
+address=/tracking.olx-st.com/
+address=/tracking.orixa-media.com/
+address=/tracking.publicidees.com/
+address=/tracking.thinkabt.com/
+address=/tracking01.walmart.com/
+address=/tracking101.com/
+address=/tracking22.com/
+address=/trackingfestival.com/
+address=/trackingsoft.com/
+address=/tracklink-tel.de/
+address=/trackmysales.com/
+address=/trackuhub.com/
+address=/tradeadexchange.com/
+address=/tradedoubler.com/
+address=/trading-rtbg.com/
+address=/traffic.focuusing.com/
+address=/traffic-exchange.com/
+address=/trafficfactory.biz/
+address=/trafficforce.com/
+address=/trafficholder.com/
+address=/traffichunt.com/
+address=/trafficjunky.net/
+address=/trafficleader.com/
+address=/traffic-redirecting.com/
+address=/trafficreps.com/
+address=/trafficrouter.io/
+address=/trafficshop.com/
+address=/trafficspaces.net/
+address=/trafficstrategies.com/
+address=/trafficswarm.com/
+address=/traffictrader.net/
+address=/trafficz.com/
+address=/traffiq.com/
+address=/trafic.ro/
+address=/traktrafficflow.com/
+address=/tranquilside.com/
+address=/travis.bosscasinos.com/
+address=/trck.a8.net/
+address=/trcking4wdm.de/
+address=/trcklion.com/
+address=/treasuredata.com/
+address=/trekdata.com/
+address=/tremendoustime.com/
+address=/tremorhub.com/
+address=/trendcounter.com/
+address=/trendmd.com/
+address=/tribalfusion.com/
+address=/trickycelery.com/
+address=/triplelift.com/
+address=/triptease.io/
+address=/trix.net/
+address=/trk.bee-data.com/
+address=/trk.techtarget.com/
+address=/trk42.net/
+address=/trkn.us/
+address=/trknths.com/
+address=/trmit.com/
+address=/truckstomatoes.com/
+address=/truehits.net/
+address=/truehits1.gits.net.th/
+address=/truehits2.gits.net.th/
+address=/trust.titanhq.com/
+address=/truste/
+address=/trusted.de/
+address=/trustx.org/
+address=/tsyndicate.com/
+address=/tsyndicate.net/
+address=/tubelibre.com/
+address=/tubemogul.com/
+address=/tubepatrol.net/
+address=/tubesafari.com/
+address=/turboadv.com/
+address=/turn.com/
+address=/tvmtracker.com/
+address=/twiago.com/
+address=/twittad.com/
+address=/twyn.com/
+address=/tynt.com/
+address=/typicalteeth.com/
+address=/tyroo.com/
+address=/uarating.com/
+address=/ucfunnel.com/
+address=/udkcrj.com/
+address=/udncoeln.com/
+address=/uib.ff.avast.com/
+address=/ukbanners.com/
+address=/ultimateclixx.com/
+address=/ultramercial.com/
+address=/ultraoranges.com/
+address=/unarmedindustry.com/
+address=/undertone.com/
+address=/unister-adserver.de/
+address=/unknowntray.com/
+address=/unless.com/
+address=/unrulymedia.com/
+address=/untd.com/
+address=/untidyquestion.com/
+address=/unup4y/
+address=/unusualtitle.com/
+address=/unwieldyhealth.com/
+address=/unwrittenspot.com/
+address=/upu.samsungelectronics.com/
+address=/urbandictionary.com/
+address=/urchin.com/
+address=/urlcash.net/
+address=/urldata.net/
+address=/us.a1.yimg.com/
+address=/userreplay.com/
+address=/userreplay.net/
+address=/utils.mediageneral.net/
+address=/utl-1.com/
+address=/uttermosthobbies.com/
+address=/uu.domainforlite.com/
+address=/uzk4umokyri3.com/
+address=/v1.cnzz.com/
+address=/v1adserver.com/
+address=/validclick.com/
+address=/valuead.com/
+address=/valueclick.com/
+address=/valueclickmedia.com/
+address=/valuecommerce.com/
+address=/valuesponsor.com/
+address=/vanfireworks.com/
+address=/variablefitness.com/
+address=/vcommission.com/
+address=/veille-referencement.com/
+address=/velismedia.com/
+address=/ventivmedia.com/
+address=/venturead.com/
+address=/verblife-3.co/
+address=/verblife-4.co/
+address=/verblife-5.co/
+address=/vericlick.com/
+address=/vertamedia.com/
+address=/verticalmass.com/
+address=/vervewireless.com/
+address=/vgwort.com/
+address=/vgwort.de/
+address=/vgwort.org/
+address=/vibrantmedia.com/
+address=/vidcpm.com/
+address=/videoadex.com/
+address=/videoamp.com/
+address=/videoegg.com/
+address=/videostats.kakao.com/
+address=/video-stats.video.google.com/
+address=/vidible.tv/
+address=/vidora.com/
+address=/view4cash.de/
+address=/viglink.com/
+address=/visiblemeasures.com/
+address=/visistat.com/
+address=/visit.webhosting.yahoo.com/
+address=/visitbox.de/
+address=/visitpath.com/
+address=/visual-pagerank.fr/
+address=/visualrevenue.com/
+address=/vivads.net/
+address=/vivatube.com/
+address=/vivime.net.fr/
+address=/vivtracking.com/
+address=/vmmpxl.com/
+address=/vodafone-affiliate.de/
+address=/voicefive.com/
+address=/voicevegetable.com/
+address=/voluum.com/
+address=/voluumtrk.com/
+address=/voluumtrk2.com/
+address=/volvelle.tech/
+address=/voodoo-ads.io/
+address=/vpon.com/
+address=/vrs.cz/
+address=/vrtzcontextualads.com/
+address=/vs.tucows.com/
+address=/vtracy.de/
+address=/vungle.com/
+address=/vwo.com/
+address=/vx.org.ua/
+address=/w55c.net/
+address=/wa.and.co.uk/
+address=/waardex.com/
+address=/warlog.ru/
+address=/warmafterthought.com/
+address=/waryfog.com/
+address=/wateryvan.com/
+address=/wdads.sx.atl.publicus.com/
+address=/wd-track.de/
+address=/wearbasin.com/
+address=/web.informer.com/
+address=/web2.deja.com/
+address=/webads.co.nz/
+address=/webads.nl/
+address=/webcash.nl/
+address=/webcontentassessor.com/
+address=/webcounter.cz/
+address=/webcounter.goweb.de/
+address=/webctrx.com/
+address=/webgains.com/
+address=/weborama.com/
+address=/weborama.fr/
+address=/webpower.com/
+address=/web-redirecting.com/
+address=/webreseau.com/
+address=/webseoanalytics.com/
+address=/websponsors.com/
+address=/webstat.channel4.com/
+address=/webstat.com/
+address=/web-stat.com/
+address=/webstat.net/
+address=/webstats4u.com/
+address=/webtracker.jp/
+address=/webtrackerplus.com/
+address=/webtracky.com/
+address=/webtraffic.se/
+address=/webtraxx.de/
+address=/webtrends.telegraph.co.uk/
+address=/webtrendslive.com/
+address=/webxcdn.com/
+address=/wellmadefrog.com/
+address=/werbung.meteoxpress.com/
+address=/wetrack.it/
+address=/whaleads.com/
+address=/wheredoyoucomefrom.ovh/
+address=/whirlwealth.com/
+address=/whiskyqueue.com/
+address=/whispa.com/
+address=/whisperingcrib.com/
+address=/whitexxxtube.com/
+address=/whoisonline.net/
+address=/wholesaletraffic.info/
+address=/widespace.com/
+address=/widget.privy.com/
+address=/widgetbucks.com/
+address=/wikia-ads.wikia.com/
+address=/win.iqm.com/
+address=/window.nixnet.cz/
+address=/wintricksbanner.googlepages.com/
+address=/wirecomic.com/
+address=/wisepops.com/
+address=/witch-counter.de/
+address=/wizaly.com/
+address=/wlmarketing.com/
+address=/womanear.com/
+address=/wonderlandads.com/
+address=/wondoads.de/
+address=/woopra.com/
+address=/worldwide-cash.net/
+address=/worldwidedigitalads.com/
+address=/worriednumber.com/
+address=/wpnrtnmrewunrtok.xyz/
+address=/wryfinger.com/
+address=/ws/
+address=/wt.bankmillennium.pl/
+address=/wt-eu02.net/
+address=/wtlive.com/
+address=/www.amazon.in/
+address=/www.dnps.com/
+address=/www.kaplanindex.com/
+address=/www.photo-ads.co.uk/
+address=/www8.glam.com/
+address=/www-banner.chat.ru/
+address=/www-google-analytics.l.google.com/
+address=/wwwpromoter.com/
+address=/x.bild.de/
+address=/x.chip.de/
+address=/x.fokus.de/
+address=/x.welt.de/
+address=/x6.yakiuchi.com/
+address=/xad.com/
+address=/xapads.com/
+address=/xchange.ro/
+address=/xertive.com/
+address=/xfreeservice.com/
+address=/xg4ken.com/
+address=/xiti.com/
+address=/xovq5nemr.com/
+address=/xplusone.com/
+address=/xponsor.com/
+address=/xpu.samsungelectronics.com/
+address=/xq1.net/
+address=/xtendmedia.com/
+address=/x-traceur.com/
+address=/xtracker.logimeter.com/
+address=/xtremetop100.com/
+address=/xxxcounter.com/
+address=/xxxmyself.com/
+address=/y.ibsys.com/
+address=/yab-adimages.s3.amazonaws.com/
+address=/yadro.ru/
+address=/yepads.com/
+address=/yesads.com/
+address=/yesadvertising.com/
+address=/yieldads.com/
+address=/yieldlab.net/
+address=/yieldmanager.com/
+address=/yieldmanager.net/
+address=/yieldmo.com/
+address=/yieldtraffic.com/
+address=/yldbt.com/
+address=/ymetrica1.com/
+address=/yoggrt.com/
+address=/ypu.samsungelectronics.com/
+address=/z3dmbpl6309s.com/
+address=/z5x.net/
+address=/zangocash.com/
+address=/zanox.com/
+address=/zanox-affiliate.de/
+address=/zantracker.com/
+address=/zarget.com/
+address=/zbwp6ghm.com/
+address=/zealousfield.com/
+address=/zedo.com/
+address=/zemanta.com/
+address=/zencudo.co.uk/
+address=/zenkreka.com/
+address=/zenra.com/
+address=/zenra.de/
+address=/zenzuu.com/
+address=/zeus.developershed.com/
+address=/zeusclicks.com/
+address=/zlp6s.pw/
+address=/zm232.com/
+address=/zmedia.com/
+address=/zpu.samsungelectronics.com/
+address=/zqtk.net/
+address=/zukxd6fkxqn.com/
+address=/zy16eoat1w.com/
+address=/zzhc.vnet.cn/
 address=/gewinnspiel.focus.de/
 address=/gewinnspiel.chip.de/
 address=/gewinnspiel.bild.de/
@@ -2816,7 +6625,6 @@ address=/.sexy/
 address=/.tube/
 address=/.xyz/
 EOF
-
 
 cat << EOF > /etc/dnsmasq.d/Blacklist/white
 
@@ -3216,10 +7024,17 @@ server=/imdb.de/127.0.0.1#5353
 server=/imdb.org/127.0.0.1#5353
 server=/you2.be/127.0.0.1#5353
 server=/youtu.be/127.0.0.1#5353
-
 server=/spotify.com/127.0.0.1#5353
 server=/spotify.de/127.0.0.1#5353
 server=/spotify.net/127.0.0.1#5353
+server=/www.bit.ly/127.0.0.1#5353
+server=/bit.ly/127.0.0.1#5353
+server=/ow.ly/127.0.0.1#5353
+server=/tinyurl.com/127.0.0.1#5353
+server=/buff.ly/127.0.0.1#5353
+server=/trib.al/127.0.0.1#5353
+server=/serienstream.sx/127.0.0.1#5353
+server=/goo.gl/127.0.0.1#5353
 
 server=/.skype/127.0.0.1#5353
 server=/.youtube/127.0.0.1#5353
@@ -3227,7 +7042,6 @@ server=/.office/127.0.0.1#5353
 server=/.exit/127.0.0.1#9053
 server=/.onion/127.0.0.1#9053
 EOF
-
 
 cat << EOF > /etc/dnsmasq.d/Blacklist/banking
 
@@ -3321,16 +7135,16 @@ uci commit firewall
 
 uci add firewall zone
 uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="INET"
+uci set firewall.@zone[-1].name="TOR"
 uci set firewall.@zone[-1].input="ACCEPT"
 uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="ONION_CLIENTS"
+uci set firewall.@zone[-1].network="TOR_CLIENTS"
 uci set firewall.@zone[-1].output="ACCEPT"
 uci commit firewall
 uci add firewall forwarding
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="INET"
+uci set firewall.@forwarding[-1].src="TOR"
 uci commit firewall
 
 uci add firewall zone
@@ -3379,7 +7193,7 @@ uci commit firewall && reload_config
 uci -q delete firewall.ssh_int
 uci set firewall.ssh_int="redirect"
 uci set firewall.ssh_int.name="Intercept-SSH"
-uci set firewall.ssh_int.src="INET"
+uci set firewall.ssh_int.src="TOR"
 uci set firewall.ssh_int.src_dport="22"
 uci set firewall.ssh_int.proto="tcp"
 uci set firewall.ssh_int.target="DNAT"
@@ -3387,7 +7201,7 @@ uci set firewall.ssh_int.target="DNAT"
 uci -q delete firewall.http_int
 uci set firewall.http_int="redirect"
 uci set firewall.http_int.name="Intercept-HTTP"
-uci set firewall.http_int.src="INET"
+uci set firewall.http_int.src="TOR"
 uci set firewall.http_int.src_dport="8080"
 uci set firewall.http_int.proto="tcp"
 uci set firewall.http_int.target="DNAT"
@@ -3395,7 +7209,7 @@ uci set firewall.http_int.target="DNAT"
 uci -q delete firewall.https_int
 uci set firewall.https_int="redirect"
 uci set firewall.https_int.name="Intercept-HTTPS"
-uci set firewall.https_int.src="INET"
+uci set firewall.https_int.src="TOR"
 uci set firewall.https_int.src_dport="8443"
 uci set firewall.https_int.proto="tcp"
 uci set firewall.https_int.target="DNAT"
@@ -3408,7 +7222,7 @@ uci commit firewall && reload_config
 uci -q delete firewall.tcp_tor1_int
 uci set firewall.tcp_tor1_int="redirect"
 uci set firewall.tcp_tor1_int.name="Intercept-tor-https"
-uci set firewall.tcp_tor1_int.src="INET"
+uci set firewall.tcp_tor1_int.src="TOR"
 uci set firewall.tcp_tor1_int.dest_port="9040"
 uci set firewall.tcp_tor1_int.src_dip="!192.168.0.0/16"
 uci set firewall.tcp_tor1_int.proto="tcp"
@@ -3425,316 +7239,4 @@ echo
 echo 'Firewall-Rules activated'
 echo
 
-
-# Configure Tor client
-cat << EOF > /etc/tor/main
-AutomapHostsOnResolve 1
-VirtualAddrNetworkIPv4 172.16.0.0/12
-VirtualAddrNetworkIPV4 10.192.0.0/10
-VirtualAddrNetworkIPv6 fc00::/7
-
-DNSPort 192.168.187.1:9053
-DNSPort 192.168.188.1:9053
-DNSPort 192.168.189.1:9053
-DNSPort 192.168.190.1:9053
-DNSPort 192.168.66.254:9053
-DNSPort 192.168.70.254:9053
-DNSPort 192.168.71.254:9053
-
-DNSPort 192.168.187.1:9153
-DNSPort 192.168.188.1:9153
-DNSPort 192.168.189.1:9153
-DNSPort 192.168.190.1:9153
-DNSPort 192.168.66.254:9153
-DNSPort 192.168.70.254:9153
-DNSPort 192.168.71.254:9153
-
-DNSPort 192.168.187.1:54
-DNSPort 192.168.188.1:54
-DNSPort 192.168.189.1:54
-DNSPort 192.168.190.1:54
-DNSPort 192.168.66.254:54
-DNSPort 192.168.70.254:54
-DNSPort 192.168.71.254:54
-
-DNSPort 127.0.0.1:9053
-DNSPort 127.0.0.1:9153
-DNSPort 127.0.0.1:853
-DNSPort 127.0.10.1:53
-DNSPort 127.0.0.1:54
-
-TransPort 192.168.187.1:9040
-TransPort 192.168.188.1:9040
-TransPort 192.168.189.1:9040
-TransPort 192.168.190.1:9040
-TransPort 192.168.66.254:9040
-TransPort 192.168.70.254:9040
-TransPort 192.168.71.254:9040
-TransPort 127.0.0.1:9040
-
-SocksPort 192.168.187.1:9050
-SocksPort 192.168.188.1:9050
-SocksPort 192.168.189.1:9050
-SocksPort 192.168.190.1:9050
-SocksPort 192.168.66.254:9050
-SocksPort 192.168.70.254:9050
-SocksPort 192.168.71.254:9050
-SocksPort 127.0.0.1:9050
-
-SocksPort 192.168.187.1:9150
-SocksPort 192.168.188.1:9150
-SocksPort 192.168.189.1:9150
-SocksPort 192.168.190.1:9150
-SocksPort 192.168.66.254:9150
-SocksPort 192.168.70.254:9150
-SocksPort 192.168.71.254:9150
-SocksPort 127.0.0.1:9150
-
-#ORPort 9049
-#DirPort 9030
-
-HTTPTunnelPort 192.168.187.1:9060
-HTTPTunnelPort 192.168.188.1:9060
-HTTPTunnelPort 192.168.189.1:9060
-HTTPTunnelPort 192.168.190.1:9060
-HTTPTunnelPort 192.168.66.254:9060
-HTTPTunnelPort 192.168.70.254:9060
-HTTPTunnelPort 192.168.71.254:9060
-HTTPTunnelPort 127.0.0.1:9060
-
-
-#Nur sichere Exitnodes Benutzen
-StrictExitNodes 1 # war aktiv
-
-ExitNodes {LI}, {AT}, {CH}, {NL}, {UK}, {US} 
-
-AvoidDiskWrites 1
-RunAsDaemon 1
-Nickname EnemyOneEU
-#Log notice file /var/log/tor/tor-notices.log
-DataDirectory /var/lib/tor
-User tor
-
-EOF
-
-
-uci del_list tor.conf.tail_include="/etc/tor/main"
-uci add_list tor.conf.tail_include="/etc/tor/main"
-uci commit tor && reload_config
-
-/etc/init.d/tor restart
-
-echo 
-echo 'Tor-Onion-Services activated'
-echo
-
-
-#Configure stubby
-cat << EOF > /etc/config/stubby
-config stubby 'global'
-       option manual '0'
-       option trigger 'ONION_CLIENTS'
-       option trigger 'HCONTROL'
-       option trigger 'CONTROL'
-       option trigger 'SERVER'
-       option trigger 'ENTERTAIN'
-       option trigger 'VOICE'
-       option trigger 'GUEST'
-
-       # option triggerdelay '2'
-       list dns_transport 'GETDNS_TRANSPORT_TLS'
-       option tls_authentication '1'
-       option tls_query_padding_blocksize '128'
-       # option tls_connection_retries '2'
-       # option tls_backoff_time '3600'
-       # option timeout '5000'
-       # option dnssec_return_status '0'
-       option appdata_dir '/var/lib/stubby'
-       # option trust_anchors_backoff_time 2500
-       # option dnssec_trust_anchors '/var/lib/stubby/getdns-root.key'
-       option edns_client_subnet_private '1'
-       option idle_timeout '10000'
-       option round_robin_upstreams '1'
-       list listen_address '127.0.0.1@5453'
-       list listen_address '192.168.187.1@5453'
-       list listen_address '192.168.188.1@5453'
-       list listen_address '192.168.189.1@5453'
-       list listen_address '192.168.190.1@5453'
-       list listen_address '192.168.66.254@5453'
-       list listen_address '192.168.70.254@5453'
-       list listen_address '192.168.71.254@5453'
-
-       list listen_address '0::1@5453'
-       # option log_level '7'
-       # option command_line_arguments ''
-       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
-       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
-       # option tls_min_version '1.2'
-       # option tls_max_version '1.3'
-
-# Upstream resolvers are specified using 'resolver' sections.
-config resolver
-       option address '2606:4700:4700::1111'
-       option tls_auth_name 'cloudflare-dns.com'
-       # option tls_port 853
-       # list spki 'sha256/yioEpqeR4WtDwE9YxNVnCEkTxIjx6EEIwFSQW+lJsbc='
-       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
-       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
-       # option tls_min_version '1.2'
-       # option tls_max_version '1.3'
-
-config resolver
-       option address '2606:4700:4700::1001'
-       option tls_auth_name 'cloudflare-dns.com'
-       # option tls_port 853
-       # list spki 'sha256/yioEpqeR4WtDwE9YxNVnCEkTxIjx6EEIwFSQW+lJsbc='
-       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
-       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
-       # option tls_min_version '1.2'
-       # option tls_max_version '1.3'
-
-config resolver
-       option address '1.1.1.1'
-       option tls_auth_name 'cloudflare-dns.com'
-       # option tls_port 853
-       # list spki 'sha256/yioEpqeR4WtDwE9YxNVnCEkTxIjx6EEIwFSQW+lJsbc='
-       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
-       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
-       # option tls_min_version '1.2'
-       # option tls_max_version '1.3'
-
-config resolver
-       option address '1.0.0.1'
-       option tls_auth_name 'cloudflare-dns.com'
-       # option tls_port 853
-       # list spki 'sha256/yioEpqeR4WtDwE9YxNVnCEkTxIjx6EEIwFSQW+lJsbc='
-       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
-       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
-       # option tls_min_version '1.2'
-       # option tls_max_version '1.3'
-
-EOF
-
-/etc/init.d/stubby restart
-# Configure unbound client
-
-echo
-echo ' Stubby Pivaticy over cloudflair.com'
-echo
-
-cat << EOF > /etc/config/unbound
-config unbound
-	option add_extra_dns '0'
-	option add_local_fqdn '1'
-	option add_wan_fqdn '0'
-	option dhcp_link 'none'
-	option dhcp4_slaac6 '0'
-	option do_ip4 'yes'
-	option do_ip6 'yes'
-	option do_tcp 'yes'
-	option do_udp 'yes'
-	option domain 'local'
-	option domain_type 'static'
-	option edns_size '1280'
-	option extended_stats '0'
-	option hide_binddata '1'
-	option interface_auto '1'
-	option listen_port '5353'
-	option localservice '1'
-	option manual_conf '0'
-	option num_threads '1'
-	option protocol 'default'
-	option query_minimize '0'
-	option query_min_strict '0'
-	option rate_limit '0'
-	option rebind_localhost '0'
-	option rebind_protection '1'
-	option recursion 'default'
-	option resource 'default'
-	option root_hints '/var/lib/unbound/root.hints'
-	option root_age '9'
-	option ttl_min '120'
-	option unbound_control '0'
-	option validator '1'
-	option validator_ntp '1'
-	option verbosity '0'
-	list trigger_interface 'CONTROL'
-	list trigger_interface 'HCONTROL'
-	list trigger_interface 'ONION_CLIENTS'
-	list trigger_interface 'SERVER'
-	list trigger_interface 'VOICE'
-	list trigger_interface 'ENTERTAIN'
-	list trigger_interface 'GUEST'
-	list trigger_interface 'wan'
-	list domain_insecure '192.168.175.254'
-	list outgoing_port_permit '853'
-	list outgoing_port_permit '9050'
-	list outgoing_port_permit '9150'
-	list outgoing_port_permit '9053'
-	list outgoing_port_permit '9153'
-	list outgoing_port_permit '10240-65335'
-
-config zone 'forward'
-	option fallback '1'
-	option zone_type 'forward_zone'
-	option tls_upstream '1'
-	option tls_index 'dns.cloudflair'
-	option tls_cert_bundle '/etc/unbound/ca-certificates.crt'
-	option name '.'
-	option forward_addr 'dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @9050'
-#config zone 'forward'
-#	option fallback '0'
-#	option zone_type 'forward_zone'
-#	option name 'inet.local'
-#	option forward_addr '192.168.189.1'
-#config zone 'forward'
-#	option fallback '0'
-#	option zone_type 'forward_zone'
-#	option name 'hcontrol.local'
-#	option forward_addr '192.168.70.254'
-#config zone 'forward'
-#	option fallback '0'
-#	option zone_type 'forward_zone'
-#	option name 'control.local'
-#	option forward_addr '192.168.71.254'
-#config zone 'forward'
-#	option fallback '0'
-#	option zone_type 'forward_zone'
-#	option name 'server.local'
-#	option forward_addr '192.168.66.254'
-#config zone 'forward'
-#	option fallback '0'
-#	option zone_type 'forward_zone'
-#	option name 'voice.local'
-#	option forward_addr '192.168.190.1'
-#config zone 'forward'
-#	option fallback '0'
-#	option zone_type 'forward_zone'
-#	option name 'guest.local'
-#	option forward_addr '192.168.188.1'
-#config zone 'forward'
-#	option fallback '0'
-#	option zone_type 'forward_zone'
-#	option name 'entertain.local'
-#	option forward_addr '192.168.187.1'
-	
-EOF
-uci commit unbound
-
-echo
-echo 'Unbound lokal DNS-Resolver with lokal root-files'
-/etc/init.d/odhcpd disable
-/etc/init.d/odhcpd stop
-
-echo
-echo 'Thanx for waiting'
-echo 
-echo 'for more Privacy install Brave-Browser https://brave.com/download/ on your machine'
-echo 
-echo 'I will restart in 5 Seconds. After you can work private and secure on all private Natworks'
-echo
-
-read -t 5 -n -p -s
-
 reboot
-
