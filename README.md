@@ -15,8 +15,8 @@
   Don´t forget to note the <i><b>newpassword</b></i>.<br>
   <br>
   copy the sourcecode from <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a> and insert and run in ssh.
-  <b>
-   After the rebbot you will have following Networks:
+  <br>
+   After the reboot you will have following Networks:
     <li>Voice for Amazon Alexa, Google Assisten or other Voice Assisten-Systems</li>
     <li>HCONTROL for Homeautomation or Smarthome</li>
     <li>ENTERTAIn for TVs, PlayStation, X-Boxe, Mediaplayer, DVD-Player and BlueRay-Playere etc.</li>
