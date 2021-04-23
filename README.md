@@ -1,8 +1,7 @@
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/CyberSecurityBox.jpg" alt="Logo" width="300px"> </img>
 # CyberSecurity-Box<h3>(inkl. Ad Blocker, UnBound (DNS), Tor or optional Pi-Hole5 (incl. DB) and ntopng) </h3>
 <p>
-<ul><li>
-  <h3>Installation on OpenWRT-Router - Alternative 1</h3>
+<ul><ol><li><h3>Installation on OpenWRT-Router - Alternative 1</h3>
   use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
   User: <i><b>root</b></i>
@@ -17,6 +16,7 @@
   copy the sourcecode from <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a> and insert and run in ssh.
   <br>
    After the reboot you will have following Networks:<br>
+    <ul>
     <li>REPEATER for internal Communication between Router and Repeater for all of this Networks</li>
     <li>VOICE for Amazon Alexa, Google Assistent or other Voice Assistent-Systems</li>
     <li>CONTROL for IR/RF-Controlling like Logitech Harmony, Broadlink etc. </li> 
@@ -24,13 +24,14 @@
     <li>ENTERTAIN for TVs, PlayStation, X-Box, Mediaplayer, DVD-Player and BlueRay-Player etc.</li>
     <li>DMZ for NAS, Network Storage, PLEX-Server, UPNP/DLNA-Servers, Database-Servers, Mail-Server and Web-Server etc.</li>
     <li>TOR for Clients with .onion and Tor-Network Access</li>
-    <li>GUEST for your Gests only</li><br>
+    <li>GUEST for your Gests only</li>
+  </ul><br>
   All of this have the WiFi-Password/-Key: <i><b>Cyber,Sec9ox</b></i><br><br>
   For each of this separated Networks you will have a <b>VLAN</b> on the Switch-/Output-Ethernet-Ports of the Router between <b>VLAN_ID 101</b> and <b>VLAN_ID 106</b>.
   <br>
   </li>
-  <li>
-  <h3>Installation CyberSecurityBox (RasPi) - Alternative 2</h3>
+  
+  <li><h3>Installation CyberSecurityBox (RasPi) - Alternative 2</h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian-SD-Card-Image</a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
@@ -48,7 +49,7 @@
   <pre><code>sudo su
 apt-get update
 apt-get upgrade -y</code></pre>
-  <ol>
+  <ul>
     <li>
 <h4>Type for Installation</h4>
      <pre><code>apt-get install tor unbound privoxy ntopng postfix iptables-persistent netfilter-persistent -y
@@ -97,12 +98,12 @@ service privoxy start
 service unbound start
 service pihole-FTL start</code></pre>
    </li>
-  </ol>
-  <li>
-  <h3>(optional) Configuration of the AVM FRITZ!Box with Presets for Security and Port-List - Option for Alternative 2 Pi_Hole</h3>
+  </ul>
+  
+  <li><h3>(optional) Configuration of the AVM FRITZ!Box with Presets for Security and Port-List - Option for Alternative 2 Pi_Hole</h3>
 <h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
   <img src="Schema.PNG" width="450px"></img>
-  </li>
+  </li></ol>
 </ul></p>
 <p>
 For more Information in german visit https://www.cyberandi.de/Smarthome
