@@ -119,11 +119,11 @@ For more Information in german visit https://www.cyberandi.de/Smarthome
 <p>
 <h3>Screenshots</h3>
 <p>
-![2021-03-03 (2)](https://user-images.githubusercontent.com/46010442/127315754-5aeb4e22-8b65-44ad-8566-95d280ba03e7.png)
+![Log-In Page](https://user-images.githubusercontent.com/46010442/127315754-5aeb4e22-8b65-44ad-8566-95d280ba03e7.png)
 <p>
-![2021-07-28_LI (2)](https://user-images.githubusercontent.com/46010442/127315881-16fe8b4b-63d6-4298-8512-de48602dc12f.jpg)
+![Overview](https://user-images.githubusercontent.com/46010442/127315881-16fe8b4b-63d6-4298-8512-de48602dc12f.jpg)
 <p> 
-![2021-07-28 (4)](https://user-images.githubusercontent.com/46010442/127315841-db6c4b4d-ee65-41ab-b7bd-0a2a9d07eb3e.png)
+![Network](https://user-images.githubusercontent.com/46010442/127315841-db6c4b4d-ee65-41ab-b7bd-0a2a9d07eb3e.png)
 
 
 
