@@ -1,6 +1,4 @@
 #!/bin/sh
-opkg update
-opkg install whiptail
 clear
 clear
 echo
@@ -16,8 +14,29 @@ echo
 echo
 #Firewall Pihole Unbound Tor Transparentproxy
 
+opkg update
+opkg upgrade $(opkg list-upgradable | awk '{print $1}')
+opkg update
+opkg install nano git wget curl luci-ssl unbound-daemon-heavy unbound-anchor unbound-control unbound-control-setup unbound-host unbound-checkconf ca-certificates stubby tor tor-geoip dnsmasq-full bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill
+clear
+echo
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo 'Software Packeges installed'
+echo
+
 #Localaddresen
 LOCALADDRESS="127.192.0.1/10"
+
+actLoop=$(ifconfig | grep '^l\w*' -m 1 | cut -f1 -d ' ')
+actEth=$(ifconfig | grep '^e\w*' -m 1 | cut -f1 -d ' ')
+actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
 
 #Internet Gateway
 INET_GW=$(ip route | grep default | cut -f3  -d ' ')
@@ -36,6 +55,9 @@ WAN_ip=$(echo $INET_GW | cut -f1 -d '.')
 WAN_ip=$WAN_ip"."$(echo $INET_GW | cut -f2 -d '.')
 WAN_ip=$WAN_ip"."$(echo $INET_GW | cut -f3 -d '.')".250"
 
+WAN_broadcast=$(echo $INET_GW | cut -f1 -d '.')
+WAN_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f2 -d '.')
+WAN_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f3 -d '.')".255"
 
 #complet Internet
 Internet="0.0.0.0/0"
@@ -45,10 +67,10 @@ all_IP="0.0.0.0"
 all_IP6="[::]"
 
 #Access to Server
-ACCESS_SERVER=$(ip addr show dev eth1 | grep inet | grep eth1 | cut -f6 -d' ') 
+ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' )
 
 #Lokal LAN
-LAN=$(ip addr show dev eth1 | grep inet | grep eth1 | cut -f6 -d' ' | cut -f0 -d'/')
+LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
 LAN_org=$LAN
 
 echo 'Type the LAN-IP (Internal Network): ('$LAN')'
@@ -113,6 +135,13 @@ if [ $SUBNET_sep -lt 125 ]
 
 fi
 
+SERVER_range='192.168.'$(($SUBNET_sep - 123))'.2,192.168.'$(($SUBNET_sep - 123))'.200,24h'
+CONTROL_range='192.168.'$(($SUBNET_sep - 119))'.2,192.168.'$(($SUBNET_sep - 119))'.200,24h'
+HCONTROL_range='192.168.'$(($SUBNET_sep - 118))'.2,192.168.'$(($SUBNET_sep - 118))'.200,24h'
+INET_range='192.168.'$SUBNET_sep'.2,192.168.'$SUBNET_sep'.200,24h'
+VOICE_range='192.168.'$(($SUBNET_sep + 1))'.2,192.168.'$(($SUBNET_sep + 1))'.200,24h'
+ENTERTAIN_range='192.168.'$(($SUBNET_sep - 1))'.2,192.168.'$(($SUBNET_sep - 1))'.200,24h'
+GUEST_range='192.168.'$(($SUBNET_sep + 10))'.2,192.168.'$(($SUBNET_sep + 10))'.200,24h'
 
 SERVER_ip='192.168.'$(($SUBNET_sep - 123))'.254'
 CONTROL_ip='192.168.'$(($SUBNET_sep - 119))'.254'
@@ -130,6 +159,14 @@ VOICE_broadcast='192.168.'$(($SUBNET_sep + 1))'.255'
 ENTERTAIN_broadcast='192.168.'$(($SUBNET_sep - 1))'.255'
 GUEST_broadcast='192.168.'$(($SUBNET_sep + 10))'.255'
 
+SERVER_lan='192.168.'$(($SUBNET_sep - 123))'.0'
+CONTROL_lan='192.168.'$(($SUBNET_sep - 119))'.0'
+HCONTROL_lan='192.168.'$(($SUBNET_sep - 118))'.0'
+INET_lan='192.168.'$SUBNET_sep'.0'
+VOICE_lan='192.168.'$(($SUBNET_sep + 1))'.0'
+ENTERTAIN_lan='192.168.'$(($SUBNET_sep - 1))'.0'
+GUEST_lan='192.168.'$(($SUBNET_sep + 10))'.0'
+
 SERVER_net=$SERVER_ip'/24'
 CONTROL_net=$CONTROL_ip'/24'
 HCONTROL_net=$HCONTROL_ip'/24'
@@ -138,6 +175,14 @@ VOICE_net=$VOICE_ip'/24'
 ENTERTAIN_net=$ENTERTAIN_ip'/24'
 GUEST_net=$GUEST_ip'/24'
 WAN_net=$WAN_ip'/24'
+
+SERVER_domain='server.'$LOCAL_DOMAIN
+CONTROL_domain='control.'$LOCAL_DOMAIN
+HCONTROL_domain='hcontrol.'$LOCAL_DOMAIN
+INET_domain='inet.'$LOCAL_DOMAIN
+VOICE_domain='voice.local'
+ENTERTAIN_domain='entertain.local'
+GUEST_domain='guest.local'
 
 
 SERVER_ssid='DMZ-'$WIFI_SSID
@@ -149,25 +194,9 @@ ENTERTAIN_ssid='Entertain-'$WIFI_SSID
 GUEST_ssid='Guest-'$WIFI_SSID
 Adversisment_ssid='Telekom'
 
-clear
-echo
-echo 'Your Config is:'
-echo
-echo 'Your WiFi SSID is: iNet-'$WIFI_SSID
-echo 'Key:               '$WIFI_PASS
-echo
-echo 'IP-Address:        '$ACCESS_SERVER 
-echo 'Gateway:           '$INET_GW 
-echo 'Domain:            '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:        https://'$LAN':8443' 
-echo 'User:              '$USERNAME
-echo 'Password:          password'
-echo
-
 
 #----------------------------------------------------------------------------
-echp
+echo
 echo "define variables"
 echo
 #DHCP
@@ -434,6 +463,9 @@ ACCESS_HTTPS_port="8443"
 #TOR Onion Services
 TOR_SOCKS_port="9050"
 TOR_TRANS_port="9040"
+TOR_DIR_port="9030"
+TOR_OR_port="9049"
+TOR_THTTP_port="9060"
 
 #Amazon_Alexa
 Amazon_Alexa_port="67-68 8080 40317 49317 33434 123 54838 55443 46053 1000-10000 50000-65000 16000-26000"
@@ -574,6 +606,7 @@ iptab_all_other_AVM_Mesh_port="1:50841 50843:53804 53806:65535"
 #Torrc Ports
 iptab_TORRC_port="9030 9040 9049 9050 9053 9060"
 iptab_all_other_TORRC_port="1:9029 9031:9039 9041:9048 9051 9052 9054:9059 9061:65535"
+
 
 
 #SPYPE
@@ -731,6 +764,10 @@ iptab_ACCESS_HTTPS_port="8443"
 #TOR Onion Services
 iptab_TOR_SOCKS_port="9050"
 iptab_TOR_TRANS_port="9040"
+iptab_TOR_DIR_port="9030"
+iptab_TOR_OR_port="9049"
+iptab_TOR_THTTP_port="9060"
+
 
 #Amazon_Alexa
 iptab_Amazon_Alexa_port="67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
@@ -830,6 +867,14 @@ VIDEO_SRV="52.192.0.0/11 99.86.3.59/24 18.236.7.30/11 217.148.99.11/28 46.137.17
 echo
 echo "variables defineds"
 echo
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '########################################################'
 
 #----------------------------------------------------------------------------
 uci set system.@system[0]=system
@@ -867,17 +912,6 @@ echo 'Default Country-Settings'
 echo 
 
 
-opkg update
-opkg remove odhcp6c odhcpd-ipv6only dnsmasq
-
-
-opkg update
-opkg upgrade $(opkg list-upgradable | awk '{print $1}')
-opkg update
-opkg install nano git wget curl luci-ssl unbound-daemon-heavy unbound-anchor unbound-control unbound-control-setup unbound-host unbound-checkconf ca-certificates stubby tor tor-geoip dnsmasq-full bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill
-
-echo 'Software Packeges installed'
-echo
 echo
 echo 'https activated'
 echo
@@ -922,13 +956,13 @@ DEVICE_REVISION='v0'
 EOF
 
 #Datum erstellen
-date=$(date --utc --date "$1" +%F)
-
+#actdate(date --utc --date "$1" +%F)
+datum=`date +\"%Y%d%m%H%M\"`
 echo
 
 #sichere alte Konfiguration
 echo Sichere alte Konfiguration
-iptables-save > /etc/iptables/rules.v4_old_`date +%F`.bkp
+iptables-save > rules.v4_old_$datum.bkp
 
 cat << EOF > test.txt 
 
@@ -2124,14 +2158,22 @@ curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&sho
 echo
 echo 'optical Style installed'
 echo
+
+clear
 echo '########################################################'
-echo '#                   Network Definitions                #'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                Network Definitions                   #'
+echo '#                                                      #'
 echo '########################################################'
 echo 
 
 #!/bin/sh
 uci -q delete network
-uci delete network.lan
+#uci delete network.lan
 
 uci set network.loopback=interface
 uci set network.loopback.ifname='lo'
@@ -2143,9 +2185,9 @@ uci set network.loopback.dns='127.0.0.1'
 uci set network.globals=globals
 uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='VOICE'
-uci commit network
+uci commit network >/dev/null
 uci set network.VOICE.proto='static'
 uci set network.VOICE.type='bridge'
 uci set network.VOICE.ipaddr=$VOICE_ip
@@ -2157,11 +2199,11 @@ uci set network.VOICE.igmp_snooping='1'
 uci set network.VOICE.gateway=$INET_GW
 uci set network.VOICE.ifname='eth0.105'
 uci set network.VOICE.dns=$VOICE_ip
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network
+uci commit network >/dev/null
 uci set network.ENTERTAIN.proto='static'
 uci set network.ENTERTAIN.type='bridge'
 uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
@@ -2173,11 +2215,11 @@ uci set network.ENTERTAIN.igmp_snooping='1'
 uci set network.ENTERTAIN.gateway=$INET_GW
 uci set network.ENTERTAIN.ifname='eth0.106'
 uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='GUEST'
-uci commit network
+uci commit network >/dev/null
 uci set network.GUEST.proto='static'
 uci set network.GUEST.type='bridge'
 uci set network.GUEST.ipaddr=$GUEST_ip
@@ -2189,11 +2231,11 @@ uci set network.GUEST.igmp_snooping='1'
 uci set network.GUEST.gateway=$INET_GW
 #uci set network.GUEST.ifname='eth0.107'
 uci set network.GUEST.dns=$GUEST_ip
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='SERVER'
-uci commit network
+uci commit network >/dev/null
 uci set network.SERVER.proto='static'
 uci set network.SERVER.type='bridge'
 uci set network.SERVER.ipaddr=$SERVER_ip
@@ -2205,27 +2247,27 @@ uci set network.SERVER.igmp_snooping='1'
 uci set network.SERVER.gateway=$INET_GW
 uci set network.SERVER.ifname='eth0.101'
 uci set network.SERVER.dns=$SERVER_ip
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
-uci rename network.@interface[-1]='INET_CLIENTS'
-uci commit network
-uci set network.INET_CLIENTS.proto='static'
-uci set network.INET_CLIENTS.type='bridge'
-uci set network.INET_CLIENTS.ipaddr=$INET_ip
-uci set network.INET_CLIENTS.netmask='255.255.255.0'
-uci set network.INET_CLIENTS.ip6assign='56'
-uci set network.INET_CLIENTS.broadcast=$INET_broadcast
-uci set network.INET_CLIENTS.igmp_snooping='1'
-#uci set network.INET_CLIENTS.gateway='127.0.0.1'
-uci set network.INET_CLIENTS.gateway=$INET_GW
-uci set network.INET_CLIENTS.ifname='eth0.104'
-uci set network.INET_CLIENTS.dns=$INET_ip
-uci commit network
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='INET'
+uci commit network >/dev/null
+uci set network.INET.proto='static'
+uci set network.INET.type='bridge'
+uci set network.INET.ipaddr=$INET_ip
+uci set network.INET.netmask='255.255.255.0'
+uci set network.INET.ip6assign='56'
+uci set network.INET.broadcast=$INET_broadcast
+uci set network.INET.igmp_snooping='1'
+#uci set network.INET.gateway='127.0.0.1'
+uci set network.INET.gateway=$INET_GW
+uci set network.INET.ifname='eth0.104'
+uci set network.INET.dns=$INET_ip
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='CONTROL'
-uci commit network
+uci commit network >/dev/null
 uci set network.CONTROL.proto='static'
 uci set network.CONTROL.type='bridge'
 uci set network.CONTROL.ipaddr=$CONTROL_ip
@@ -2237,11 +2279,11 @@ uci set network.CONTROL.igmp_snooping='1'
 uci set network.CONTROL.gateway=$INET_GW
 uci set network.CONTROL.ifname='eth0.103'
 uci set network.CONTROL.dns=$CONTROL_ip
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='HCONTROL'
-uci commit network
+uci commit network >/dev/null
 uci set network.HCONTROL.proto='static'
 uci set network.HCONTROL.type='bridge'
 uci set network.HCONTROL.ipaddr=$HCONTROL_ip
@@ -2253,9 +2295,9 @@ uci set network.HCONTROL.igmp_snooping='1'
 uci set network.HCONTROL.gateway=$INET_GW
 uci set network.HCONTROL.ifname='eth0.102'
 uci set network.HCONTROL.dns=$HCONTROL_ip
-uci commit network
+uci commit network >/dev/null
 
-uci set network.wan=interface
+uci set network.wan=interface >/dev/null
 uci set network.wan.proto='static'
 uci set network.wan.netmask='255.255.255.0'
 uci set network.wan.ip6assign='60'
@@ -2264,7 +2306,7 @@ uci add_list network.wan.dns="127.0.0.1"
 uci set network.wan.ifname='eth1'
 uci set network.wan.ipaddr=$WAN_ip
 uci set network.wan.peerdns="0"
-uci commit network
+uci commit network >/dev/null
 
 uci set network.wan6.proto='dhcpv6'
 uci set network.wan6.reqaddress='try'
@@ -2274,119 +2316,119 @@ uci set network.wan6.ifname='eth1'
 #uci add_list network.wan6.dns="2606:4700:4700::1003"
 uci add_list network.wan6.dns="0::1"
 uci set network.wan6.peerdns="0"
-uci commit network
+uci commit network >/dev/null
 
 uci set network.@switch[0]=switch
 uci set network.@switch[0].name='switch0'
 uci set network.@switch[0].reset='1'
 uci set network.@switch[0].enable_vlan='1'
-uci commit network
+uci commit network >/dev/null
 
 uci set network.@switch_vlan[0]=switch_vlan
 uci set network.@switch_vlan[0].device='switch0'
 uci set network.@switch_vlan[0].vlan='101'
 uci set network.@switch_vlan[0].vid='101'
 uci set network.@switch_vlan[0].ports='0t 1t 2 3t 4t 5t'
-uci commit network
+uci commit network >/dev/null
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='102'
 uci set network.@switch_vlan[-1].vid='102'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3 4t 5t'
-uci commit network
+uci commit network >/dev/null
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vLan='103'
 uci set network.@switch_vlan[-1].vid='103'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci commit network
+uci commit network >/dev/null
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='104'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='104'
-uci commit network
+uci commit network >/dev/null
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='105'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='105'
-uci commit network
+uci commit network >/dev/null
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='106'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='106'
-uci commit network
+uci commit network >/dev/null
 
 uci add network interface
 uci rename network.@interface[-1]='SWITCH_Port'
-uci commit network
+uci commit network >/dev/null
 uci set network.SWITCH_Port.ifname='eth0'
 uci set network.SWITCH_Port.proto='none'
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='SWITCH_P101'
-uci commit network
+uci commit network >/dev/null
 uci set network.SWITCH_P101.ifname='eth0.101'
 uci set network.SWITCH_P101.proto='none'
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='SWITCH_P102'
-uci commit network
+uci commit network >/dev/null
 uci set network.SWITCH_P102.ifname='eth0.102'
 uci set network.SWITCH_P102.proto='none'
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='SWITCH_P103'
-uci commit network
+uci commit network >/dev/null
 uci set network.SWITCH_P103.ifname='eth0.103'
 uci set network.SWITCH_P103.proto='none'
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='SWITCH_P104'
-uci commit network
+uci commit network >/dev/null
 uci set network.SWITCH_P104.ifname='eth0.104'
 uci set network.SWITCH_P104.proto='none'
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='SWITCH_P105'
-uci commit network
+uci commit network >/dev/null
 uci set network.SWITCH_P105.ifname='eth0.105'
 uci set network.SWITCH_P105.proto='none'
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='SWITCH_P106'
-uci commit network
+uci commit network >/dev/null
 uci set network.SWITCH_P106.ifname='eth0.106'
 uci set network.SWITCH_P106.proto='none'
-uci commit network
+uci commit network >/dev/null
 
-uci add network interface
+uci add network interface >/dev/null
 uci rename network.@interface[-1]='REPEATER'
-uci commit network
+uci commit network >/dev/null
 uci set network.REPEATER.proto='none'
-uci commit  && reload_config
+uci commit  && reload_config >/dev/null
 
  
 # Save and apply
-uci commit network && reload_config
+uci commit network && reload_config >/dev/null
 #/etc/init.d/network restart
 
 dig www.internic.net @1.1.1.1
 
-uci -q delete wireless
+uci -q delete wireless  >/dev/null
 
 uci set wireless.radio0=wifi-device
 uci set wireless.radio0.type='mac80211'
@@ -2429,7 +2471,7 @@ uci set wireless.wifinet3.ssid=$INET_ssid
 uci set wireless.wifinet3.encryption='psk2'
 uci set wireless.wifinet3.device='radio0'
 uci set wireless.wifinet3.mode='ap'
-uci set wireless.wifinet3.network='INET_CLIENTS'
+uci set wireless.wifinet3.network='INET'
 uci set wireless.wifinet3.key=$WIFI_PASS
 
 uci delete wireless.wifinet4
@@ -2482,7 +2524,7 @@ uci set wireless.wifinet7.ssid=$INET_ssid
 uci set wireless.wifinet7.encryption='psk2'
 uci set wireless.wifinet7.device='radio1'
 uci set wireless.wifinet7.mode='ap'
-uci set wireless.wifinet7.network='INET_CLIENTS'
+uci set wireless.wifinet7.network='INET'
 uci set wireless.wifinet7.key=$WIFI_PASS
 
 uci delete wireless.wifinet8
@@ -2512,38 +2554,66 @@ uci set wireless.wifinet10.key=$WIFI_PASS
 uci set wireless.wifinet10.network='GUEST'
 uci set wireless.wifinet10.ssid=$GUEST_ssid
 
-uci delete wireless.radio0.disabled
-uci delete wireless.radio1.disabled
+uci delete wireless.radio0.disabled >/dev/null
+uci delete wireless.radio1.disabled >/dev/null
 
-#uci delete wireless.wifinet11
-#uci delete wireless.wifinet12
-#uci delete wireless.wifinet13
-#uci delete wireless.wifinet14
-#uci delete wireless.wifinet15
-#uci delete wireless.wifinet16
-
-
-clear
-echo
-echo 'This is now your Presets for the CyberSecurity-Box'
-echo
-echo "Your WAN-IP in the Router-Subnet is:" $INET_GW 
-echo
-echo "The IP-Range for the INET_Clients is:" $LAN_INT
-echo
-echo "To open the Config-Site of "$LOCAL_DOMAIN" type https://"$LAN_INT":8443 in the browser."
-echo "and login with root and "$PASSWORD
-
-
-
-uci commit  && reload_config
+uci commit  && reload_config >/dev/null
 
 echo
 echo 'Networks Settings defined'
 echo
 
-/etc/init.d/tor stop
-/etc/init.d/log restart
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo 'Your Config is:'
+echo
+echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$INET_net
+echo
+echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$HCONTROL_net
+echo
+echo 'Voice-Assistent SSID: '$VOICE_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$VOICE_net
+echo
+echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$ENTERTAIN_net
+echo
+echo 'Server-WiFi SSID:     '$SERVER_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$SERVER_net
+echo
+echo 'IR/BT-Control SSID:   '$CONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$CONTROL_net
+echo
+echo 'Guests SSID is:       '$GUEST_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$GUEST_net
+echo
+echo
+echo
+echo 'IP-Address:           '$ACCESS_SERVER
+echo 'Gateway:              '$INET_GW
+echo 'Domain:               '$LOCAL_DOMAIN
+echo
+echo 'GUI-Access:           https://'$INET_ip':8443'
+echo 'User:                 '$USERNAME
+echo 'Password:             password'
+echo
+
+
+/etc/init.d/tor stop >/dev/null
+/etc/init.d/log restart >/dev/null
 
 # Configure Tor client
 cat << EOF > /etc/tor/main
@@ -2637,7 +2707,9 @@ NumCPUs 1
 #Nur sichere Exitnodes Benutzen
 StrictExitNodes 1 # war aktiv
 
-ExitNodes {LI}, {AT}, {CH}, {NL}, {LU}, {DK}, {LT}, {LV}
+ExcludeNodes {AU}, {CA}, {FR}, {GB}, {NZ}, {US}, {DE}, {CH}, {JP}, {FR}, {FX}, {SE}, {DK}, {NL}, {NO}, {IT}, {ES}, {BE}, {IL}, {SG}, {KR}
+ExitNodes {LI}, {AT}, {LU}, {LT}, {LV}, {EE}, {TW}
+
 
 SafeSocks 1
 WarnUnsafeSocks 1
@@ -2682,11 +2754,11 @@ User tor
 EOF
 
 
-uci del_list tor.conf.tail_include="/etc/tor/main"
-uci add_list tor.conf.tail_include="/etc/tor/main"
-uci commit tor && reload_config
+uci del_list tor.conf.tail_include="/etc/tor/main" >/dev/null
+uci add_list tor.conf.tail_include="/etc/tor/main" >/dev/null
+uci commit tor && reload_config >/dev/null
 
-/etc/init.d/tor start
+/etc/init.d/tor start 
 
 echo 
 echo 'Tor-Onion-Services activated'
@@ -2714,6 +2786,13 @@ config stubby 'global'
        option round_robin_upstreams '1'
        list listen_address '127.0.0.1@$(echo $DNS_STUBBY_port)'
        list listen_address '0::1@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $INET_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $SERVER_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $HCONTROL_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $CONTROL_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $VOICE_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $GUEST_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $ENTERTAIN_ip)@$(echo $DNS_STUBBY_port)'
        # option log_level '7'
        # option command_line_arguments ''
        # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
@@ -2722,19 +2801,29 @@ config stubby 'global'
        # option tls_max_version '1.3'
 
 config resolver
-        option address '80.241.218.68'
-        option tls_auth_name 'fdns1.dismail.de'
-        list spki 'sha256/MMi3E2HZr5A5GL+badqe3tzEPCB00+OmApZqJakbqUU='
+        option address '1.1.1.3'
+        option tls_auth_name 'family.cloudflare-dns.com'
+
 
 config resolver
-        option address '46.182.19.48'
-        option tls_auth_name 'dns2.digitalcourage.de'
-        list spki 'sha256/v7rm6OtQQD3x/wbsdHDZjiDg+utMZvnoX3jq3Vi8tGU='
+        option address '1.0.0.3'
+        option tls_auth_name 'family.cloudflare-dns.com'
+
+
+#config resolver
+#        option address '80.241.218.68'
+#        option tls_auth_name 'fdns1.dismail.de'
+#        list spki 'sha256/MMi3E2HZr5A5GL+badqe3tzEPCB00+OmApZqJakbqUU='
+
+#config resolver
+#        option address '46.182.19.48'
+#        option tls_auth_name 'dns2.digitalcourage.de'
+#        list spki 'sha256/v7rm6OtQQD3x/wbsdHDZjiDg+utMZvnoX3jq3Vi8tGU='
 
 
 EOF
 
-uci commit stubby && reload_config
+uci commit stubby && reload_config >/dev/null
 
 /etc/init.d/stubby restart
 # Configure unbound client
@@ -2743,10 +2832,10 @@ echo
 echo 'Stubby Pivaticy over cloudflair.com'
 echo
 
-/etc/init.d/unbound stop
-/etc/init.d/log restart
-mkdir /etc/unbound/unbound.conf.d
-curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
+/etc/init.d/unbound stop  >/dev/null
+/etc/init.d/log restart  >/dev/null
+mkdir /etc/unbound/unbound.conf.d >/dev/null
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >/dev/null
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
 uci set unbound.@unbound[0]=unbound
@@ -2766,7 +2855,7 @@ uci set unbound.@unbound[0].do_tcp='yes'
 uci set unbound.@unbound[0].do_udp='yes'
 uci set unbound.@unbound[0].dns64='0'
 uci set unbound.@unbound[0].do_not_query_localhost='no'
-uci set unbound.@unbound[0].domain='stawimedia.local'
+uci set unbound.@unbound[0].domain=$LOCAL_DOMAIN
 uci set unbound.@unbound[0].domain_type='static'
 uci set unbound.@unbound[0].edns_size='1280'
 uci set unbound.@unbound[0].edns_buffer_size='1472'
@@ -2842,23 +2931,23 @@ uci add_list unbound.@unbound[0].trigger_interface='VOICE'
 uci add_list unbound.@unbound[0].trigger_interface='ENTERTAIN'
 uci add_list unbound.@unbound[0].trigger_interface='GUEST'
 uci add_list unbound.@unbound[0].trigger_interface='wan6'
-#uci set unbound.@unbound[0].domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
-uci add_list unbound.@unbound[0].domain_insecure='inet.stawimedia.local'
-uci add_list unbound.@unbound[0].domain_insecure='server.stawimedia.local'
-uci add_list unbound.@unbound[0].domain_insecure='hcontrol.stawimedia.local'
-uci add_list unbound.@unbound[0].domain_insecure='control.stawimedia.local'
-uci add_list unbound.@unbound[0].domain_insecure='voice.local'
-uci add_list unbound.@unbound[0].domain_insecure='guest.local'
-uci add_list unbound.@unbound[0].domain_insecure='entertain.local'
+uci set unbound.@unbound[0].domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
+uci add_list unbound.@unbound[0].domain_insecure=$INET_domain
+uci add_list unbound.@unbound[0].domain_insecure=$SERVER_domain
+uci add_list unbound.@unbound[0].domain_insecure=$HCONTROL_domain
+uci add_list unbound.@unbound[0].domain_insecure=$CONTROL_domain
+uci add_list unbound.@unbound[0].domain_insecure=$VOICE_domain
+uci add_list unbound.@unbound[0].domain_insecure=$GUEST_domain
+uci add_list unbound.@unbound[0].domain_insecure=$ENTERTAIN_domain
 uci add_list unbound.@unbound[0].domain_insecure='onion'
 uci add_list unbound.@unbound[0].domain_insecure='exit'
-uci add_list unbound.@unbound[0].private_domain='inet.stawimedia.local'
-uci add_list unbound.@unbound[0].private_domain='server.stawimedia.local'
-uci add_list unbound.@unbound[0].private_domain='hcontrol.stawimedia.local'
-uci add_list unbound.@unbound[0].private_domain='control.stawimedia.local'
-uci add_list unbound.@unbound[0].private_domain='voice.local'
-uci add_list unbound.@unbound[0].private_domain='guest.local'
-uci add_list unbound.@unbound[0].private_domain='entertain.local'
+uci add_list unbound.@unbound[0].private_domain=$INET_domain
+uci add_list unbound.@unbound[0].private_domain=$SERVER_domain
+uci add_list unbound.@unbound[0].private_domain=$HCONTROL_domain
+uci add_list unbound.@unbound[0].private_domain=$CONTROL_domain
+uci add_list unbound.@unbound[0].private_domain=$VOICE_domain
+uci add_list unbound.@unbound[0].private_domain=$GUEST_domain
+uci add_list unbound.@unbound[0].private_domain=$ENTERTAIN_domain
 uci add_list unbound.@unbound[0].private_domain='onion'
 uci add_list unbound.@unbound[0].private_domain='exit'
 
@@ -2883,63 +2972,103 @@ uci set unbound.@zone[-1].fallback='0'
 uci set unbound.@zone[-1].tls_upstream='1'
 uci set unbound.@zone[-1].tls_index='dns.cloudflair'
 uci set unbound.@zone[-1].forward_tls_upstream='yes'
-uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @9053'
+uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
 
-uci commit unbound && reload_config
+uci commit unbound && reload_config  >/dev/null
 /etc/init.d/unbound start
 echo
 echo 'Unbound lokal DNS-Resolver with lokal root-files'
 
+uci -q delete dhcp >/dev/null
+uci delete dhcp.BlacklistSERVER >/dev/null
+uci delete dhcp.BlacklistHCONTROL >/dev/null
+uci delete dhcp.BlacklistCONTROL >/dev/null
+uci delete dhcp.BlacklistINET >/dev/null
+uci delete dhcp.WhitelistVOICE >/dev/null
+uci delete dhcp.WhitelistENTERTAIN >/dev/null
+uci delete dhcp.WhitelistGUEST >/dev/null
+uci delete dhcp.SERVER >/dev/null
+uci delete dhcp.HCONTROL >/dev/null
+uci delete dhcp.CONTROL >/dev/null
+uci delete dhcp.INET >/dev/null
+uci delete dhcp.VOICE >/dev/null
+uci delete dhcp.ENTERTAIN >/dev/null
+uci delete dhcp.GUEST >/dev/null
+uci delete dhcp.Blacklist>/dev/null
+uci delete dhcp.Whitelist >/dev/null
+uci delete dhcp.lan >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci commit dhcp >/dev/null
+uci set dhcp.Blacklist=dnsmasq
+uci set dhcp.Blacklist.domainneeded='1'
+uci set dhcp.Blacklist.localise_queries='1'
+uci set dhcp.Blacklist.rebind_protection='1'
+uci set dhcp.Blacklist.rebind_localhost='1'
+uci set dhcp.Blacklist.filterwin2k='1'
+uci set dhcp.Blacklist.local='/'$SERVER_domain'/'
+uci set dhcp.Blacklist.expandhosts='1'
+uci set dhcp.Blacklist.authoritative='1'
+uci set dhcp.Blacklist.readethers='1'
+uci set dhcp.Blacklist.leasefile='/tmp/dhcp.blacklist.leases'
+uci set dhcp.Blacklist.resolvfile='/tmp/resolv.blacklist.conf.auto'
+uci set dhcp.Blacklist.localservice='1'
+uci set dhcp.Blacklist.cachesize='1500'
+uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
+uci set dhcp.Blacklist.boguspriv='1'
+uci set dhcp.Blacklist.logqueries='0'
+uci set dhcp.Blacklist.logfacility='/var/log/dnsmasq.blacklist.log'
+uci add_list dhcp.Blacklist.notinterface='br-VOICE'
+uci add_list dhcp.Blacklist.notinterface='br-GUEST'
+uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN'
+uci set dhcp.Blacklist.interface='br-INET'
+uci add_list dhcp.Blacklist.interface='br-HCONTROL'
+uci add_list dhcp.Blacklist.interface='br-CONTROL'
+uci add_list dhcp.Blacklist.interface='br-SERVER'
+uci set dhcp.Blacklist.domain=$SERVER_domain
 
+uci set dhcp.Whitelist=dnsmasq
+uci set dhcp.Whitelist.domainneeded='1'
+uci set dhcp.Whitelist.localise_queries='1'
+uci set dhcp.Whitelist.rebind_protection='1'
+uci set dhcp.Whitelist.rebind_localhost='1'
+uci set dhcp.Whitelist.filterwin2k='1'
+uci set dhcp.Whitelist.local='/'$ENTERTAIN_domain'/'
+uci set dhcp.Whitelist.expandhosts='1'
+uci set dhcp.Whitelist.authoritative='1'
+uci set dhcp.Whitelist.readethers='1'
+uci set dhcp.Whitelist.leasefile='/tmp/dhcp.whitelist.leases'
+uci set dhcp.Whitelist.resolvfile='/tmp/resolv.whitelist.conf.auto'
+uci set dhcp.Whitelist.localservice='1'
+uci set dhcp.Whitelist.cachesize='1500'
+uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
+uci set dhcp.Whitelist.boguspriv='1'
+uci set dhcp.Whitelist.logqueries='0'
+uci set dhcp.Whitelist.logfacility='/var/log/dnsmasq.whitelist.log'
+uci set dhcp.Whitelist.interface='br-VOICE' 
+uci add_list dhcp.Whitelist.interface='br-GUEST'
+uci add_list dhcp.Whitelist.interface='br-ENTERTAIN'
+uci set dhcp.Whitelist.notinterface='br-INET'
+uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-SERVER'
+uci set dhcp.Whitelist.domain=$ENTERTAIN_domain
 
-uci -q delete dhcp
-uci delete dhcp.@dnsmasq[0]
-uci delete dhcp.@dnsmasq[1]
-uci delete dhcp.@dnsmasq[2]
-uci delete dhcp.@dnsmasq[3]
-uci delete dhcp.@dnsmasq[4]
-uci delete dhcp.@dnsmasq[5]
-uci delete dhcp.lan
-uci commit dhcp
+uci set dhcp.lan=dhcp
+uci set dhcp.lan.interface='lan'
+uci set dhcp.lan.start='1'
+uci set dhcp.lan.limit='250'
+uci set dhcp.lan.leasetime='24h'
+uci set dhcp.lan.dhcpv6='server'
+uci set dhcp.lan.ra='server'
 
-uci set dhcp.BlacklistSERVER=dnsmasq
-uci set dhcp.BlacklistSERVER.port=$DNS_port
-#uci set dhcp.BlacklistSERVER.query_port=$DNS_UNBOUND_port
-uci set dhcp.BlacklistSERVER.domainneeded='1'
-uci set dhcp.BlacklistSERVER.localise_queries='1'
-uci set dhcp.BlacklistSERVER.rebind_protection='1'
-uci set dhcp.BlacklistSERVER.rebind_localhost='1'
-uci set dhcp.BlacklistSERVER.filterwin2k='1'
-uci set dhcp.BlacklistSERVER.local='/server.stawimedia.local/'
-uci set dhcp.BlacklistSERVER.expandhosts='1'
-uci set dhcp.BlacklistSERVER.authoritative='1'
-uci set dhcp.BlacklistSERVER.readethers='1'
-uci set dhcp.BlacklistSERVER.leasefile='/tmp/dhcp.blacklistserver.leases'
-uci set dhcp.BlacklistSERVER.resolvfile='/tmp/resolv.blacklistserver.conf.auto'
-uci set dhcp.BlacklistSERVER.localservice='1'
-uci set dhcp.BlacklistSERVER.cachesize='150'
-uci set dhcp.BlacklistSERVER.cachelocal='0'
-uci set dhcp.BlacklistSERVER.noresolv='1'
-uci set dhcp.BlacklistSERVER.confdir='/etc/dnsmasq.d/Blacklist'
-uci set dhcp.BlacklistSERVER.logqueries='0'
-uci set dhcp.BlacklistSERVER.logfacility='/var/log/dnsmasq.blacklistserver.log'
-uci add_list dhcp.BlacklistSERVER.notinterface='VOICE'
-uci add_list dhcp.BlacklistSERVER.notinterface='GUEST' 
-uci add_list dhcp.BlacklistSERVER.notinterface='ENTERTAIN'
-#uci set dhcp.BlacklistSERVER.dnssec_no_timecheck='0'
-uci set dhcp.BlacklistSERVER.dnssec='1'
-uci set dhcp.BlacklistSERVER.dnsseccheckunsigned='1'
-#uci set dhcp.BlacklistSERVER.proxydnssec='1'
-#uci set dhcp.BlacklistSERVER.dnssec_timestamp='/etc/version'
-uci set dhcp.BlacklistSERVER.conf_file='/usr/share/dnsmasq/trust-anchors.conf'
-uci add_list dhcp.BlacklistSERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
-uci set dhcp.BlacklistSERVER.boguspriv='1'
-uci add_list dhcp.BlacklistSERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
-uci add_list dhcp.BlacklistSERVER.dhcp_option='3,'$SERVER_ip
-uci add_list dhcp.BlacklistSERVER.dhcp_option='6,'$SERVER_ip
-uci add_list dhcp.BlacklistSERVER.dhcp_option='42,'$INET_GW
-uci add_list dhcp.BlacklistSERVER.dhcp_option='15,server.stawimedia.local'
-
+uci set dhcp.wan=dhcp
+uci set dhcp.wan.interface='wan'
+uci set dhcp.wan.ignore='1'
 
 uci set dhcp.SERVER=dhcp
 uci set dhcp.SERVER.start='1'
@@ -2947,149 +3076,13 @@ uci set dhcp.SERVER.limit='250'
 uci set dhcp.SERVER.interface='SERVER'
 uci set dhcp.SERVER.leasetime='24h'
 uci set dhcp.SERVER.dhcpv6='server'
-uci set dhcp.SERVER.dhcpv4='server'
-uci set dhcp.SERVER.ra='server'
-uci set dhcp.SERVER.ra_management='1'
-uci set dhcp.SERVER.instance='BlacklistSERVER'
-
-uci set dhcp.BlacklistINET=dnsmasq
-uci set dhcp.BlacklistINET.port=$DNS_port
-#uci set dhcp.BlacklistINET.query_port=$DNS_UNBOUND_port
-uci set dhcp.BlacklistINET.domainneeded='1'
-uci set dhcp.BlacklistINET.localise_queries='1'
-uci set dhcp.BlacklistINET.rebind_protection='1'
-uci set dhcp.BlacklistINET.rebind_localhost='1'
-uci set dhcp.BlacklistINET.filterwin2k='1'
-uci set dhcp.BlacklistINET.local='/inet.stawimedia.local/'
-uci set dhcp.BlacklistINET.expandhosts='1'
-uci set dhcp.BlacklistINET.authoritative='1'
-uci set dhcp.BlacklistINET.readethers='1'
-uci set dhcp.BlacklistINET.leasefile='/tmp/dhcp.blacklistinet.leases'
-uci set dhcp.BlacklistINET.resolvfile='/tmp/resolv.blacklistinet.conf.auto'
-uci set dhcp.BlacklistINET.localservice='1'
-uci set dhcp.BlacklistINET.cachesize='150'
-uci set dhcp.BlacklistINET.cachelocal='0'
-uci set dhcp.BlacklistINET.noresolv='1'
-uci set dhcp.BlacklistINET.confdir='/etc/dnsmasq.d/Blacklist'
-uci set dhcp.BlacklistINET.logqueries='0'
-uci set dhcp.BlacklistINET.logfacility='/var/log/dnsmasq.blacklistinet.log'
-uci add_list dhcp.BlacklistINET.notinterface='VOICE'
-uci add_list dhcp.BlacklistINET.notinterface='GUEST' 
-uci add_list dhcp.BlacklistINET.notinterface='ENTERTAIN'
-#uci set dhcp.BlacklistINET.dnssec_no_timecheck='0'
-uci set dhcp.BlacklistINET.dnssec='1'
-uci set dhcp.BlacklistINET.dnsseccheckunsigned='1'
-#uci set dhcp.BlacklistINET.proxydnssec='1'
-#uci set dhcp.BlacklistINET.dnssec_timestamp='/etc/version'
-uci set dhcp.BlacklistINET.conf_file='/usr/share/dnsmasq/trust-anchors.conf'
-uci add_list dhcp.BlacklistINET.server='127.0.0.1#'$DNS_UNBOUND_port
-uci set dhcp.BlacklistINET.boguspriv='1'
-uci add_list dhcp.BlacklistINET.server=$INET_ip'#'$DNS_UNBOUND_port
-uci add_list dhcp.BlacklistINET.dhcp_option='3,'$INET_ip
-uci add_list dhcp.BlacklistINET.dhcp_option='6,'$INET_ip
-uci add_list dhcp.BlacklistINET.dhcp_option='42,'$INET_GW
-uci add_list dhcp.BlacklistINET.dhcp_option='15,inet.stawimedia.local'
-
-
-uci set dhcp.INET_CLIENTS=dhcp
-uci set dhcp.INET_CLIENTS.start='1'
-uci set dhcp.INET_CLIENTS.limit='250'
-uci set dhcp.INET_CLIENTS.interface='INET_CLIENTS'
-uci set dhcp.INET_CLIENTS.leasetime='24h'
-uci set dhcp.INET_CLIENTS.dhcpv6='server'
-uci set dhcp.INET_CLIENTS.dhcpv4='server'
-uci set dhcp.INET_CLIENTS.ra='server'
-uci set dhcp.INET_CLIENTS.ra_management='1'
-uci set dhcp.INET_CLIENTS.instance='BlacklistINET'
-
-uci set dhcp.BlacklistHCONTROL=dnsmasq
-uci set dhcp.BlacklistHCONTROL.port=$DNS_port
-#uci set dhcp.BlacklistHCONTROL.query_port=$DNS_UNBOUND_port
-uci set dhcp.BlacklistHCONTROL.domainneeded='1'
-uci set dhcp.BlacklistHCONTROL.localise_queries='1'
-uci set dhcp.BlacklistHCONTROL.rebind_protection='1'
-uci set dhcp.BlacklistHCONTROL.rebind_localhost='1'
-uci set dhcp.BlacklistHCONTROL.filterwin2k='1'
-uci set dhcp.BlacklistHCONTROL.local='/hcontrol.stawimedia.local/'
-uci set dhcp.BlacklistHCONTROL.expandhosts='1'
-uci set dhcp.BlacklistHCONTROL.authoritative='1'
-uci set dhcp.BlacklistHCONTROL.readethers='1'
-uci set dhcp.BlacklistHCONTROL.leasefile='/tmp/dhcp.blacklisthcontrol.leases'
-uci set dhcp.BlacklistHCONTROL.resolvfile='/tmp/resolv.blacklisthcontrol.conf.auto'
-uci set dhcp.BlacklistHCONTROL.localservice='1'
-uci set dhcp.BlacklistHCONTROL.cachesize='150'
-uci set dhcp.BlacklistHCONTROL.cachelocal='0'
-uci set dhcp.BlacklistHCONTROL.noresolv='1'
-uci set dhcp.BlacklistHCONTROL.confdir='/etc/dnsmasq.d/Blacklist'
-uci set dhcp.BlacklistHCONTROL.logqueries='0'
-uci set dhcp.BlacklistHCONTROL.logfacility='/var/log/dnsmasq.blacklisthcontrol.log'
-uci add_list dhcp.BlacklistHCONTROL.notinterface='VOICE'
-uci add_list dhcp.BlacklistHCONTROL.notinterface='GUEST' 
-uci add_list dhcp.BlacklistHCONTROL.notinterface='ENTERTAIN'
-#uci set dhcp.BlacklistHCONTROL.dnssec_no_timecheck='0'
-uci set dhcp.BlacklistHCONTROL.dnssec='1'
-uci set dhcp.BlacklistHCONTROL.dnsseccheckunsigned='1'
-#uci set dhcp.BlacklistHCONTROL.proxydnssec='1'
-#uci set dhcp.BlacklistHCONTROL.dnssec_timestamp='/etc/version'
-uci set dhcp.BlacklistHCONTROL.conf_file='/usr/share/dnsmasq/trust-anchors.conf'
-uci add_list dhcp.BlacklistHCONTROL.server='127.0.0.1#'$DNS_UNBOUND_port
-uci set dhcp.BlacklistHCONTROL.boguspriv='1'
-uci add_list dhcp.BlacklistHCONTROL.server=$HCONTROL_ip'#'$DNS_UNBOUND_port
-uci add_list dhcp.BlacklistHCONTROL.dhcp_option='3,'$HCONTROL_ip
-uci add_list dhcp.BlacklistHCONTROL.dhcp_option='6,'$HCONTROL_ip
-uci add_list dhcp.BlacklistHCONTROL.dhcp_option='42,'$INET_GW
-uci add_list dhcp.BlacklistHCONTROL.dhcp_option='15,hcontrol.stawimedia.local'
-
-
-uci set dhcp.HCONTROL=dhcp
-uci set dhcp.HCONTROL.start='1'
-uci set dhcp.HCONTROL.limit='250'
-uci set dhcp.HCONTROL.interface='HCONTROL'
-uci set dhcp.HCONTROL.leasetime='24h'
-uci set dhcp.HCONTROL.dhcpv6='server'
-uci set dhcp.HCONTROL.dhcpv4='server'
-uci set dhcp.HCONTROL.ra='server'
-uci set dhcp.HCONTROL.ra_management='1'
-uci set dhcp.HCONTROL.instance='BlacklistHCONTROL'
-
-
-uci set dhcp.BlacklistCONTROL=dnsmasq
-uci set dhcp.BlacklistCONTROL.port=$DNS_port
-#uci set dhcp.BlacklistCONTROL.query_port=$DNS_UNBOUND_port
-uci set dhcp.BlacklistCONTROL.domainneeded='1'
-uci set dhcp.BlacklistCONTROL.localise_queries='1'
-uci set dhcp.BlacklistCONTROL.rebind_protection='1'
-uci set dhcp.BlacklistCONTROL.rebind_localhost='1'
-uci set dhcp.BlacklistCONTROL.filterwin2k='1'
-uci set dhcp.BlacklistCONTROL.local='/control.stawimedia.local/'
-uci set dhcp.BlacklistCONTROL.expandhosts='1'
-uci set dhcp.BlacklistCONTROL.authoritative='1'
-uci set dhcp.BlacklistCONTROL.readethers='1'
-uci set dhcp.BlacklistCONTROL.leasefile='/tmp/dhcp.blacklistcontrol.leases'
-uci set dhcp.BlacklistCONTROL.resolvfile='/tmp/resolv.blacklistcontrol.conf.auto'
-uci set dhcp.BlacklistCONTROL.localservice='1'
-uci set dhcp.BlacklistCONTROL.cachesize='150'
-uci set dhcp.BlacklistCONTROL.cachelocal='0'
-uci set dhcp.BlacklistCONTROL.noresolv='1'
-uci set dhcp.BlacklistCONTROL.confdir='/etc/dnsmasq.d/Blacklist'
-uci set dhcp.BlacklistCONTROL.logqueries='0'
-uci set dhcp.BlacklistCONTROL.logfacility='/var/log/dnsmasq.blacklistcontrol.log'
-uci add_list dhcp.BlacklistCONTROL.notinterface='VOICE'
-uci add_list dhcp.BlacklistCONTROL.notinterface='GUEST' 
-uci add_list dhcp.BlacklistCONTROL.notinterface='ENTERTAIN'
-#uci set dhcp.BlacklistCONTROL.dnssec_no_timecheck='0'
-uci set dhcp.BlacklistCONTROL.dnssec='1'
-uci set dhcp.BlacklistCONTROL.dnsseccheckunsigned='1'
-#uci set dhcp.BlacklistCONTROL.proxydnssec='1'
-#uci set dhcp.BlacklistCONTROL.dnssec_timestamp='/etc/version'
-uci set dhcp.BlacklistCONTROL.conf_file='/usr/share/dnsmasq/trust-anchors.conf'
-uci add_list dhcp.BlacklistCONTROL.server='127.0.0.1#'$DNS_UNBOUND_port
-uci set dhcp.BlacklistCONTROL.boguspriv='1'
-uci add_list dhcp.BlacklistCONTROL.server=$CONTROL_ip'#'$DNS_UNBOUND_port
-uci add_list dhcp.BlacklistCONTROL.dhcp_option='3,'$CONTROL_ip
-uci add_list dhcp.BlacklistCONTROL.dhcp_option='6,'$CONTROL_ip
-uci add_list dhcp.BlacklistCONTROL.dhcp_option='42,'$INET_GW
-uci add_list dhcp.BlacklistCONTROL.dhcp_option='15,control.stawimedia.local'
+uci set dhcp.SERVER.domain=$SERVER_domain
+uci set dhcp.SERVER.local='/'$SERVER_domain'/'
+uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
+uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
+uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
+uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.CONTROL=dhcp
 uci set dhcp.CONTROL.start='1'
@@ -3097,101 +3090,41 @@ uci set dhcp.CONTROL.limit='250'
 uci set dhcp.CONTROL.interface='CONTROL'
 uci set dhcp.CONTROL.leasetime='24h'
 uci set dhcp.CONTROL.dhcpv6='server'
-uci set dhcp.CONTROL.dhcpv4='server'
-uci set dhcp.CONTROL.ra='server'
-uci set dhcp.CONTROL.ra_management='1'
-uci set dhcp.CONTROL.instance='BlacklistCONTROL'
+uci set dhcp.CONTROL.domain=$CONTROL_domain
+uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
+uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
+uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip
+uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
+uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_UNBOUND_port
 
+uci set dhcp.HCONTROL=dhcp
+uci set dhcp.HCONTROL.start='1'
+uci set dhcp.HCONTROL.limit='250'
+uci set dhcp.HCONTROL.interface='HCONTROL'
+uci set dhcp.HCONTROL.leasetime='24h'
+uci set dhcp.HCONTROL.dhcpv6='server'
+uci set dhcp.HCONTROL.domain=$HCONTROL_domain
+uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
+uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
+uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
+uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
+uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_UNBOUND_port
 
-uci set dhcp.WhitelistVOICE=dnsmasq
-uci set dhcp.WhitelistVOICE.port=$DNS_port
-#uci set dhcp.WhitelistVOICE.query_port=$DNS_UNBOUND_port
-uci set dhcp.WhitelistVOICE.domainneeded='1'
-uci set dhcp.WhitelistVOICE.localise_queries='1'
-uci set dhcp.WhitelistVOICE.rebind_protection='1'
-uci set dhcp.WhitelistVOICE.rebind_localhost='1'
-uci set dhcp.WhitelistVOICE.filterwin2k='1'
-uci set dhcp.WhitelistVOICE.local='/voice.local/'
-uci set dhcp.WhitelistVOICE.expandhosts='1'
-uci set dhcp.WhitelistVOICE.authoritative='1'
-uci set dhcp.WhitelistVOICE.readethers='1'
-uci set dhcp.WhitelistVOICE.leasefile='/tmp/dhcp.whitelistvoice.leases'
-uci set dhcp.WhitelistVOICE.resolvfile='/tmp/resolv.whitelistvoice.conf.auto'
-uci set dhcp.WhitelistVOICE.localservice='1'
-uci set dhcp.WhitelistVOICE.cachesize='150'
-uci set dhcp.WhitelistVOICE.cachelocal='0'
-uci set dhcp.WhitelistVOICE.noresolv='1'
-uci set dhcp.WhitelistVOICE.confdir='/etc/dnsmasq.d/Whitelist'
-uci set dhcp.WhitelistVOICE.logqueries='0'
-uci set dhcp.WhitelistVOICE.logfacility='/var/log/dnsmasq.whitelistvoice.log'
-uci add_list dhcp.WhitelistVOICE.notinterface='INET_CLIENTS'
-uci add_list dhcp.WhitelistVOICE.notinterface='HCONTROL'
-uci add_list dhcp.WhitelistVOICE.notinterface='CONTROL' 
-uci add_list dhcp.WhitelistVOICE.notinterface='SERVER'
-#uci set dhcp.WhitelistVOICE.dnssec_no_timecheck='0'
-uci set dhcp.WhitelistVOICE.dnssec='1'
-uci set dhcp.WhitelistVOICE.dnsseccheckunsigned='1'
-#uci set dhcp.WhitelistVOICE.proxydnssec='1'
-#uci set dhcp.WhitelistVOICE.dnssec_timestamp='/etc/version'
-uci set dhcp.WhitelistVOICE.conf_file='/usr/share/dnsmasq/trust-anchors.conf'
-uci add_list dhcp.WhitelistVOICE.server='127.0.0.1#'$DNS_UNBOUND_port
-uci set dhcp.WhitelistVOICE.boguspriv='1'
-uci add_list dhcp.WhitelistVOICE.server=$VOICE_ip'#'$DNS_UNBOUND_port
-uci add_list dhcp.WhitelistVOICE.dhcp_option='3,'$VOICE_ip
-uci add_list dhcp.WhitelistVOICE.dhcp_option='6,'$VOICE_ip
-uci add_list dhcp.WhitelistVOICE.dhcp_option='42,'$INET_GW
-uci add_list dhcp.WhitelistVOICE.dhcp_option='15,voice.local'
-
-uci set dhcp.VOICE=dhcp
-uci set dhcp.VOICE.start='1'
-uci set dhcp.VOICE.limit='250'
-uci set dhcp.VOICE.interface='VOICE'
-uci set dhcp.VOICE.leasetime='24h'
-uci set dhcp.VOICE.dhcpv6='server'
-uci set dhcp.VOICE.dhcpv4='server'
-uci set dhcp.VOICE.ra='server'
-uci set dhcp.VOICE.ra_management='1'
-uci set dhcp.VOICE.instance='WhitelistVOICE'
-
-
-uci set dhcp.WhitelistENTERTAIN=dnsmasq
-uci set dhcp.WhitelistENTERTAIN.port=$DNS_port
-#uci set dhcp.WhitelistENTERTAIN.query_port=$DNS_UNBOUND_port
-uci set dhcp.WhitelistENTERTAIN.domainneeded='1'
-uci set dhcp.WhitelistENTERTAIN.localise_queries='1'
-uci set dhcp.WhitelistENTERTAIN.rebind_protection='1'
-uci set dhcp.WhitelistENTERTAIN.rebind_localhost='1'
-uci set dhcp.WhitelistENTERTAIN.filterwin2k='1'
-uci set dhcp.WhitelistENTERTAIN.local='/entertain.local/'
-uci set dhcp.WhitelistENTERTAIN.expandhosts='1'
-uci set dhcp.WhitelistENTERTAIN.authoritative='1'
-uci set dhcp.WhitelistENTERTAIN.readethers='1'
-uci set dhcp.WhitelistENTERTAIN.leasefile='/tmp/dhcp.whitelistentertain.leases'
-uci set dhcp.WhitelistENTERTAIN.resolvfile='/tmp/resolv.whitelistentertain.conf.auto'
-uci set dhcp.WhitelistENTERTAIN.localservice='1'
-uci set dhcp.WhitelistENTERTAIN.cachesize='150'
-uci set dhcp.WhitelistENTERTAIN.cachelocal='0'
-uci set dhcp.WhitelistENTERTAIN.noresolv='1'
-uci set dhcp.WhitelistENTERTAIN.confdir='/etc/dnsmasq.d/Whitelist'
-uci set dhcp.WhitelistENTERTAIN.logqueries='0'
-uci set dhcp.WhitelistENTERTAIN.logfacility='/var/log/dnsmasq.whitelistentertain.log'
-uci add_list dhcp.WhitelistENTERTAIN.notinterface='INET_CLIENTS'
-uci add_list dhcp.WhitelistENTERTAIN.notinterface='HCONTROL'
-uci add_list dhcp.WhitelistENTERTAIN.notinterface='CONTROL' 
-uci add_list dhcp.WhitelistENTERTAIN.notinterface='SERVER'
-#uci set dhcp.WhitelistENTERTAIN.dnssec_no_timecheck='0'
-uci set dhcp.WhitelistENTERTAIN.dnssec='1'
-uci set dhcp.WhitelistENTERTAIN.dnsseccheckunsigned='1'
-#uci set dhcp.WhitelistENTERTAIN.proxydnssec='1'
-#uci set dhcp.WhitelistENTERTAIN.dnssec_timestamp='/etc/version'
-uci set dhcp.WhitelistENTERTAIN.conf_file='/usr/share/dnsmasq/trust-anchors.conf'
-uci add_list dhcp.WhitelistENTERTAIN.server='127.0.0.1#'$DNS_UNBOUND_port
-uci set dhcp.WhitelistENTERTAIN.boguspriv='1'
-uci add_list dhcp.WhitelistENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_UNBOUND_port
-uci add_list dhcp.WhitelistENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
-uci add_list dhcp.WhitelistENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip
-uci add_list dhcp.WhitelistENTERTAIN.dhcp_option='42,'$INET_GW
-uci add_list dhcp.WhitelistENTERTAIN.dhcp_option='15,entertain.local'
+uci set dhcp.INET=dhcp
+uci set dhcp.INET.start='1'
+uci set dhcp.INET.limit='250'
+uci set dhcp.INET.interface='INET'
+uci set dhcp.INET.leasetime='24h'
+uci set dhcp.INET.dhcpv6='server'
+uci set dhcp.INET.domain=$INET_domain
+uci set dhcp.INET.local='/'$INET_domain'/'
+uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
+uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
+uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
+uci set dhcp.INET.server=$INET_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.ENTERTAIN=dhcp
 uci set dhcp.ENTERTAIN.start='1'
@@ -3199,50 +3132,27 @@ uci set dhcp.ENTERTAIN.limit='250'
 uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
 uci set dhcp.ENTERTAIN.leasetime='24h'
 uci set dhcp.ENTERTAIN.dhcpv6='server'
-uci set dhcp.ENTERTAIN.dhcpv4='server'
-uci set dhcp.ENTERTAIN.ra='server'
-uci set dhcp.ENTERTAIN.ra_management='1'
-uci set dhcp.ENTERTAIN.instance='WhitelistENTERTAIN'
+uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
+uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
+uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
+uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_UNBOUND_port
 
-
-uci set dhcp.WhitelistGUEST=dnsmasq
-uci set dhcp.WhitelistGUEST.port=$DNS_port
-#uci set dhcp.WhitelistGUEST.query_port=$DNS_UNBOUND_port
-uci set dhcp.WhitelistGUEST.domainneeded='1'
-uci set dhcp.WhitelistGUEST.localise_queries='1'
-uci set dhcp.WhitelistGUEST.rebind_protection='1'
-uci set dhcp.WhitelistGUEST.rebind_localhost='1'
-uci set dhcp.WhitelistGUEST.filterwin2k='1'
-uci set dhcp.WhitelistGUEST.local='/guest.local/'
-uci set dhcp.WhitelistGUEST.expandhosts='1'
-uci set dhcp.WhitelistGUEST.authoritative='1'
-uci set dhcp.WhitelistGUEST.readethers='1'
-uci set dhcp.WhitelistGUEST.leasefile='/tmp/dhcp.whitelistguest.leases'
-uci set dhcp.WhitelistGUEST.resolvfile='/tmp/resolv.whitelistguest.conf.auto'
-uci set dhcp.WhitelistGUEST.localservice='1'
-uci set dhcp.WhitelistGUEST.cachesize='150'
-uci set dhcp.WhitelistGUEST.cachelocal='0'
-uci set dhcp.WhitelistGUEST.noresolv='1'
-uci set dhcp.WhitelistGUEST.confdir='/etc/dnsmasq.d/Whitelist'
-uci set dhcp.WhitelistGUEST.logqueries='0'
-uci set dhcp.WhitelistGUEST.logfacility='/var/log/dnsmasq.whitelistguest.log'
-uci add_list dhcp.WhitelistGUEST.notinterface='INET_CLIENTS'
-uci add_list dhcp.WhitelistGUEST.notinterface='HCONTROL'
-uci add_list dhcp.WhitelistGUEST.notinterface='CONTROL' 
-uci add_list dhcp.WhitelistGUEST.notinterface='SERVER'
-#uci set dhcp.WhitelistGUEST.dnssec_no_timecheck='0'
-uci set dhcp.WhitelistGUEST.dnssec='1'
-uci set dhcp.WhitelistGUEST.dnsseccheckunsigned='1'
-#uci set dhcp.WhitelistGUEST.proxydnssec='1'
-#uci set dhcp.WhitelistGUEST.dnssec_timestamp='/etc/version'
-uci set dhcp.WhitelistGUEST.conf_file='/usr/share/dnsmasq/trust-anchors.conf'
-uci add_list dhcp.WhitelistGuest.server='127.0.0.1#'$DNS_UNBOUND_port
-uci set dhcp.WhitelistGUEST.boguspriv='1'
-uci add_list dhcp.WhitelistGUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
-uci add_list dhcp.WhitelistGUEST.dhcp_option='3,'GUEST_ip
-uci add_list dhcp.WhitelistGUEST.dhcp_option='6,'GUEST_ip
-uci add_list dhcp.WhitelistGUEST.dhcp_option='42,'$INET_GW
-uci add_list dhcp.WhitelistGUEST.dhcp_option='15,guest.local'
+uci set dhcp.VOICE=dhcp
+uci set dhcp.VOICE.start='1'
+uci set dhcp.VOICE.limit='250'
+uci set dhcp.VOICE.interface='VOICE'
+uci set dhcp.VOICE.leasetime='24h'
+uci set dhcp.VOICE.dhcpv6='server'
+uci set dhcp.VOICE.domain=$VOICE_domain
+uci set dhcp.VOICE.local='/'$VOICE_domain'/'
+uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
+uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
+uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
+uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.GUEST=dhcp
 uci set dhcp.GUEST.start='100'
@@ -3250,107 +3160,100 @@ uci set dhcp.GUEST.limit='150'
 uci set dhcp.GUEST.interface='GUEST'
 uci set dhcp.GUEST.leasetime='24h'
 uci set dhcp.GUEST.dhcpv6='server'
-uci set dhcp.GUEST.dhcpv4='server'
-uci set dhcp.GUEST.ra='server'
-uci set dhcp.GUEST.ra_management='1'
-uci set dhcp.GUEST.confdir='/etc/dnsmasq.d/Whitelist'
+uci set dhcp.GUEST.domain=$GUEST_domain
+uci set dhcp.GUEST.local='/'$GUEST_domain'/'
+uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
+uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
+uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
+uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
+uci commit && reload_config
 
-uci set dhcp.AllowAll=dnsmasq
-uci set dhcp.AllowAll.port=$DNS_port
-#uci set dhcp.AllowAll.query_port=$DNS_UNBOUND_port
-uci set dhcp.AllowAll.domainneeded='1'
-uci set dhcp.AllowAll.localise_queries='1'
-uci set dhcp.AllowAll.rebind_protection='1'
-uci set dhcp.AllowAll.rebind_localhost='1'
-uci set dhcp.AllowAll.filterwin2k='1'
-uci set dhcp.AllowAll.expandhosts='1'
-uci set dhcp.AllowAll.authoritative='1'
-uci set dhcp.AllowAll.readethers='1'
-uci set dhcp.AllowAll.leasefile='/tmp/dhcp.allowall.leases'
-uci set dhcp.AllowAll.resolvfile='/tmp/resolv.allowall.conf.auto'
-uci set dhcp.AllowAll.localservice='1'
-uci set dhcp.AllowAll.cachesize='150'
-uci set dhcp.AllowAll.cachelocal='0'
-uci set dhcp.AllowAll.noresolv='1'
-uci set dhcp.AllowAll.confdir='/etc/dnsmasq.d/AllowAll/'
-uci set dhcp.AllowAll.logqueries='0'
-uci set dhcp.AllowAll.logfacility='/var/log/dnsmasq.allowall.log'
-uci set dhcp.AllowAll.boguspriv='1'
-uci set dhcp.AllowAll.dnssec='1'
-uci set dhcp.AllowAll.dnsseccheckunsigned='1'
-#uci set dhcp.AllowAll.dnssec_no_timecheck='0'
-#uci set dhcp.AllowAll.proxydnssec='1'
-#uci set dhcp.AllowAll.dnssec_timestamp='/etc/version'
-uci set dhcp.AllowAll.conf_file='/usr/share/dnsmasq/trust-anchors.conf'
-uci add_list dhcp.AllowAll.server='127.0.0.1#'$DNS_UNBOUND_port
 
-uci set dhcp.BlockAll=dnsmasq
-uci set dhcp.BlockAll.port=$DNS_port
-#uci set dhcp.BlockAll.query_port=$DNS_UNBOUND_port
-uci set dhcp.BlockAll.domainneeded='1'
-uci set dhcp.BlockAll.localise_queries='1'
-uci set dhcp.BlockAll.rebind_protection='1'
-uci set dhcp.BlockAll.rebind_localhost='1'
-uci set dhcp.BlockAll.filterwin2k='1'
-uci set dhcp.BlockAll.expandhosts='1'
-uci set dhcp.BlockAll.authoritative='1'
-uci set dhcp.BlockAll.readethers='1'
-uci set dhcp.BlockAll.leasefile='/tmp/dhcp.blockall.leases'
-uci set dhcp.BlockAll.resolvfile='/tmp/resolv.blockall.conf.auto'
-uci set dhcp.BlockAll.localservice='1'
-uci set dhcp.BlockAll.cachesize='150'
-uci set dhcp.BlockAll.cachelocal='0'
-uci set dhcp.BlockAll.noresolv='1'
-uci set dhcp.BlockAll.confdir='/etc/dnsmasq.d/BlockAll/'
-uci set dhcp.BlockAll.logqueries='0'
-uci set dhcp.BlockAll.logfacility='/var/log/dnsmasq.blockall.log'
-uci set dhcp.BlockAll.boguspriv='1'
-uci set dhcp.BlockAll.dnssec='1'
-uci set dhcp.BlockAll.dnsseccheckunsigned='1'
-#uci set dhcp.BlockAll.dnssec_no_timecheck='0'
-#uci set dhcp.BlockAll.proxydnssec='1'
-#uci set dhcp.BlockAll.dnssec_timestamp='/etc/version'
-uci set dhcp.BlockAll.conf_file='/usr/share/dnsmasq/trust-anchors.conf'
-uci add_list dhcp.BlockAll.server='127.0.0.1#'$DNS_UNBOUND_port
+mkdir /etc/dnsmasq.d  >/dev/null
+mkdir /etc/dnsmasq.d/Blacklist >/dev/null
+mkdir /etc/dnsmasq.d/Whitelist >/dev/null
+mkdir /etc/dnsmasq.d/BlockAll >/dev/null
+mkdir /etc/dnsmasq.d/AllowAll >/dev/null
 
-uci set dhcp.wan=dhcp
-uci set dhcp.wan.interface='wan'
-uci set dhcp.wan.ignore='1'
+uci commit dhcp && reload_config >/dev/null
 
-mkdir /etc/dnsmasq.d 
-mkdir /etc/dnsmasq.d/Blacklist
-mkdir /etc/dnsmasq.d/Whitelist
-mkdir /etc/dnsmasq.d/BlockAll
-mkdir /etc/dnsmasq.d/AllowAll
-
-uci commit dhcp && reload_config
-
-#/etc/init.d/dnsmasq restart
+#/etc/init.d/dnsmasq restart >/dev/null
 
 uci set network.wan.peerdns='0'
 uci set network.wan.dns='127.0.0.1'
 uci set network.wan6.peerdns='0'
 uci set network.wan6.dns='0::1'
-uci commit && reload_config
+uci commit && reload_config >/dev/null
 
 #uci set dhcp.@dnsmasq[-1].dnssec=1
 #uci set dhcp.@dnsmasq[-1].dnsseccheckunsigned=1
-#uci commit && reload_config
+#uci commit && reload_config >/dev/null
 
 uci set dhcp.wan=dhcp
 uci set dhcp.wan.interface='wan'
 uci set dhcp.wan.ignore='1'
 
-mkdir /etc/dnsmasq.d 
-mkdir /etc/dnsmasq.d/Blacklist
-mkdir /etc/dnsmasq.d/Whitelist
-mkdir /etc/dnsmasq.d/BlockAll
-mkdir /etc/dnsmasq.d/AllowAll
+mkdir /etc/dnsmasq.d  >/dev/null
+mkdir /etc/dnsmasq.d/Blacklist >/dev/null
+mkdir /etc/dnsmasq.d/Whitelist >/dev/null
+mkdir /etc/dnsmasq.d/BlockAll >/dev/null
+mkdir /etc/dnsmasq.d/AllowAll >/dev/null
 
-uci commit dhcp && reload_config
+uci commit dhcp && reload_config >/dev/null
 
-/etc/init.d/dnsmasq restart
-cp /usr/share/dnsmasq/trust-anchors.conf /etc/
+/etc/init.d/dnsmasq restart >/dev/null
+cp /usr/share/dnsmasq/trust-anchors.conf /etc/ >/dev/null
+
+
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo 'Your Config is:'
+echo
+echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$INET_net
+echo
+echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$HCONTROL_net
+echo
+echo 'Voice-Assistent SSID: '$VOICE_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$VOICE_net
+echo
+echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$ENTERTAIN_net
+echo
+echo 'Server-WiFi SSID:     '$SERVER_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$SERVER_net
+echo
+echo 'IR/BT-Control SSID:   '$CONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$CONTROL_net
+echo
+echo 'Guests SSID is:       '$GUEST_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$GUEST_net
+echo
+echo
+echo
+echo 'IP-Address:           '$ACCESS_SERVER
+echo 'Gateway:              '$INET_GW
+echo 'Domain:               '$LOCAL_DOMAIN
+echo
+echo 'GUI-Access:           https://'$INET_ip':8443'
+echo 'User:                 '$USERNAME
+echo 'Password:             password'
+echo
+echo 'Please wait until Reboot ....'
 
 # Configure Black and Whitelsit
 cat << EOF > /etc/dnsmasq.d/Blacklist/z_all_allow
@@ -8218,18 +8121,71 @@ server=/commerzbank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
 EOF
 
 
-cp /etc/dnsmasq.d/Blacklist/ads /etc/dnsmasq.d/Whitelist/ads
-cp /etc/dnsmasq.d/Blacklist/agency /etc/dnsmasq.d/Whitelist/agency
-cp /etc/dnsmasq.d/Blacklist/banking /etc/dnsmasq.d/Whitelist/banking
-cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys
-cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn
-cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white
+cp /etc/dnsmasq.d/Blacklist/ads /etc/dnsmasq.d/Whitelist/ads >/dev/null
+cp /etc/dnsmasq.d/Blacklist/agency /etc/dnsmasq.d/Whitelist/agency >/dev/null
+cp /etc/dnsmasq.d/Blacklist/banking /etc/dnsmasq.d/Whitelist/banking >/dev/null
+cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys >/dev/null
+cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn >/dev/null
+cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white >/dev/null
 
-/etc/init.d/dnsmasq restart
+/etc/init.d/dnsmasq restart >/dev/null
 
+echo
+
+echo
+
+
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '########################################################'
 echo
 echo ' AD- and Porn-Filter installed'
+echo 'Your Config is:'
 echo
+echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$INET_net
+echo
+echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$HCONTROL_net
+echo
+echo 'Voice-Assistent SSID: '$VOICE_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$VOICE_net
+echo
+echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$ENTERTAIN_net
+echo
+echo 'Server-WiFi SSID:     '$SERVER_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$SERVER_net
+echo
+echo 'IR/BT-Control SSID:   '$CONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$CONTROL_net
+echo
+echo 'Guests SSID is:       '$GUEST_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$GUEST_net
+echo
+echo
+echo
+echo 'IP-Address:           '$ACCESS_SERVER
+echo 'Gateway:              '$INET_GW
+echo 'Domain:               '$LOCAL_DOMAIN
+echo
+echo 'GUI-Access:           https://'$INET_ip':8443'
+echo 'User:                 '$USERNAME
+echo 'Password:             password'
+echo
+echo 'Please wait until Reboot ....'
+
+
 uci set firewall.@zone[0]=zone
 uci set firewall.@zone[0].name="REPEATER"
 uci set firewall.@zone[0].input="ACCEPT"
@@ -8237,14 +8193,14 @@ uci set firewall.@zone[0].network="REPEATER"
 uci set firewall.@zone[0].output="ACCEPT"
 uci set firewall.@zone[0].forward="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall
-uci add firewall forwarding
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="REPEATER"
-uci commit firewall && reload_config
+uci commit firewall && reload_config >/dev/null
 
-uci add firewall zone
+uci add firewall zone >/dev/null
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="CONTROL"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -8252,14 +8208,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="CONTROL"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall
-uci add firewall forwarding
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="CONTROL"
-uci commit firewall && reload_config
+uci commit firewall && reload_config >/dev/null
 
-uci add firewall zone
+uci add firewall zone >/dev/null
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="HCONTROL"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -8267,14 +8223,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="HCONTROL"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall
-uci add firewall forwarding
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="HCONTROL"
-uci commit firewall && reload_config
+uci commit firewall && reload_config >/dev/null
 
-uci add firewall zone
+uci add firewall zone >/dev/null
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="SERVER"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -8282,29 +8238,29 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="SERVER"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall
-uci add firewall forwarding
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="SERVER"
-uci commit firewall && reload_config
+uci commit firewall && reload_config >/dev/null
 
-uci add firewall zone
+uci add firewall zone >/dev/null
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="INET"
 uci set firewall.@zone[-1].input="ACCEPT"
 uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="INET_CLIENTS"
+uci set firewall.@zone[-1].network="INET"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall
-uci add firewall forwarding
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="INET"
-uci commit firewall && reload_config
+uci commit firewall && reload_config >/dev/null
 
-uci add firewall zone
+uci add firewall zone >/dev/null
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="GUEST"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -8312,14 +8268,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="GUEST"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall
-uci add firewall forwarding
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="GUEST"
-uci commit firewall && reload_config
+uci commit firewall && reload_config >/dev/null
 
-uci add firewall zone
+uci add firewall zone >/dev/null
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="VOICE"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -8327,14 +8283,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="VOICE"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall
-uci add firewall forwarding
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="VOICE"
-uci commit firewall && reload_config
+uci commit firewall && reload_config >/dev/null
 
-uci add firewall zone
+uci add firewall zone >/dev/null
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="ENTERTAIN"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -8342,15 +8298,15 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="ENTERTAIN"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall
-uci add firewall forwarding
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="ENTERTAIN"
-uci commit firewall && reload_config
+uci commit firewall && reload_config >/dev/null
 
 # Intercept SSH, HTTP and HTTPS traffic
-uci -q delete firewall.ssh_int
+uci -q delete firewall.ssh_int >/dev/null
 uci set firewall.ssh_int="redirect"
 uci set firewall.ssh_int.name="Intercept_SSH"
 uci set firewall.ssh_int.src="INET"
@@ -8358,7 +8314,7 @@ uci set firewall.ssh_int.src_dport="$SSH_port"
 uci set firewall.ssh_int.proto="tcp"
 uci set firewall.ssh_int.target="DNAT"
 
-uci -q delete firewall.http_int
+uci -q delete firewall.http_int >/dev/null
 uci set firewall.http_int="redirect"
 uci set firewall.http_int.name="Intercept_HTTP"
 uci set firewall.http_int.src="INET"
@@ -8374,10 +8330,10 @@ uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
 uci set firewall.https_int.proto="tcp"
 uci set firewall.https_int.target="DNAT"
 
-uci commit firewall && reload_config
+uci commit firewall && reload_config >/dev/null
 
 # Intercept DNS and TCP traffic
-uci -q delete firewall.tcp_tor1_int
+uci -q delete firewall.tcp_tor1_int >/dev/null
 uci set firewall.tcp_tor1_int="redirect"
 uci set firewall.tcp_tor1_int.name="Intercept_tor"
 uci set firewall.tcp_tor1_int.src="INET"
@@ -8387,7 +8343,7 @@ uci set firewall.tcp_tor1_int.proto="tcp"
 uci set firewall.tcp_tor1_int.extra="--syn"
 uci set firewall.tcp_tor1_int.target="DNAT"
 
-uci -q delete firewall.tcp_tor2_int
+uci -q delete firewall.tcp_tor2_int >/dev/null
 uci set firewall.tcp_tor2_int="redirect"
 uci set firewall.tcp_tor2_int.name="Intercept_tor_https"
 uci set firewall.tcp_tor2_int.src="INET"
@@ -8396,15 +8352,22 @@ uci set firewall.tcp_tor2_int.src_dip="!192.168.0.0/16"
 uci set firewall.tcp_tor2_int.proto="tcp"
 uci set firewall.tcp_tor2_int.extra="--syn"
 uci set firewall.tcp_tor2_int.target="DNAT"
-uci commit && reload_config
+uci commit && reload_config >/dev/null
 
-uci set firewall.service=rule
-uci set firewall.service.target='ACCEPT'
-uci set firewall.service.dest_ip='192.168.0.0/16'
-uci set firewall.service.dest='*'
-uci set firewall.service.src='*'
-uci set firewall.service.name='Service_WLAN'
-uci commit && reload_config
+uci set firewall.@zone[0]=zone
+uci set firewall.@zone[0].name="REPEATER"
+uci set firewall.@zone[0].input="ACCEPT"
+uci set firewall.@zone[0].network="REPEATER"
+uci set firewall.@zone[0].output="ACCEPT"
+uci set firewall.@zone[0].forward="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="REPEATER"
+uci commit firewall && reload_config >/dev/null
+uci -q delete firewall.http_int >/dev/null
 
 #-----------------------------------------------------------------------------
 
@@ -8440,7 +8403,7 @@ uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR"
 uci set firewall.DNS_Cloudflare.enabled="0" 
 uci set firewall.DNS_Cloudflare.proto="tcp udp"
 uci set firewall.DNS_Cloudflare.target="ACCEPT"
-uci commit && reload_config
+uci commit && reload_config >/dev/null
 
 
 
@@ -9113,7 +9076,7 @@ uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR"
 uci set firewall.Block_DNS_Cloudflare.enabled="0" 
 uci set firewall.Block_DNS_Cloudflare.proto="tcp udp"
 uci set firewall.Block_DNS_Cloudflare.target="REJECT"
-uci commit && reload_config
+uci commit && reload_config >/dev/null
 
 
 
@@ -9138,6 +9101,7 @@ uci set firewall.Block_OfficeClient.proto='udp tcp'
 uci set firewall.Block_OfficeClient.target='REJECT'
 uci set firewall.Block_OfficeClient.dest_port="$OfficeClient_port"
 #1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
+uci set firewall.Block_OfficeClient.enabled='0'
 
 uci set firewall.Block_OfficeWebClient=rule
 uci set firewall.Block_OfficeWebClient.src='INET'
@@ -9146,6 +9110,7 @@ uci set firewall.Block_OfficeWebClient.dest='wan'
 uci set firewall.Block_OfficeWebClient.proto='udp tcp'
 uci set firewall.Block_OfficeWebClient.target='REJECT'
 uci set firewall.Block_OfficeWebClient.dest_port="$OfficeWebClient_port"
+uci set firewall.Block_OfficeWebClient.enabled='0'
 
 #Alexa (Port)
 #"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
@@ -9157,6 +9122,7 @@ uci set firewall.Block_Amazon_Alexa.dest='wan'
 uci set firewall.Block_Amazon_Alexa.target='REJECT'
 uci set firewall.Block_Amazon_Alexa.src='VOICE'
 uci set firewall.Block_Amazon_Alexa.dest_port="$Amazon_Alexa_port"
+uci set firewall.Block_Amazon_Alexa.enabled='0'
 uci set firewall.Block_Amazon_Alexa_UDP=rule
 uci set firewall.Block_Amazon_Alexa_UDP.name='Block_AmazonAlexa_UDP'
 uci set firewall.Block_Amazon_Alexa_UDP.proto='udp'
@@ -9164,6 +9130,7 @@ uci set firewall.Block_Amazon_Alexa_UDP.dest='wan'
 uci set firewall.Block_Amazon_Alexa_UDP.target='REJECT'
 uci set firewall.Block_Amazon_Alexa_UDP.src='VOICE'
 uci set firewall.Block_Amazon_Alexa_UDP.dest_port="$Amazon_Alexa_UDP_port"
+uci set firewall.Block_Amazon_Alexa_UDP.enabled='0'
 
 #Google Assistent (Port)
 #uci set firewall.Block_Google_assistent=rule
@@ -9784,10 +9751,10 @@ uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare20_SVR"
 uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare21_SVR" 
 uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare22_SVR"
 uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare23_SVR" 
-uci set firewall.Allow_only_DNS_Cloudflare.enabled="1" 
+uci set firewall.Allow_only_DNS_Cloudflare.enabled="0" 
 uci set firewall.Allow_only_DNS_Cloudflare.proto="tcp udp"
 uci set firewall.Allow_only_DNS_Cloudflare.target="REJECT"
-uci commit && reload_config
+uci commit && reload_config >/dev/null
 
 
 
@@ -9812,6 +9779,7 @@ uci set firewall.Allow_only_OfficeClient.proto='udp tcp'
 uci set firewall.Allow_only_OfficeClient.target='REJECT'
 uci set firewall.Allow_only_OfficeClient.dest_port="$all_other_OfficeClient_port"
 #1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
+uci set firewall.Allow_only_OfficeClient.enabled='1'
 
 uci set firewall.Allow_only_OfficeWebClient=rule
 uci set firewall.Allow_only_OfficeWebClient.src='INET'
@@ -9820,6 +9788,7 @@ uci set firewall.Allow_only_OfficeWebClient.dest='wan'
 uci set firewall.Allow_only_OfficeWebClient.proto='udp tcp'
 uci set firewall.Allow_only_OfficeWebClient.target='REJECT'
 uci set firewall.Allow_only_OfficeWebClient.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_only_OfficeWebClient.enabled='1'
 
 #Alexa (Port)
 #"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
@@ -9831,6 +9800,8 @@ uci set firewall.Allow_only_Amazon_Alexa.dest='wan'
 uci set firewall.Allow_only_Amazon_Alexa.target='REJECT'
 uci set firewall.Allow_only_Amazon_Alexa.src='VOICE'
 uci set firewall.Allow_only_Amazon_Alexa.dest_port="$all_other_Amazon_Alexa_port"
+uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
+
 uci set firewall.Allow_only_Amazon_Alexa_UDP=rule
 uci set firewall.Allow_only_Amazon_Alexa_UDP.name='Allow_only_AmazonAlexa_UDP'
 uci set firewall.Allow_only_Amazon_Alexa_UDP.proto='udp'
@@ -9838,6 +9809,7 @@ uci set firewall.Allow_only_Amazon_Alexa_UDP.dest='wan'
 uci set firewall.Allow_only_Amazon_Alexa_UDP.target='REJECT'
 uci set firewall.Allow_only_Amazon_Alexa_UDP.src='VOICE'
 uci set firewall.Allow_only_Amazon_Alexa_UDP.dest_port="$all_other_Amazon_Alexa_UDP_port"
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
 
 #Google Assistent (Port)
 #uci set firewall.Allow_only_Google_assistent=rule
@@ -10476,7 +10448,7 @@ uci set firewall.Block_all_other_EXT_HEIGHT_PORT.name="Block_all_other_EXT_HEIGH
 uci set firewall.Block_all_other_EXT_HEIGHT_PORT.proto="tcp"
 uci set firewall.Block_all_other_EXT_HEIGHT_PORT.dest="wan"
 uci set firewall.Block_all_other_EXT_HEIGHT_PORT.target="REJECT"
-uci set firewall.Block_all_other_EXT_HEIGHT_PORT.enabled="1"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.enabled="0"
 
 
 #UDP
@@ -10488,7 +10460,7 @@ uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.name="Block_all_other_EXT_H
 uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.proto="udp"
 uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.dest="wan"
 uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.target="REJECT"
-uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.enabled="1"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.enabled="0"
 
 
 
@@ -10549,6 +10521,11 @@ uci set firewall.filter6_fwd.proto="all"
 uci set firewall.filter6_fwd.target="ACCEPT"
 
 clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '########################################################'
 echo
 echo 'Your Config is:'
 echo
@@ -10586,11 +10563,11 @@ echo 'IP-Address:           '$ACCESS_SERVER
 echo 'Gateway:              '$INET_GW
 echo 'Domain:               '$LOCAL_DOMAIN
 echo
-echo "Login after reboot:   https://'$INET_ip':8443'
+echo 'GUI-Access:           https://'$INET_ip':8443'
 echo 'User:                 '$USERNAME
 echo 'Password:             password'
 echo
-
+echo 'Please wait until Reboot ....'
 
 uci commit firewall && reload_config >/dev/null
 /etc/init.d/firewall restart >/dev/null
@@ -10606,8 +10583,8 @@ uci set firewall.nat6.path="/etc/firewall.nat6" >/dev/null
 uci set firewall.nat6.reload="1" >/dev/null
  
 # Disable LAN to WAN forwarding
-uci rename firewall.@forwarding[0]="INET_CLIENTS_INTERNET" >/dev/null
-uci set firewall.INET_CLIENTS_INTERNET.enabled="0" >/dev/null
+uci rename firewall.@forwarding[0]="INET_INTERNET" >/dev/null
+uci set firewall.INET_INTERNET.enabled="0" >/dev/null
 uci commit firewall >/dev/null
 /etc/init.d/firewall restart >/dev/null
  
@@ -10637,5 +10614,54 @@ uci commit firewall >/dev/null
 echo >/dev/null
 echo "Firewall-Rules activated" >/dev/null
 echo >/dev/null
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo 'Your Config is:'
+echo
+echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$INET_net
+echo
+echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$HCONTROL_net
+echo
+echo 'Voice-Assistent SSID: '$VOICE_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$VOICE_net
+echo
+echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$ENTERTAIN_net
+echo
+echo 'Server-WiFi SSID:     '$SERVER_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$SERVER_net
+echo
+echo 'IR/BT-Control SSID:   '$CONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$CONTROL_net
+echo
+echo 'Guests SSID is:       '$GUEST_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$GUEST_net
+echo
+echo
+echo
+echo 'IP-Address:           '$ACCESS_SERVER
+echo 'Gateway:              '$INET_GW
+echo 'Domain:               '$LOCAL_DOMAIN
+echo
+echo 'GUI-Access:           https://'$INET_ip':8443'
+echo 'User:                 '$USERNAME
+echo 'Password:             password'
+echo
+echo 'Please wait until Reboot ....'
+echo
 
 reboot
