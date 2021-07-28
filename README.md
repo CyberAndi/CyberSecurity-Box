@@ -1,7 +1,7 @@
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/CyberSecurityBox.jpg" alt="Logo" width="300px"> </img>
 # CyberSecurity-Box<h3>(inkl. Ad Blocker, UnBound (DNS), Tor or optional Pi-Hole5 (incl. DB) and ntopng) </h3>
 <p>
-  First load the <b><a href="https://brave.com/download/">Brave-Browser</a></b> from the <a href="https://brave.com/">Brave-Webste</a> 
+  First load the <b><a href="https://brave.com/download/">Brave-Browser</a></b> from the <a href="https://brave.com/">Brave-Website</a> 
 <p>
 <ul><ol><li><h3>Installation on OpenWRT-Router(Fritz!Box, TP-Link etc.)  - Alternative 1</h3>
   Go on <a href="https://openwrt.org/"> OpenWRT-Project-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/">Firmware</a></b> for your Router.<br>
