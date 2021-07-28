@@ -1,6 +1,8 @@
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/CyberSecurityBox.jpg" alt="Logo" width="300px"> </img>
 # CyberSecurity-Box<h3>(inkl. Ad Blocker, UnBound (DNS), Tor or optional Pi-Hole5 (incl. DB) and ntopng) </h3>
 <p>
+  First load the <a href="https://brave.com/download/">Brave-Browser</a> from the <a href="https://brave.com/">Brave-Webste</a> 
+<p>
 <ul><ol><li><h3>Installation on OpenWRT-Router - Alternative 1</h3>
   use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
