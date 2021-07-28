@@ -1,5 +1,8 @@
 #!/bin/sh
+
 clear
+clear
+
 clear
 echo
 echo '########################################################'
@@ -15,8 +18,8 @@ echo
 #Firewall Pihole Unbound Tor Transparentproxy
 
 opkg update
-opkg upgrade $(opkg list-upgradable | awk '{print $1}')
-opkg update
+opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >/dev/null
+opkg update   >/dev/null
 opkg install nano git wget curl luci-ssl unbound-daemon-heavy unbound-anchor unbound-control unbound-control-setup unbound-host unbound-checkconf ca-certificates stubby tor tor-geoip dnsmasq-full bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill
 clear
 echo
@@ -904,8 +907,8 @@ uci add_list uhttpd.main.listen_http="[::]:8080"
 uci -q delete uhttpd.main.listen_https
 uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
-uci commit  && reload_config
-/etc/init.d/uhttpd restart
+uci commit  && reload_config  >/dev/null
+/etc/init.d/uhttpd restart  >/dev/null
 
 echo
 echo 'Default Country-Settings'
@@ -2758,7 +2761,7 @@ uci del_list tor.conf.tail_include="/etc/tor/main" >/dev/null
 uci add_list tor.conf.tail_include="/etc/tor/main" >/dev/null
 uci commit tor && reload_config >/dev/null
 
-/etc/init.d/tor start 
+/etc/init.d/tor start  >/dev/null
 
 echo 
 echo 'Tor-Onion-Services activated'
@@ -2825,7 +2828,7 @@ EOF
 
 uci commit stubby && reload_config >/dev/null
 
-/etc/init.d/stubby restart
+/etc/init.d/stubby restart  >/dev/null
 # Configure unbound client
 
 echo
@@ -2975,7 +2978,7 @@ uci set unbound.@zone[-1].forward_tls_upstream='yes'
 uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
 
 uci commit unbound && reload_config  >/dev/null
-/etc/init.d/unbound start
+/etc/init.d/unbound start  >/dev/null
 echo
 echo 'Unbound lokal DNS-Resolver with lokal root-files'
 
@@ -10520,6 +10523,10 @@ uci set firewall.filter6_fwd.family="ipv6"
 uci set firewall.filter6_fwd.proto="all"
 uci set firewall.filter6_fwd.target="ACCEPT"
 
+
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -10568,9 +10575,6 @@ echo 'User:                 '$USERNAME
 echo 'Password:             password'
 echo
 echo 'Please wait until Reboot ....'
-
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
 
 cat << "EOF" > /etc/firewall.nat6 
 iptables-save -t nat \
@@ -10611,15 +10615,14 @@ uci commit firewall >/dev/null
 /etc/init.d/dnsmasq restart >/dev/null
 /etc/init.d/network restart >/dev/null
 
-echo >/dev/null
-echo "Firewall-Rules activated" >/dev/null
-echo >/dev/null
 clear
 echo '########################################################'
 echo '#                                                      #'
 echo '#                 CyberSecurity-Box                    #'
 echo '#                                                      #'
 echo '########################################################'
+echo
+echo 'Firewall-Rules activated and it will reboot now.'
 echo
 echo 'Your Config is:'
 echo
@@ -10664,4 +10667,4 @@ echo
 echo 'Please wait until Reboot ....'
 echo
 
-reboot
+reboot 
