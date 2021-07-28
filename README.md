@@ -1,10 +1,10 @@
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/CyberSecurityBox.jpg" alt="Logo" width="300px"> </img>
 # CyberSecurity-Box<h3>(inkl. Ad Blocker, UnBound (DNS), Tor or optional Pi-Hole5 (incl. DB) and ntopng) </h3>
 <p>
-  First load the <b><a href="https://brave.com/download/">Brave-Browser</a></b> from the <a href="https://brave.com/">Brave-Website</a> 
+  First load the <b><a href="https://brave.com/download/" target="_blank">Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
 <p>
 <ul><ol><li><h3>Installation on OpenWRT-Router(Fritz!Box, TP-Link etc.)  - Alternative 1</h3>
-  Go on <a href="https://openwrt.org/"> OpenWRT-Project-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/">Firmware</a></b> for your Router.<br>
+  Go on <a href="https://openwrt.org/" target="_blank"> OpenWRT-Project-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router.<br>
   After flushing use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
   User: <i><b>root</b></i>
@@ -16,7 +16,7 @@
 [newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>.<br>
   <br>
-  copy the sourcecode from <b><a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a></b> insert it and run in ssh/putty. <br> <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
+  copy the sourcecode from <b><a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt" target="_blank">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a></b> insert it and run in ssh/putty. <br> <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
   <br><br>
    After the reboot you will have following Networks:<br><br>
     <ul>
@@ -37,9 +37,9 @@
   
   <li><h3>Installation CyberSecurityBox (RasPi) - Alternative 2</h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
-  Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian-SD-Card-Image</a></b> or 
+  Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank">Raspbian-SD-Card-Image</a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
-  <br>Install one of this with <b><a href="https://www.balena.io/etcher/">balenaEtcher</a></b> on a SD-Card. <br>Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.<br><br>
+  <br>Install one of this with <b><a href="https://www.balena.io/etcher/" target="_blank">balenaEtcher</a></b> on a SD-Card. <br>Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of RasPi]</code></pre>
   User: <i><b>pi</b></i>
   <br>
@@ -61,15 +61,15 @@ curl -sSL https://install.pi-hole.net | bash</code></pre>
      and follow the messages on the screen.<br>
     </li>
     <li>
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/pi-hole-teleporter_2020-06-07_09-38-48.tar.gz">pi-hole-teleporter_2020-06-07_09-38-48.tar.gz</a></h4>
+    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/pi-hole-teleporter_2020-06-07_09-38-48.tar.gz" target="_blank">pi-hole-teleporter_2020-06-07_09-38-48.tar.gz</a></h4>
       Is the newest Version with <b>PiHole 5.0 and DataBase Support</b>. It includes the Porn-, Ad- and Tracking-Blocking.
     </li>
     <li>
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz</a></h4> inludes White- and Blacklist (Advertisement and Maleware). <b> Until Pi-Hole 4 and smaller</b></li>
+    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz" target="_blank">pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz</a></h4> inludes White- and Blacklist (Advertisement and Maleware). <b> Until Pi-Hole 4 and smaller</b></li>
     <li>
-    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz">pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz</a></h4> inludes White- and Blacklist (Advertisement, Maleware, Tracking and Porn).<b> Until Pi-Hole 4 and smaller</b></li>
+    <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz" target="_blank">pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz</a></h4> inludes White- and Blacklist (Advertisement, Maleware, Tracking and Porn).<b> Until Pi-Hole 4 and smaller</b></li>
     <li>
-    <h4>The Pi-Hole 4 <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list">regex.list</a></h4> includes Blacklist (Advertisment, Maleware, Tracking and Porn) with over 40% blocking rate.<br> In pi-hole-teleporter_2020-06-07_09-38-48.tar.gz is this included for Pi-Hole5.
+    <h4>The Pi-Hole 4 <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list" target="_blank">regex.list</a></h4> includes Blacklist (Advertisment, Maleware, Tracking and Porn) with over 40% blocking rate.<br> In pi-hole-teleporter_2020-06-07_09-38-48.tar.gz is this included for Pi-Hole5.
   <pre><code>service pihole-FTL stop
 service unbound stop
 service privoxy stop
@@ -105,7 +105,7 @@ service pihole-FTL start</code></pre>
   </ul>
   
   <li><h3>(optional) Configuration of the AVM FRITZ!Box with Presets for Security and Port-List - Option for Alternative 2 Pi_Hole</h3>
-<h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
+<h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip" target="_blank">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
   <img src="Schema.PNG" width="450px"></img>
   </li></ol>
 </ul></p>
@@ -113,7 +113,7 @@ service pihole-FTL start</code></pre>
 For more Information in german visit https://www.cyberandi.de/Smarthome
 </p>
 <hr>
-<center>Contact: <a href="mailto:cyberandi@outlook.de">cyberandi@outlook.de</a> - Website: https://www.cyberandi.de</center>
+<center>Contact: <a href="mailto:cyberandi@outlook.de">cyberandi@outlook.de</a> - Website: <a href="https://www.cyberandi.de" target="_blank">https://www.cyberandi.de</a></center>
 </hr>
 <p>
 <p>
