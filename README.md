@@ -1,10 +1,11 @@
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/CyberSecurityBox.jpg" alt="Logo" width="300px"> </img>
 # CyberSecurity-Box<h3>(inkl. Ad Blocker, UnBound (DNS), Tor or optional Pi-Hole5 (incl. DB) and ntopng) </h3>
 <p>
-  First load the <a href="https://brave.com/download/">Brave-Browser</a> from the <a href="https://brave.com/">Brave-Webste</a> 
+  First load the <b><a href="https://brave.com/download/">Brave-Browser</a></b> from the <a href="https://brave.com/">Brave-Webste</a> 
 <p>
-<ul><ol><li><h3>Installation on OpenWRT-Router - Alternative 1</h3>
-  use SSH or Putty for Installation and type the following code.<br><br>
+<ul><ol><li><h3>Installation on OpenWRT-Router(Fritz!Box, TP-Link etc.)  - Alternative 1</h3>
+  Go on <a href="https://openwrt.org/"> OpenWRT-Project-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/">Firmware</a></b> for your Router.<br>
+  After flushing use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
   User: <i><b>root</b></i>
   <br>
@@ -15,7 +16,7 @@
 [newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>.<br>
   <br>
-  copy the sourcecode from <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a> and insert and run in ssh.
+  copy the sourcecode from <b><a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a></b> insert it and run in ssh/putty. <br> <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
   <br><br>
    After the reboot you will have following Networks:<br><br>
     <ul>
