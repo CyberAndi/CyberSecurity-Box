@@ -31,7 +31,7 @@
   </ul><br>
   All of this have the WiFi-Password/-Key: <i><b>Cyber,Sec9ox</b></i><br><br>
   For each of this separated Networks you will have a <b>VLAN</b> on the Switch-/Output-Ethernet-Ports of the Router between <b>VLAN_ID 101</b> and <b>VLAN_ID 106</b>.
-  <br>
+  <p>
   You will find the Screenshots <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/README.md#screenshots">here</a>. 
   </li>
   
