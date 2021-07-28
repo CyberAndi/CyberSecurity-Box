@@ -17,9 +17,9 @@
   Don´t forget to note the <i><b>newpassword</b></i>.<br>
   <br>
   copy the sourcecode from <b><a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt" target="_blank">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a></b> insert it and run in ssh/putty. <br> <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
-  
+ <p>
   <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" width=489px></img>
-<br>
+<p>
    After the reboot you will have following Networks:<br><br>
     <ul>
     <li><b>REPEATER</b> for internal Communication between Router and Repeater for all of this Networks</li>
