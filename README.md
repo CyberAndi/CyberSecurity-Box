@@ -114,3 +114,11 @@ For more Information in german visit https://www.cyberandi.de/Smarthome
 <hr>
 <center>Contact: <a href="mailto:cyberandi@outlook.de">cyberandi@outlook.de</a> - Website: https://www.cyberandi.de</center>
 </hr>
+<p>
+<p>
+<h3>Screenshots</h3>
+
+![2021-03-03](https://user-images.githubusercontent.com/46010442/127313139-dadeb4e5-5cc9-4c8c-bdea-26f0b9e49c6f.png)<br>
+![2021-07-28](https://user-images.githubusercontent.com/46010442/127313619-b21bc261-feb6-448e-a318-6c1b29e0849e.png)<br>
+![2021-07-28 (2)](https://user-images.githubusercontent.com/46010442/127313566-67684172-4a09-42ed-a33b-661bab64ef63.png)
+
