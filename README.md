@@ -121,17 +121,17 @@ For more Information in german visit https://www.cyberandi.de/Smarthome
 <p>
 <h3>Screenshots</h3>
 <p>
-![Install](https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg)
+<img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" alt="Set Parameters"></img>
 <p>
-![Log-In Page](https://user-images.githubusercontent.com/46010442/127315754-5aeb4e22-8b65-44ad-8566-95d280ba03e7.png)
+<img src="https://user-images.githubusercontent.com/46010442/127315754-5aeb4e22-8b65-44ad-8566-95d280ba03e7.png" alt="Login Page"></img>
 <p>
-![Overview](https://user-images.githubusercontent.com/46010442/127315881-16fe8b4b-63d6-4298-8512-de48602dc12f.jpg)
+<img src="https://user-images.githubusercontent.com/46010442/127315881-16fe8b4b-63d6-4298-8512-de48602dc12f.jpg" alt="Overview"></img>
 <p>
-!Pop-Up Box](https://user-images.githubusercontent.com/46010442/127318088-e18112bc-be15-4f92-aa71-e997ee519da8.png)
+<img src="https://user-images.githubusercontent.com/46010442/127318088-e18112bc-be15-4f92-aa71-e997ee519da8.png" alt="PopUp-Box"></img>
 <p>
-![Software Update](https://user-images.githubusercontent.com/46010442/127318114-cdc092ff-495f-4506-9140-def8ce9f400d.png)
+<img src="https://user-images.githubusercontent.com/46010442/127318114-cdc092ff-495f-4506-9140-def8ce9f400d.png" alt="Software Updates"></img>
 <p>
-![Networks](https://user-images.githubusercontent.com/46010442/127338589-44965886-2807-46b0-95e1-2fd3c43af673.jpg)
+<img src="https://user-images.githubusercontent.com/46010442/127338589-44965886-2807-46b0-95e1-2fd3c43af673.jpg" alt="Network Overview"></img>
 
 
 
