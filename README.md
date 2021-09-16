@@ -136,5 +136,9 @@ For more Information in german visit https://www.cyberandi.de/Smarthome
 
 
 
+![Screenshot (13)](https://user-images.githubusercontent.com/46010442/133683307-93274089-8d65-4b38-8872-b4ef62bc3fa0.png)
+![Screenshot (14)](https://user-images.githubusercontent.com/46010442/133683326-c51c0288-430a-4de1-ad9b-1d6d9545806e.png)
+![Screenshot (15)](https://user-images.githubusercontent.com/46010442/133683385-3cb493aa-0a2d-43e5-9014-3a5a2e7207a0.png)
+![Screenshot (16)](https://user-images.githubusercontent.com/46010442/133683426-ef978a9c-7a9a-4142-b845-f0338d5803de.png)
 
 
