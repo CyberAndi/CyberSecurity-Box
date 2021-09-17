@@ -132,6 +132,13 @@ For more Information in german visit https://www.cyberandi.de/Smarthome
 <img src="https://user-images.githubusercontent.com/46010442/127318114-cdc092ff-495f-4506-9140-def8ce9f400d.png" alt="Software Updates" width="50%"></img>
 <p>
 <img src="https://user-images.githubusercontent.com/46010442/127338589-44965886-2807-46b0-95e1-2fd3c43af673.jpg" alt="Network Overview" width="50%"></img>
+
+<p> 
+  <img src="https://user-images.githubusercontent.com/46010442/133788783-9ef6d6c9-4428-4bb1-9971-ddb40f524e4b.png" width=50%"></img>
+ <p>
+ <img src="https://user-images.githubusercontent.com/46010442/133788864-be55d84f-47d3-44b9-9134-31b903ff1938.png" width=50%"></img>
+ <p>
+ <img src="https://user-images.githubusercontent.com/46010442/133788889-e6e42258-6f8d-4d8b-a3f3-2d557e490531.png" width=50%"></img>
 <p>
  <img src="https://user-images.githubusercontent.com/46010442/133786871-56b38494-6326-4194-8e37-1f62a4b30d9d.png" width=50%"></img>
 <p>
