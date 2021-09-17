@@ -123,22 +123,11 @@ For more Information in german visit https://www.cyberandi.de/Smarthome
 <p>
 <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" alt="Set Parameters" width="50%"></img>
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/127315754-5aeb4e22-8b65-44ad-8566-95d280ba03e7.png" alt="Login Page" width="50%"></img>
-<p>
-<img src="https://user-images.githubusercontent.com/46010442/127315881-16fe8b4b-63d6-4298-8512-de48602dc12f.jpg" alt="Overview" width="50%"></img>
-<p>
-<img src="https://user-images.githubusercontent.com/46010442/127318088-e18112bc-be15-4f92-aa71-e997ee519da8.png" alt="PopUp-Box" width="50%"></img>
-<p>
-<img src="https://user-images.githubusercontent.com/46010442/127318114-cdc092ff-495f-4506-9140-def8ce9f400d.png" alt="Software Updates" width="50%"></img>
-<p>
-<img src="https://user-images.githubusercontent.com/46010442/127338589-44965886-2807-46b0-95e1-2fd3c43af673.jpg" alt="Network Overview" width="50%"></img>
-
-<p> 
-  <img src="https://user-images.githubusercontent.com/46010442/133788783-9ef6d6c9-4428-4bb1-9971-ddb40f524e4b.png" width=50%"></img>
+  <img src="https://user-images.githubusercontent.com/46010442/133788783-9ef6d6c9-4428-4bb1-9971-ddb40f524e4b.png" alt="Login Page" width=50%"></img>
  <p>
- <img src="https://user-images.githubusercontent.com/46010442/133788864-be55d84f-47d3-44b9-9134-31b903ff1938.png" width=50%"></img>
+ <img src="https://user-images.githubusercontent.com/46010442/133788864-be55d84f-47d3-44b9-9134-31b903ff1938.png" alt="Overview" width=50%"></img>
  <p>
- <img src="https://user-images.githubusercontent.com/46010442/133788889-e6e42258-6f8d-4d8b-a3f3-2d557e490531.png" width=50%"></img>
+ <img src="https://user-images.githubusercontent.com/46010442/133788889-e6e42258-6f8d-4d8b-a3f3-2d557e490531.png" alt="Overview 2" width=50%"></img>
 <p>
  <img src="https://user-images.githubusercontent.com/46010442/133786871-56b38494-6326-4194-8e37-1f62a4b30d9d.png" width=50%"></img>
 <p>
