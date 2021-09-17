@@ -132,6 +132,21 @@ For more Information in german visit https://www.cyberandi.de/Smarthome
 <img src="https://user-images.githubusercontent.com/46010442/127318114-cdc092ff-495f-4506-9140-def8ce9f400d.png" alt="Software Updates" width="50%"></img>
 <p>
 <img src="https://user-images.githubusercontent.com/46010442/127338589-44965886-2807-46b0-95e1-2fd3c43af673.jpg" alt="Network Overview" width="50%"></img>
+<p>
+ <img src="https://user-images.githubusercontent.com/46010442/133786871-56b38494-6326-4194-8e37-1f62a4b30d9d.png" width=50%"></img>
+<p>
+ <img src="https://user-images.githubusercontent.com/46010442/133786876-76f2cf7d-5fe4-4a64-81a5-66d1333a52ec.png" width=50%"></img>
+ <p>
+ <img src="https://user-images.githubusercontent.com/46010442/133786879-ebaed5be-1853-48c2-b3fa-dc22966e454f.png" width=50%"></img>
+<p> 
+<img src="https://user-images.githubusercontent.com/46010442/133786886-1caf75ce-e220-40d3-adcb-980bf081a8a9.png" width=50%"></img>
+<p>
+<img src="https://user-images.githubusercontent.com/46010442/133786890-071828fc-80dd-4ce6-ab08-15ce47c9f000.png" width=50%"></img>
+<p>
+<img src="(https://user-images.githubusercontent.com/46010442/133786902-e4167664-97dc-4a85-a491-0698f349a572.pn" width=50%"></img>
+<p> 
+<img src="https://user-images.githubusercontent.com/46010442/133786905-74f2d27a-8813-46a1-b4f9-bd415abbe14a.png" width=50%"></img>
+
 
 
 
