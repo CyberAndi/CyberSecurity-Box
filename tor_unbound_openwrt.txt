@@ -1325,6 +1325,7 @@ cat << EOF > test_2.txt
 
 
 
+
 * {
 border:0;
 box-sizing:border-box;
@@ -3459,7 +3460,7 @@ header div > ul a.menu:hover, .nav a.menu:hover, header div > ul li.open .menu, 
 
 
 #topmenu.nav > li.dropdown > a.menu:after,.dropdown-toggle:after{
-    width: var(--menuBoxMaxWidth);
+     width: var(--menuBoxMaxWidth);
      height: 2.8em;
      display: inline-block;
      content:"\25BE" !important;
@@ -3467,7 +3468,7 @@ header div > ul a.menu:hover, .nav a.menu:hover, header div > ul li.open .menu, 
      position: relative;
      font-size: inherit;
      font-weight: inherit;
-     overflow-y:clip;
+     overflow:clip;
      left: var(--menuBoxMinWidth);
      top: -2em;
 }
@@ -4263,6 +4264,7 @@ div#view {
 #topmenu > .dropdown > a.menu {
     padding-top: .5em !important;
     padding-bottom: .5em !important;
+    overflow: clip !important;
 }
 
 #view .right > .btn, #view .right > button, #view .left > .btn, #view .left > button {
@@ -6175,6 +6177,8 @@ local-zone: "porncana.de" always_null
 local-zone: "redwap.me" always_null 
 local-zone: "redwap.de" always_null 
 local-zone: "redwap.com" always_null 
+local-zone: "xnxx-free-videos.com" always_null 
+local-zone: "xnxx-free-videos.de" always_null 
 
 #ad-ware
 local-zone: "x.amica.de" always_null 
