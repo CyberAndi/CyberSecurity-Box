@@ -14,9 +14,13 @@
   <pre><code>passwd
 [newpassword]
 [newpassword]</code></pre>
-  Don´t forget to note the <i><b>newpassword</b></i>.<br>
+  Don´t forget to note the <i><b>newpassword</b></i>.<br><br>
+  Download the Installscript.<br><br>
+  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/openWRT_install.sh</code></pre>
+  and start it with<br>
   <br>
-  copy the sourcecode from <b><a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt" target="_blank">https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor_unbound_openwrt.txt</a></b> insert it and run in ssh/putty. <br> <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
+  <pre><code>sh openWRT_install.sh</code></pre>
+  <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
  <p>
   <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" width="50%"></img>
 <p>
