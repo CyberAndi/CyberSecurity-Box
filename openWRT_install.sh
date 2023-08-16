@@ -2377,6 +2377,14 @@ uci set firewall.@forwarding[-1].src="ENTERTAIN"
 uci commit firewall && reload_config >/dev/null
 
 
+mkdir /etc/dnsmasq.d  >/dev/null
+mkdir /etc/dnsmasq.d/Blacklist >/dev/null
+mkdir /etc/dnsmasq.d/Whitelist >/dev/null
+mkdir /etc/dnsmasq.d/BlockAll >/dev/null
+mkdir /etc/dnsmasq.d/AllowAll >/dev/null
+
+uci commit dhcp && reload_config >/dev/null
+
 clear
 echo '########################################################'
 echo '#                                                      #'
