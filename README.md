@@ -16,7 +16,7 @@
 [newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>.<br><br>
   Download the Installscript.<br><br>
-  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/openWRT_install.sh</code></pre>
+  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/openWRT_install.sh</code></pre>
   and start it with<br>
   <br>
   <pre><code>sh openWRT_install.sh</code></pre>
