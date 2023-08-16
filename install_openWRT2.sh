@@ -22076,21 +22076,21 @@ uci set firewall.ssh_int.src_dport="$SSH_port"
 uci set firewall.ssh_int.proto="tcp"
 uci set firewall.ssh_int.target="DNAT"
 
-uci -q delete firewall.http_int >/dev/null
-uci set firewall.http_int="redirect"
-uci set firewall.http_int.name="Intercept_HTTP"
-uci set firewall.http_int.src="INET"
-uci set firewall.http_int.src_dport="$ACCESS_HTTP_port"
-uci set firewall.http_int.proto="tcp"
-uci set firewall.http_int.target="DNAT"
+#uci -q delete firewall.http_int >/dev/null
+#uci set firewall.http_int="redirect"
+#uci set firewall.http_int.name="Intercept_HTTP"
+#uci set firewall.http_int.src="INET"
+#uci set firewall.http_int.src_dport="$ACCESS_HTTP_port"
+#uci set firewall.http_int.proto="tcp"
+#uci set firewall.http_int.target="DNAT"
 
-uci -q delete firewall.https_int
-uci set firewall.https_int="redirect"
-uci set firewall.https_int.name="Intercept_HTTPS"
-uci set firewall.https_int.src="INET"
-uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
-uci set firewall.https_int.proto="tcp"
-uci set firewall.https_int.target="DNAT"
+#uci -q delete firewall.https_int
+#uci set firewall.https_int="redirect"
+#uci set firewall.https_int.name="Intercept_HTTPS"
+#uci set firewall.https_int.src="INET"
+#uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
+#uci set firewall.https_int.proto="tcp"
+#uci set firewall.https_int.target="DNAT"
 
 uci commit firewall && reload_config >/dev/null
 
