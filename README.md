@@ -16,7 +16,7 @@
 [newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>.<br><br>
   Download the Installscript. It starts automatically.<br><br>
-  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/openWRT_install.sh && openWRT_install.sh</code></pre>
+  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/openWRT_install.sh && sh openWRT_install.sh</code></pre>
   <br>
   <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
  <p>
