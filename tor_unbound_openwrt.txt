@@ -1,9 +1,5 @@
 #!/bin/sh
 
-clear
-clear
-
-clear
 echo
 echo '########################################################'
 echo '#                                                      #'
@@ -16,11 +12,15 @@ echo
 echo
 echo
 #Firewall Pihole Unbound Tor Transparentproxy
-
+/etc/init.d/dnsmasq stop
+/etc/init.d/dnsmasq disable
 opkg update
+opkg remove dnsmasq
+opkg update >/dev/null
 opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >/dev/null
-opkg update   >/dev/null
-opkg install nano git wget curl luci-ssl unbound-daemon-heavy unbound-anchor unbound-control unbound-control-setup unbound-host unbound-checkconf ca-certificates stubby tor tor-geoip dnsmasq-full bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill
+opkg update >/dev/null
+opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon-heavy unbound-anchor unbound-control unbound-control-setup unbound-host unbound-checkconf ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite
+/etc/init.d/dnsmasq start
 clear
 echo
 echo '########################################################'
@@ -34,6 +34,13 @@ echo
 echo 'Software Packeges installed'
 echo
 
+release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=')
+revision=$(cat /etc/openwrt_release | grep "DISTRIB_REVISION" | cut -f2 -d '=')
+revision=${revision::-1}
+release=${release::-1}
+revision=${revision:1}
+release=${release:1}
+echo $release $revision
 #Localaddresen
 LOCALADDRESS="127.192.0.1/10"
 
@@ -934,7 +941,7 @@ cat << EOF > /etc/banner
       local Privacy for Voice-Assistents, Smart-TVs and SmartHome 
 	   
 --------------------------------------------------------------------------
-   powered by OpenWrt 19.07.7, r11306-c4a6851c72
+   powered by OpenWrt $(echo $release), $(echo $revision)
 --------------------------------------------------------------------------
 
 
@@ -942,19 +949,19 @@ EOF
 
 cat << EOF > /etc/openwrt_release
 DISTRIB_ID='OpenWrt'
-DISTRIB_RELEASE='19.07.7'
-DISTRIB_REVISION='r11306-c4a6851c72'
+DISTRIB_RELEASE='$(echo $release)'
+DISTRIB_REVISION='$(echo $revision)'
 DISTRIB_TARGET='ipq40xx/generic'
 DISTRIB_ARCH='arm_cortex-a7_neon-vfpv4'
-DISTRIB_DESCRIPTION='CyberSecurity-Box 19.07.7'
+DISTRIB_DESCRIPTION='CyberSecurity-Box $(echo $revision)'
 DISTRIB_TAINTS=''
 EOF
 
 cat << EOF > /etc/device_info
 DEVICE_MANUFACTURER='@CyberAndi'
-DEVICE_MANUFACTURER_URL='https://www.cyberandi.de/'
+DEVICE_MANUFACTURER_URL='https://cyberandi.tumblr.com/'
 DEVICE_PRODUCT='CyberSecurity-Box'
-DEVICE_REVISION='v0'
+DEVICE_REVISION='v0.5'
 
 EOF
 
