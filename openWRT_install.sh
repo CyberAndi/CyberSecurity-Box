@@ -2437,6 +2437,14 @@ echo 'Password:             password'
 echo
 
 
+mkdir /etc/dnsmasq.d  >/dev/null
+mkdir /etc/dnsmasq.d/Blacklist >/dev/null
+mkdir /etc/dnsmasq.d/Whitelist >/dev/null
+mkdir /etc/dnsmasq.d/BlockAll >/dev/null
+mkdir /etc/dnsmasq.d/AllowAll >/dev/null
+
+uci commit dhcp && reload_config >/dev/null
+
 # Configure Black and Whitelsit
 cat << EOF > /etc/dnsmasq.d/Blacklist/z_all_allow
 server=/dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/127.0.0.1
