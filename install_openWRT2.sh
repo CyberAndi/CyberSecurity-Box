@@ -20,7 +20,7 @@ revision=${revision::-1}
 release=${release::-1}
 revision=${revision:1}
 release=${release:1}
-echo $release, $revision
+echo 'Current Version ' $release, $revision
  
 #Localaddresen
 LOCALADDRESS="127.192.0.1/10"
