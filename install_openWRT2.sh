@@ -13390,7 +13390,7 @@ uci commit stubby && reload_config >/dev/null
 /etc/init.d/stubby restart  >/dev/null
 }
 
-set_ubound() {
+set_unbound() {
 echo
 echo '########################################################'
 echo '#                                                      #'
