@@ -26230,7 +26230,7 @@ ask_parameter
 install_update
 #install_adguard
 define_variables
-custumize_firmware
+customize_firmware
 create_network
 build_websites
 set_tor
