@@ -13,13 +13,14 @@ echo
 echo
 #Firewall Pihole Unbound Tor Transparentproxy
 
+ask_parameter() {
 release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=')
 revision=$(cat /etc/openwrt_release | grep "DISTRIB_REVISION" | cut -f2 -d '=')
 revision=${revision::-1}
 release=${release::-1}
 revision=${revision:1}
 release=${release:1}
-echo $release, $revision
+echo 'Current Version ' $release, $revision
  
 #Localaddresen
 LOCALADDRESS="127.192.0.1/10"
@@ -204,7 +205,9 @@ ENTERTAIN_ssid='Entertain-'$WIFI_SSID
 GUEST_ssid='Guest-'$WIFI_SSID
 CMOVIE_ssid='Free_CMovie_Portal'
 Adversisment_ssid='Telekom'
+}
 
+install_update() {
 /etc/init.d/dnsmasq stop
 /etc/init.d/dnsmasq disable
 opkg update
@@ -212,7 +215,7 @@ opkg remove dnsmasq
 opkg update >/dev/null
 opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >/dev/null
 opkg update >/dev/null
-opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon-heavy unbound-anchor unbound-control unbound-control-setup unbound-host unbound-checkconf ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite
+opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite
 /etc/init.d/dnsmasq start
 clear
 echo
@@ -226,7 +229,19 @@ echo '########################################################'
 echo
 echo 'Software Packeges installed'
 echo
+}
 
+install_adguard() {
+opkg update && opkg install wget
+mkdir /opt/ && cd /opt
+wget -c https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.105.2/AdGuardHome_linux_armv5.tar.gz
+tar xfvz AdGuardHome_linux_armv5.tar.gz
+rm AdGuardHome_linux_armv5.tar.gz
+
+/opt/AdGuardHome/AdGuardHome -s install
+}
+
+define_variables() {
 #----------------------------------------------------------------------------
 echo
 echo "define variables"
@@ -924,8 +939,10 @@ echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
 echo '#                                                      #'
 echo '########################################################'
 echo
-#----------------------------------------------------------------------------
+}
 
+#----------------------------------------------------------------------------
+customize_firmware() {
 uci set system.@system[0]=system
 uci set system.@system[0].ttylogin='0'
 uci set system.@system[0].log_size='64'
@@ -1013,12 +1030,15 @@ echo
 #sichere alte Konfiguration
 echo Sichere alte Konfiguration
 iptables-save > rules.v4_old_$datum.bkp
+}
 
+build_websites() {
 mkdir /www/router
 mkdir /www/redirect
 mkdir /www/CaptivePortal
 mkdir /www/generate_204
 mkdir /www/CaptivePortal/pic
+
 
 cat << EOF > /www/index.html
 
@@ -1670,7 +1690,17 @@ cat << EOF > /www/CaptivePortal/theme_variable.css
 
 EOF
 
+#cat test_2.txt >>  test.txt
 
+#cp test.txt /www/luci-static/bootstrap/cascade.css
+
+#rm test.txt
+#rm test_2.txt
+
+
+}
+
+create_network() {
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -1682,7 +1712,22 @@ echo '#                Network Definitions                   #'
 echo '#                                                      #'
 echo '########################################################'
 echo 
-#uci -q delete network.lan
+uci -q delete network.lan
+
+cat << EOF > /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+
+::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
+curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound_ad_servers
+
+uci delete network.@device[0] >/dev/null
 
 uci set network.loopback=interface
 uci set network.loopback.device='lo'
@@ -2105,6 +2150,8 @@ echo
 uci commit network && reload_config >/dev/null
 #/etc/init.d/network restart
 
+
+
 dig www.internic.net @1.1.1.1
 
 uci -q delete wireless  >/dev/null
@@ -2238,7 +2285,7 @@ uci set wireless.wifinet12.network='CMOVIE'
 uci set wireless.wifinet12.ssid=$CMOVIE_ssid
 
 uci delete wireless.radio0.disabled >/dev/null
-#uci delete wireless.radio1.disabled >/dev/null
+uci delete wireless.radio1.disabled >/dev/null
 
 uci commit  && reload_config >/dev/null
 
@@ -2384,7 +2431,346 @@ mkdir /etc/dnsmasq.d/BlockAll >/dev/null
 mkdir /etc/dnsmasq.d/AllowAll >/dev/null
 
 uci commit dhcp && reload_config >/dev/null
+}
 
+set_dhcp() {
+uci -q delete dhcp >/dev/null
+uci delete dhcp.odhcpd >/dev/null
+uci delete dhcp.BlacklistSERVER >/dev/null
+uci delete dhcp.BlacklistHCONTROL >/dev/null
+uci delete dhcp.BlacklistCONTROL >/dev/null
+uci delete dhcp.BlacklistINET >/dev/null
+uci delete dhcp.WhitelistVOICE >/dev/null
+uci delete dhcp.WhitelistENTERTAIN >/dev/null
+uci delete dhcp.WhitelistGUEST >/dev/null
+uci delete dhcp.WhitelistCMOVIE >/dev/null
+uci delete dhcp.SERVER >/dev/null
+uci delete dhcp.HCONTROL >/dev/null
+uci delete dhcp.CONTROL >/dev/null
+uci delete dhcp.INET >/dev/null
+uci delete dhcp.VOICE >/dev/null
+uci delete dhcp.ENTERTAIN >/dev/null
+uci delete dhcp.GUEST >/dev/null
+uci delete dhcp.CMOVIE >/dev/null
+uci delete dhcp.Blacklist>/dev/null
+uci delete dhcp.Whitelist >/dev/null
+uci delete dhcp.lan >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci commit dhcp >/dev/null
+uci set dhcp.Blacklist=dnsmasq
+uci set dhcp.Blacklist.domainneeded='1'
+uci set dhcp.Blacklist.localise_queries='1'
+uci set dhcp.Blacklist.rebind_protection='1'
+uci set dhcp.Blacklist.rebind_localhost='1'
+uci set dhcp.Blacklist.filterwin2k='1'
+uci set dhcp.Blacklist.local='/'$INET_domain'/'
+uci set dhcp.Blacklist.expandhosts='1'
+uci set dhcp.Blacklist.authoritative='1'
+uci set dhcp.Blacklist.readethers='1'
+uci set dhcp.Blacklist.leasefile='/tmp/dhcp.blacklist.leases'
+uci set dhcp.Blacklist.resolvfile='/tmp/resolv.blacklist.conf.auto'
+uci set dhcp.Blacklist.localservice='1'
+uci set dhcp.Blacklist.cachesize='1'
+uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
+uci set dhcp.Blacklist.boguspriv='1'
+uci set dhcp.Blacklist.logqueries='0'
+uci set dhcp.Blacklist.logfacility='/var/log/dnsmasq.blacklist.log'
+uci add_list dhcp.Blacklist.notinterface='br-VOICE'
+uci add_list dhcp.Blacklist.notinterface='br-GUEST'
+uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN'
+uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
+uci set dhcp.Blacklist.interface='br-INET'
+uci add_list dhcp.Blacklist.interface='br-HCONTROL'
+uci add_list dhcp.Blacklist.interface='br-CONTROL'
+uci add_list dhcp.Blacklist.interface='br-SERVER'
+uci set dhcp.Blacklist.domain=$INET_domain
+
+uci set dhcp.Whitelist=dnsmasq
+uci set dhcp.Whitelist.domainneeded='1'
+uci set dhcp.Whitelist.localise_queries='1'
+uci set dhcp.Whitelist.rebind_protection='1'
+uci set dhcp.Whitelist.rebind_localhost='1'
+uci set dhcp.Whitelist.filterwin2k='1'
+uci set dhcp.Whitelist.local='/'$VOICE_domain'/'
+uci set dhcp.Whitelist.expandhosts='1'
+uci set dhcp.Whitelist.authoritative='1'
+uci set dhcp.Whitelist.readethers='1'
+uci set dhcp.Whitelist.leasefile='/tmp/dhcp.whitelist.leases'
+uci set dhcp.Whitelist.resolvfile='/tmp/resolv.whitelist.conf.auto'
+uci set dhcp.Whitelist.localservice='1'
+uci set dhcp.Whitelist.cachesize='1'
+uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
+uci set dhcp.Whitelist.boguspriv='1'
+uci set dhcp.Whitelist.logqueries='0'
+uci set dhcp.Whitelist.logfacility='/var/log/dnsmasq.whitelist.log'
+uci set dhcp.Whitelist.interface='br-VOICE' 
+uci add_list dhcp.Whitelist.interface='br-GUEST'
+uci add_list dhcp.Whitelist.interface='br-ENTERTAIN'
+uci add_list dhcp.Whitelist.interface='br-CMOVIE'
+uci set dhcp.Whitelist.notinterface='br-INET'
+uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-SERVER'
+uci set dhcp.Whitelist.domain=$VOICE_domain
+
+#uci set dhcp.lan=dhcp
+#uci set dhcp.lan.interface='lan'
+#uci set dhcp.lan.start='1'
+#uci set dhcp.lan.limit='250'
+#uci set dhcp.lan.leasetime='24h'
+#uci set dhcp.lan.dhcpv6='server'
+#uci set dhcp.lan.ra='server'
+
+uci set dhcp.wan=dhcp
+uci set dhcp.wan.interface='wan'
+uci set dhcp.wan.ignore='1'
+
+uci set dhcp.SERVER=dhcp
+uci set dhcp.SERVER.dhcpv4='server'
+uci set dhcp.SERVER.dhcpv6='server'
+uci set dhcp.SERVER.ra='server'
+uci set dhcp.SERVER.ra_slaac='1'
+uci add_list dhcp.SERVER.ra_flags='managed-config'
+uci add_list dhcp.SERVER.ra_flags='other-config'
+uci set dhcp.SERVER.start='1'
+uci set dhcp.SERVER.limit='250'
+uci set dhcp.SERVER.interface='SERVER'
+uci set dhcp.SERVER.leasetime='24h'
+uci set dhcp.SERVER.dhcpv6='server'
+uci set dhcp.SERVER.domain=$SERVER_domain
+uci set dhcp.SERVER.local='/'$SERVER_domain'/'
+uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
+uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
+uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
+uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.CONTROL=dhcp
+uci set dhcp.CONTROL.dhcpv4='server'
+uci set dhcp.CONTROL.dhcpv6='server'
+uci set dhcp.CONTROL.ra='server'
+uci set dhcp.CONTROL.ra_slaac='1'
+uci add_list dhcp.CONTROL.ra_flags='managed-config'
+uci add_list dhcp.CONTROL.ra_flags='other-config'
+uci set dhcp.CONTROL.start='1'
+uci set dhcp.CONTROL.limit='250'
+uci set dhcp.CONTROL.interface='CONTROL'
+uci set dhcp.CONTROL.leasetime='24h'
+uci set dhcp.CONTROL.dhcpv6='server'
+uci set dhcp.CONTROL.domain=$CONTROL_domain
+uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
+uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
+uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip
+uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
+uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.HCONTROL=dhcp
+uci set dhcp.HCONTROL.dhcpv4='server'
+uci set dhcp.HCONTROL.dhcpv6='server'
+uci set dhcp.HCONTROL.ra='server'
+uci set dhcp.HCONTROL.ra_slaac='1'
+uci add_list dhcp.HCONTROL.ra_flags='managed-config'
+uci add_list dhcp.HCONTROL.ra_flags='other-config'
+uci set dhcp.HCONTROL.start='1'
+uci set dhcp.HCONTROL.limit='250'
+uci set dhcp.HCONTROL.interface='HCONTROL'
+uci set dhcp.HCONTROL.leasetime='24h'
+uci set dhcp.HCONTROL.dhcpv6='server'
+uci set dhcp.HCONTROL.domain=$HCONTROL_domain
+uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
+uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
+uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
+uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
+uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.INET=dhcp
+uci set dhcp.INET.dhcpv4='server'
+uci set dhcp.INET.dhcpv6='server'
+uci set dhcp.INET.ra='server'
+uci set dhcp.INET.ra_slaac='1'
+uci add_list dhcp.INET.ra_flags='managed-config'
+uci add_list dhcp.INET.ra_flags='other-config'
+uci set dhcp.INET.start='1'
+uci set dhcp.INET.limit='250'
+uci set dhcp.INET.interface='INET'
+uci set dhcp.INET.leasetime='24h'
+uci set dhcp.INET.dhcpv6='server'
+uci set dhcp.INET.domain=$INET_domain
+uci set dhcp.INET.local='/'$INET_domain'/'
+uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
+uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
+uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
+uci set dhcp.INET.server=$INET_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.ENTERTAIN=dhcp
+uci set dhcp.ENTERTAIN.dhcpv4='server'
+uci set dhcp.ENTERTAIN.dhcpv6='server'
+uci set dhcp.ENTERTAIN.ra='server'
+uci set dhcp.ENTERTAIN.ra_slaac='1'
+uci add_list dhcp.ENTERTAIN.ra_flags='managed-config'
+uci add_list dhcp.ENTERTAIN.ra_flags='other-config'
+uci set dhcp.ENTERTAIN.start='1'
+uci set dhcp.ENTERTAIN.limit='250'
+uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
+uci set dhcp.ENTERTAIN.leasetime='24h'
+uci set dhcp.ENTERTAIN.dhcpv6='server'
+uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
+uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
+uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
+uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.VOICE=dhcp
+uci set dhcp.VOICE.dhcpv4='server'
+uci set dhcp.VOICE.dhcpv6='server'
+uci set dhcp.VOICE.ra='server'
+uci set dhcp.VOICE.ra_slaac='1'
+uci add_list dhcp.VOICE.ra_flags='managed-config'
+uci add_list dhcp.VOICE.ra_flags='other-config'
+uci set dhcp.VOICE.start='1'
+uci set dhcp.VOICE.limit='250'
+uci set dhcp.VOICE.interface='VOICE'
+uci set dhcp.VOICE.leasetime='24h'
+uci set dhcp.VOICE.dhcpv6='server'
+uci set dhcp.VOICE.domain=$VOICE_domain
+uci set dhcp.VOICE.local='/'$VOICE_domain'/'
+uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
+uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
+uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
+uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.GUEST=dhcp
+uci set dhcp.GUEST.dhcpv4='server'
+uci set dhcp.GUEST.dhcpv6='server'
+uci set dhcp.GUEST.ra='server'
+uci set dhcp.GUEST.ra_slaac='1'
+uci add_list dhcp.GUEST.ra_flags='managed-config'
+uci add_list dhcp.GUEST.ra_flags='other-config'
+uci set dhcp.GUEST.start='100'
+uci set dhcp.GUEST.limit='150'
+uci set dhcp.GUEST.interface='GUEST'
+uci set dhcp.GUEST.leasetime='24h'
+uci set dhcp.GUEST.dhcpv6='server'
+uci set dhcp.GUEST.domain=$GUEST_domain
+uci set dhcp.GUEST.local='/'$GUEST_domain'/'
+uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
+uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
+uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
+uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
+uci commit && reload_config
+
+uci set dhcp.CMOVIE=dhcp
+uci set dhcp.CMOVIE.dhcpv4='server'
+uci set dhcp.CMOVIE.dhcpv6='server'
+uci set dhcp.CMOVIE.ra='server'
+uci set dhcp.CMOVIE.ra_slaac='1'
+uci add_list dhcp.CMOVIE.ra_flags='managed-config'
+uci add_list dhcp.CMOVIE.ra_flags='other-config'
+uci set dhcp.CMOVIE.start='100'
+uci set dhcp.CMOVIE.limit='150'
+uci set dhcp.CMOVIE.interface='CMOVIE'
+uci set dhcp.CMOVIE.leasetime='24h'
+uci set dhcp.CMOVIE.dhcpv6='server'
+uci set dhcp.CMOVIE.domain=$CMOVIE_domain
+uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
+uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
+uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
+uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
+uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
+uci commit && reload_config
+
+uci commit dhcp && reload_config >/dev/null
+
+#/etc/init.d/dnsmasq restart >/dev/null
+
+uci set network.wan.peerdns='0'
+uci set network.wan.dns='127.0.0.1'
+uci set network.wan6.peerdns='0'
+uci set network.wan6.dns='0::1'
+uci commit && reload_config >/dev/null
+
+#uci set dhcp.@dnsmasq[-1].dnssec=1
+#uci set dhcp.@dnsmasq[-1].dnsseccheckunsigned=1
+#uci commit && reload_config >/dev/null
+
+uci set dhcp.wan=dhcp
+uci set dhcp.wan.interface='wan'
+uci set dhcp.wan.ignore='1'
+
+uci commit dhcp && reload_config >/dev/null
+
+/etc/init.d/dnsmasq restart >/dev/null
+cp /usr/share/dnsmasq/trust-anchors.conf /etc/ >/dev/null
+
+
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '#                  DHCP - dnsmasq                      #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo
+echo 'Your Config is:'
+echo
+echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$INET_net
+echo
+echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$HCONTROL_net
+echo
+echo 'Voice-Assistent SSID: '$VOICE_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$VOICE_net
+echo
+echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$ENTERTAIN_net
+echo
+echo 'Server-WiFi SSID:     '$SERVER_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$SERVER_net
+echo
+echo 'IR/BT-Control SSID:   '$CONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$CONTROL_net
+echo
+echo 'Guests SSID is:       '$GUEST_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$GUEST_net
+echo
+echo
+echo
+echo 'IP-Address:           '$ACCESS_SERVER
+echo 'Gateway:              '$INET_GW
+echo 'Domain:               '$LOCAL_DOMAIN
+echo
+echo 'GUI-Access:           https://'$INET_ip':8443'
+echo 'User:                 '$USERNAME
+echo 'Password:             password'
+echo
+echo 'Please wait until Reboot ....'
+
+}
+
+create_url_filter() {
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -2445,14 +2831,16 @@ mkdir /etc/dnsmasq.d/AllowAll >/dev/null
 
 uci commit dhcp && reload_config >/dev/null
 
+DNS_Relay_port=9053
+
 # Configure Black and Whitelsit
 cat << EOF > /etc/dnsmasq.d/Blacklist/z_all_allow
 server=/dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/127.0.0.1
-server=/#/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/#/127.0.0.1#$(echo $DNS_Relay_port)
 EOF
 
 cat << EOF > /etc/dnsmasq.d/AllowAll/all_allow
-server=/#/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/#/127.0.0.1#$(echo $DNS_Relay_port)
 EOF
 
 cat << EOF > /etc/dnsmasq.d/BlockAll/block_all
@@ -7052,470 +7440,470 @@ EOF
 cat << EOF > /etc/dnsmasq.d/Blacklist/white
 server=/dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/127.0.0.1#9053
 
-server=/microsoftconnecttest.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/msftncsi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/clients3.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/connectivitycheck.gstatic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/detectportal.firefox.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tplinkcloud.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/captive.apple.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/microsoftconnecttest.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/msftncsi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/clients3.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/connectivitycheck.gstatic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/detectportal.firefox.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tplinkcloud.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/captive.apple.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/3sat.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/7tv.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/7tv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/accuweather.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/accuweather.comde/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-control.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-control.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-controls.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-controls.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/akamaihd.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alexasounds.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice-dsl.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice-dsl.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonsilk.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonaws.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/.amazon/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mlis.amazon.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spectrum.s3.amazonaws.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonaws.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonaws.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/a2z.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/images-amazon.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/andreas-stawinski.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/android.clients.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/antenne.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.amazonalexa.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.co.uk.amazonalexa.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.crittercism.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.eu.amazonalexa.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonvideo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api-global.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openwrt.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/raspbery.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/3sat.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/7tv.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/7tv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/accuweather.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/accuweather.comde/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-control.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-controls.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-controls.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/akamaihd.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alexasounds.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice-dsl.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice-dsl.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonsilk.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonaws.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/.amazon/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mlis.amazon.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spectrum.s3.amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonaws.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/a2z.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/images-amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/andreas-stawinski.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/android.clients.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/antenne.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.co.uk.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.crittercism.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.eu.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonvideo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api-global.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openwrt.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/raspbery.org/127.0.0.1#$(echo $DNS_Relay_port)
 
 
-server=/apple.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mzstatic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/apple.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/apple.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mzstatic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/apple.de/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/ard.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ardmediathek.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/arte.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/avm.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bing.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br24.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br-24.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br-24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cddbp.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/chip.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/chip.smarttv.cellular.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cinepass.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cinepass.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloud.mediola.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloudfront.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloudflare-dns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloudflare.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/connectors.yonomi.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/connectors.yonomi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/content.dhg.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ct.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.blog/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/daserste.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/deutschewelle.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/deutschewelle.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/directions.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/directions.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dnssec-or-not.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dnssec.vs.uni-due.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dw.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dw.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/epg.corio.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erf1.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erste.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/filmstarts.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/focus.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/freestream.nmdn.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/fritz.box/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flip.it/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ftp.stawimedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/github.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/github.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/github.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/galileo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/gallileo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/geonames.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/getinvoked.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ggpht.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/googleapis.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/googlevideo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/gracenote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/gvt1.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmonyremote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmony-remote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmonyremote.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmony-remote.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hbbtv.*/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heise.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heise-online.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heute.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hinter.bibeltv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/home.stawimedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hotmail.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hotmail.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ichnaea.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icloud.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icloud.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ifttt.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ihealthlabs.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/invokedapps.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/invokedapps.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ipleak.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ipv4_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ipv6_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ism/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/it-business.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/it-business.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/itunes.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ix.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/ard.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ardmediathek.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/arte.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/avm.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bing.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br24.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br-24.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br-24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cddbp.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/chip.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/chip.smarttv.cellular.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cinepass.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cinepass.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloud.mediola.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloudfront.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloudflare-dns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloudflare.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/connectors.yonomi.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/connectors.yonomi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/content.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ct.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.blog/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/daserste.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/deutschewelle.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/deutschewelle.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/directions.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/directions.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dnssec-or-not.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dnssec.vs.uni-due.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dw.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dw.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/epg.corio.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erf1.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erste.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/filmstarts.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/focus.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/freestream.nmdn.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/fritz.box/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flip.it/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ftp.stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/github.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/github.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/github.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/galileo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/gallileo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/geonames.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/getinvoked.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ggpht.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/googleapis.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/googlevideo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/gracenote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/gvt1.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmonyremote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmony-remote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmonyremote.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmony-remote.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hbbtv.*/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heise.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heise-online.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heute.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hinter.bibeltv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/home.stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hotmail.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hotmail.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ichnaea.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icloud.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icloud.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ifttt.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ihealthlabs.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/invokedapps.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/invokedapps.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ipleak.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ipv4_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ipv6_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ism/127.0.0.1#$(echo $DNS_Relay_port)
+server=/it-business.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/it-business.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/itunes.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ix.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/joyn.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.segment.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/seventv.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/route71.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ak-t1p-vod-playout-prod.akamaized.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/prosieben-ctr.live.ott.irdeto.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/p7s1video.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/joyn.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/joyn.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/joyn.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/kabeleins.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/joyn.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.segment.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/seventv.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/route71.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ak-t1p-vod-playout-prod.akamaized.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/prosieben-ctr.live.ott.irdeto.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/p7s1video.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/joyn.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/joyn.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/joyn.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/kabeleins.de/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/laut.fm/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/live.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/live.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/llnwd.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/llnwd.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/logging.dhg.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/m.media-amazon.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/m.tvinfo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/macandi.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mediola.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mediola.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/members.harmonyremote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/metafilegenerator.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/microsoft.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/microsoft.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mobile.chip.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myfritz.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myharmony.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myharmony.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myremotesetup.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mytvscout.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/n24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/push.prod.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nccp.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/uiboot.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/secure.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/customerevents.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/netflix.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflximg.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflximg.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxvideo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxvideo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxso.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nfximg.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxso.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nfximg.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxso.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nfximg.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nodejs.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/no-ip.biz/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nokia.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nokia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/npmjs.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ntp.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/n-tv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/o2.box/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office365.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office365.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/onlinewetter.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/onlinewetter.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openstreetmap.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openstreetmap.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openstreetmap.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/outlook.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/outlook.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/outlook.live.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pcwelt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pc-welt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/philips.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/philips.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/philips.nl/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/phobos.apple.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/phobos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/photos.apple.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/photos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pionieer.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/play.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/playstation.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/prosieben.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ps3.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pubsub.pubnub.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pubnub.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/radio.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/radiogong.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/radiotime.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-control.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-control.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-controls.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-controls.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotesneo.aio-control.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver1.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver2.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver3.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver4.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/rtl.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/rtl2.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/s3-directional-w.amazonaws.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/samsung.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sat1.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/script.ioam.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/shoutcast.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spn.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/startpage.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/startpage.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/startpage.nl/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stawimedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stawimedia.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stawimedia.local/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stream.erf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/streamfarm.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sus.dhg.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/svcs.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/t3n.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/telegram.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/t.me/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tagesschau.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tagesschau24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/time.nist.gov/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/time.windows.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/torproject.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tumblr.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tumblr.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tumblr.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune_in.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune_in.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tunein.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune-in.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tunein.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune-in.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitter.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitter.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/t.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvtv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/unifiedlayer.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vevo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vevo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/video.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videobuster.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videobuster.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videociety.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videociety.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vimeo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vimeo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wbsapi.withings.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/whatismyip.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wpstr.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.ch/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/weather.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/weather.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/welt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetteronline.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter-online.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikimedia.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikipedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikipedia.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikipedia.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/withings.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/withings.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ws.withings.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wunderlist.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/y2u.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelpcdn.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yonomi.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yonomi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtu.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtube.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtube-nocookie.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ytimg.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/laut.fm/127.0.0.1#$(echo $DNS_Relay_port)
+server=/live.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/live.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/llnwd.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/llnwd.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/logging.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/m.media-amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/m.tvinfo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/macandi.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mediola.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mediola.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/members.harmonyremote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/metafilegenerator.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/microsoft.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/microsoft.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mobile.chip.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myfritz.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myharmony.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myharmony.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myremotesetup.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mytvscout.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/n24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/push.prod.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nccp.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/uiboot.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/secure.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/customerevents.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/netflix.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflximg.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflximg.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxvideo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxvideo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxso.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nfximg.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxso.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nfximg.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxso.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nfximg.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nodejs.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/no-ip.biz/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nokia.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nokia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/npmjs.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ntp.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/n-tv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/o2.box/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office365.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office365.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/onlinewetter.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/onlinewetter.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openstreetmap.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openstreetmap.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openstreetmap.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/outlook.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/outlook.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/outlook.live.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pcwelt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pc-welt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/philips.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/philips.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/philips.nl/127.0.0.1#$(echo $DNS_Relay_port)
+server=/phobos.apple.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/phobos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/photos.apple.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/photos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pionieer.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/play.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/playstation.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/prosieben.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ps3.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pubsub.pubnub.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pubnub.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/radio.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/radiogong.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/radiotime.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-control.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-controls.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-controls.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotesneo.aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver1.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver2.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver3.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver4.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/rtl.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/rtl2.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/s3-directional-w.amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/samsung.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sat1.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/script.ioam.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/shoutcast.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spn.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/startpage.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/startpage.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/startpage.nl/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stawimedia.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stawimedia.local/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stream.erf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/streamfarm.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sus.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/svcs.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/t3n.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/telegram.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/t.me/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tagesschau.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tagesschau24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/time.nist.gov/127.0.0.1#$(echo $DNS_Relay_port)
+server=/time.windows.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/torproject.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tumblr.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tumblr.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tumblr.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune_in.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune_in.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tunein.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune-in.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tunein.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune-in.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitter.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitter.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/t.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvtv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/unifiedlayer.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vevo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vevo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/video.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videobuster.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videobuster.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videociety.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videociety.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vimeo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vimeo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wbsapi.withings.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/whatismyip.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wpstr.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.ch/127.0.0.1#$(echo $DNS_Relay_port)
+server=/weather.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/weather.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/welt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetteronline.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter-online.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikimedia.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikipedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikipedia.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikipedia.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/withings.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/withings.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ws.withings.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wunderlist.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/y2u.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelpcdn.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yonomi.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yonomi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtu.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtube.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtube-nocookie.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ytimg.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/zattoo.ch/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zahs.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/zattoo.ch/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zahs.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.eu/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/zdf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zdf-cdn.live.cellular.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/zdf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zdf-cdn.live.cellular.de/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/dlive.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dlive.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/dlive.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dlive.tv/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/twitch.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitch.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitch.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitchcdn.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ttvnw.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/jtvnw.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitch.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/twitch.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitch.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitch.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitchcdn.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ttvnw.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/jtvnw.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitch.tv/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/disneyplus.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney+.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disneyplus.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney+.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disneyplus.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bamgrid.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bam.nr-data.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cdn.registerdisney.go.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cws.convia.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/d9.flashtalking.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney-portal.my.onetrust.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disneyplus.bn5x.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/js-agent.newrelic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney-plus.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dssott.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/adobedtm.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney+.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/disneyplus.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney+.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disneyplus.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney+.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disneyplus.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bamgrid.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bam.nr-data.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cdn.registerdisney.go.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cws.convia.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/d9.flashtalking.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney-portal.my.onetrust.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disneyplus.bn5x.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/js-agent.newrelic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney-plus.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dssott.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/adobedtm.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney+.tv/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/pluto.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pluto.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pluto.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduck.go/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduckgo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduckgo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/pluto.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pluto.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pluto.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduck.go/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduckgo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduckgo.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/bitchute.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bitchute.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/instagram.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/instagram.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pinterest.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pinterest.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pinterest.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flickr.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flickr.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flickr.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/you2.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtu.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spotify.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spotify.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spotify.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/www.bit.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bit.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ow.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tinyurl.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/buff.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/trib.al/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/serienstream.sx/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/goo.gl/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduckgo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduck.go/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter-online.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter-online.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/snapcraft.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/easylist.to/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/secure.fanboy.co.nz/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/glm.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heise.cloudimg.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/im.bestcheck.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/eum.instana.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/s.w-x.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/docker.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bibelserver.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bibelserver.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bibleserver.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bibleserver.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icf.ch/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icf.church/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/bitchute.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bitchute.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/instagram.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/instagram.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pinterest.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pinterest.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pinterest.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flickr.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flickr.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flickr.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/you2.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtu.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spotify.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spotify.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spotify.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/www.bit.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bit.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ow.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tinyurl.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/buff.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/trib.al/127.0.0.1#$(echo $DNS_Relay_port)
+server=/serienstream.sx/127.0.0.1#$(echo $DNS_Relay_port)
+server=/goo.gl/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduckgo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduck.go/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter-online.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter-online.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/snapcraft.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/easylist.to/127.0.0.1#$(echo $DNS_Relay_port)
+server=/secure.fanboy.co.nz/127.0.0.1#$(echo $DNS_Relay_port)
+server=/glm.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heise.cloudimg.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/im.bestcheck.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/eum.instana.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/s.w-x.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/docker.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bibelserver.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bibelserver.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bibleserver.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bibleserver.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icf.ch/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icf.church/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/.skype/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/.youtube/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/.office/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/.skype/127.0.0.1#$(echo $DNS_Relay_port)
+server=/.youtube/127.0.0.1#$(echo $DNS_Relay_port)
+server=/.office/127.0.0.1#$(echo $DNS_Relay_port)
 server=/.exit/127.0.0.1#9053
 server=/.onion/127.0.0.1#9053
 EOF
 
 cat << EOF > /etc/dnsmasq.d/Blacklist/banking
 
-server=/.banking/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/unicredit.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hvb.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/unicredit.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hvb.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hypovereinsbak.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hypovereinsbank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/comdirekt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/comdirect.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/comdirect.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/postbank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/satander.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/n26.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/deutschebank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/reiba.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sparkasse.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sskm.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/commerzbank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/.banking/127.0.0.1#$(echo $DNS_Relay_port)
+server=/unicredit.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hvb.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/unicredit.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hvb.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hypovereinsbak.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hypovereinsbank.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/comdirekt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/comdirect.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/comdirect.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/postbank.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/satander.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/n26.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/deutschebank.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/reiba.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sparkasse.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sskm.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/commerzbank.de/127.0.0.1#$(echo $DNS_Relay_port)
 
 EOF
 
@@ -7587,11 +7975,11 @@ echo 'Please wait until Reboot ....'
 # Configure Black and Whitelsit
 cat << EOF > /etc/dnsmasq.d/Blacklist/z_all_allow
 server=/dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/127.0.0.1
-server=/#/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/#/127.0.0.1#$(echo $DNS_Relay_port)
 EOF
 
 cat << EOF > /etc/dnsmasq.d/AllowAll/all_allow
-server=/#/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/#/127.0.0.1#$(echo $DNS_Relay_port)
 EOF
 
 cat << EOF > /etc/dnsmasq.d/BlockAll/block_all
@@ -12191,470 +12579,470 @@ EOF
 cat << EOF > /etc/dnsmasq.d/Blacklist/white
 server=/dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/127.0.0.1#9053
 
-server=/microsoftconnecttest.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/msftncsi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/clients3.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/connectivitycheck.gstatic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/detectportal.firefox.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tplinkcloud.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/captive.apple.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/microsoftconnecttest.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/msftncsi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/clients3.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/connectivitycheck.gstatic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/detectportal.firefox.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tplinkcloud.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/captive.apple.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/3sat.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/7tv.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/7tv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/accuweather.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/accuweather.comde/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-control.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-control.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-controls.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-controls.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/akamaihd.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alexasounds.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice-dsl.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice-dsl.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonsilk.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonaws.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/.amazon/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mlis.amazon.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spectrum.s3.amazonaws.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonaws.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonaws.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/a2z.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/images-amazon.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/andreas-stawinski.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/android.clients.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/antenne.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.amazonalexa.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.co.uk.amazonalexa.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.crittercism.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.eu.amazonalexa.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonvideo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api-global.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openwrt.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/raspbery.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/3sat.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/7tv.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/7tv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/accuweather.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/accuweather.comde/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-control.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-controls.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-controls.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/akamaihd.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alexasounds.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice-dsl.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice-dsl.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonsilk.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonaws.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/.amazon/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mlis.amazon.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spectrum.s3.amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonaws.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/a2z.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/images-amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/andreas-stawinski.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/android.clients.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/antenne.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.co.uk.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.crittercism.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.eu.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonvideo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api-global.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openwrt.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/raspbery.org/127.0.0.1#$(echo $DNS_Relay_port)
 
 
-server=/apple.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mzstatic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/apple.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/apple.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mzstatic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/apple.de/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/ard.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ardmediathek.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/arte.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/avm.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bing.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br24.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br-24.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br-24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cddbp.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/chip.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/chip.smarttv.cellular.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cinepass.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cinepass.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloud.mediola.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloudfront.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloudflare-dns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloudflare.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/connectors.yonomi.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/connectors.yonomi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/content.dhg.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ct.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.blog/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/daserste.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/deutschewelle.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/deutschewelle.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/directions.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/directions.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dnssec-or-not.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dnssec.vs.uni-due.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dw.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dw.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/epg.corio.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erf1.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erste.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/filmstarts.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/focus.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/freestream.nmdn.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/fritz.box/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flip.it/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ftp.stawimedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/github.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/github.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/github.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/galileo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/gallileo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/geonames.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/getinvoked.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ggpht.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/googleapis.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/googlevideo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/gracenote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/gvt1.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmonyremote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmony-remote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmonyremote.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmony-remote.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hbbtv.*/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heise.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heise-online.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heute.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hinter.bibeltv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/home.stawimedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hotmail.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hotmail.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ichnaea.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icloud.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icloud.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ifttt.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ihealthlabs.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/invokedapps.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/invokedapps.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ipleak.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ipv4_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ipv6_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ism/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/it-business.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/it-business.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/itunes.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ix.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/ard.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ardmediathek.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/arte.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/avm.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bing.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br24.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br-24.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br-24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cddbp.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/chip.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/chip.smarttv.cellular.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cinepass.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cinepass.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloud.mediola.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloudfront.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloudflare-dns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloudflare.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/connectors.yonomi.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/connectors.yonomi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/content.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ct.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.blog/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/daserste.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/deutschewelle.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/deutschewelle.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/directions.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/directions.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dnssec-or-not.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dnssec.vs.uni-due.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dw.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dw.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/epg.corio.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erf1.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erste.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/filmstarts.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/focus.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/freestream.nmdn.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/fritz.box/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flip.it/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ftp.stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/github.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/github.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/github.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/galileo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/gallileo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/geonames.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/getinvoked.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ggpht.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/googleapis.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/googlevideo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/gracenote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/gvt1.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmonyremote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmony-remote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmonyremote.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmony-remote.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hbbtv.*/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heise.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heise-online.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heute.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hinter.bibeltv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/home.stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hotmail.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hotmail.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ichnaea.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icloud.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icloud.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ifttt.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ihealthlabs.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/invokedapps.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/invokedapps.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ipleak.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ipv4_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ipv6_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ism/127.0.0.1#$(echo $DNS_Relay_port)
+server=/it-business.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/it-business.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/itunes.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ix.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/joyn.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.segment.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/seventv.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/route71.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ak-t1p-vod-playout-prod.akamaized.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/prosieben-ctr.live.ott.irdeto.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/p7s1video.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/joyn.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/joyn.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/joyn.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/kabeleins.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/joyn.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.segment.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/seventv.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/route71.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ak-t1p-vod-playout-prod.akamaized.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/prosieben-ctr.live.ott.irdeto.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/p7s1video.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/joyn.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/joyn.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/joyn.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/kabeleins.de/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/laut.fm/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/live.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/live.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/llnwd.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/llnwd.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/logging.dhg.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/m.media-amazon.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/m.tvinfo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/macandi.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mediola.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mediola.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/members.harmonyremote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/metafilegenerator.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/microsoft.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/microsoft.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mobile.chip.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myfritz.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myharmony.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myharmony.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myremotesetup.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mytvscout.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/n24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/push.prod.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nccp.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/uiboot.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/secure.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/customerevents.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/netflix.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflximg.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflximg.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxvideo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxvideo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxso.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nfximg.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxso.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nfximg.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxso.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nfximg.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nodejs.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/no-ip.biz/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nokia.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nokia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/npmjs.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ntp.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/n-tv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/o2.box/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office365.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office365.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/onlinewetter.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/onlinewetter.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openstreetmap.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openstreetmap.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openstreetmap.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/outlook.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/outlook.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/outlook.live.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pcwelt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pc-welt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/philips.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/philips.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/philips.nl/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/phobos.apple.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/phobos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/photos.apple.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/photos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pionieer.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/play.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/playstation.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/prosieben.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ps3.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pubsub.pubnub.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pubnub.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/radio.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/radiogong.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/radiotime.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-control.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-control.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-controls.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-controls.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotesneo.aio-control.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver1.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver2.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver3.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver4.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/rtl.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/rtl2.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/s3-directional-w.amazonaws.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/samsung.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sat1.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/script.ioam.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/shoutcast.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spn.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/startpage.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/startpage.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/startpage.nl/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stawimedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stawimedia.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stawimedia.local/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stream.erf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/streamfarm.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sus.dhg.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/svcs.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/t3n.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/telegram.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/t.me/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tagesschau.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tagesschau24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/time.nist.gov/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/time.windows.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/torproject.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tumblr.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tumblr.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tumblr.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune_in.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune_in.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tunein.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune-in.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tunein.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune-in.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitter.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitter.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/t.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvtv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/unifiedlayer.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vevo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vevo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/video.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videobuster.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videobuster.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videociety.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videociety.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vimeo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vimeo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wbsapi.withings.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/whatismyip.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wpstr.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.ch/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/weather.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/weather.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/welt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetteronline.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter-online.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikimedia.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikipedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikipedia.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikipedia.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/withings.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/withings.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ws.withings.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wunderlist.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/y2u.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelpcdn.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yonomi.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yonomi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtu.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtube.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtube-nocookie.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ytimg.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/laut.fm/127.0.0.1#$(echo $DNS_Relay_port)
+server=/live.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/live.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/llnwd.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/llnwd.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/logging.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/m.media-amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/m.tvinfo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/macandi.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mediola.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mediola.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/members.harmonyremote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/metafilegenerator.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/microsoft.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/microsoft.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mobile.chip.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myfritz.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myharmony.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myharmony.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myremotesetup.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mytvscout.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/n24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/push.prod.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nccp.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/uiboot.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/secure.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/customerevents.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/netflix.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflximg.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflximg.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxvideo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxvideo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxso.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nfximg.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxso.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nfximg.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxso.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nfximg.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nodejs.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/no-ip.biz/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nokia.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nokia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/npmjs.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ntp.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/n-tv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/o2.box/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office365.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office365.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/onlinewetter.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/onlinewetter.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openstreetmap.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openstreetmap.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openstreetmap.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/outlook.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/outlook.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/outlook.live.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pcwelt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pc-welt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/philips.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/philips.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/philips.nl/127.0.0.1#$(echo $DNS_Relay_port)
+server=/phobos.apple.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/phobos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/photos.apple.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/photos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pionieer.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/play.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/playstation.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/prosieben.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ps3.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pubsub.pubnub.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pubnub.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/radio.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/radiogong.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/radiotime.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-control.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-controls.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-controls.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotesneo.aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver1.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver2.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver3.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver4.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/rtl.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/rtl2.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/s3-directional-w.amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/samsung.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sat1.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/script.ioam.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/shoutcast.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spn.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/startpage.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/startpage.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/startpage.nl/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stawimedia.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stawimedia.local/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stream.erf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/streamfarm.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sus.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/svcs.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/t3n.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/telegram.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/t.me/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tagesschau.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tagesschau24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/time.nist.gov/127.0.0.1#$(echo $DNS_Relay_port)
+server=/time.windows.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/torproject.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tumblr.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tumblr.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tumblr.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune_in.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune_in.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tunein.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune-in.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tunein.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune-in.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitter.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitter.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/t.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvtv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/unifiedlayer.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vevo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vevo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/video.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videobuster.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videobuster.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videociety.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videociety.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vimeo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vimeo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wbsapi.withings.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/whatismyip.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wpstr.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.ch/127.0.0.1#$(echo $DNS_Relay_port)
+server=/weather.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/weather.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/welt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetteronline.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter-online.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikimedia.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikipedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikipedia.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikipedia.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/withings.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/withings.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ws.withings.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wunderlist.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/y2u.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelpcdn.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yonomi.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yonomi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtu.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtube.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtube-nocookie.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ytimg.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/zattoo.ch/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zahs.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/zattoo.ch/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zahs.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.eu/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/zdf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zdf-cdn.live.cellular.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/zdf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zdf-cdn.live.cellular.de/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/dlive.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dlive.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/dlive.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dlive.tv/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/twitch.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitch.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitch.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitchcdn.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ttvnw.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/jtvnw.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitch.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/twitch.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitch.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitch.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitchcdn.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ttvnw.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/jtvnw.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitch.tv/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/disneyplus.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney+.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disneyplus.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney+.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disneyplus.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bamgrid.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bam.nr-data.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cdn.registerdisney.go.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cws.convia.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/d9.flashtalking.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney-portal.my.onetrust.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disneyplus.bn5x.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/js-agent.newrelic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney-plus.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dssott.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/adobedtm.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney+.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/disneyplus.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney+.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disneyplus.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney+.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disneyplus.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bamgrid.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bam.nr-data.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cdn.registerdisney.go.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cws.convia.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/d9.flashtalking.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney-portal.my.onetrust.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disneyplus.bn5x.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/js-agent.newrelic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney-plus.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dssott.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/adobedtm.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney+.tv/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/pluto.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pluto.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pluto.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduck.go/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduckgo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduckgo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/pluto.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pluto.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pluto.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduck.go/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduckgo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduckgo.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/bitchute.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bitchute.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/instagram.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/instagram.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pinterest.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pinterest.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pinterest.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flickr.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flickr.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flickr.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/you2.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtu.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spotify.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spotify.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spotify.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/www.bit.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bit.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ow.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tinyurl.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/buff.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/trib.al/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/serienstream.sx/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/goo.gl/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduckgo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduck.go/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter-online.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter-online.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/snapcraft.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/easylist.to/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/secure.fanboy.co.nz/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/glm.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heise.cloudimg.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/im.bestcheck.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/eum.instana.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/s.w-x.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/docker.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bibelserver.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bibelserver.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bibleserver.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bibleserver.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icf.ch/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icf.church/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/bitchute.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bitchute.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/instagram.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/instagram.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pinterest.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pinterest.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pinterest.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flickr.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flickr.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flickr.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/you2.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtu.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spotify.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spotify.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spotify.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/www.bit.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bit.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ow.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tinyurl.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/buff.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/trib.al/127.0.0.1#$(echo $DNS_Relay_port)
+server=/serienstream.sx/127.0.0.1#$(echo $DNS_Relay_port)
+server=/goo.gl/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduckgo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduck.go/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter-online.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter-online.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/snapcraft.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/easylist.to/127.0.0.1#$(echo $DNS_Relay_port)
+server=/secure.fanboy.co.nz/127.0.0.1#$(echo $DNS_Relay_port)
+server=/glm.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heise.cloudimg.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/im.bestcheck.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/eum.instana.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/s.w-x.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/docker.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bibelserver.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bibelserver.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bibleserver.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bibleserver.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icf.ch/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icf.church/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/.skype/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/.youtube/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/.office/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/.skype/127.0.0.1#$(echo $DNS_Relay_port)
+server=/.youtube/127.0.0.1#$(echo $DNS_Relay_port)
+server=/.office/127.0.0.1#$(echo $DNS_Relay_port)
 server=/.exit/127.0.0.1#9053
 server=/.onion/127.0.0.1#9053
 EOF
 
 cat << EOF > /etc/dnsmasq.d/Blacklist/banking
 
-server=/.banking/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/unicredit.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hvb.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/unicredit.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hvb.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hypovereinsbak.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hypovereinsbank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/comdirekt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/comdirect.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/comdirect.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/postbank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/satander.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/n26.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/deutschebank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/reiba.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sparkasse.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sskm.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/commerzbank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/.banking/127.0.0.1#$(echo $DNS_Relay_port)
+server=/unicredit.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hvb.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/unicredit.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hvb.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hypovereinsbak.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hypovereinsbank.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/comdirekt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/comdirect.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/comdirect.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/postbank.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/satander.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/n26.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/deutschebank.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/reiba.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sparkasse.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sskm.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/commerzbank.de/127.0.0.1#$(echo $DNS_Relay_port)
 
 EOF
 
@@ -12724,7 +13112,9 @@ echo
 echo 'Please wait until Reboot ....'
 
 uci commit  && reload_config >/dev/null
+}
 
+set_tor() {
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -12935,7 +13325,9 @@ echo '#               Tor-Onion-Services activated           #'
 echo '#                                                      #'
 echo '########################################################'
 echo 
+}
 
+set_stubby() {
 #Configure stubby
 cat << EOF > /etc/config/stubby
 config stubby 'global'
@@ -12997,8 +13389,9 @@ EOF
 uci commit stubby && reload_config >/dev/null
 
 /etc/init.d/stubby restart  >/dev/null
-# Configure unbound client
+}
 
+set_unbound() {
 echo
 echo '########################################################'
 echo '#                                                      #'
@@ -23438,6 +23831,9 @@ echo 'Password:             password'
 echo
 echo 'Please wait until Reboot ....'
 
+}
+
+set_firewall_rules() {
 # Intercept SSH, HTTP and HTTPS traffic
 #uci -q delete firewall.ssh_int >/dev/null
 #uci set firewall.ssh_int="redirect"
@@ -25800,30 +26196,51 @@ uci commit firewall >/dev/null
 /etc/init.d/network restart >/dev/null
 clear
 
-#mkdir -p /mnt/sda1
-#mount /dev/sda1 /mnt/sda1
-#mkdir -p /tmp/cproot
-#mount --bind / /tmp/cproot
-#tar -C /tmp/cproot -cvf - . | tar -C /mnt/sda1 -x
-#umount /tmp/cproot
+}
 
-#block detect | uci import fstab
-#uci set fstab.@swap[0].enabled='1'
-#uci set fstab.@global[0].anon_mount='1'
 
-#uci set fstab.@mount[0].enabled='1'
-#uci set fstab.@mount[0].options='rw,sync'
 
-#uci set fstab.@mount[1].enabled='1'
-#uci set fstab.@mount[1].options='rw,sync'
-#uci set fstab.@mount[1].target='/home'
+set_mountpoints() {
+mkdir -p /mnt/sda1
+mount /dev/sda1 /mnt/sda1
+mkdir -p /tmp/cproot
+mount --bind / /tmp/cproot
+tar -C /tmp/cproot -cvf - . | tar -C /mnt/sda1 -x
+umount /tmp/cproot
 
-#uci set fstab.@mount[0].target='/'
-#uci set fstab.@mount[0].is_rootfs='1'
+block detect | uci import fstab
+uci set fstab.@swap[0].enabled='1'
+uci set fstab.@global[0].anon_mount='1'
 
-#uci commit fstab
-#/etc/init.d/fstab boot
+uci set fstab.@mount[0].enabled='1'
+uci set fstab.@mount[0].options='rw,sync'
 
+uci set fstab.@mount[1].enabled='1'
+uci set fstab.@mount[1].options='rw,sync'
+uci set fstab.@mount[1].target='/home'
+
+uci set fstab.@mount[0].target='/'
+uci set fstab.@mount[0].is_rootfs='1'
+
+uci commit fstab
+/etc/init.d/fstab boot
+}
+
+#-------------------------start---------------------------------------
+ask_parameter
+install_update
+#install_adguard
+define_variables
+customize_firmware
+create_network
+set_dhcp
+build_websites
+set_tor
+set_stubby
+set_unbound
+create_url_filter
+#set_firewall_rules
+#set_mountpoints
 
 clear
 echo '########################################################'
@@ -25878,4 +26295,4 @@ echo 'Please wait until Reboot ....'
 echo
 echo
 echo 'Enter to continue'
-reboot 
+# reboot 
