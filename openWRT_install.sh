@@ -2435,7 +2435,7 @@ uci commit dhcp && reload_config >/dev/null
 
 set_dhcp() {
 uci -q delete dhcp >/dev/null
-uci delete dhcp.odhcpd >/dev/null
+#uci delete dhcp.odhcpd >/dev/null
 uci delete dhcp.BlacklistSERVER >/dev/null
 uci delete dhcp.BlacklistHCONTROL >/dev/null
 uci delete dhcp.BlacklistCONTROL >/dev/null
