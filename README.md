@@ -1,5 +1,6 @@
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/CyberSecurityBox.jpg" alt="Logo" width="300px"> </img>
 # CyberSecurity-Box<h3>(inkl. Ad Blocker, UnBound (DNS), Tor or optional Pi-Hole5 (incl. DB) and ntopng) </h3>
+<a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch">For German / F&uuml;er Deutsch</a>
 <p>
   First load the <b><a href="https://brave.com/download/" target="_blank">Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
 <p>
