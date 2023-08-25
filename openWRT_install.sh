@@ -246,8 +246,8 @@ define_variables() {
 echo
 echo "define variables"
 echo
-#DHCP
-DHCP_port="67"
+#
+_port="67"
 all_other_DHCP_port="1-66 68-65535"
 
 
@@ -2531,12 +2531,12 @@ uci set dhcp.wan.interface='wan'
 uci set dhcp.wan.ignore='1'
 
 uci set dhcp.SERVER=dhcp
-uci set dhcp.SERVER.dhcpv4='server'
-uci set dhcp.SERVER.dhcpv6='server'
-uci set dhcp.SERVER.ra='server'
-uci set dhcp.SERVER.ra_slaac='1'
-uci add_list dhcp.SERVER.ra_flags='managed-config'
-uci add_list dhcp.SERVER.ra_flags='other-config'
+#uci set dhcp.SERVER.dhcpv4='server'
+#uci set dhcp.SERVER.dhcpv6='server'
+#uci set dhcp.SERVER.ra='server'
+#uci set dhcp.SERVER.ra_slaac='1'
+#uci add_list dhcp.SERVER.ra_flags='managed-config'
+#uci add_list dhcp.SERVER.ra_flags='other-config'
 uci set dhcp.SERVER.start='1'
 uci set dhcp.SERVER.limit='250'
 uci set dhcp.SERVER.interface='SERVER'
@@ -2551,12 +2551,12 @@ uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
 uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.CONTROL=dhcp
-uci set dhcp.CONTROL.dhcpv4='server'
-uci set dhcp.CONTROL.dhcpv6='server'
-uci set dhcp.CONTROL.ra='server'
-uci set dhcp.CONTROL.ra_slaac='1'
-uci add_list dhcp.CONTROL.ra_flags='managed-config'
-uci add_list dhcp.CONTROL.ra_flags='other-config'
+#uci set dhcp.CONTROL.dhcpv4='server'
+#uci set dhcp.CONTROL.dhcpv6='server'
+#uci set dhcp.CONTROL.ra='server'
+#uci set dhcp.CONTROL.ra_slaac='1'
+#uci add_list dhcp.CONTROL.ra_flags='managed-config'
+#uci add_list dhcp.CONTROL.ra_flags='other-config'
 uci set dhcp.CONTROL.start='1'
 uci set dhcp.CONTROL.limit='250'
 uci set dhcp.CONTROL.interface='CONTROL'
@@ -2571,12 +2571,12 @@ uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
 uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.HCONTROL=dhcp
-uci set dhcp.HCONTROL.dhcpv4='server'
-uci set dhcp.HCONTROL.dhcpv6='server'
-uci set dhcp.HCONTROL.ra='server'
-uci set dhcp.HCONTROL.ra_slaac='1'
-uci add_list dhcp.HCONTROL.ra_flags='managed-config'
-uci add_list dhcp.HCONTROL.ra_flags='other-config'
+#uci set dhcp.HCONTROL.dhcpv4='server'
+#uci set dhcp.HCONTROL.dhcpv6='server'
+#uci set dhcp.HCONTROL.ra='server'
+#uci set dhcp.HCONTROL.ra_slaac='1'
+#uci add_list dhcp.HCONTROL.ra_flags='managed-config'
+#uci add_list dhcp.HCONTROL.ra_flags='other-config'
 uci set dhcp.HCONTROL.start='1'
 uci set dhcp.HCONTROL.limit='250'
 uci set dhcp.HCONTROL.interface='HCONTROL'
@@ -2591,12 +2591,12 @@ uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
 uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.INET=dhcp
-uci set dhcp.INET.dhcpv4='server'
-uci set dhcp.INET.dhcpv6='server'
-uci set dhcp.INET.ra='server'
-uci set dhcp.INET.ra_slaac='1'
-uci add_list dhcp.INET.ra_flags='managed-config'
-uci add_list dhcp.INET.ra_flags='other-config'
+#uci set dhcp.INET.dhcpv4='server'
+#uci set dhcp.INET.dhcpv6='server'
+#uci set dhcp.INET.ra='server'
+#uci set dhcp.INET.ra_slaac='1'
+#uci add_list dhcp.INET.ra_flags='managed-config'
+#uci add_list dhcp.INET.ra_flags='other-config'
 uci set dhcp.INET.start='1'
 uci set dhcp.INET.limit='250'
 uci set dhcp.INET.interface='INET'
@@ -2611,12 +2611,12 @@ uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
 uci set dhcp.INET.server=$INET_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.ENTERTAIN=dhcp
-uci set dhcp.ENTERTAIN.dhcpv4='server'
-uci set dhcp.ENTERTAIN.dhcpv6='server'
-uci set dhcp.ENTERTAIN.ra='server'
-uci set dhcp.ENTERTAIN.ra_slaac='1'
-uci add_list dhcp.ENTERTAIN.ra_flags='managed-config'
-uci add_list dhcp.ENTERTAIN.ra_flags='other-config'
+#uci set dhcp.ENTERTAIN.dhcpv4='server'
+#uci set dhcp.ENTERTAIN.dhcpv6='server'
+#uci set dhcp.ENTERTAIN.ra='server'
+#uci set dhcp.ENTERTAIN.ra_slaac='1'
+#uci add_list dhcp.ENTERTAIN.ra_flags='managed-config'
+#uci add_list dhcp.ENTERTAIN.ra_flags='other-config'
 uci set dhcp.ENTERTAIN.start='1'
 uci set dhcp.ENTERTAIN.limit='250'
 uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
@@ -2631,12 +2631,12 @@ uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
 uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.VOICE=dhcp
-uci set dhcp.VOICE.dhcpv4='server'
-uci set dhcp.VOICE.dhcpv6='server'
-uci set dhcp.VOICE.ra='server'
-uci set dhcp.VOICE.ra_slaac='1'
-uci add_list dhcp.VOICE.ra_flags='managed-config'
-uci add_list dhcp.VOICE.ra_flags='other-config'
+#uci set dhcp.VOICE.dhcpv4='server'
+#uci set dhcp.VOICE.dhcpv6='server'
+#uci set dhcp.VOICE.ra='server'
+#uci set dhcp.VOICE.ra_slaac='1'
+#uci add_list dhcp.VOICE.ra_flags='managed-config'
+#uci add_list dhcp.VOICE.ra_flags='other-config'
 uci set dhcp.VOICE.start='1'
 uci set dhcp.VOICE.limit='250'
 uci set dhcp.VOICE.interface='VOICE'
@@ -2651,12 +2651,12 @@ uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
 uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.GUEST=dhcp
-uci set dhcp.GUEST.dhcpv4='server'
-uci set dhcp.GUEST.dhcpv6='server'
-uci set dhcp.GUEST.ra='server'
-uci set dhcp.GUEST.ra_slaac='1'
-uci add_list dhcp.GUEST.ra_flags='managed-config'
-uci add_list dhcp.GUEST.ra_flags='other-config'
+#uci set dhcp.GUEST.dhcpv4='server'
+#uci set dhcp.GUEST.dhcpv6='server'
+#uci set dhcp.GUEST.ra='server'
+#uci set dhcp.GUEST.ra_slaac='1'
+#uci add_list dhcp.GUEST.ra_flags='managed-config'
+#uci add_list dhcp.GUEST.ra_flags='other-config'
 uci set dhcp.GUEST.start='100'
 uci set dhcp.GUEST.limit='150'
 uci set dhcp.GUEST.interface='GUEST'
@@ -2672,12 +2672,12 @@ uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
 uci commit && reload_config
 
 uci set dhcp.CMOVIE=dhcp
-uci set dhcp.CMOVIE.dhcpv4='server'
-uci set dhcp.CMOVIE.dhcpv6='server'
-uci set dhcp.CMOVIE.ra='server'
-uci set dhcp.CMOVIE.ra_slaac='1'
-uci add_list dhcp.CMOVIE.ra_flags='managed-config'
-uci add_list dhcp.CMOVIE.ra_flags='other-config'
+#uci set dhcp.CMOVIE.dhcpv4='server'
+#uci set dhcp.CMOVIE.dhcpv6='server'
+#uci set dhcp.CMOVIE.ra='server'
+#uci set dhcp.CMOVIE.ra_slaac='1'
+#uci add_list dhcp.CMOVIE.ra_flags='managed-config'
+#uci add_list dhcp.CMOVIE.ra_flags='other-config'
 uci set dhcp.CMOVIE.start='100'
 uci set dhcp.CMOVIE.limit='150'
 uci set dhcp.CMOVIE.interface='CMOVIE'
