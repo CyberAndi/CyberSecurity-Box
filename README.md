@@ -118,7 +118,7 @@ service pihole-FTL start</code></pre>
 For more Information in german visit https://www.cyberandi.de/Smarthome
 </p>
 <hr>
-<center>Contact: <a href="mailto:cyberandi@outlook.de">cyberandi@outlook.de</a> - Website: <a href="https://www.cyberandi.de" target="_blank">https://www.cyberandi.de</a></center>
+<center>Contact: <a href="mailto:cyberandi@outlook.de">cyberandi@outlook.de</a> - Website: <a href="https://cyberandi.tumblr.com" target="_blank">https://cyberandi.tumblr.com</a></center>
 </hr>
 <p>
 <p>
