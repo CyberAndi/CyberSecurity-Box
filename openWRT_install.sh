@@ -26233,7 +26233,7 @@ install_update
 define_variables
 customize_firmware
 create_network
-#set_dhcp
+set_dhcp
 #build_websites
 set_tor
 set_stubby
