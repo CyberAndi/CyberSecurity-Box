@@ -23925,7 +23925,7 @@ echo '#                                                      #'
 echo '########################################################'
 echo 
 echo
-
+/etc/init.d/unbound restart  >/dev/null
 
 
 
