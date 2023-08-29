@@ -10,7 +10,7 @@ echo '#                                                      #'
 echo '########################################################'
 echo
 echo
-echo
+echo '--------------------------------------------------------'
 #Firewall Pihole Unbound Tor Transparentproxy
 
 ask_parameter() {
@@ -20,8 +20,12 @@ revision=${revision::-1}
 release=${release::-1}
 revision=${revision:1}
 release=${release:1}
+echo 
 echo 'Current Version ' $release, $revision
- 
+echo 
+echo '--------------------------------------------------------'
+echo
+
 #Localaddresen
 LOCALADDRESS="127.192.0.1/10"
 
