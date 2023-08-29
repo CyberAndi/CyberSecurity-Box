@@ -17,13 +17,13 @@
 [newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>.<br><br>
   Download the Installscript. It starts automatically.<br>
-  for OpenWRT 22.x.xx<br><br>
+  for OpenWRT Version 22.x.xx<br><br>
   <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/openWRT_install.sh && sh openWRT_install.sh</code></pre>
   <br>
-  for OpenWRT 21.x.xx<br><br>
+  for OpenWRT Version 21.x.xx<br><br>
   <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/openWRT21_install.sh && sh openWRT21_install.sh</code></pre>
   <br>
-  for OpenWRT 19.x.xx<br><br>
+  for OpenWRT Version 19.x.xx<br><br>
   <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/openWRT_19_install.sh && sh openWRT_19_install.sh</code></pre>
   <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
  <p>
