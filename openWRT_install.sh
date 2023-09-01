@@ -26650,7 +26650,7 @@ set_tor
 set_stubby
 set_unbound
 create_url_filter
-#set_firewall_rules
+set_firewall_rules
 #set_mountpoints
 
 clear
@@ -26706,4 +26706,4 @@ echo 'Please wait until Reboot ....'
 echo
 echo
 echo 'Enter to continue'
-# reboot 
+reboot 
