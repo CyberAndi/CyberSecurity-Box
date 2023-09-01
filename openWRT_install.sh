@@ -14,13 +14,6 @@ echo
 #Firewall Pihole Unbound Tor Transparentproxy
 
 view_config()  {
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '########################################################'
-echo
 echo
 echo 'Your Config is:'
 echo
