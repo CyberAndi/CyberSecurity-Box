@@ -13,6 +13,59 @@ echo
 echo
 #Firewall Pihole Unbound Tor Transparentproxy
 
+view_config()  {
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo
+echo 'Your Config is:'
+echo
+echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$INET_net
+echo
+echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$HCONTROL_net
+echo
+echo 'Voice-Assistent SSID: '$VOICE_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$VOICE_net
+echo
+echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$ENTERTAIN_net
+echo
+echo 'Server-WiFi SSID:     '$SERVER_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$SERVER_net
+echo
+echo 'IR/BT-Control SSID:   '$CONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$CONTROL_net
+echo
+echo 'Guests SSID is:       '$GUEST_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$GUEST_net
+echo
+echo
+echo
+echo 'IP-Address:           '$ACCESS_SERVER
+echo 'Gateway:              '$INET_GW
+echo 'Domain:               '$LOCAL_DOMAIN
+echo
+echo 'GUI-Access:           https://'$INET_ip':8443'
+echo 'User:                 '$USERNAME
+echo 'Password:             password'
+echo
+echo 'Please wait until Reboot ...'
+echo
+}
+
 ask_parameter() {
 release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=')
 revision=$(cat /etc/openwrt_release | grep "DISTRIB_REVISION" | cut -f2 -d '=')
@@ -930,14 +983,7 @@ VIDEO_SRV="52.192.0.0/11 99.86.3.59/24 18.236.7.30/11 217.148.99.11/28 46.137.17
 echo
 echo "variables defineds"
 echo
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '########################################################'
+view_config
 echo
 }
 
@@ -2983,57 +3029,7 @@ uci commit dhcp && reload_config >/dev/null
 /etc/init.d/dnsmasq restart >/dev/null
 cp /usr/share/dnsmasq/trust-anchors.conf /etc/ >/dev/null
 
-
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '#                  DHCP - dnsmasq                      #'
-echo '#                                                      #'
-echo '########################################################'
-echo
-echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
+view_config
 echo 'Please wait until Reboot ....'
 
 }
@@ -3047,47 +3043,7 @@ echo '#                                                      #'
 echo '#                  Tor Definitions                     #'
 echo '#                                                      #'
 echo '########################################################'
-echo
-echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
+view_config
 echo
 
 
@@ -26476,8 +26432,11 @@ uci set firewall.blockIncoming.dest="*"
 uci set firewall.blockIncoming.target="REJECT"
 uci set firewall.blockIncoming.enabled="1"
 
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
 
-
+set_firewall_ipset() {
 # Configure IP sets
 uci -q delete firewall.filter
 uci set firewall.filter="ipset"
@@ -26517,55 +26476,7 @@ uci set firewall.filter6_fwd.target="ACCEPT"
 
 uci commit firewall && reload_config >/dev/null
 /etc/init.d/firewall restart >/dev/null
-
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '########################################################'
-echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
-echo 'Please wait until Reboot ....'
+view_config
 
 cat << "EOF" > /etc/firewall.nat6 
 iptables-save -t nat \
@@ -26609,8 +26520,6 @@ clear
 
 }
 
-
-
 set_mountpoints() {
 mkdir -p /mnt/sda1
 mount /dev/sda1 /mnt/sda1
@@ -26645,6 +26554,7 @@ define_variables
 customize_firmware
 create_network
 set_dhcp
+view_config
 #build_websites
 set_tor
 set_stubby
