@@ -2462,6 +2462,183 @@ uci delete dhcp.@dnsmasq[-1] >/dev/null
 uci delete dhcp.@dnsmasq[-1] >/dev/null
 uci delete dhcp.@dnsmasq[-1] >/dev/null
 uci commit dhcp >/dev/null
+
+uci set dhcp.Blacklist=dnsmasq
+uci set dhcp.Blacklist.domainneeded='1'
+uci set dhcp.Blacklist.boguspriv='1'
+uci set dhcp.Blacklist.filterwin2k='0'
+uci set dhcp.Blacklist.localise_queries='1'
+uci set dhcp.Blacklist.rebind_protection='1'
+uci set dhcp.Blacklist.rebind_localhost='1'
+uci set dhcp.Blacklist.expandhosts='1'
+uci set dhcp.Blacklist.nonegcache='0'
+uci set dhcp.Blacklist.authoritative='1'
+uci set dhcp.Blacklist.readethers='1'
+uci set dhcp.Blacklist.nonwildcard='1'
+uci set dhcp.Blacklist.localservice='1'
+uci set dhcp.Blacklist.ednspacket_max='1232'
+uci set dhcp.Blacklist.local='/stawimedia.local/'
+uci set dhcp.Blacklist.domain='stawimedia.local'
+uci set dhcp.Blacklist.leasefile='/tmp/dhcp.leases'
+uci set dhcp.Blacklist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+uci set dhcp.Blacklist.serversfile='/etc/dnsmasq.d/Blacklist/'
+uci add_list dhcp.Blacklist.notinterface='br-VOICE'
+uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN' 
+uci add_list dhcp.Blacklist.notinterface='br-GUEST'
+uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
+uci add_list dhcp.Whitelist.interface='br-INET'
+uci add_list dhcp.Whitelist.interface='br-SERVER' 
+uci add_list dhcp.Whitelist.interface='br-HCONTROL'
+uci add_list dhcp.Whitelist.interface='br-CONTROL'
+
+
+uci set dhcp.Whitelist=dnsmasq
+uci set dhcp.Whitelist.domainneeded='1'
+uci set dhcp.Whitelist.boguspriv='1'
+uci set dhcp.Whitelist.filterwin2k='0'
+uci set dhcp.Whitelist.localise_queries='1'
+uci set dhcp.Whitelist.rebind_protection='1'
+uci set dhcp.Whitelist.rebind_localhost='1'
+uci set dhcp.Whitelist.expandhosts='1'
+uci set dhcp.Whitelist.nonegcache='0'
+uci set dhcp.Whitelist.authoritative='1'
+uci set dhcp.Whitelist.readethers='1'
+uci set dhcp.Whitelist.nonwildcard='1'
+uci set dhcp.Whitelist.localservice='1'
+uci set dhcp.Whitelist.ednspacket_max='1232'
+uci set dhcp.Whitelist.local='/local/'
+uci set dhcp.Whitelist.domain='local'
+uci set dhcp.Whitelist.leasefile='/tmp/dhcp.leases'
+uci set dhcp.Whitelist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+uci set dhcp.Whitelist.serversfile='/etc/dnsmasq.d/Whitelist/'
+uci add_list dhcp.Whitelist.interface='br-VOICE'
+uci add_list dhcp.Whitelist.interface='br-ENTERTAIN' 
+uci add_list dhcp.Whitelist.interface='br-GUEST'
+uci add_list dhcp.Whitelist.interface='br-CMOVIE'
+uci add_list dhcp.Whitelist.notinterface='br-INET'
+uci add_list dhcp.Whitelist.notinterface='br-SERVER' 
+uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
+
+
+uci set dhcp.HCONTROL=dhcp
+uci set dhcp.HCONTROL.dhcpv4='server'
+uci set dhcp.HCONTROL.dhcpv6='server'
+uci set dhcp.HCONTROL.ra='server'
+uci set dhcp.HCONTROL.ra_slaac='1'
+uci add_list dhcp.HCONTROL.ra_flags='managed-config'
+uci add_list dhcp.HCONTROL.ra_flags='other-config'
+uci set dhcp.HCONTROL.interface='HCONTROL'
+uci set dhcp.HCONTROL.start='2'
+uci set dhcp.HCONTROL.limit='250'
+uci set dhcp.HCONTROL.leasetime='24h'
+uci set dhcp.HCONTROL.force='1'
+uci set dhcp.CONTROL=dhcp
+uci set dhcp.CONTROL.dhcpv4='server'
+uci set dhcp.CONTROL.dhcpv6='server'
+uci set dhcp.CONTROL.ra='server'
+uci set dhcp.CONTROL.ra_slaac='1'
+uci add_list dhcp.CONTROL.ra_flags='managed-config'
+uci add_list dhcp.CONTROL.ra_flags='other-config'
+uci set dhcp.CONTROL.interface='CONTROL'
+uci set dhcp.CONTROL.start='2'
+uci set dhcp.CONTROL.limit='250'
+uci set dhcp.CONTROL.leasetime='24h'
+uci set dhcp.CONTROL.force='1'
+uci set dhcp.INET=dhcp
+uci set dhcp.INET.dhcpv4='server'
+uci set dhcp.INET.dhcpv6='server'
+uci set dhcp.INET.ra='server'
+uci set dhcp.INET.ra_slaac='1'
+uci add_list dhcp.INET.ra_flags='managed-config'
+uci add_list dhcp.INET.ra_flags='other-config'
+uci set dhcp.INET.interface='INET'
+uci set dhcp.INET.start='2'
+uci set dhcp.INET.limit='250'
+uci set dhcp.INET.leasetime='24h'
+uci set dhcp.INET.force='1'
+uci set dhcp.SERVER=dhcp
+uci set dhcp.SERVER.dhcpv4='server'
+uci set dhcp.SERVER.dhcpv6='server'
+uci set dhcp.SERVER.ra='server'
+uci set dhcp.SERVER.ra_slaac='1'
+uci add_list dhcp.SERVER.ra_flags='managed-config'
+uci add_list dhcp.SERVER.ra_flags='other-config'
+uci set dhcp.SERVER.interface='SERVER'
+uci set dhcp.SERVER.start='2'
+uci set dhcp.SERVER.limit='250'
+uci set dhcp.SERVER.leasetime='24h'
+uci set dhcp.SERVER.force='1'
+uci set dhcp.VOICE=dhcp
+uci set dhcp.VOICE.dhcpv4='server'
+uci set dhcp.VOICE.dhcpv6='server'
+uci set dhcp.VOICE.ra='server'
+uci set dhcp.VOICE.ra_slaac='1'
+uci add_list dhcp.VOICE.ra_flags='managed-config'
+uci add_list dhcp.VOICE.ra_flags='other-config'
+uci set dhcp.VOICE.interface='VOICE'
+uci set dhcp.VOICE.start='2'
+uci set dhcp.VOICE.limit='250'
+uci set dhcp.VOICE.leasetime='24h'
+uci set dhcp.VOICE.force='1'
+uci set dhcp.ENTERTAIN=dhcp
+uci set dhcp.ENTERTAIN.dhcpv4='server'
+uci set dhcp.ENTERTAIN.dhcpv6='server'
+uci set dhcp.ENTERTAIN.ra='server'
+uci set dhcp.ENTERTAIN.ra_slaac='1'
+uci add_list.ENTERTAIN.ra_flags='managed-config'
+uci add_list dhcp.ENTERTAIN.ra_flags='other-config'
+uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
+uci set dhcp.ENTERTAIN.start='2'
+uci set dhcp.ENTERTAIN.limit='250'
+uci set dhcp.ENTERTAIN.leasetime='24h'
+uci set dhcp.ENTERTAIN.force='1'
+uci set dhcp.GUEST=dhcp
+uci set dhcp.GUEST.dhcpv4='server'
+uci set dhcp.GUEST.dhcpv6='server'
+uci set dhcp.GUEST.ra='server'
+uci set dhcp.GUEST.ra_slaac='1'
+uci add_list dhcp.GUEST.ra_flags='managed-config'
+uci add_list dhcp.GUEST.ra_flags='other-config'
+uci set dhcp.GUEST.interface='GUEST'
+uci set dhcp.GUEST.start='2'
+uci set dhcp.GUEST.limit='250'
+uci set dhcp.GUEST.leasetime='24h'
+uci set dhcp.GUEST.force='1'
+
+uci commit && reload_config
+/etc/init.d/dnsmasq restart >/dev/null
+}
+
+set_dhcp_old() {
+uci -q delete dhcp >/dev/null
+#uci delete dhcp.odhcpd >/dev/null
+uci delete dhcp.BlacklistSERVER >/dev/null
+uci delete dhcp.BlacklistHCONTROL >/dev/null
+uci delete dhcp.BlacklistCONTROL >/dev/null
+uci delete dhcp.BlacklistINET >/dev/null
+uci delete dhcp.WhitelistVOICE >/dev/null
+uci delete dhcp.WhitelistENTERTAIN >/dev/null
+uci delete dhcp.WhitelistGUEST >/dev/null
+uci delete dhcp.WhitelistCMOVIE >/dev/null
+uci delete dhcp.SERVER >/dev/null
+uci delete dhcp.HCONTROL >/dev/null
+uci delete dhcp.CONTROL >/dev/null
+uci delete dhcp.INET >/dev/null
+uci delete dhcp.VOICE >/dev/null
+uci delete dhcp.ENTERTAIN >/dev/null
+uci delete dhcp.GUEST >/dev/null
+uci delete dhcp.CMOVIE >/dev/null
+uci delete dhcp.Blacklist>/dev/null
+uci delete dhcp.Whitelist >/dev/null
+uci delete dhcp.lan >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci commit dhcp >/dev/null
 uci set dhcp.Blacklist=dnsmasq
 uci set dhcp.Blacklist.domainneeded='1'
 uci set dhcp.Blacklist.localise_queries='1'
