@@ -1797,6 +1797,8 @@ echo '#                Network Definitions                   #'
 echo '#                                                      #'
 echo '########################################################'
 echo 
+view_config
+
 uci -q delete network.lan
 
 cat << EOF > /etc/hosts
