@@ -3094,7 +3094,7 @@ mkdir /etc/dnsmasq.d/AllowAll >/dev/null
 
 uci commit dhcp && reload_config >/dev/null
 
-DNS_Relay_port=9053
+#DNS_Relay_port=9053
 
 # Configure Black and Whitelsit
 cat << EOF > /etc/dnsmasq.d/Blacklist/z_all_allow
