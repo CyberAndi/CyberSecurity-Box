@@ -83,7 +83,7 @@ actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
 INET_GW=$(ip route | grep default | cut -f3  -d ' ')
 INET_GW_org=$INET_GW
 
-read -p 'Please give me the WAN-IP (Gateway/Router): ('$INET_GW')' INET_GW
+read -p 'Please give me the WAN-IP (Gateway/Router): ('$INET_GW') ' INET_GW
 echo
 if [ "$INET_GW" = "" ]
 	then
@@ -126,8 +126,12 @@ ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) 
 LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
 LAN_org=$LAN
 
-#echo 'Type the LAN-IP (Internal Network): ('$LAN')'
-read -p 'Type the LAN-IP (Internal Network): ('$LAN')' LAN
+if [ "$LAN" = "" ]  
+	then
+		LAN=$LAN_org
+fi
+echo
+read -p 'Type the LAN-IP (Internal Network): ('$LAN') ' LAN
 if [ "$LAN" = "" ]  
 	then
 		LAN=$LAN_org
@@ -135,8 +139,7 @@ fi
 
 LOCAL_DOMAIN='CyberSecBox.local'
 echo
-#echo 'Your local Domain of your LAN? (CyberSecBox.local)'
-read -p  'Your local Domain of your LAN? (CyberSecBox.local)' LOCAL_DOMAIN
+read -p  'Your local Domain of your LAN? (CyberSecBox.local) ' LOCAL_DOMAIN
 if [ "$LOCAL_DOMAIN" = "" ]
 	then
 		LOCAL_DOMAIN='CyberSecBox.local'
@@ -146,7 +149,7 @@ WIFI_SSID='CyberSecBox'
 WIFI_SSID_org=$WIFI_SSID
 echo
 #echo 'The Main-WiFi-SSID? ('$WIFI_SSID')'
-read -p 'The Main-WiFi-SSID? ('$WIFI_SSID')' WIFI_SSID
+read -p 'The Main-WiFi-SSID? ('$WIFI_SSID') ' WIFI_SSID
 if [ "$WIFI_SSID" = "" ]
         then
                 WIFI_SSID=$WIFI_SSID_org
@@ -156,7 +159,7 @@ fi
 WIFI_PASS='Cyber,Sec9ox'
 WIFI_PASS_org=$WIFI_PASS
 echo
-read -p 'And the WiFi-Key? (Cyber,Sec9ox)' WIFI_PASS
+read -p 'And the WiFi-Key? (Cyber,Sec9ox) ' WIFI_PASS
 if [ "$WIFI_PASS" = "" ]
 	then
 		WIFI_PASS=$WIFI_PASS_org
@@ -164,7 +167,7 @@ fi
 
 USERNAME='root'
 echo
-read -p 'Enter the user for the login: (default: root)' -s USERNAME
+read -p 'Enter the user for the login: (root) ' -s USERNAME
 passwd $USERNAME
 
 SUBNET=$(echo $LAN | cut -f3 -d '.')
