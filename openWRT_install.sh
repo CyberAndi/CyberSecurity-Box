@@ -67,11 +67,11 @@ release=${release::-1}
 revision=${revision:1}
 release=${release:1}
 echo
-echo '----------------------------------------------------------------'
-echo '              Current Version ' $release, $revision
-echo '----------------------------------------------------------------'
+echo '--------------------------------------------------------'
+echo '       Current Version ' $release, $revision
+echo '--------------------------------------------------------'
 echo 
- 
+
 #Localaddresen
 LOCALADDRESS="127.192.0.1/10"
 
@@ -83,7 +83,7 @@ actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
 INET_GW=$(ip route | grep default | cut -f3  -d ' ')
 INET_GW_org=$INET_GW
 
-read -p 'Please give me the WAN-IP (Gateway/Router): ('$INET_GW') ' INET_GW
+read -p 'Please give me the WAN-IP (Gateway/Router): ['$INET_GW'] ' INET_GW
 echo
 if [ "$INET_GW" = "" ]
 	then
@@ -124,22 +124,23 @@ ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) 
 
 #Lokal LAN
 LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
+
+if [ "$LAN" = "" ]
+        then
+                LAN='192.168.75.254'
+fi
+
 LAN_org=$LAN
 
-if [ "$LAN" = "" ]  
-	then
-		LAN=$LAN_org
-fi
-echo
-read -p 'Type the LAN-IP (Internal Network): ('$LAN') ' LAN
-if [ "$LAN" = "" ]  
-	then
-		LAN=$LAN_org
+read -p 'Type the LAN-IP (Internal Network): ['$( echo $LAN )'] ' LAN
+if [ "$LAN" = "" ]
+        then
+                LAN=$LAN_org
 fi
 
 LOCAL_DOMAIN='CyberSecBox.local'
 echo
-read -p  'Your local Domain of your LAN? (CyberSecBox.local) ' LOCAL_DOMAIN
+read -p  'Your local Domain of your LAN? [CyberSecBox.local] ' LOCAL_DOMAIN
 if [ "$LOCAL_DOMAIN" = "" ]
 	then
 		LOCAL_DOMAIN='CyberSecBox.local'
@@ -148,8 +149,7 @@ fi
 WIFI_SSID='CyberSecBox'
 WIFI_SSID_org=$WIFI_SSID
 echo
-#echo 'The Main-WiFi-SSID? ('$WIFI_SSID')'
-read -p 'The Main-WiFi-SSID? ('$WIFI_SSID') ' WIFI_SSID
+read -p 'The Main-WiFi-SSID? ['$(echo $WIFI_SSID)'] ' WIFI_SSID
 if [ "$WIFI_SSID" = "" ]
         then
                 WIFI_SSID=$WIFI_SSID_org
@@ -159,7 +159,7 @@ fi
 WIFI_PASS='Cyber,Sec9ox'
 WIFI_PASS_org=$WIFI_PASS
 echo
-read -p 'And the WiFi-Key? (Cyber,Sec9ox) ' WIFI_PASS
+read -p 'And the WiFi-Key? [Cyber,Sec9ox] ' WIFI_PASS
 if [ "$WIFI_PASS" = "" ]
 	then
 		WIFI_PASS=$WIFI_PASS_org
@@ -167,7 +167,9 @@ fi
 
 USERNAME='root'
 echo
-read -p 'Enter the user for the login: (root) ' -s USERNAME
+read -p 'Enter the user for the login: [root] ' -s USERNAME
+echo
+echo
 passwd $USERNAME
 
 SUBNET=$(echo $LAN | cut -f3 -d '.')
@@ -175,11 +177,12 @@ SUBNET_sep=$SUBNET
 
 if [ $SUBNET_sep -lt 125 ]
         then
-                SUBNET=$(($SUBNET + 125))
+
                 if  [ $SUBNET_sep -lt 5 ]
                         then
                                 SUBNET_sep=$(($SUBNET_sep + 6))
                 fi
+		SUBNET_sep=$(($SUBNET_sep + 125))
 
         else
                 if  [ $SUBNET_sep -gt 250 ]
@@ -191,31 +194,33 @@ fi
 
 DNS_PORT='y'
 echo
-read -p 'DNS-Relay to UNBOUND-DNS? (Y/n) ' -s  -n 1 DNS_PORT
+
+read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
 if [ "$DNS_PORT" = "" ]
         then
-               DNS_Relay_port="5353"
+               DNS_Relay_port='5353'
         elif [ "$DNS_PORT" = "y" ] 
 		then 
-		DNS_Relay_port="5353"
+		DNS_Relay_port='5353'
 	else
-               DNS_Relay_port="9053"
+               DNS_Relay_port='9053'
 fi
 
 
 SECURE_RULES='y'
 
 echo
-read -p 'Activate HighSecure-Firewall? (Y/n) ' -s  -n 1 SECURE_RULES
+echo
+read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 SECURE_RULES
 
 if [ "$SECURE_RULES" = "" ]
         then
-             FW_HSactive="1"
+             FW_HSactive='1'
         elif [ "$SECURE_RULES" = "y" ]
                 then
-		FW_HSactive="1"
+		FW_HSactive='1'
         else
-              FW_HSactive="0"
+              FW_HSactive='0'
 fi
 
 SERVER_range='192.168.'$(($SUBNET_sep - 123))'.2,192.168.'$(($SUBNET_sep - 123))'.200,24h'
@@ -285,6 +290,8 @@ GUEST_ssid='Guest-'$WIFI_SSID
 CMOVIE_ssid='Free_CMovie_Portal'
 Adversisment_ssid='Telekom'
 
+clear
+view_config
 }
 
 install_update() {
