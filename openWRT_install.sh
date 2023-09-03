@@ -1046,12 +1046,13 @@ uci set uhttpd.defaults.state=''
 uci set uhttpd.defaults.location='DMZ'
 uci set uhttpd.defaults.commonname=$LAN
 uci -q delete uhttpd.main.listen_http
-uci add_list uhttpd.main.listen_http="0.0.0.0:8080"
-uci add_list uhttpd.main.listen_http="[::]:8080"
+uci add_list uhttpd.main.listen_http="0.0.0.0:80"
+uci add_list uhttpd.main.listen_http="[::]:80"
 uci -q delete uhttpd.main.listen_https
 uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
 uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
+uci set uhttpd.main.redirect_https='1'
 uci commit  && reload_config  >/dev/null
 /etc/init.d/uhttpd restart  >/dev/null
 
