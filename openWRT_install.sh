@@ -1087,7 +1087,7 @@ cat << EOF > /etc/banner
 EOF
 
 cat << EOF > /etc/openwrt_release
-DISTRIB_ID='OpenWrt'
+DISTRIB_ID='CyberSecurity-Box'
 DISTRIB_RELEASE='$(echo $release)'
 DISTRIB_REVISION='$(echo $revision)'
 DISTRIB_TARGET='ipq40xx/generic'
@@ -1115,6 +1115,10 @@ cat << EOF > /etc/sysupgrade.conf
 # /etc/example.conf
 # /etc/openvpn/
 /etc/openWRT_install.sh
+/etc/banner
+/etc/device_info
+/etc/openwrt_release
+/etc/config/
 EOF
 
 #Datum erstellen
