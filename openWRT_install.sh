@@ -1119,6 +1119,7 @@ cat << EOF > /etc/sysupgrade.conf
 /etc/device_info
 /etc/openwrt_release
 /etc/config/
+/www/
 EOF
 
 #Datum erstellen
