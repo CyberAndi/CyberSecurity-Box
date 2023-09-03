@@ -1110,6 +1110,17 @@ DEVICE_REVISION='v0.5'
 
 EOF
 
+cp /root/openWRT_install.sh /etc/openWRT_install.sh
+
+cat << EOF > /etc/openWRT_install.sh
+## This file contains files and directories that should
+## be preserved during an upgrade.
+
+# /etc/example.conf
+# /etc/openvpn/
+/etc/openWRT_install.sh
+EOF
+
 #Datum erstellen
 #actdate(date --utc --date "$1" +%F)
 datum=$(date +"%y%d%m%H%M")
