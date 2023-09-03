@@ -1058,6 +1058,7 @@ uci add_list uhttpd.main.listen_http="[::]:8080"
 uci -q delete uhttpd.main.listen_https
 uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
+uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
 uci commit  && reload_config  >/dev/null
 /etc/init.d/uhttpd restart  >/dev/null
 
