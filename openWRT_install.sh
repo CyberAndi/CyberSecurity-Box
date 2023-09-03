@@ -216,11 +216,14 @@ read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 SECURE_RULES
 if [ "$SECURE_RULES" = "" ]
         then
              FW_HSactive='1'
+             set_HS_Firewall
         elif [ "$SECURE_RULES" = "y" ]
                 then
 		FW_HSactive='1'
+                set_HS_Firewall
         else
               FW_HSactive='0'
+              set_HS_Firewall_disable
 fi
 
 SERVER_range='192.168.'$(($SUBNET_sep - 123))'.2,192.168.'$(($SUBNET_sep - 123))'.200,24h'
@@ -24418,6 +24421,7 @@ uci set firewall.OfficeClient.dest='SERVER'
 uci set firewall.OfficeClient.proto='udp tcp'
 uci set firewall.OfficeClient.target='ACCEPT'
 uci set firewall.OfficeClient.dest_port="$OfficeClient_port"
+usi set firewall.OfficeClient.enabled='1'
 #1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
 
 uci set firewall.OfficeWebClient=rule
@@ -24427,6 +24431,7 @@ uci set firewall.OfficeWebClient.dest='wan'
 uci set firewall.OfficeWebClient.proto='udp tcp'
 uci set firewall.OfficeWebClient.target='ACCEPT'
 uci set firewall.OfficeWebClient.dest_port="$OfficeWebClient_port"
+uci set firewall.OfficeWebClient.enabled='1'
 
 #Alexa (Port)
 #"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
@@ -24438,6 +24443,7 @@ uci set firewall.Amazon_Alexa.dest='wan'
 uci set firewall.Amazon_Alexa.target='ACCEPT'
 uci set firewall.Amazon_Alexa.src='VOICE'
 uci set firewall.Amazon_Alexa.dest_port="$Amazon_Alexa_port"
+uci set firewall.Amazon_Alexa_.enabled='1'
 uci set firewall.Amazon_Alexa_UDP=rule
 uci set firewall.Amazon_Alexa_UDP.name='Allow_AmazonAlexa_UDP'
 uci set firewall.Amazon_Alexa_UDP.proto='udp'
@@ -24445,6 +24451,7 @@ uci set firewall.Amazon_Alexa_UDP.dest='wan'
 uci set firewall.Amazon_Alexa_UDP.target='ACCEPT'
 uci set firewall.Amazon_Alexa_UDP.src='VOICE'
 uci set firewall.Amazon_Alexa_UDP.dest_port="$Amazon_Alexa_UDP_port"
+uci set firewall.Amazon_Alexa_UDP.enabled='1'
 
 #Google Assistent (Port)
 #uci set firewall.Google_assistent=rule
@@ -26396,6 +26403,7 @@ uci set firewall.Allow_Only_WebClient1.dest='wan'
 uci set firewall.Allow_Only_WebClient1.name='Allow_only_WebClient_CONTROL'
 uci set firewall.Allow_Only_WebClient1.target='REJECT'
 uci set firewall.Allow_Only_WebClient1.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient1.enabled='1'
 
 
 uci set firewall.Allow_Only_WebClient2=rule
@@ -26404,6 +26412,7 @@ uci set firewall.Allow_Only_WebClient2.dest='wan'
 uci set firewall.Allow_Only_WebClient2.name='Allow_only_WebClient_HCONTROL'
 uci set firewall.Allow_Only_WebClient2.target='REJECT'
 uci set firewall.Allow_Only_WebClient2.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient2.enabled='1'
 
 uci set firewall.Allow_Only_WebClient3=rule
 uci set firewall.Allow_Only_WebClient3.src='SERVER'
@@ -26411,7 +26420,7 @@ uci set firewall.Allow_Only_WebClient3.dest='wan'
 uci set firewall.Allow_Only_WebClient3.name='Allow_only_WebClient_SERVER'
 uci set firewall.Allow_Only_WebClient3.target='REJECT'
 uci set firewall.Allow_Only_WebClient3.dest_port="$all_other_OfficeWebClient_port"
-
+uci set firewall.Allow_Only_WebClient3.enabled='1'
 
 uci set firewall.Allow_Only_WebClient4=rule
 uci set firewall.Allow_Only_WebClient4.src='GUEST'
@@ -26419,7 +26428,7 @@ uci set firewall.Allow_Only_WebClient4.dest='wan'
 uci set firewall.Allow_Only_WebClient4.name='Allow_only_WebClient_GUEST'
 uci set firewall.Allow_Only_WebClient4.target='REJECT'
 uci set firewall.Allow_Only_WebClient4.dest_port="$all_other_OfficeWebClient_port"
-
+uci set firewall.Allow_Only_WebClient4.enabled='1'
 
 uci set firewall.Allow_Only_WebClient5=rule
 uci set firewall.Allow_Only_WebClient5.src='ENTERTAIN'
@@ -26427,7 +26436,7 @@ uci set firewall.Allow_Only_WebClient5.dest='wan'
 uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_ENTERTAIN'
 uci set firewall.Allow_Only_WebClient5.target='REJECT'
 uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
-
+uci set firewall.Allow_Only_WebClient5.enabled='1'
 
 #Hohe Ziel (Ports)
 #TCP 
@@ -26476,6 +26485,47 @@ uci set firewall.blockIncoming.enabled="1"
 uci commit firewall && reload_config >/dev/null
 /etc/init.d/firewall restart >/dev/null
 }
+
+set_HS_Firewall() {
+uci set firewall.OfficeClient.enabled='1'
+uci set firewall.OfficeWebClient.enabled='1'
+uci set firewall.Amazon_Alexa.enabled='1'
+uci set firewall.Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_only_OfficeClient.enabled='1'
+uci set firewall.Allow_only_OfficeWebClient.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_Only_WebClient1.enabled='1'
+uci set firewall.Allow_Only_WebClient2.enabled='1'
+uci set firewall.Allow_Only_WebClient3.enabled='1'
+uci set firewall.Allow_Only_WebClient4.enabled='1'
+uci set firewall.Allow_Only_WebClient5.enabled='1'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
+set_HS_Firewall_disable() {
+uci set firewall.OfficeClient.enabled='0'
+uci set firewall.OfficeWebClient.enabled='0'
+uci set firewall.Amazon_Alexa.enabled='0'
+uci set firewall.Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_only_OfficeClient.enabled='0'
+uci set firewall.Allow_only_OfficeWebClient.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_Only_WebClient1.enabled='0'
+uci set firewall.Allow_Only_WebClient2.enabled='0'
+uci set firewall.Allow_Only_WebClient3.enabled='0'
+uci set firewall.Allow_Only_WebClient4.enabled='0'
+uci set firewall.Allow_Only_WebClient5.enabled='0'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
 
 set_firewall_ipset() {
 # Configure IP sets
