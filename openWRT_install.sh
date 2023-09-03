@@ -1113,7 +1113,7 @@ EOF
 
 cp /root/openWRT_install.sh /etc/openWRT_install.sh
 
-cat << EOF > /etc/openWRT_install.sh
+cat << EOF > /etc/sysupgrade.conf
 ## This file contains files and directories that should
 ## be preserved during an upgrade.
 
