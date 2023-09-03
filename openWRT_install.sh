@@ -1,6 +1,5 @@
 #!/bin/sh
 clear
-echo
 echo '########################################################'
 echo '#                                                      #'
 echo '#                 CyberSecurity-Box                    #'
@@ -8,9 +7,7 @@ echo '#                                                      #'
 echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
 echo '#                                                      #'
 echo '########################################################'
-echo
-echo
-echo
+
 #Firewall Pihole Unbound Tor Transparentproxy
 
 view_config()  {
@@ -45,8 +42,6 @@ echo 'Guests SSID is:       '$GUEST_ssid
 echo 'Key:                  '$WIFI_PASS
 echo 'IP:                   '$GUEST_net
 echo
-echo
-echo
 echo 'IP-Address:           '$ACCESS_SERVER
 echo 'Gateway:              '$INET_GW
 echo 'Domain:               '$LOCAL_DOMAIN
@@ -66,7 +61,6 @@ revision=${revision::-1}
 release=${release::-1}
 revision=${revision:1}
 release=${release:1}
-echo
 echo '--------------------------------------------------------'
 echo '       Current Version ' $release, $revision
 echo '--------------------------------------------------------'
@@ -313,7 +307,6 @@ opkg update >/dev/null
 opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >/dev/null
 /etc/init.d/dnsmasq start >/dev/null
 clear
-echo
 echo '########################################################'
 echo '#                                                      #'
 echo '#                 CyberSecurity-Box                    #'
@@ -323,7 +316,7 @@ echo '#                                                      #'
 echo '########################################################'
 echo
 echo 'Software Packeges installed'
-echo
+view_config
 }
 
 install_adguard() {
@@ -1811,7 +1804,6 @@ echo '#                                                      #'
 echo '#                Network Definitions                   #'
 echo '#                                                      #'
 echo '########################################################'
-echo 
 view_config
 
 uci -q delete network.lan
@@ -2243,11 +2235,10 @@ echo '#                 CyberSecurity-Box                    #'
 echo '#                                                      #'
 echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
 echo '#                                                      #'
-echo '#                Wireless Network Definitions          #'
+echo '#            Wireless Network Definitions              #'
 echo '#                                                      #'
 echo '########################################################'
-echo 
-
+view_config
 # Save and apply
 uci commit network && reload_config >/dev/null
 #/etc/init.d/network restart
@@ -2796,6 +2787,7 @@ uci commit && reload_config
 }
 
 set_dhcp_old() {
+
 uci -q delete dhcp >/dev/null
 #uci delete dhcp.odhcpd >/dev/null
 uci delete dhcp.BlacklistSERVER >/dev/null
@@ -3100,7 +3092,6 @@ echo '#                  Tor Definitions                     #'
 echo '#                                                      #'
 echo '########################################################'
 view_config
-echo
 
 
 mkdir /etc/dnsmasq.d  >/dev/null
@@ -8209,48 +8200,7 @@ echo '#                                                      #'
 echo '#                AD- and Porn-Filter installed         #'
 echo '#                                                      #'
 echo '########################################################'
-echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
-echo 'Please wait until Reboot ....'
+view_config
 
 # Configure Black and Whitelsit
 cat << EOF > /etc/dnsmasq.d/Blacklist/z_all_allow
@@ -13348,49 +13298,7 @@ echo '#                                                      #'
 echo '#                AD- and Porn-Filter installed         #'
 echo '#                                                      #'
 echo '########################################################'
-echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
-echo 'Please wait until Reboot ....'
-
+view_config
 uci commit  && reload_config >/dev/null
 }
 
@@ -13403,48 +13311,7 @@ echo '#                                                      #'
 echo '#                  Tor Definitions                     #'
 echo '#                                                      #'
 echo '########################################################'
-echo
-echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
+view_config
 
 /etc/init.d/tor stop >/dev/null
 /etc/init.d/log restart >/dev/null
@@ -13604,7 +13471,7 @@ echo '#                                                      #'
 echo '#               Tor-Onion-Services activated           #'
 echo '#                                                      #'
 echo '########################################################'
-echo 
+view_config
 }
 
 set_stubby() {
@@ -13672,7 +13539,7 @@ uci commit stubby && reload_config >/dev/null
 }
 
 set_unbound() {
-echo
+clear
 echo '########################################################'
 echo '#                                                      #'
 echo '#                 CyberSecurity-Box                    #'
@@ -13682,8 +13549,7 @@ echo '#                                                      #'
 echo '#         Stubby Pivaticy over cloudflair.com          #'
 echo '#                                                      #'
 echo '########################################################'
-echo 
-echo
+view_config
 
 /etc/init.d/unbound stop  >/dev/null
 /etc/init.d/log restart  >/dev/null
@@ -23884,7 +23750,7 @@ local-zone: "cdn.permutive.com" always_null
 local-zone: "twin-iq.kickfire.com" always_null
 
 EOF
-
+clear
 echo '########################################################'
 echo '#                                                      #'
 echo '#                 CyberSecurity-Box                    #'
@@ -23894,7 +23760,7 @@ echo '#                                                      #'
 echo '#                 Unbound Blocklist                    #'
 echo '#                                                      #'
 echo '########################################################'
-echo 
+view_config
 
 mkdir /etc/unbound/unbound.conf.d >/dev/null
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >/dev/null
@@ -24186,7 +24052,7 @@ uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75eu
 
 uci commit unbound && reload_config  >/dev/null
 /etc/init.d/unbound start  >/dev/null
-echo
+clear
 echo '########################################################'
 echo '#                                                      #'
 echo '#                 CyberSecurity-Box                    #'
@@ -24196,8 +24062,8 @@ echo '#                                                      #'
 echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
 echo '#                                                      #'
 echo '########################################################'
-echo 
-echo
+view_config
+
 /etc/init.d/unbound restart  >/dev/null
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
@@ -24211,49 +24077,7 @@ echo '#                                                      #'
 echo '#                AD- and Porn-Filter installed         #'
 echo '#                                                      #'
 echo '########################################################'
-echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
-echo 'Please wait until Reboot ....'
-
+view_config
 }
 
 set_firewall_rules() {
@@ -26579,6 +26403,19 @@ uci set firewall.filter6_fwd.target="ACCEPT"
 
 uci commit firewall && reload_config >/dev/null
 /etc/init.d/firewall restart >/dev/null
+if [ "$SECURE_RULES" = "" ]
+        then
+             FW_HSactive='1'
+             set_HS_Firewall
+        elif [ "$SECURE_RULES" = "y" ]
+                then
+		FW_HSactive='1'
+                set_HS_Firewall
+        else
+              FW_HSactive='0'
+              set_HS_Firewall_disable
+fi
+
 view_config
 
 cat << "EOF" > /etc/firewall.nat6 
@@ -26656,7 +26493,7 @@ install_update
 define_variables
 customize_firmware
 create_network
-set_dhcp
+set_dhcp >/dev/null
 view_config
 #build_websites
 set_tor
@@ -26675,48 +26512,7 @@ echo '########################################################'
 echo
 echo 'Firewall-Rules activated and it will reboot now.'
 echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
-echo 'Please wait until Reboot ....'
-echo
+view_config
 echo
 echo 'Enter to continue'
 reboot 
