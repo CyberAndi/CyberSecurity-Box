@@ -1105,6 +1105,7 @@ DEVICE_REVISION='v0.5'
 EOF
 
 cp /root/openWRT_install.sh /etc/openWRT_install.sh
+chmod 0755 /etc/openWRT_install.sh
 
 cat << EOF > /etc/sysupgrade.conf
 ## This file contains files and directories that should
