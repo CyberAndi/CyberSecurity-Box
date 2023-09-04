@@ -9,7 +9,6 @@ echo '#                                                      #'
 echo '########################################################'
 
 #Firewall Pihole Unbound Tor Transparentproxy
-
 #-------------------------start---------------------------------------
 ask_parameter
 install_update
@@ -1118,11 +1117,11 @@ cat << EOF > /etc/device_info
 DEVICE_MANUFACTURER='@CyberAndi'
 DEVICE_MANUFACTURER_URL='https://cyberandi.tumblr.com/'
 DEVICE_PRODUCT='CyberSecurity-Box'
-DEVICE_REVISION='v0.5'
+DEVICE_REVISION='v0.75'
 
 EOF
 
-cp /root/openWRT_install.sh /etc/openWRT_install.sh
+cp openWRT_install.sh /etc/openWRT_install.sh
 chmod 0755 /etc/openWRT_install.sh
 
 cat << EOF > /etc/sysupgrade.conf
