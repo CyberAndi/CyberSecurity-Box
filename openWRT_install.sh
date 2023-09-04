@@ -10,7 +10,7 @@ echo '########################################################'
 
 #Firewall Pihole Unbound Tor Transparentproxy
 #-------------------------start---------------------------------------
-ask_parameter
+ask_parameter $1 $2 $3 $4 $5 $6
 install_update
 #install_adguard
 define_variables
