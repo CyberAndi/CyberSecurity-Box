@@ -9,22 +9,6 @@ echo '#                                                      #'
 echo '########################################################'
 
 #Firewall Pihole Unbound Tor Transparentproxy
-#-------------------------start---------------------------------------
-ask_parameter $1 $2 $3 $4 $5 $6
-install_update
-#install_adguard
-define_variables
-customize_firmware
-create_network
-set_dhcp >/dev/null
-view_config
-#build_websites
-set_tor
-set_stubby
-set_unbound
-create_url_filter
-set_firewall_rules
-#set_mountpoints
 
 view_config()  {
 echo
@@ -26531,6 +26515,23 @@ uci set fstab.@mount[0].is_rootfs='1'
 uci commit fstab
 /etc/init.d/fstab boot
 }
+
+#-------------------------start---------------------------------------
+ask_parameter $1 $2 $3 $4 $5 $6
+install_update
+#install_adguard
+define_variables
+customize_firmware
+create_network
+set_dhcp >/dev/null
+view_config
+#build_websites
+set_tor
+set_stubby
+set_unbound
+create_url_filter
+set_firewall_rules
+#set_mountpoints
 
 clear
 echo '########################################################'
