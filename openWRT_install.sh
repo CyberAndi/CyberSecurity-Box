@@ -10,6 +10,23 @@ echo '########################################################'
 
 #Firewall Pihole Unbound Tor Transparentproxy
 
+#-------------------------start---------------------------------------
+ask_parameter
+install_update
+#install_adguard
+define_variables
+customize_firmware
+create_network
+set_dhcp >/dev/null
+view_config
+#build_websites
+set_tor
+set_stubby
+set_unbound
+create_url_filter
+set_firewall_rules
+#set_mountpoints
+
 view_config()  {
 echo
 echo 'Your Config is:'
@@ -304,7 +321,7 @@ opkg remove dnsmasq >/dev/null
 opkg update >/dev/null
 opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >/dev/null
 opkg update >/dev/null
-opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >/dev/null
+opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >/dev/null
 /etc/init.d/dnsmasq start >/dev/null
 clear
 echo '########################################################'
@@ -26492,23 +26509,6 @@ uci set fstab.@mount[0].is_rootfs='1'
 uci commit fstab
 /etc/init.d/fstab boot
 }
-
-#-------------------------start---------------------------------------
-ask_parameter
-install_update
-#install_adguard
-define_variables
-customize_firmware
-create_network
-set_dhcp >/dev/null
-view_config
-#build_websites
-set_tor
-set_stubby
-set_unbound
-create_url_filter
-set_firewall_rules
-#set_mountpoints
 
 clear
 echo '########################################################'
