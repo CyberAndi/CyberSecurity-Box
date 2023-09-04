@@ -90,7 +90,11 @@ actEth=$(ifconfig | grep '^e\w*' -m 1 | cut -f1 -d ' ')
 actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
 
 #Internet Gateway
-INET_GW=$(ip route | grep default | cut -f3  -d ' ')
+if [ "$1" != "" ]  then
+		INET_GW=$1
+	else
+		INET_GW=$(ip route | grep default | cut -f3  -d ' ')
+fi
 INET_GW_org=$INET_GW
 
 read -p 'Please give me the WAN-IP (Gateway/Router): ['$INET_GW'] ' INET_GW
@@ -133,7 +137,11 @@ all_IP6="[::]"
 ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' )
 
 #Lokal LAN
-LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
+if [ "$2" != "" ]  then
+		LAN=$2
+	else
+		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
+fi
 
 if [ "$LAN" = "" ]
         then
@@ -148,15 +156,23 @@ if [ "$LAN" = "" ]
                 LAN=$LAN_org
 fi
 
-LOCAL_DOMAIN='CyberSecBox.local'
+if [ "$3" != "" ]  then
+		LOCAL_DOMAIN_org=$3
+	else
+		LOCAL_DOMAIN_org='CyberSecBox.local'
+fi
 echo
 read -p  'Your local Domain of your LAN? [CyberSecBox.local] ' LOCAL_DOMAIN
 if [ "$LOCAL_DOMAIN" = "" ]
 	then
-		LOCAL_DOMAIN='CyberSecBox.local'
+		LOCAL_DOMAIN=$LOCAL_DOMAIN_org
 fi
 
-WIFI_SSID='CyberSecBox'
+if [ "$4" != "" ]  then
+		WIFI_SSID=$4
+	else
+		WIFI_SSID='CyberSecBox'
+fi
 WIFI_SSID_org=$WIFI_SSID
 echo
 read -p 'The Main-WiFi-SSID? ['$(echo $WIFI_SSID)'] ' WIFI_SSID
@@ -165,8 +181,12 @@ if [ "$WIFI_SSID" = "" ]
                 WIFI_SSID=$WIFI_SSID_org
 fi
 
+if [ "$5" != "" ]  then
+		WIFI_PASS=$5
+	else
+		WIFI_PASS='Cyber,Sec9ox'
+fi
 
-WIFI_PASS='Cyber,Sec9ox'
 WIFI_PASS_org=$WIFI_PASS
 echo
 read -p 'And the WiFi-Key? [Cyber,Sec9ox] ' WIFI_PASS
@@ -216,8 +236,11 @@ if [ "$DNS_PORT" = "" ]
                DNS_Relay_port='9053'
 fi
 
-
-SECURE_RULES='y'
+if [ "$6" != "" ]  then
+		SECURE_RULESW=$6
+	else
+		SECURE_RULES='y'
+fi
 
 echo
 echo
