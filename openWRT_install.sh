@@ -74,7 +74,8 @@ actEth=$(ifconfig | grep '^e\w*' -m 1 | cut -f1 -d ' ')
 actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
 
 #Internet Gateway
-if [ "$1" != "" ]  then
+if [ "$1" != "" ]  
+	then
 		INET_GW=$1
 	else
 		INET_GW=$(ip route | grep default | cut -f3  -d ' ')
@@ -121,7 +122,8 @@ all_IP6="[::]"
 ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' )
 
 #Lokal LAN
-if [ "$2" != "" ]  then
+if [ "$2" != "" ] 
+	then
 		LAN=$2
 	else
 		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
@@ -140,7 +142,8 @@ if [ "$LAN" = "" ]
                 LAN=$LAN_org
 fi
 
-if [ "$3" != "" ]  then
+if [ "$3" != "" ] 
+	then
 		LOCAL_DOMAIN_org=$3
 	else
 		LOCAL_DOMAIN_org='CyberSecBox.local'
@@ -152,7 +155,8 @@ if [ "$LOCAL_DOMAIN" = "" ]
 		LOCAL_DOMAIN=$LOCAL_DOMAIN_org
 fi
 
-if [ "$4" != "" ]  then
+if [ "$4" != "" ]  
+	then
 		WIFI_SSID=$4
 	else
 		WIFI_SSID='CyberSecBox'
@@ -165,7 +169,8 @@ if [ "$WIFI_SSID" = "" ]
                 WIFI_SSID=$WIFI_SSID_org
 fi
 
-if [ "$5" != "" ]  then
+if [ "$5" != "" ]  
+	then
 		WIFI_PASS=$5
 	else
 		WIFI_PASS='Cyber,Sec9ox'
@@ -220,7 +225,8 @@ if [ "$DNS_PORT" = "" ]
                DNS_Relay_port='9053'
 fi
 
-if [ "$6" != "" ]  then
+if [ "$6" != "" ]  
+	then
 		SECURE_RULESW=$6
 	else
 		SECURE_RULES='y'
