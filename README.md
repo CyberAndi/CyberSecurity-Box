@@ -116,7 +116,7 @@ service pihole-FTL start</code></pre>
    </li>
   </ul>
   
-  <li><h3>Option for Alternative 2 - Pi_Hole Configuration of the AVM FRITZ!Box with Presets for Security and Port-List</h3>
+  <li><h3>Alternative 2 optional - Pi_Hole Configuration of the AVM FRITZ!Box with Presets for Security and Port-List</h3>
 <h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip" target="_blank">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
   <img src="Schema.PNG" width="450px"></img>
   </li></ol>
