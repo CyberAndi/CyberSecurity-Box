@@ -5,7 +5,7 @@
 <p>
   First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
 <p>
-<ul><ol><li><h3>Installation on <img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img>-Router( <img src="/avm_logo.svg" style="max-width: 100%; vertical-align: middle; padding: 0.25em; height:1em; background-color: rgba(230,230,230,0.7);"></img> Fritz!Box, <img src="/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img> etc.)  - Alternative 1</h3>
+<ul><ol><li><h3>Alternative 1 - Installation on <img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img>-Router( <img src="/avm_logo.svg" style="max-width: 100%; vertical-align: middle; padding: 0.25em; height:1em; background-color: rgba(230,230,230,0.7);"></img> Fritz!Box, <img src="/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img> etc.)</h3>
   Go on <a href="https://openwrt.org/" target="_blank"><img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router.<br>
   After flushing use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
@@ -47,7 +47,7 @@
   You will find the Screenshots <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/README.md#screenshots">here</a>. 
   </li>
   
-  <li><h3>Installation CyberSecurityBox (RasPi) - Alternative 2</h3>
+  <li><h3>Alternative 2 - Installation CyberSecurityBox (RasPi)</h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank">Raspbian-SD-Card-Image</a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
@@ -116,7 +116,7 @@ service pihole-FTL start</code></pre>
    </li>
   </ul>
   
-  <li><h3>(optional) Configuration of the AVM FRITZ!Box with Presets for Security and Port-List - Option for Alternative 2 Pi_Hole</h3>
+  <li><h3>Option for Alternative 2 - Pi_Hole Configuration of the AVM FRITZ!Box with Presets for Security and Port-List</h3>
 <h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip" target="_blank">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
   <img src="Schema.PNG" width="450px"></img>
   </li></ol>
