@@ -2,10 +2,10 @@
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/CyberSecurityBox.jpg" alt="Logo" width="300px"> </img>
 <h4><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch">F&uuml;r Deutsch / For German</a></h4>
 <p>
-  First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0.25em; height:1em"></img> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
+  First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
 <p>
-<ul><ol><li><h3>Installation on <img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0.25em; height:1em"></img>-Router( <img src="/avm_logo.svg" style="max-width: 100%; vertical-align: middle; padding: 0.25em; height:1em; background-color: rgba(230,230,230,0.7);"></img> Fritz!Box, <img src="/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0.25em; height:1em"></img> etc.)  - Alternative 1</h3>
-  Go on <a href="https://openwrt.org/" target="_blank"><img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0.25em; height:1em"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router.<br>
+<ul><ol><li><h3>Installation on <img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img>-Router( <img src="/avm_logo.svg" style="max-width: 100%; vertical-align: middle; padding: 0.25em; height:1em; background-color: rgba(230,230,230,0.7);"></img> Fritz!Box, <img src="/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img> etc.)  - Alternative 1</h3>
+  Go on <a href="https://openwrt.org/" target="_blank"><img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router.<br>
   After flushing use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
   User: <i><b>root</b></i>
