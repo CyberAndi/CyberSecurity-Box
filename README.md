@@ -2,10 +2,10 @@
 # CyberSecurity-Box<h3>(inkl. Ad Blocker, UnBound (DNS), Tor or optional Pi-Hole5 (incl. DB) and ntopng) </h3>
 <h4><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch">For German / F&uuml;r Deutsch</a></h4>
 <p>
-  First load the <b><a href="https://brave.com/download/" target="_blank">Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
+  First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/brave-logo-sans-text.svg" height="16px"></img> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
 <p>
 <ul><ol><li><h3>Installation on OpenWRT-Router(Fritz!Box, TP-Link etc.)  - Alternative 1</h3>
-  Go on <a href="https://openwrt.org/" target="_blank"> OpenWRT-Project-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router.<br>
+  Go on <a href="https://openwrt.org/" target="_blank"><img src="/openWRT.png" height="16px"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router.<br>
   After flushing use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
   User: <i><b>root</b></i>
