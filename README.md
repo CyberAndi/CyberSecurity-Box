@@ -4,7 +4,7 @@
 <p>
   First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/brave-logo-sans-text.svg" height="16px"></img> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
 <p>
-<ul><ol><li><h3>Installation on OpenWRT-Router(Fritz!Box, TP-Link etc.)  - Alternative 1</h3>
+<ul><ol><li><h3>Installation on <img src="/openWRT.png" height="24px"></img>-Router(<img src="/avm_logo.svg" height="24px"></img> Fritz!Box, <img src="/tplink-logo-white.svg" height="24px"></img> TP-Link etc.)  - Alternative 1</h3>
   Go on <a href="https://openwrt.org/" target="_blank"><img src="/openWRT.png" height="16px"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router.<br>
   After flushing use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
