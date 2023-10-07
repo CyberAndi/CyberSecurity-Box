@@ -24293,7 +24293,7 @@ uci set firewall.OfficeClient.dest='SERVER'
 uci set firewall.OfficeClient.proto='udp tcp'
 uci set firewall.OfficeClient.target='ACCEPT'
 uci set firewall.OfficeClient.dest_port="$OfficeClient_port"
-usi set firewall.OfficeClient.enabled='1'
+uci set firewall.OfficeClient.enabled='1'
 #1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
 
 uci set firewall.OfficeWebClient=rule
