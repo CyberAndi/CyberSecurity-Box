@@ -26523,15 +26523,16 @@ uci commit fstab
 }
 
 #-------------------------start---------------------------------------
-ask_parameter $1 $2 $3 $4 $5 $6
-install_update
+#ask_parameter $1 $2 $3 $4 $5 $6
+ask_parameter
+#install_update
 #install_adguard
 define_variables
 customize_firmware
 create_network
 set_dhcp >/dev/null
 view_config
-#build_websites
+build_websites
 set_tor
 set_stubby
 set_unbound
