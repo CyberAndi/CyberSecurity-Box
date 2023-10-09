@@ -5,7 +5,7 @@
 <p>
   First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
 <p>
-<ul><ol><li><h3>Alternative 1 - Installation on <img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img>-Router( <img src="/avm_logo.svg" style="max-width: 100%; vertical-align: middle; padding: 0.25em; height:1em; background-color: rgba(230,230,230,0.7);"></img> Fritz!Box, <img src="/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img> etc.)</h3>
+<ol><li><h3>Alternative 1 - Installation on <img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img>-Router( <img src="/avm_logo.svg" style="max-width: 100%; vertical-align: middle; padding: 0.25em; height:1em; background-color: rgba(230,230,230,0.7);"></img> Fritz!Box, <img src="/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img> etc.)</h3>
   Go on <a href="https://openwrt.org/" target="_blank"><img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router.<br>
   After flushing use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
@@ -119,8 +119,8 @@ service pihole-FTL start</code></pre>
   <li><h3>Alternative 2 optional - Pi_Hole Configuration of the AVM FRITZ!Box with Presets for Security and Port-List</h3>
 <h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip" target="_blank">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
   <img src="Schema.PNG" width="450px"></img>
-  </li></ol>
-</ul></p>
+  </li>
+</ol></p>
 <p>
 For more Information in german visit <a href="https://cyberandi.tumblr.com/Smarthome" target="_blank">https://cyberandi.tumblr.com/Smarthome</a>
 </p>
