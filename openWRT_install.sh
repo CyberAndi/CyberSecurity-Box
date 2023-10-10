@@ -1829,6 +1829,425 @@ EOF
 
 }
 
+
+create_switch() {
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                Network Definitions                   #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+
+
+uci commit network >/dev/null
+uci set network.@switch[0]=switch
+uci set network.@switch[0].name='switch0'
+uci set network.@switch[0].reset='1'
+uci set network.@switch[0].enable_vlan='1'
+uci commit network >/dev/null
+
+uci set network.cfg081ec7.ports='0t 1t 2t 3t 4t 5t'
+uci set network.cfg081ec7.vid='1'
+uci set network.cfg081ec7.description='default'
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1]=switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='101'
+uci set network.@switch_vlan[-1].vid='101'
+uci set network.@switch_vlan[-1].ports='0t 1t 2 3t 4t 5t'
+uci set network.@switch_vlan[-1].description='server'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='102'
+uci set network.@switch_vlan[-1].vid='102'
+uci set network.@switch_vlan[-1].ports='0t 1 2t 3 4t 5t'
+uci set network.@switch_vlan[-1].description='hcontrol'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vLan='103'
+uci set network.@switch_vlan[-1].vid='103'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].description='comtrol'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='104'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4 5t'
+uci set network.@switch_vlan[-1].vid='104'
+uci set network.@switch_vlan[-1].description='inet'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='105'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='105'
+uci set network.@switch_vlan[-1].description='voice'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='106'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='106'
+uci set network.@switch_vlan[-1].description='entertain'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='107'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='107'
+uci set network.@switch_vlan[-1].description='guest'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='108'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='108'
+uci set network.@switch_vlan[-1].description='cmovie'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='110'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='110'
+uci set network.@switch_vlan[-1].description='t-online'
+uci commit network >/dev/null
+
+}
+
+create_wlan() {
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#            Wireless Network Definitions              #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+# Save and apply
+uci commit network && reload_config >/dev/null
+#/etc/init.d/network restart
+
+uci -q delete wireless  >/dev/null
+
+uci set wireless.radio0=wifi-device
+uci set wireless.radio0.type='mac80211'
+uci set wireless.radio0.path='platform/soc/a000000.wifi'
+uci set wireless.radio0.htmode='HT20'
+uci set wireless.radio0.country='DE'
+uci set wireless.radio0.channel='6'
+uci set wireless.radio0.hwmode='11n'
+
+uci delete wireless.default_radio0
+uci set wireless.default_radio0=wifi-iface
+uci set wireless.default_radio0.device='radio0'
+uci set wireless.default_radio0.mode='ap'
+uci set wireless.default_radio0.key=$WIFI_PASS
+uci set wireless.default_radio0.ssid=$CONTROL_ssid
+uci set wireless.default_radio0.encryption='psk2'
+uci set wireless.default_radio0.network='CONTROL'
+
+uci delete wireless.wifinet1
+uci set wireless.wifinet1=wifi-iface
+uci set wireless.wifinet1.ssid=$HCONTROL_ssid
+uci set wireless.wifinet1.encryption='psk2'
+uci set wireless.wifinet1.device='radio0'
+uci set wireless.wifinet1.mode='ap'
+uci set wireless.wifinet1.network='HCONTROL'
+uci set wireless.wifinet1.key=$WIFI_PASS
+
+uci delete wireless.wifinet2
+uci set wireless.wifinet2=wifi-iface
+uci set wireless.wifinet2.ssid=$VOICE_ssid
+uci set wireless.wifinet2.device='radio0'
+uci set wireless.wifinet2.mode='ap'
+uci set wireless.wifinet2.network='VOICE'
+uci set wireless.wifinet2.key=$WIFI_PASS
+uci set wireless.wifinet2.encryption='psk2'
+
+uci delete wireless.wifinet3
+uci set wireless.wifinet3=wifi-iface
+uci set wireless.wifinet3.ssid=$INET_ssid
+uci set wireless.wifinet3.encryption='psk2'
+uci set wireless.wifinet3.device='radio0'
+uci set wireless.wifinet3.mode='ap'
+uci set wireless.wifinet3.network='INET'
+uci set wireless.wifinet3.key=$WIFI_PASS
+
+uci delete wireless.wifinet4
+uci set wireless.wifinet4=wifi-iface
+uci set wireless.wifinet4.ssid=$ENTERTAIN_ssid
+uci set wireless.wifinet4.encryption='psk2'
+uci set wireless.wifinet4.device='radio0'
+uci set wireless.wifinet4.mode='ap'
+uci set wireless.wifinet4.network='ENTERTAIN'
+uci set wireless.wifinet4.key=$WIFI_PASS
+
+uci delete wireless.wifinet5
+uci set wireless.wifinet5=wifi-iface
+uci set wireless.wifinet5.ssid=$SERVER_ssid
+uci set wireless.wifinet5.encryption='psk2'
+uci set wireless.wifinet5.device='radio0'
+uci set wireless.wifinet5.mode='ap'
+uci set wireless.wifinet5.network='REPEATER'
+uci set wireless.wifinet5.key=$WIFI_PASS
+
+uci delete wireless.wifinet6
+uci set wireless.wifinet6=wifi-iface
+uci set wireless.wifinet6.ssid=$GUEST_ssid
+uci set wireless.wifinet6.encryption='psk2'
+uci set wireless.wifinet6.device='radio0'
+uci set wireless.wifinet6.mode='ap'
+uci set wireless.wifinet6.network='GUEST'
+uci set wireless.wifinet6.key=$WIFI_PASS
+
+uci set wireless.radio1=wifi-device
+uci set wireless.radio1.type='mac80211'
+uci set wireless.radio1.channel='36'
+uci set wireless.radio1.hwmode='11a'
+uci set wireless.radio1.path='platform/soc/a800000.wifi'
+uci set wireless.radio1.htmode='VHT80'
+uci set wireless.radio1.country='DE'
+
+uci delete wireless.default_radio1
+uci set wireless.default_radio1=wifi-iface
+uci set wireless.default_radio1.device='radio1'
+uci set wireless.default_radio1.mode='ap'
+uci set wireless.default_radio1.key=$WIFI_PASS
+uci set wireless.default_radio1.ssid=$VOICE_ssid
+uci set wireless.default_radio1.encryption='psk2'
+uci set wireless.default_radio1.network='VOICE'
+
+uci delete wireless.wifinet7
+uci set wireless.wifinet7=wifi-iface
+uci set wireless.wifinet7.ssid=$INET_ssid
+uci set wireless.wifinet7.encryption='psk2'
+uci set wireless.wifinet7.device='radio1'
+uci set wireless.wifinet7.mode='ap'
+uci set wireless.wifinet7.network='INET'
+uci set wireless.wifinet7.key=$WIFI_PASS
+
+uci delete wireless.wifinet8
+uci set wireless.wifinet8=wifi-iface
+uci set wireless.wifinet8.ssid=$ENTERTAIN_ssid
+uci set wireless.wifinet8.encryption='psk2'
+uci set wireless.wifinet8.device='radio1'
+uci set wireless.wifinet8.mode='ap'
+uci set wireless.wifinet8.network='ENTERTAIN'
+uci set wireless.wifinet8.key=$WIFI_PASS
+
+uci delete wireless.wifinet9
+uci set wireless.wifinet9=wifi-iface
+uci set wireless.wifinet9.device='radio1'
+uci set wireless.wifinet9.mode='ap'
+uci set wireless.wifinet9.ssid=$SERVER_ssid
+uci set wireless.wifinet9.encryption='psk2'
+uci set wireless.wifinet9.key=$WIFI_PASS
+uci set wireless.wifinet9.network='REPEATER'
+
+uci delete wireless.wifinet10
+uci set wireless.wifinet10=wifi-iface
+uci set wireless.wifinet10.encryption='psk2'
+uci set wireless.wifinet10.device='radio1'
+uci set wireless.wifinet10.mode='ap'
+uci set wireless.wifinet10.key=$WIFI_PASS
+uci set wireless.wifinet10.network='GUEST'
+uci set wireless.wifinet10.ssid=$GUEST_ssid
+
+uci delete wireless.wifinet11
+uci set wireless.wifinet11=wifi-iface
+uci set wireless.wifinet11.encryption=''
+uci set wireless.wifinet11.device='radio1'
+uci set wireless.wifinet11.mode='ap'
+uci set wireless.wifinet11.network='CMOVIE'
+uci set wireless.wifinet11.ssid=$CMOVIE_ssid
+
+uci delete wireless.wifinet12
+uci set wireless.wifinet12=wifi-iface
+uci set wireless.wifinet12.encryption=''
+uci set wireless.wifinet12.device='radio0'
+uci set wireless.wifinet12.mode='ap'
+uci set wireless.wifinet12.network='CMOVIE'
+uci set wireless.wifinet12.ssid=$CMOVIE_ssid
+
+uci delete wireless.radio0.disabled >/dev/null
+uci delete wireless.radio1.disabled >/dev/null
+
+uci commit  && reload_config >/dev/null
+}
+
+create_firewall_zones() {
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#             irwall Zones Definitions                 #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+# Save and apply
+uci commit network && reload_config >/dev/null
+#/etc/init.d/network restart
+
+dig www.internic.net @1.1.1.1
+
+
+uci set firewall.@zone[0]=zone
+uci set firewall.@zone[0].name="REPEATER"
+uci set firewall.@zone[0].input="ACCEPT"
+uci set firewall.@zone[0].network="REPEATER"
+uci set firewall.@zone[0].output="ACCEPT"
+uci set firewall.@zone[0].forward="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="REPEATER"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="CONTROL"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="CONTROL"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="CONTROL"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="HCONTROL"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="HCONTROL"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="HCONTROL"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="SERVER"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="SERVER"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="SERVER"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="INET"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="INET"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="INET"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="GUEST"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="GUEST"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="GUEST"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="CMOVIE"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="CMOVIE"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="CMOVIE"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="VOICE"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="VOICE"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="VOICE"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="ENTERTAIN"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="ENTERTAIN"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="ENTERTAIN"
+uci commit firewall && reload_config >/dev/null
+
+}
+
+
 create_network() {
 clear
 echo '########################################################'
@@ -26523,21 +26942,23 @@ uci commit fstab
 }
 
 #-------------------------start---------------------------------------
-#ask_parameter $1 $2 $3 $4 $5 $6
-ask_parameter
+ask_parameter $1 $2 $3 $4 $5 $6
 #install_update
 #install_adguard
 define_variables
 customize_firmware
-create_network
-set_dhcp >/dev/null
-view_config
-build_websites
+#build_websites
 set_tor
 set_stubby
 set_unbound
 create_url_filter
-set_firewall_rules
+create_switch
+create_wlan
+create_firewall_zones
+#create_network
+#set_dhcp >/dev/null
+view_config
+#set_firewall_rules
 #set_mountpoints
 
 clear
