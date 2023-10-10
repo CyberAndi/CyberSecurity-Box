@@ -26943,7 +26943,7 @@ uci commit fstab
 
 #-------------------------start---------------------------------------
 ask_parameter $1 $2 $3 $4 $5 $6
-install_update
+#install_update
 #install_adguard
 define_variables
 customize_firmware
