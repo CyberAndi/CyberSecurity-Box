@@ -2192,6 +2192,127 @@ uci delete wireless.radio1.disabled >/dev/null
 uci commit  && reload_config >/dev/null
 }
 
+
+create_bridge() {
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-SERVER'
+uci add_list network.@device[-1].ports='eth0.101'
+uci set network.@device[-1].mtu='1500'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-HCONTROL'
+uci add_list network.@device[-1].ports='eth0.102'
+uci set network.@device[-1].mtu='1500'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-CONTROL'
+uci add_list network.@device[-1].ports='eth0.103'
+uci set network.@device[-1].mtu='1500'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-INET'
+uci add_list network.@device[-1].ports='eth0.104'
+uci set network.@device[-1].mtu='1500'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-VOICE'
+uci add_list network.@device[-1].ports='eth0.105'
+uci set network.@device[-1].mtu='1500'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-ENTERTAIN'
+uci add_list network.@device[-1].ports='eth0.106'
+uci set network.@device[-1].mtu='1500'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-GUEST'
+uci add_list network.@device[-1].ports='eth0.107'
+uci set network.@device[-1].mtu='1500'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-CMOVIE'
+uci add_list network.@device[-1].ports='eth0.108'
+uci set network.@device[-1].mtu='1500'
+}
+
+create_vlan_bridge() {
+
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                  Network Bridges                     #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-SERVER'
+uci set network.@bridge-vlan[-1].vlan='101'
+uci add_list network.@bridge-vlan[-1].ports='eth0.101'
+uci set network.@bridge-vlan[-1].mtu='1500'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-HCONTROL'
+uci set network.@bridge-vlan[-1].vlan='102'
+uci add_list network.@bridge-vlan[-1].ports='eth0.102'
+uci set network.@bridge-vlan[-1].mtu='1500'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-CONTROL'
+uci set network.@bridge-vlan[-1].vlan='103'
+uci add_list network.@bridge-vlan[-1].ports='eth0.103'
+uci set network.@bridge-vlan[-1].mtu='1500'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-INET'
+uci set network.@bridge-vlan[-1].vlan='104'
+uci add_list network.@bridge-vlan[-1].ports='eth0.104'
+uci set network.@bridge-vlan[-1].mtu='1500'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-VOICE'
+uci set network.@bridge-vlan[-1].vlan='105'
+uci add_list network.@bridge-vlan[-1].ports='eth0.105'
+uci set network.@bridge-vlan[-1].mtu='1500'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-ENTERTAIN'
+uci set network.@bridge-vlan[-1].vlan='106'
+uci add_list network.@bridge-vlan[-1].ports='eth0.106'
+uci set network.@bridge-vlan[-1].mtu='1500'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-GUEST'
+uci set network.@bridge-vlan[-1].vlan='107'
+uci add_list network.@bridge-vlan[-1].ports='eth0.107'
+uci set network.@bridge-vlan[-1].mtu='1500'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-CMOVIE'
+uci set network.@bridge-vlan[-1].vlan='108'
+uci add_list network.@bridge-vlan[-1].ports='eth0.108'
+uci set network.@bridge-vlan[-1].mtu='1500'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-tonline'
+uci set network.@bridge-vlan[-1].vlan='110'
+uci add_list network.@bridge-vlan[-1].ports='eth0.110'
+uci set network.@bridge-vlan[-1].mtu='1500'
+
+}
+
+
 create_firewall_zones() {
 echo '########################################################'
 echo '#                                                      #'
