@@ -1851,6 +1851,106 @@ uci set network.@switch[0].reset='1'
 uci set network.@switch[0].enable_vlan='1'
 uci commit network >/dev/null
 
+uci set network.cfg081ec7.ports='0 1 2 3 4 5t'
+uci set network.cfg081ec7.vid='1'
+uci set network.cfg081ec7.description='default'
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1]=switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='101'
+uci set network.@switch_vlan[-1].vid='101'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].description='server'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='102'
+uci set network.@switch_vlan[-1].vid='102'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].description='hcontrol'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vLan='103'
+uci set network.@switch_vlan[-1].vid='103'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].description='comtrol'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='104'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='104'
+uci set network.@switch_vlan[-1].description='inet'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='105'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='105'
+uci set network.@switch_vlan[-1].description='voice'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='106'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='106'
+uci set network.@switch_vlan[-1].description='entertain'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='107'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='107'
+uci set network.@switch_vlan[-1].description='guest'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='108'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='108'
+uci set network.@switch_vlan[-1].description='cmovie'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='110'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='110'
+uci set network.@switch_vlan[-1].description='t-online'
+uci commit network >/dev/null
+
+}
+
+create_custom_switch() {
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                Network Definitions                   #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+
+
+uci commit network >/dev/null
+uci set network.@switch[0]=switch
+uci set network.@switch[0].name='switch0'
+uci set network.@switch[0].reset='1'
+uci set network.@switch[0].enable_vlan='1'
+uci commit network >/dev/null
+
 uci set network.cfg081ec7.ports='0t 1t 2t 3t 4t 5t'
 uci set network.cfg081ec7.vid='1'
 uci set network.cfg081ec7.description='default'
@@ -1929,6 +2029,7 @@ uci set network.@switch_vlan[-1].description='t-online'
 uci commit network >/dev/null
 
 }
+
 
 create_wlan() {
 echo '########################################################'
