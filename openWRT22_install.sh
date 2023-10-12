@@ -27173,9 +27173,9 @@ set_tor
 set_stubby
 set_unbound
 create_url_filter
-create_switch
-create_wlan
-create_firewall_zones
+#create_switch
+#create_wlan
+#create_firewall_zones
 #create_network
 #set_dhcp >/dev/null
 view_config
