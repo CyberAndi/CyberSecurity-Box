@@ -1,4 +1,4 @@
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/Version2/CyberSecurityBox.jpg" alt="Logo" width="300px"> </img>
+<img src="/CyberSecurityBox.jpg" alt="Logo" width="300px"> </img>
 # CyberSecurity-Box
 <h4>(inkl. Ad Blocker, <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/Unbound_FC_Shaded_cropped.svg" style="max-width: 100%; vertical-align: middle; background-color: rgba(230,230,230,0.7); padding: 0.15em 0.25em; height:1em" height="14px"> (DNS), <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor-logo%402x.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> or optional <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/pihole.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Pi-Hole (incl. DB) and ntopng) </h4>
 
