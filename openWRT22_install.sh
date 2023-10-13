@@ -2702,6 +2702,504 @@ uci commit network >/dev/null
 uci set network.REPEATER.proto='none'
 uci commit  && reload_config >/dev/null
 
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#            Wireless Network Definitions              #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+# Save and apply
+uci commit network && reload_config >/dev/null
+#/etc/init.d/network restart
+}
+
+
+create_network() {
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                Network Definitions                   #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+
+uci -q delete network.lan
+
+cat << EOF > /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+
+::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
+curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound_ad_servers
+
+uci delete network.@device[0] >/dev/null
+
+uci set network.loopback=interface
+uci set network.loopback.device='lo'
+uci set network.loopback.ifname='lo'
+uci set network.loopback.proto='static'
+uci set network.loopback.ipaddr='127.0.0.1'
+uci set network.loopback.netmask='255.0.0.0'
+uci set network.loopback.dns=$WAN_GW
+
+uci set network.globals=globals
+uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
+
+uci set network.wan=interface >/dev/null
+uci set network.wan.device='eth1'
+uci set network.wan.proto='static'
+uci set network.wan.netmask='255.255.255.0'
+uci set network.wan.ip6assign='60'
+uci set network.wan.gateway=$INET_GW
+uci add_list network.wan.dns=$WAN_GW
+uci set network.wan.ifname='eth1'
+uci set network.wan.ipaddr=$WAN_ip
+uci set network.wan.metric='10'
+uci set network.wan.peerdns='0'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='wan_mobile'
+uci commit network >/dev/null
+uci set network.wan_mobile.proto='static'
+uci set network.wan_mobile.netmask='255.255.255.0'
+uci set network.wan_mobile.ip6assign='60'
+uci set network.wan_mobile.gateway=$WAN_MOBILE_GW
+uci add_list network.wan_mobile.dns=$WAN_MOBILE_GW
+uci set network.wan_mobile.ifname='eth0.110'
+uci set network.wan_mobile.device='eth0.110'
+uci set network.wan_mobile.ipaddr=$WAN_MOBILE_ip
+uci set network.wan_mobile.metric='20'
+uci set network.wan_mobile.peerdns='0'
+uci commit network >/dev/null
+
+uci set network.wan6.proto='dhcpv6'
+uci set network.wan6.reqaddress='try'
+uci set network.wan6.reqprefix='auto'
+uci set network.wan6.ifname='eth1'
+uci set network.wan6.device='eth1'
+uci add_list network.wan6.dns='0::1'
+uci set network.wan6.metric='10'
+uci set network.wan6.peerdns='0'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='wan_mobile6'
+uci commit network >/dev/null
+uci set network.wan_mobile6.proto='dhcpv6'
+uci set network.wan_mobile6.reqaddress='try'
+uci set network.wan_mobile6.reqprefix='auto'
+uci set network.wan_mobile6.ifname='eth0.110'
+uci set network.wan_mobile6.device='eth0.110'
+uci add_list network.wan_mobile6.dns='0::1'
+uci set network.wan_mobile6.metric='20'
+uci set network.wan_mobile6.peerdns='0'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='VOICE'
+uci commit network >/dev/null
+uci set network.VOICE.proto='static'
+uci set network.VOICE.type='bridge'
+uci set network.VOICE.ipaddr=$VOICE_ip
+uci set network.VOICE.netmask='255.255.255.0'
+uci set network.VOICE.ip6assign='56'
+uci set network.VOICE.broadcast=$VOICE_broadcast
+uci set network.VOICE.igmp_snooping='1'
+#uci set network.VOICE.gateway='127.0.0.1'
+uci set network.VOICE.gateway=$WAN_GW
+uci set network.VOICE.ifname='eth0.105'
+uci set network.VOICE.device='eth0.105'
+uci set network.VOICE.dns=$VOICE_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='ENTERTAIN'
+uci commit network >/dev/null
+uci set network.ENTERTAIN.proto='static'
+uci set network.ENTERTAIN.type='bridge'
+uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
+uci set network.ENTERTAIN.netmask='255.255.255.0'
+uci set network.ENTERTAIN.ip6assign='56'
+uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
+uci set network.ENTERTAIN.igmp_snooping='1'
+#uci set network.ENTERTAIN.gateway='127.0.0.1'
+uci set network.ENTERTAIN.gateway=$WAN_GW
+uci set network.ENTERTAIN.ifname='eth0.106'
+uci set network.ENTERTAIN.device='eth0.106'
+uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='GUEST'
+uci commit network >/dev/null
+uci set network.GUEST.proto='static'
+uci set network.GUEST.type='bridge'
+uci set network.GUEST.ipaddr=$GUEST_ip
+uci set network.GUEST.netmask='255.255.255.0'
+uci set network.GUEST.ip6assign='56'
+uci set network.GUEST.broadcast=$GUEST_broadcast
+uci set network.GUEST.igmp_snooping='1'
+#uci set network.GUEST.gateway='127.0.0.1'
+uci set network.GUEST.gateway=$WAN_GW
+uci set network.GUEST.ifname='eth0.107'
+uci set network.GUEST.device='eth0.107'
+uci set network.GUEST.dns=$GUEST_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='CMOVIE'
+uci commit network >/dev/null
+uci set network.CMOVIE.proto='static'
+uci set network.CMOVIE.type='bridge'
+uci set network.CMOVIE.ipaddr=$CMOVIE_ip
+uci set network.CMOVIE.netmask='255.255.255.0'
+uci set network.CMOVIE.ip6assign='56'
+uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
+uci set network.CMOVIE.igmp_snooping='1'
+#uci set network.CMOVIE.gateway='127.0.0.1'
+uci set network.CMOVIE.gateway=$WAN_GW
+uci set network.CMOVIE.ifname='eth0.108'
+uci set network.CMOVIE.device='eth0.108'
+uci set network.CMOVIE.dns=$CMOVIE_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SERVER'
+uci commit network >/dev/null
+uci set network.SERVER.proto='static'
+uci set network.SERVER.type='bridge'
+uci set network.SERVER.ipaddr=$SERVER_ip
+uci set network.SERVER.netmask='255.255.255.0'
+uci set network.SERVER.ip6assign='56'
+uci set network.SERVER.broadcast=$SERVER_broadcast
+uci set network.SERVER.igmp_snooping='1'
+#uci set network.SERVER.gateway='127.0.0.1'
+uci set network.SERVER.gateway=$WAN_GW
+uci set network.SERVER.ifname='eth0.101'
+uci set network.SERVER.device='eth0.101'
+uci set network.SERVER.dns=$SERVER_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='INET'
+uci commit network >/dev/null
+uci set network.INET.proto='static'
+uci set network.INET.type='bridge'
+uci set network.INET.ipaddr=$INET_ip
+uci set network.INET.netmask='255.255.255.0'
+uci set network.INET.ip6assign='56'
+uci set network.INET.broadcast=$INET_broadcast
+uci set network.INET.igmp_snooping='1'
+#uci set network.INET.gateway='127.0.0.1'
+uci set network.INET.gateway=$WAN_GW
+uci set network.INET.ifname='eth0.104'
+uci set network.INET.device='eth0.104'
+uci set network.INET.dns=$INET_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='CONTROL'
+uci commit network >/dev/null
+uci set network.CONTROL.proto='static'
+uci set network.CONTROL.type='bridge'
+uci set network.CONTROL.ipaddr=$CONTROL_ip
+uci set network.CONTROL.netmask='255.255.255.0'
+uci set network.CONTROL.ip6assign='56'
+uci set network.CONTROL.broadcast=$CONTROL_broadcast
+uci set network.CONTROL.igmp_snooping='1'
+#uci set network.CONTROL.gateway='127.0.0.1'
+uci set network.CONTROL.gateway=$WAN_GW
+uci set network.CONTROL.ifname='eth0.103'
+uci set network.CONTROL.device='eth0.103'
+uci set network.CONTROL.dns=$CONTROL_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='HCONTROL'
+uci commit network >/dev/null
+uci set network.HCONTROL.proto='static'
+uci set network.HCONTROL.type='bridge'
+uci set network.HCONTROL.ipaddr=$HCONTROL_ip
+uci set network.HCONTROL.netmask='255.255.255.0'
+uci set network.HCONTROL.ip6assign='56'
+uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
+uci set network.HCONTROL.igmp_snooping='1'
+#uci set network.HCONTROL.gateway='127.0.0.1'
+uci set network.HCONTROL.gateway=$WAN_GW
+uci set network.HCONTROL.ifname='eth0.102'
+uci set network.HCONTROL.device='eth0.102'
+uci set network.HCONTROL.dns=$HCONTROL_ip
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='REPEATER'
+uci commit network >/dev/null
+uci set network.REPEATER.proto='none'
+uci commit  && reload_config >/dev/null
+
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#            Wireless Network Definitions              #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+# Save and apply
+uci commit network && reload_config >/dev/null
+#/etc/init.d/network restart
+}
+
+
+create_network_old() {
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                Network Definitions                   #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+
+uci -q delete network.lan
+
+cat << EOF > /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+
+::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
+curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound_ad_servers
+
+uci delete network.@device[0] >/dev/null
+
+uci set network.loopback=interface
+uci set network.loopback.device='lo'
+uci set network.loopback.ifname='lo'
+uci set network.loopback.proto='static'
+uci set network.loopback.ipaddr='127.0.0.1'
+uci set network.loopback.netmask='255.0.0.0'
+uci set network.loopback.dns=$WAN_GW
+
+uci set network.globals=globals
+uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
+
+uci set network.wan=interface >/dev/null
+uci set network.wan.device='eth1'
+uci set network.wan.proto='static'
+uci set network.wan.netmask='255.255.255.0'
+uci set network.wan.ip6assign='60'
+uci set network.wan.gateway=$INET_GW
+uci add_list network.wan.dns=$WAN_GW
+uci set network.wan.ifname='eth1'
+uci set network.wan.ipaddr=$WAN_ip
+uci set network.wan.metric='10'
+uci set network.wan.peerdns='0'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='wan_mobile'
+uci commit network >/dev/null
+uci set network.wan_mobile.proto='static'
+uci set network.wan_mobile.netmask='255.255.255.0'
+uci set network.wan_mobile.ip6assign='60'
+uci set network.wan_mobile.gateway=$WAN_MOBILE_GW
+uci add_list network.wan_mobile.dns=$WAN_MOBILE_GW
+uci set network.wan_mobile.ifname='eth0.110'
+uci set network.wan_mobile.device='eth0.110'
+uci set network.wan_mobile.ipaddr=$WAN_MOBILE_ip
+uci set network.wan_mobile.metric='20'
+uci set network.wan_mobile.peerdns='0'
+uci commit network >/dev/null
+
+uci set network.wan6.proto='dhcpv6'
+uci set network.wan6.reqaddress='try'
+uci set network.wan6.reqprefix='auto'
+uci set network.wan6.ifname='eth1'
+uci set network.wan6.device='eth1'
+uci add_list network.wan6.dns='0::1'
+uci set network.wan6.metric='10'
+uci set network.wan6.peerdns='0'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='wan_mobile6'
+uci commit network >/dev/null
+uci set network.wan_mobile6.proto='dhcpv6'
+uci set network.wan_mobile6.reqaddress='try'
+uci set network.wan_mobile6.reqprefix='auto'
+uci set network.wan_mobile6.ifname='eth0.110'
+uci set network.wan_mobile6.device='eth0.110'
+uci add_list network.wan_mobile6.dns='0::1'
+uci set network.wan_mobile6.metric='20'
+uci set network.wan_mobile6.peerdns='0'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='VOICE'
+uci commit network >/dev/null
+uci set network.VOICE.proto='static'
+uci set network.VOICE.type='bridge'
+uci set network.VOICE.ipaddr=$VOICE_ip
+uci set network.VOICE.netmask='255.255.255.0'
+uci set network.VOICE.ip6assign='56'
+uci set network.VOICE.broadcast=$VOICE_broadcast
+uci set network.VOICE.igmp_snooping='1'
+#uci set network.VOICE.gateway='127.0.0.1'
+uci set network.VOICE.gateway=$WAN_GW
+uci set network.VOICE.ifname='eth0.105'
+uci set network.VOICE.device='eth0.105'
+uci set network.VOICE.dns=$VOICE_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='ENTERTAIN'
+uci commit network >/dev/null
+uci set network.ENTERTAIN.proto='static'
+uci set network.ENTERTAIN.type='bridge'
+uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
+uci set network.ENTERTAIN.netmask='255.255.255.0'
+uci set network.ENTERTAIN.ip6assign='56'
+uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
+uci set network.ENTERTAIN.igmp_snooping='1'
+#uci set network.ENTERTAIN.gateway='127.0.0.1'
+uci set network.ENTERTAIN.gateway=$WAN_GW
+uci set network.ENTERTAIN.ifname='eth0.106'
+uci set network.ENTERTAIN.device='eth0.106'
+uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='GUEST'
+uci commit network >/dev/null
+uci set network.GUEST.proto='static'
+uci set network.GUEST.type='bridge'
+uci set network.GUEST.ipaddr=$GUEST_ip
+uci set network.GUEST.netmask='255.255.255.0'
+uci set network.GUEST.ip6assign='56'
+uci set network.GUEST.broadcast=$GUEST_broadcast
+uci set network.GUEST.igmp_snooping='1'
+#uci set network.GUEST.gateway='127.0.0.1'
+uci set network.GUEST.gateway=$WAN_GW
+uci set network.GUEST.ifname='eth0.107'
+uci set network.GUEST.device='eth0.107'
+uci set network.GUEST.dns=$GUEST_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='CMOVIE'
+uci commit network >/dev/null
+uci set network.CMOVIE.proto='static'
+uci set network.CMOVIE.type='bridge'
+uci set network.CMOVIE.ipaddr=$CMOVIE_ip
+uci set network.CMOVIE.netmask='255.255.255.0'
+uci set network.CMOVIE.ip6assign='56'
+uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
+uci set network.CMOVIE.igmp_snooping='1'
+#uci set network.CMOVIE.gateway='127.0.0.1'
+uci set network.CMOVIE.gateway=$WAN_GW
+uci set network.CMOVIE.ifname='eth0.108'
+uci set network.CMOVIE.device='eth0.108'
+uci set network.CMOVIE.dns=$CMOVIE_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SERVER'
+uci commit network >/dev/null
+uci set network.SERVER.proto='static'
+uci set network.SERVER.type='bridge'
+uci set network.SERVER.ipaddr=$SERVER_ip
+uci set network.SERVER.netmask='255.255.255.0'
+uci set network.SERVER.ip6assign='56'
+uci set network.SERVER.broadcast=$SERVER_broadcast
+uci set network.SERVER.igmp_snooping='1'
+#uci set network.SERVER.gateway='127.0.0.1'
+uci set network.SERVER.gateway=$WAN_GW
+uci set network.SERVER.ifname='eth0.101'
+uci set network.SERVER.device='eth0.101'
+uci set network.SERVER.dns=$SERVER_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='INET'
+uci commit network >/dev/null
+uci set network.INET.proto='static'
+uci set network.INET.type='bridge'
+uci set network.INET.ipaddr=$INET_ip
+uci set network.INET.netmask='255.255.255.0'
+uci set network.INET.ip6assign='56'
+uci set network.INET.broadcast=$INET_broadcast
+uci set network.INET.igmp_snooping='1'
+#uci set network.INET.gateway='127.0.0.1'
+uci set network.INET.gateway=$WAN_GW
+uci set network.INET.ifname='eth0.104'
+uci set network.INET.device='eth0.104'
+uci set network.INET.dns=$INET_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='CONTROL'
+uci commit network >/dev/null
+uci set network.CONTROL.proto='static'
+uci set network.CONTROL.type='bridge'
+uci set network.CONTROL.ipaddr=$CONTROL_ip
+uci set network.CONTROL.netmask='255.255.255.0'
+uci set network.CONTROL.ip6assign='56'
+uci set network.CONTROL.broadcast=$CONTROL_broadcast
+uci set network.CONTROL.igmp_snooping='1'
+#uci set network.CONTROL.gateway='127.0.0.1'
+uci set network.CONTROL.gateway=$WAN_GW
+uci set network.CONTROL.ifname='eth0.103'
+uci set network.CONTROL.device='eth0.103'
+uci set network.CONTROL.dns=$CONTROL_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='HCONTROL'
+uci commit network >/dev/null
+uci set network.HCONTROL.proto='static'
+uci set network.HCONTROL.type='bridge'
+uci set network.HCONTROL.ipaddr=$HCONTROL_ip
+uci set network.HCONTROL.netmask='255.255.255.0'
+uci set network.HCONTROL.ip6assign='56'
+uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
+uci set network.HCONTROL.igmp_snooping='1'
+#uci set network.HCONTROL.gateway='127.0.0.1'
+uci set network.HCONTROL.gateway=$WAN_GW
+uci set network.HCONTROL.ifname='eth0.102'
+uci set network.HCONTROL.device='eth0.102'
+uci set network.HCONTROL.dns=$HCONTROL_ip
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='REPEATER'
+uci commit network >/dev/null
+uci set network.REPEATER.proto='none'
+uci commit  && reload_config >/dev/null
+
 uci commit network >/dev/null
 uci set network.@switch[0]=switch
 uci set network.@switch[0].name='switch0'
