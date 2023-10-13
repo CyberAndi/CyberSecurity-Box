@@ -2718,7 +2718,7 @@ uci commit network && reload_config >/dev/null
 }
 
 
-create_network() {
+create_network_old() {
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -2967,7 +2967,7 @@ uci commit network && reload_config >/dev/null
 }
 
 
-create_network_old() {
+create_network_org() {
 clear
 echo '########################################################'
 echo '#                                                      #'
