@@ -27175,8 +27175,9 @@ set_unbound
 create_url_filter
 #create_switch
 #create_wlan
-#create_firewall_zones
 #create_network
+#create_dridge
+#create_firewall_zones
 #set_dhcp >/dev/null
 view_config
 #set_firewall_rules
