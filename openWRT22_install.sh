@@ -27662,7 +27662,7 @@ uci commit fstab
 
 #-------------------------start---------------------------------------
 ask_parameter $1 $2 $3 $4 $5 $6
-#install_update
+install_update
 #install_adguard
 define_variables
 customize_firmware
@@ -27674,9 +27674,9 @@ create_url_filter
 create_switch
 create_wlan
 create_network
-create_dridge
+create_bridge
 create_firewall_zones
-#set_dhcp >/dev/null
+set_dhcp >/dev/null
 view_config
 #set_firewall_rules
 #set_mountpoints
