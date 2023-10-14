@@ -5236,7 +5236,7 @@ echo
 #Configure stubby
 }
 
-set_unbound {
+create_unbound_url_filter() {
 cat << EOF > /etc/unbound/unbound_srv.conf
 ##############################################################################
 # User custom options added in the server: clause part of UCI 'unbound.conf'
@@ -14463,7 +14463,9 @@ local-zone: "ogp.me" always_null
 local-zone: "*sex*.*" always_null
 
 EOF
+}
 
+set_unbound() {
 mkdir /etc/unbound/unbound.conf.d >/dev/null
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >/dev/null
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
@@ -14837,7 +14839,8 @@ uci commit dhcp && reload_config >/dev/null
 /etc/init.d/dnsmasq restart >/dev/null
 cp /usr/share/dnsmasq/trust-anchors.conf /etc/ >/dev/null
 }
-create_url_filter {
+
+create_dnsmasq_url_filter() {
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -22273,20 +22276,29 @@ uci commit fstab
 }
 
 #-------------------------start---------------------------------------
-ask_parameter
+define_variables
+ask_parameter $1 $2 $3 $4 $5 $6
 install_update
 #install_adguard
-define_variables
-customize_firmware
-create_network
-set_dhcp
-#build_websites
 set_tor
 set_stubby
 set_unbound
-create_url_filter
-#set_firewall_rules
+create_unbound_url_filter
+create_dnsmasq_url_filter
+view_config
+customize_firmware
+#create_websites
+
+create_network
+create_switch
+create_wlan
+create_firewall_zones
+view_config
+
+set_dhcp
+set_firewall_rules
 #set_mountpoints
+
 
 clear
 echo '########################################################'
