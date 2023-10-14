@@ -6,7 +6,7 @@
 <p>
   First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="14px"></img> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
 <p>
-<ol><h3><li>Alternative 1 - Installation on <img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>-Router( <img src="/avm_logo.svg" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px"></img> Fritz!Box, <img src="/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img> etc.)</h3>
+<ol><h3><li>Alternative 1 - Installation on <img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>-Router( <img src="/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px" alt="AVM"></img> Fritz!Box, <img src="/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="tp-link"></img>, <img src="/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="ASUS"></img> etc.)</h3>
   Go on <a href="https://openwrt.org/" target="_blank"><img src="/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router.<br>
   After flushing use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
@@ -48,7 +48,7 @@
   You will find the Screenshots <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/README.md#screenshots">here</a>. 
   </li>
   
-  <h3><li>Alternative 2 - Installation CyberSecurity-Box (Raspberry-Pi)</h3>
+  <h3><li>Alternative 2 - Installation CyberSecurity-Box ( <img src="/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img> Raspberry-Pi</li>)</h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank">Raspbian-SD-Card-Image</a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
