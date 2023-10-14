@@ -4256,7 +4256,7 @@ echo 'Please wait until Reboot ....'
 
 }
 
-create_url_filter() {
+create_dnsmasq_url_filter() {
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -14712,7 +14712,7 @@ uci commit stubby && reload_config >/dev/null
 /etc/init.d/stubby restart  >/dev/null
 }
 
-set_unbound() {
+create_unbound_url_filter() {
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -24935,7 +24935,8 @@ echo '#                 Unbound Blocklist                    #'
 echo '#                                                      #'
 echo '########################################################'
 view_config
-
+}
+set_unbound() {
 mkdir /etc/unbound/unbound.conf.d >/dev/null
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >/dev/null
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
