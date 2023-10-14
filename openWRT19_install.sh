@@ -3,8 +3,6 @@
 clear
 clear
 
-clear
-echo
 echo '########################################################'
 echo '#                                                      #'
 echo '#                 CyberSecurity-Box                    #'
@@ -12,198 +10,16 @@ echo '#                                                      #'
 echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
 echo '#                                                      #'
 echo '########################################################'
-echo
-echo
-echo
+
 #Firewall Pihole Unbound Tor Transparentproxy
 
-opkg update
-opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >/dev/null
-opkg update   >/dev/null
-opkg install nano git wget curl luci-ssl unbound-daemon-heavy unbound-anchor unbound-control unbound-control-setup unbound-host unbound-checkconf ca-certificates stubby tor tor-geoip dnsmasq-full bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill
-clear
-echo
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '########################################################'
-echo
-echo 'Software Packeges installed'
-echo
-
-#Localaddresen
-LOCALADDRESS="127.192.0.1/10"
-
-actLoop=$(ifconfig | grep '^l\w*' -m 1 | cut -f1 -d ' ')
-actEth=$(ifconfig | grep '^e\w*' -m 1 | cut -f1 -d ' ')
-actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
-
-#Internet Gateway
-INET_GW=$(ip route | grep default | cut -f3  -d ' ')
-INET_GW_org=$INET_GW
-
-echo 'Please give me the WAN-IP (Gateway/Router): ('$INET_GW')'
-read INET_GW
-echo
-if [ "$INET_GW" = "" ]
-	then
-		INET_GW=$INET_GW_org	 
-		
-fi
-
-WAN_ip=$(echo $INET_GW | cut -f1 -d '.')
-WAN_ip=$WAN_ip"."$(echo $INET_GW | cut -f2 -d '.')
-WAN_ip=$WAN_ip"."$(echo $INET_GW | cut -f3 -d '.')".250"
-
-WAN_broadcast=$(echo $INET_GW | cut -f1 -d '.')
-WAN_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f2 -d '.')
-WAN_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f3 -d '.')".255"
-
-#complet Internet
-Internet="0.0.0.0/0"
-
-#all Adresses
-all_IP="0.0.0.0"
-all_IP6="[::]"
-
-#Access to Server
-ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' )
-
-#Lokal LAN
-LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
-LAN_org=$LAN
-
-echo 'Type the LAN-IP (Internal Network): ('$LAN')'
-read LAN
-if [ "$LAN" = "" ]  
-	then
-		LAN=$LAN_org
-fi
-
-LOCAL_DOMAIN='CyberSecBox.local'
-echo
-echo 'Your local Domain of your LAN? (CyberSecBox.local)'
-read LOCAL_DOMAIN
-if [ "$LOCAL_DOMAIN" = "" ]
-	then
-		LOCAL_DOMAIN='CyberSecBox.local'
-fi
-
-WIFI_SSID='CyberSecBox'
-WIFI_SSID_org=$WIFI_SSID
-echo
-echo 'The Main-WiFi-SSID? ('$WIFI_SSID')'
-read WIFI_SSID
-if [ "$WIFI_SSID" = "" ]
-        then
-                WIFI_SSID=$WIFI_SSID_org
-fi
-
-
-WIFI_PASS='Cyber,Sec9ox'
-WIFI_PASS_org=$WIFI_PASS
-echo
-echo 'And the WiFi-Key? (Cyber,Sec9ox)'
-read WIFI_PASS
-if [ "$WIFI_PASS" = "" ]
-	then
-		WIFI_PASS=$WIFI_PASS_org
-fi
-
-USERNAME='root'
-echo
-echo 'Enter the user for the login: (default: root)'
-read -s USERNAME
-passwd $USERNAME
-
-SUBNET=$(echo $LAN | cut -f3 -d '.')
-SUBNET_sep=$SUBNET
-
-if [ $SUBNET_sep -lt 125 ]
-        then
-                SUBNET=$(($SUBNET + 125))
-                if  [ $SUBNET_sep -lt 5 ]
-                        then
-                                SUBNET_sep=$(($SUBNET_sep + 6))
-                fi
-
-        else
-                if  [ $SUBNET_sep -gt 250 ]
-                        then
-                                SUBNET_sep=$(($SUBNET_sep - 62))
-                fi
-
-fi
-
-SERVER_range='192.168.'$(($SUBNET_sep - 123))'.2,192.168.'$(($SUBNET_sep - 123))'.200,24h'
-CONTROL_range='192.168.'$(($SUBNET_sep - 119))'.2,192.168.'$(($SUBNET_sep - 119))'.200,24h'
-HCONTROL_range='192.168.'$(($SUBNET_sep - 118))'.2,192.168.'$(($SUBNET_sep - 118))'.200,24h'
-INET_range='192.168.'$SUBNET_sep'.2,192.168.'$SUBNET_sep'.200,24h'
-VOICE_range='192.168.'$(($SUBNET_sep + 1))'.2,192.168.'$(($SUBNET_sep + 1))'.200,24h'
-ENTERTAIN_range='192.168.'$(($SUBNET_sep - 1))'.2,192.168.'$(($SUBNET_sep - 1))'.200,24h'
-GUEST_range='192.168.'$(($SUBNET_sep + 10))'.2,192.168.'$(($SUBNET_sep + 10))'.200,24h'
-
-SERVER_ip='192.168.'$(($SUBNET_sep - 123))'.254'
-CONTROL_ip='192.168.'$(($SUBNET_sep - 119))'.254'
-HCONTROL_ip='192.168.'$(($SUBNET_sep - 118))'.254'
-INET_ip='192.168.'$SUBNET_sep'.1'
-VOICE_ip='192.168.'$(($SUBNET_sep + 1))'.1'
-ENTERTAIN_ip='192.168.'$(($SUBNET_sep - 1))'.1'
-GUEST_ip='192.168.'$(($SUBNET_sep + 10))'.1'
-
-SERVER_broadcast='192.168.'$(($SUBNET_sep - 123))'.255'
-CONTROL_broadcast='192.168.'$(($SUBNET_sep - 119))'.255'
-HCONTROL_broadcast='192.168.'$(($SUBNET_sep - 118))'.255'
-INET_broadcast='192.168.'$SUBNET_sep'.255'
-VOICE_broadcast='192.168.'$(($SUBNET_sep + 1))'.255'
-ENTERTAIN_broadcast='192.168.'$(($SUBNET_sep - 1))'.255'
-GUEST_broadcast='192.168.'$(($SUBNET_sep + 10))'.255'
-
-SERVER_lan='192.168.'$(($SUBNET_sep - 123))'.0'
-CONTROL_lan='192.168.'$(($SUBNET_sep - 119))'.0'
-HCONTROL_lan='192.168.'$(($SUBNET_sep - 118))'.0'
-INET_lan='192.168.'$SUBNET_sep'.0'
-VOICE_lan='192.168.'$(($SUBNET_sep + 1))'.0'
-ENTERTAIN_lan='192.168.'$(($SUBNET_sep - 1))'.0'
-GUEST_lan='192.168.'$(($SUBNET_sep + 10))'.0'
-
-SERVER_net=$SERVER_ip'/24'
-CONTROL_net=$CONTROL_ip'/24'
-HCONTROL_net=$HCONTROL_ip'/24'
-INET_net=$INET_ip'/24'
-VOICE_net=$VOICE_ip'/24'
-ENTERTAIN_net=$ENTERTAIN_ip'/24'
-GUEST_net=$GUEST_ip'/24'
-WAN_net=$WAN_ip'/24'
-
-SERVER_domain='server.'$LOCAL_DOMAIN
-CONTROL_domain='control.'$LOCAL_DOMAIN
-HCONTROL_domain='hcontrol.'$LOCAL_DOMAIN
-INET_domain='inet.'$LOCAL_DOMAIN
-VOICE_domain='voice.local'
-ENTERTAIN_domain='entertain.local'
-GUEST_domain='guest.local'
-
-
-SERVER_ssid='DMZ-'$WIFI_SSID
-CONTROL_ssid='Control-'$WIFI_SSID
-HCONTROL_ssid='HControl-'$WIFI_SSID
-INET_ssid='iNet-'$WIFI_SSID
-VOICE_ssid='Voice-'$WIFI_SSID
-ENTERTAIN_ssid='Entertain-'$WIFI_SSID
-GUEST_ssid='Guest-'$WIFI_SSID
-Adversisment_ssid='Telekom'
-
-
+define_variables() {
 #----------------------------------------------------------------------------
 echo
 echo "define variables"
 echo
-#DHCP
-DHCP_port="67"
+#
+_port="67"
 all_other_DHCP_port="1-66 68-65535"
 
 
@@ -269,6 +85,11 @@ all_other_WS_Discovery_port="1-5356 5358-3701 3703-65535"
 PCP_port="5351"
 all_other_PCP_port="1-5350 3552-65535"
 
+#Port NETWORK Controler
+#8043
+CONTROLER_port="8043"
+all_other_CONTROLER_port="1-8042 8044-65535"
+
 #Multicast Domain Name Service (mDNS)
 #5353
 mDNS_port="5353"
@@ -321,6 +142,8 @@ all_other_MSRDP_AlexaCall_port="1-3388 3390-65535"
 #HTTP_s (Ports)
 #80, 443, 8080
 HTTP_s_port="80 443 8080"
+HTTPs_port="443"
+HTTP_port="80"
 all_other_HTTP_s_port="1-79 81-442 444-8079 8081-65535"
 
 #FTP_Server
@@ -465,6 +288,7 @@ ACCESS_HTTPS_port="8443"
 
 #TOR Onion Services
 TOR_SOCKS_port="9050"
+TOR_SOCKS2_port="9150"
 TOR_TRANS_port="9040"
 TOR_DIR_port="9030"
 TOR_OR_port="9049"
@@ -573,6 +397,11 @@ iptab_all_other_WS_Discovery_port="1:5356 5358:3701 3703:65535"
 iptab_PCP_port="5351"
 iptab_all_other_PCP_port="1:5350 3552:65535"
 
+#Port NETWORK Controler
+#8043
+iptab_CONTROLER_port="8043"
+iptab_all_other_CONTROLER_port="1:8042 8044:65535"
+
 #Multicast Domain Name Service (mDNS)
 #5353
 iptab_mDNS_port="5353"
@@ -626,6 +455,8 @@ iptab_all_other_MSRDP_AlexaCall_port="1:3388 3390:65535"
 #HTTP_s (Ports)
 #80, 443, 8080
 iptab_HTTP_s_port="80 443 8080"
+iptab_HTTPs_port="443"
+iptab_HTTP_port="80"
 iptab_all_other_HTTP_s_port="1:79 81:442 444:8079 8081:65535"
 
 #FTP_Server
@@ -766,6 +597,7 @@ iptab_ACCESS_HTTPS_port="8443"
 
 #TOR Onion Services
 iptab_TOR_SOCKS_port="9050"
+iptab_TOR_SOCKS2_port="9150"
 iptab_TOR_TRANS_port="9040"
 iptab_TOR_DIR_port="9030"
 iptab_TOR_OR_port="9049"
@@ -870,16 +702,14 @@ VIDEO_SRV="52.192.0.0/11 99.86.3.59/24 18.236.7.30/11 217.148.99.11/28 46.137.17
 echo
 echo "variables defineds"
 echo
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '########################################################'
+view_config
+echo
+}
+
 
 #----------------------------------------------------------------------------
+
+customize_firmware() {
 uci set system.@system[0]=system
 uci set system.@system[0].ttylogin='0'
 uci set system.@system[0].log_size='64'
@@ -902,11 +732,13 @@ uci set uhttpd.defaults.state=''
 uci set uhttpd.defaults.location='DMZ'
 uci set uhttpd.defaults.commonname=$LAN
 uci -q delete uhttpd.main.listen_http
-uci add_list uhttpd.main.listen_http="0.0.0.0:8080"
-uci add_list uhttpd.main.listen_http="[::]:8080"
+uci add_list uhttpd.main.listen_http="0.0.0.0:80"
+uci add_list uhttpd.main.listen_http="[::]:80"
 uci -q delete uhttpd.main.listen_https
 uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
+uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
+uci set uhttpd.main.redirect_https='1'
 uci commit  && reload_config  >/dev/null
 /etc/init.d/uhttpd restart  >/dev/null
 
@@ -934,38 +766,715 @@ cat << EOF > /etc/banner
       local Privacy for Voice-Assistents, Smart-TVs and SmartHome 
 	   
 --------------------------------------------------------------------------
-   powered by OpenWrt 19.07.7, r11306-c4a6851c72
+   powered by OpenWrt $(echo $release), $(echo $revision)
 --------------------------------------------------------------------------
 
 
 EOF
 
 cat << EOF > /etc/openwrt_release
-DISTRIB_ID='OpenWrt'
-DISTRIB_RELEASE='19.07.7'
-DISTRIB_REVISION='r11306-c4a6851c72'
+DISTRIB_ID='CyberSecurity-Box'
+DISTRIB_RELEASE='$(echo $release)'
+DISTRIB_REVISION='$(echo $revision)'
 DISTRIB_TARGET='ipq40xx/generic'
 DISTRIB_ARCH='arm_cortex-a7_neon-vfpv4'
-DISTRIB_DESCRIPTION='CyberSecurity-Box 19.07.7'
+DISTRIB_DESCRIPTION='CyberSecurity-Box $(echo $revision)'
 DISTRIB_TAINTS=''
 EOF
 
+
 cat << EOF > /etc/device_info
 DEVICE_MANUFACTURER='@CyberAndi'
-DEVICE_MANUFACTURER_URL='https://www.cyberandi.de/'
+DEVICE_MANUFACTURER_URL='https://cyberandi.tumblr.com/'
 DEVICE_PRODUCT='CyberSecurity-Box'
-DEVICE_REVISION='v0'
+DEVICE_REVISION='v0.75'
 
+EOF
+
+cp openWRT_install.sh /etc/openWRT_install.sh
+chmod 0755 /etc/openWRT_install.sh
+
+cat << EOF > /etc/sysupgrade.conf
+## This file contains files and directories that should
+## be preserved during an upgrade.
+
+# /etc/example.conf
+# /etc/openvpn/
+/etc/openWRT_install.sh
+/etc/banner
+/etc/device_info
+/etc/openwrt_release
+/etc/config/
+/www/
 EOF
 
 #Datum erstellen
 #actdate(date --utc --date "$1" +%F)
-datum=`date +\"%Y%d%m%H%M\"`
+datum=$(date +"%y%d%m%H%M")
 echo
 
 #sichere alte Konfiguration
 echo Sichere alte Konfiguration
 iptables-save > rules.v4_old_$datum.bkp
+}
+
+create_websites() {
+mkdir /www/router
+mkdir /www/redirect
+mkdir /www/CaptivePortal
+mkdir /www/generate_204
+mkdir /www/CaptivePortal/pic
+
+
+cat << EOF > /www/index.html
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="refresh" content="0; URL=CaptivePortal/index.htm" />
+</head>
+<body style="background-color: black">
+<a style="color: #008800; font-family: arial, helvetica, sans-serif;" href="cgi-bin/luci/">LuCI - Lua Configuration Interface</a>
+</body>
+</html>
+
+EOF
+
+cat << EOF > /www/CaptivePortal/theme_variable.css
+
+:root {
+	--acceptBgColor: linear-gradient(to left bottom, rgba(0,128,0,0.8), rgba(0,128,0,0.1));
+	--activeView: -10;
+	--adjust: 100%;
+	--alertBgColor: var(--lightRed);
+	--alertColor: var(--lightRed);
+	--alertRed: #cc0000;
+	--alertTop: 3em;
+	--AnswerBoxBg: var(--lightRed);
+	--animiImage: url("pic/Corona_2.svg");
+	--animiStartPosX: 0;
+	--animiStartPosY: 0;
+	--animiStartPosZ: 0;
+	--animiStartPerspective: 150px;
+	--animiStopPosX: 0;
+	--animiStopPosY: 0;
+	--animiStopPosZ: 0;
+	--animiStopPerspective: 7000px;
+	--animiTransformStyle: preserve-3d;
+	--appearance: none;
+	--aspectRatio: 16/9;
+	--aspectRatioLT: 16/6.7467;
+	--autoHeight: auto;
+	--autoTop: auto;
+	--bgBlur: blur(2.5px);
+	--bgLight: rgba(238,238,238,0.75);
+	--bgGradientDark: linear-gradient(to bottom, rgba(16,96,0,0.8), rgba(16,96,0,0.7), rgba(16,96,0,0));
+	--bgGradientDiagDark: linear-gradient(to top right, rgba(16,96,0,0.8), rgba(16,96,0,0.7), rgba(16,96,0,0));
+	--bgGradientDiagLight: linear-gradient(to bottom left, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+	--bgGradientDiagLightActive: linear-gradient(to top right, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+	--bgGradientLight: linear-gradient(to right, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+	--bgGradientLightActive: linear-gradient(to top, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+	--bgModal: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.3), rgba(0,0,0,1) );
+	--bgPosFixed: fixed;
+	--bgTransparent: transparent;
+	--bgRepeate: no-repeat;
+	--bibleTextTransition: 0.75s;
+	--bibleTextDisplay: block;
+	--bibleTextHidden: none;
+	--bibleTextImageDisplay: inline-block;
+	--bibleImageShadow: 0.1em 0.1em 0.125em rgb(0 0 0 / 50%), 0 0 0.05em rgba(0, 0, 0, 0.25);
+	--blackColor: #000000;
+	--bookTextColor: #201000;
+	--bookBGColor: #ffeed8;
+	--blackGradient: radial-gradient(rgba(0,0,0,.3), rgba(0,0,0,1));
+	--blackTrans: rgba(0,0,0,0.5);
+	--blockBgColor: linear-gradient(to bottom left, rgba(224,224,0,0.8), rgba(224,224,0,0.1));
+	--blueGradient: radial-gradient(rgba(47, 121,160,.3), rgba(47, 121,160,1));
+	--blueGradient3: radial-gradient(rgba(47, 121,160,1), rgba(47, 121,160,0.15));
+	--blueGradientRight: linear-gradient(to right, rgba(17,17,17,.9), var(--colorBlueMid));
+	--blueGradientLeft: linear-gradient(to left, var(--colorBlueTrans), var(--colorBlue));
+	--blueScrollPic: rgba(94,149,183,.4);
+	--bookBGImage: linear-gradient(to right,rgba(135,100,0,1),  rgba(135,100,0,0.1), rgba(135,100,0,0.1), rgba(135,100,0,0.1), rgba(135,100,0,0.1), rgba(135,100,0,1));
+	--bookFont: var(--fontBook);
+	--borderDark: 1px solid #000000;
+	--borderColorDark: rgba(81,81,81,0.6);
+	--borderColorDark: var(--buttonBorderColorDark);
+	--borderColorLight: var(--borderLight);
+	--borderColorMiddle: rgba(128,128,128,0.6);
+	--borderColorMiddle: var(--buttonBorderColorMiddle);
+	--borderDark: 0.75px solid rgba(81,81,81,0.6);
+	--borderLoader: 2px solid rgb(32,128,0);
+	--borderLoader2: 7px solid #aaaaaa;
+	--borderLoaderRadius: 50%;
+	--borderLoaderTop: 7px solid rgb(32,128,0);
+	--borderMiddle: 0.75px solid rgba(128,128,128,0.6);
+	--borderNone: 1px solid #44cc00;
+	--borderRadius: 5px;
+	--borderRadiusNone: 0;
+	--borderRadiusNormal: 7px;
+	--borderRadiusSmall: 3px;
+	--borderRadiusTouch: 15px;
+	--borderSelect: 1px solid #cccccc;
+	--borderTerminal: 2px solid rgba(68,204,0,0.5);
+	--boxBg: rgba(128,128,128,0.6);
+	--boxBgDrk: rgba(48,48,48,0.85);
+	--boxBgDrkGreen: rgba(0,48,0,0.85);
+	--boxBgImage: linear-gradient(to bottom left, rgba(128,128,128,0.8), rgba(128,128,128,0.1));
+	--boxBgLgtDrk: rgba(81,81,81,0.6);
+	--boxBgLight: rgba(204,204,204,0.85);
+	--boxBgLightGreen: rgba(0,204,0,0.6);
+	--boxBgMidGreen: rgba(68,136,68,0.85);
+	--boxBGView: 49;
+	--boxHighLightBorder: rgba(0,224,0,0.9)!important; 
+	--boxHighLightBorder: rgba(82,236,168,0.9)!important; 
+	--boxHighLightShadow: inset 0 1px 3px rgb(0 0 0 / 10%), 0 0 8px rgb(0 224 0 / 60%);
+	--boxPadding: 1em 1.5em;
+	--boxShadow: 0.25em 0.25em 0.5em var(--blackTrans);
+	--boxShadow: 0.2em 0.2em 0.5em rgba(0,0,0,0.7), 0 0 0.05em #000000;
+	--boxShadow2: -0.5em 0.95em 0.5em rgba(0, 0, 0, 0.6);
+	--boxSizeingNorm: content-box;
+	--boxSizeingBorder: border-box;
+	--boxView: 50;
+	--bsLogoHeight: 51;
+	--buttonBorderColorDark: rgba(81,81,81,0.6);
+	--buttonBorderColorMiddle: rgba(128,128,128,0.6);
+	--buttonBorderDark: 0.75px solid rgba(81,81,81,0.6);
+	--buttonBorderMiddle: 0.75px solid rgba(128,128,128,0.6);
+	--buttonBorderMiddle: 0.75px solid rgba(128,128,128,0.6);
+	--buttonBoxHeight: 2.1vw;
+	--buttonColorNorm: rgba(0,0,0,0.35);
+	--buttonColorSelect: rgba(224,0,0,0.75);
+	--buttonColorDark: var(--fontDark);
+	--buttonColorLight: var(--fontLight);
+	--buttonColorStd: rgba(000,113,000,0.75);
+	--buttonHeight: 16px;
+	--buttonFloat: right;
+	--buttonHeightTouch: 60px;
+	--buttonTop: -.05em;
+	--buttonRight: 0em;
+	--buttonPadding: 0 0em 0.25em 0.5em;
+	--buttonCursor: pointer;
+	--canLeft: 60%;
+	--canSize: 30em;
+	--centerMargin: auto;
+	--centerPos: 50%;
+	--colorBlueTrans: rgba(47, 121,160,.3);
+	--colorBlue: rgba(47, 121,160,1);
+	--colorBlueMid: rgba(94,149,183,0.8);
+	--colorBlueDrk: rgba(7, 81,120,1);
+	--colorBlueLgth: rgba(107, 181,220,1);
+	--colorDrkGrey: rgba(17,17,17,0.75);
+	--colorDrkGreyTrans: rgba(17,17,17,0.25);
+	--colorLgtGrey: #eeeeee;
+	--configHeight: var(--menuHeight);
+	--configLableMax: var(--popupMaxWidth);
+	--configLableMin: var(--popupMinWidth);
+	--configMax: 40em;
+	--configMin: 6em;
+	--cursorHand: pointer;
+	--cursorWait: wait;
+	--containerBibleTextWidth: 80vw;
+	--default: 0em;
+	--defaultValue: unset;
+	--devColor: #ff0000;
+	--devColorTrans: rgba(255,0,0,0.25);
+	--devColor1: #880000;
+	--devColor1Trans: rgba(128,0,0,0.25);
+	--devColor2: #008800;
+	--devColor2Trans: rgba(0,128,0,0.25);
+	--devColor3: #00ff00;
+	--devColor3Trans: rgba(0,255,0,0.25);
+	--devColor4: #000088;
+	--devColor4Trans: rgba(0,0,128,0.25);
+	--devColor5: #0000ff;
+	--devColor5Trans: rgba(0,0,255,0.25);
+	--devColor6: #888800;
+	--devColor6Trans: rgba(128,128,0,0.25);
+	--devColor7: #ffff00;
+	--devColor7Trans: rgba(255,255,0,0.25);
+	--devColorBG: #AA00AA;
+	--devColorBGTrans: rgba(172,0,172,0.25);
+	--devColorOverL: #AAAAAA;
+	--devColorOverLTrans: rgba(172,172,172,0.25);
+	--displayNone: none;
+	--displayBlock: block;
+	--displayInlineBlock: inline-block;
+	--drk-bg: #000000;
+	--drkGreen: #004400;
+	--blueGradient: radial-gradient(rgba(47, 121,160,.3), rgba(47, 121,160,1));
+	--blueGradient2: radial-gradient(rgba(94,149,183,.3), rgba(94,149,183,1));
+	--blueTransparent: rgba(47, 121,160, 0.75);
+	--dropBgColor: linear-gradient(to bottom left, rgba(224,0,0,0.8), rgba(224,0,0,0.1));
+	--dropShadow: var(--boxShadow);
+	--factorHDVideo: 56.25;
+	--factorHDVideoVW: var(--factorHDVideo) + 'vw';
+	--factorLetterBoxSmallVideo: 37.5;
+	--factorLetterBoxSmallVideoVW: var(--factorLetterBoxSmallVideo) + 'vw';
+	--factorLetterBoxVideo: 48.92;
+	--factorLetterBoxVideoVW: var(--factorLetterBoxVideo) + 'vw';
+	--fillHeadHeight: var(--lineBoxHeadHeight);
+	--flowLeft: left;
+	--flowRight: right;
+	--focusShadow: 0 0 0.15em var(--colorBlueMid);
+	--footerHeight: calc(var(--fontSizeEm) * 2);
+	--fontActiveShadow: var(--fontShadow);
+	--fontBigShadow: -0.25em 0.425em 0.25em rgba(0, 0, 0, 0.6);
+	--fontBold: bold;
+	--fontDark: #222222;
+	--fontLight: #cccccc;
+	--fontNormal: normal;
+	--fontSelectShadow: -0.125em 0.2125em 0.125em rgba(224, 224, 224, 0.6);
+	--fontShadow: 0.2em 0.2em 0.5em rgb(0 0 0 / 75%), 0 0 0.2em #000000;
+	--fontSize: 1.2831vw;
+	--fontSizeEm: 16px;
+	--fontSizeButton: var(--fontSizeSmall);
+	--fontSizeHead: var(--fontSizeNorm);
+	--fontSizeHead1: 2.370816vw;
+	--fontSizeHead2: 1.97568vw;
+	--fontSizeHead3: 1.6464vw;
+	--fontSizeHelp: var(--fontSizeXXSmall);
+	--fontSizeIfBox: var(--fontSizeXSmall);
+	--fontSizeIfBoxHead: var(--fontSizeSmall);
+	--fontSizeLabel: 1.15248vw; 
+	--fontSizeLabel: var(--fontSizeXSmall);
+	--fontSizeMenu: var(--fontSizeSmall);
+	--fontSizeMobile: 1.6vw;
+	--fontSizeNorm: 1.4vw;
+	--fontSizeSmall: 1.1662vw;
+	--fontSizeTable: var(--fontSizeXSmall);
+	--fontSizeXSmall: 1.029vw;
+	--fontSizeXXSmall: 0.8232vw;
+	--fontWeight: 650;
+	--fontTerminal: var(--mainColor);
+	--fontXDrk: var(--drk-bg);
+	--fontXLight: var(--lightColor);
+	--fontBook: "Times New Roman", Times, serif;
+	--footerHeight: 1.5em;
+	--footerBGColor: linear-gradient(to left,rgba(17,17,17,.9), var(--colorBlueMid));
+	--forwardBgColor: linear-gradient(to left bottom, rgba(0,255,0,0.8), rgba(0,255,0,0.1));
+	--fwStateDynWidth: 260px;
+	--gray: #444444;
+	--halfTransparent: 0.8;
+	--headerBgColor: rgba(0,0,0,0.8);
+	--headerBGImage:  url("pic/CMovie.svg"), var(--blueGradientRight);
+	--headerBGImageSmall: var(--blueGradientRight);
+	--headerBGSize: 10%, auto;
+	--headerBGSizeSmall: auto;
+	--headerBGPosX: 7%, 0px;
+	--headerBGPosXBig: 10%, 0px;
+	--headerBGPosY: 55%, 0px;
+	--headerBGPosXSmall: 0px;
+	--headerBGPosYSmall: 0px;
+	--headerBoxHeight: var(--lineBoxHeadHeight);
+	--headerBoxItem: var(--lineBoxHeadHeight);
+	--headerH1: "Willkommen bei C`Movie dem Hoffnungsportal";
+	--headerH1Small: "C`Movie das Hoffnungsportal";
+	--headerH3: "Der Gegenpol zu Chaos und Panik seitens der Medien und Politik";
+	--headerH3Small: "Der Gegenpol zu Chaos und Panik";
+	--headerHeight: var(--lineHeadHeight);
+	--headerHeight: calc(var(--fontSizeEm) * 9.5);
+	--headerHeightLarge: calc(var(--fontSizeEm) * 9.5);
+	--headerHeightSmall: calc(var(--fontSizeEm) * 4.5);
+	--headerItem: var(--lineHeadHeight);
+	--headerAlign: center;
+	--headerTop: -1em;
+	--headerTopH3: -0.4em;
+	--headerLineHeight: 1.2;
+	--headFont: var(--mainFont);
+	--heightTerm: 31em;
+	--hidden: none;
+	--hoverView: 10;
+	--hyphens: auto;
+	--inlineVisible: inline-block;
+	--inpBoxWidth: 210px;
+	--inpFill-bg: var(--lightGray);
+	--inpFocus-bg: #ffffcc;
+	--inpHeight: var(--mainTextHeight);
+	--inpMarginTop: 0.75em;
+	--inpPadding: 0.25em 0.5em;
+	--inpTxt: #0000aa;
+	--inputShadow: inset 1px 1px 3px rgba(0,0,0,0.4);
+	--infoBG: var(--bgLight);
+	--infoPosLeft: calc(50% - 225px);
+	--infoPosTop: 5em;
+	--infoMargin: auto;
+	--infoWidth: 90vw;
+	--infoMaxWidth: 450px;
+	--infoMaxHeight: 80vh;
+	--infoTextShadow: var(--textNoShadow);
+	--infoPadding: 0.25em 0.5em;
+	--infoFont: Arial, sans-serif;
+	--infoTextWidth: auto;
+	--infoImageHeight: 1em;
+	--infoFontButtonHeight: 1em;
+	--inpWidth: 92%;
+	--lastScrollY: 0;
+	--lastScrollX: 0;
+	--layer2View: 20;
+	--layer3View: 30;
+	--leftTerm: 16em;
+	--light-bg: #cccccc;
+	--lightColor: #ffffff;
+	--lightGray: #aaaaaa;
+	--lightgreen: rgb(32,128,0);
+	--lightRed: rgba(196,0,0,0.6);
+	--lightRed: rgba(224,0,0,0.75);
+	--lineBoxHeadHeight: 3.92vw;
+	--lineBoxHeight: 2.1vw;
+	--lineBoxInputHeight: var(--buttonBoxHeight);
+	--lineHeadHeight: 2.8em;
+	--lineHeight: 1.5em;
+	--lineInputHeight: var(--buttonHeight);
+	--loaderAnimation: spin 2s linear infinite;
+	--loaderPadding: 30px;
+	--loaderSize: 1.5em;
+	--loaderStartAnimation: rotate(0deg);
+	--loaderStopAnimation: rotate(360deg);
+	--logoWidth: 16.3vw;
+	--logoHeight: 8.645833vw;
+	--logoPosTop: calc(100vh - var(--logoHeight) - 16px) !important;
+	--logoPosPortraiTop: calc(var(--factorHDVideoVW) - var(--logoHeight) - 16px) !important;
+	--logoPosLeft: 0em;
+	--logoBackShadow: unset;
+	--logoShadow: var(--boxShadow);
+	--logoPic: url("pic/Title.png");
+	--logoSize: cover;
+	--logoRepeate: no-repeat;
+	--main-bg-color: var(--xDrkGreen);
+	--mainBoxTextHeight: 1.68vw;
+	--mainColor: #44cc00;
+	--mainFont: "OCR A","OCR A Std", "OCR-A","OCR-A Std",Monaco,Andale Mono,Courier New,Courier,monospace;
+	--mainHeight: 1em;
+	--mainMargin: 0;
+	--mainOverflow: hidden;
+	--mainPadding: 0;
+	--mainPadding: 1em;
+	--mainTextHeight: 1.2em;
+	--mainVisible: inline;
+	--mainZoom: 100%;
+	--maxHeight:100%;
+	--maxWidth: var(--widthMax);
+	--maxTerm: 70%;
+	--menuActiveBg: var(--bgGradientLightActive);
+	--menuActiveBorder: 1px solid rgba(0, 0, 0,0.8);
+	--menuBg: var(--bgGradientLight);
+	--menuBorder: 1px solid rgba(0,0,0,0.8);
+	--menuBottom: -1.4em;
+	--menuBoxHeight: var(--buttonBoxHeight);
+	--menuBoxMaxWidth: 13.3vw;
+	--menuBoxMinWidth: 11.2vw;
+	--menuBtn: 43;
+	--menuHeight: var(--mainTextHeight);
+	--menuHoverBg: var(--bgGradientLight);
+	--menuHoverBorder: 1px solid rgba(196,196,196,0.8);
+	--menuMargin: 0 0.5em;
+	--menuMaxWidth: 9.5em;
+	--menuMinWidth: 8em;
+	--menuPadding: 0 0.5em;
+	--menuPadding2: 0.5em 1em;
+	--menuShadow: 0 0 0.15em rgb(224 224 224 / 50%), 0.25em 0.25em 0.35em rgb(0 0 0 / 50%);
+	--menuTop: 3.5em;
+	--menuTopTop: 0.25em;
+	--menuTopLow: 6.1em;
+	--menuTopWidth: max-content;
+	--menuView: 40;
+	--midGray: #888888;
+	--minTerm: 20%;
+	--modalView: 100;
+	--msgBoxMax: 80%;
+	--msgBoxMin: 15%;
+	--msgPadding: 1em;
+	--noBorder: none;
+	--noneBorder: none;
+	--noShadow: none;
+	--noTransparent: 1;
+	--noMarginPadding: 0;
+	--opacity: 0.8;
+	--overflowAuto: auto;
+	--overflowHidden: hidden;
+	--overflowNone: none;
+	--overflowCut: clip;
+	--overflowOverlay: overlay;
+	--overflowScroll: scroll;
+	--overflowScrollTouch: touch;
+	--overflowVisible: visible;
+	--overlayDiverence: 0;
+	--overlayHeight: 0;
+	--overlayCalcHeight: 0;
+	--overlayCalcLayerHeight: 0;
+	--overlayTop: 0;
+	--overlayLayerTop: 0;
+	--overlayHeadTop: 0;
+	--overlayScreenTop: 0;
+	--overlayScreenBottom: 0;
+	--overlayBottom: 0;
+	--overlayHeadBottom: 0;
+	--overlayPos: 0;
+	--overlayPosTop: 0;
+	--overlayPosHalfTop: 0;
+	--overlayPosOverlayTop: 0;
+	--overlayPosScreenTop: 0;
+	--overlayPosBottom: 0;
+	--overlayPosHeadBottom: 0;
+	--overlayPosScreenBottom: 0;
+	--overlayPosHeadScreenBottom: 0;
+	--overlayPosOverlayBottom: 0;
+	--overlayPosHeadOverlayBottom: 0;
+	--overlayPosHeadTop: 0;
+	--overlayPosHeadHalfTop: 0;
+	--overlayPosHeadOverlayTop: 0;
+	--overlayPosHeadScreenTop: 0;
+	--overlayPositionScreenTop: 0;
+	--overlayPositionTop: 0;
+	--overlayPositionBottom: 0;
+	--overlayPositionScreenBottom: 0;
+	--overlayTransition: var(--transitionLong);
+	--overlayHeightPC: 684;
+	--overlay1HeightPC: calc(100vh - 1em);
+	--overlay2HeightPC: calc(100vh - 1em);
+	--overlay3HeightPC: calc(100vh - 1em);
+	--overlay4HeightPC: calc(100vh - 1em);
+	--overlay1TopPC: 40px;
+	--overlay2TopPC: 804px;
+	--overlay3TopPC: 1568px;
+	--overlay4TopPC: 2440px;
+	--overlayHeightPad: 684;
+	--overlay1HeightPad: 554;
+	--overlay2HeightPad: 697;
+	--overlay3HeightPad: 576;
+	--overlay4HeightPad: 697;
+	--overlayHeightWPad: 684;
+	--overlay1HeightWPad: 684;
+	--overlay2HeightWPad: 684;
+	--overlay3HeightWPad: 684;
+	--overlay4HeightWPad: 684;
+	--overlayHeightPhone: 684;
+	--overlay1HeightPhone: 280;
+	--overlay2HeightPhone: 1477;
+	--overlay3HeightPhone: 211;
+	--overlay4HeightPhone: 697px;
+	--overlayHeightWPhone: 684px;
+	--overlay1HeightWPhone: 684;
+	--overlay2HeightWPhone: 684;
+	--overlay3HeightWPhone: 684;
+	--overlay4HeightWPhone: 684;
+	--parentValue: inherit;
+	--popupActiveBg: var(--bgGradientLightActive);
+	--popupActiveBorder: var(--menuActiveBorder);
+	--popupActiveColorBg: var(--drk-bg);
+	--popupBg: var(--bgGradientDiagLight);
+	--popupBorder: var(--menuBorder);
+	--popupBorder2: 1px solid var(--xDrkGreen);
+	--popupBtn: 48;
+	--popupChildMargin: var(--mainMargin);
+	--popupChildMarginBottom: -1em;
+	--popupChildPadding: 0.5em 1em 0.5em 2em;
+	--popupHeight: 33.15em;
+	--popupHoverBg: var(--bgGradientLight);
+	--popupHoverBorder: var(--menuHoverBorder);
+	--popupHoverColorBg: var(--light-bg);
+	--popupItemBg: transparent;
+	--popupItemMargin: var(--mainMargin);
+	--popupItemPadding: var(--menuPadding);
+	--popupMarginRight: 2em;
+	--popupMarginTop: -0.5em;
+	--popupMaxWidth: 12em;
+	--popupMinWidth: 6em;
+	--popupPosleft: 1em;
+	--popupPosTop: 3em;
+	--popupView: 45;
+	--posBg: center 4.2em;
+	--posAbsolute: absolute;
+	--posRelative: relative;
+	--posFixed: fixed;
+	--posStatic: static;
+	--posSticky: sticky;
+	--posTitle: var(--mainTextHeight);
+	--progressbarBoxHeight: 2.1vw;
+	--progressbarHeight: 1.5em;
+	--repeateBg: no-repeat;
+	--ratioHDVideo: 16/9;
+	--ratioLetterBox: 16/7;
+	--screenHeight: 100vh;
+	--screenWide: 100vw;
+	--scrollTouch: touch;
+	--scrollPos: 0;
+	--scrollOpacity: var(--transparent);
+	--scrollFixOpacity: var(--noTransparent);
+	--scrollPicTransition: var(--transitionXLong);
+	--scrollPosFixTop: 0;
+	--scrollPosFixBottom: 100vh;
+	--scrollPic: 4;
+	--scrollPicImage1: url("pic/Unwetter2.jpg");
+	--scrollPicImage2: var(--animiImage);
+	--scrollPicImage3: '',var(--blueGradient);
+	--scrollPicImage4: url("pic/War.jpg");
+	--scrollPic1activeTop: var(--scrollPic1TopPC);
+	--scrollPic2activeTop: var(--scrollPic2TopPC);
+	--scrollPic3activeTop: var(--scrollPic3TopPC);
+	--scrollPic4activeTop: var(--scrollPic4TopPC);
+	--scrollPic1TopPC: 0px;
+	--scrollPic2TopPC: 764;
+	--scrollPic3TopPC: 1528;
+	--scrollPic4TopPC: 2292;
+	--scrollPicHeightPC: 764;
+	--scrollPic1HeightPC: 764;
+	--scrollPic2HeightPC: 764;
+	--scrollPic3HeightPC: 764;
+	--scrollPic4HeightPC: 764;
+	--scrollPic1TopPad: 0;
+	--scrollPic2TopPad: 634;
+	--scrollPic3TopPad: 1411;
+	--scrollPic4TopPad: 2067;
+	--scrollPicHeightPad: 777;
+	--scrollPic1HeightPad: 634;
+	--scrollPic2HeightPad: 777;
+	--scrollPic3HeightPad: 656;
+	--scrollPic4HeightPad: 777;
+	--scrollPic1TopWPad: 0;
+	--scrollPic2TopWPad: 764;
+	--scrollPic3TopWPad: 1528;
+	--scrollPic4TopWPad: 2292;
+	--scrollPicHeightWPad: 764;
+	--scrollPic1HeightWPad: 764;
+	--scrollPic2HeightWPad: 764;
+	--scrollPic3HeightWPad: 764;
+	--scrollPic4HeightWPad: 764;
+	--scrollPic1TopPhone: 0;
+	--scrollPic2TopPhone: 320;
+	--scrollPic3TopPhone: 1877;
+	--scrollPic4TopPhone: 2088;
+	--scrollPicHeightPhone: 320;
+	--scrollPic1HeightPhone: 320;
+	--scrollPic2HeightPhone: 1557;
+	--scrollPic3HeightPhone: 211;
+	--scrollPic4HeightPhone: 777;
+	--scrollPic1TopWPhone: 0;
+	--scrollPic2TopWPhone: 764;
+	--scrollPic3TopWPhone: 1528;
+	--scrollPic4TopWPhone: 2292;
+	--scrollPicHeightWPhone: 764;
+	--scrollPicSize: cover;
+	--scrollPosScreenTop: var(--scrollPos);
+	--scrollPosHeader: calc(var(--scrollPos) + var(--headerHeight));
+	--scrollPosScreenBottom: calc(var(--scrollPos) + 100vh);
+	--scrollPosFooter: calc(var(--scrollPos) + (100vh - var(--footerHeight)));
+	--scrollPosHeaderBottom: calc(var(--scrollPosScreenTop) + var(--headerHeight));
+	--scrollPosFooterTop: calc(var(--scrollPosScreenTop) + var(--screenHeight) - var(--footerHeight));
+	--scrollPic1TopVisible: calc(var(--scrollPic1activeTop) - var(--scrollPosHeader));
+	--scrollPic2TopVisible: calc(var(--scrollPic2activeTop) - var(--scrollPosHeader));
+	--scrollPic3TopVisible: calc(var(--scrollPic3activeTop) - var(--scrollPosHeader));
+	--scrollPic4TopVisible: calc(var(--scrollPic4activeTop) - var(--scrollPosHeader));
+	--scrollSnapStop: always;
+	--scrollSnapXMan: x mandatory;
+	--scrollSnapYMan: y mandatory;
+	--scrollBehaviorSmooth: smooth;
+	--scrollSnapAlign: start;
+	--selectColor: rgba(0,0,0,0.4);
+	--show: visible;
+	--sizeBg: contain;
+	--startPos: 0px;
+	--stdTerm: 25%;
+	--tableColor: var(--lightgreen);
+	--tableEven: #000000;
+	--tableFont: Courier;
+	--tableMargin: 1em;
+	--tableMarginH4: 0.75em;
+	--tableOdd: #222222;
+	--tablePadding: 0.5em;
+	--tablePaddingH4: 1.5em;
+	--tableSelect: #44cc00;
+	--tableThTop: 4.1em;
+	--terminalFont: "OCR A","OCR A Std", "OCR-A","OCR-A Std",Monaco,Andale Mono,Courier New,Courier,monospace;
+	--terminalH4Top: -0.5em;
+	--terminalMarginLeft: 0.75em;
+	--terminalMax: 65%;
+	--terminalMin: 25%;
+	--terminalPaddingH4: 1.5em;
+	--terminalSelect: text;
+	--terminalThpadding: 0.5em;
+	--terminalTop: 4.1em;
+	--terminalTopCorrect: -0.5em;
+	--textCenter: center;
+	--textDecoration: underline;
+	--textDecoNo: none;
+	--textLeft: left;
+	--textRight: right;
+	--textShadow: var(--fontShadow);
+	--textNoShadow: none;
+	--textTop: top;
+	--thikBorder: 2px;
+	--titleHeight: 7.5vw;
+	--titleTop: calc(-7.5vw + 1em);
+	--titleFontSize: 2vw;
+	--titleWidth: 82vw;
+	--titleLeft: 4.25em;
+	--titleLineHeight: 1;
+	--titleVAlign: middle;
+	--titleAlign: left;
+	--titlePadding: 1em 0.5em;
+	--topFix: sticky;
+	--topFixMoz: -moz-sticky;
+	--topFixWebkit: -webkit-sticky;
+	--topTerm: 10em;
+	--topLeft: 0;
+	--touchAction: none;
+	--transBgColor: linear-gradient(to left bottom, rgba(0,224,224,0.8), rgba(0,224,224,0.1));
+	--transDiagram: translate(-19%, -50%);
+	--transFX: display visibility width height 0.5s;
+	--translateCenter: translate(-50%, -50%);
+	--transState: translateY(-30%);
+	--transparent: 0.0;
+	--transitionXLong: 3s;
+	--transitionLong: 1.5s;
+	--transition: 1s;
+	--transitionFaster: 0.75s;
+	--transitionNone: 0.0s;
+	--transitionFast: 0.5s;
+	--transitionXFast: 0.25s;
+	--unshow: hidden;
+	--user-select: none;
+	--userSelect: none;
+	--userSelectYes: text;
+	--visible: block;
+	--whiteColor: #ffffff;
+	--whiteTrans: rgba(255,255,255,0.5);
+	--widthMax: 100%;
+	--xDrkGreen: #001000;
+	--xLightGreen: #00c100;
+	--YesNoActiveBg: linear-gradient(to top, rgba(128,128,128,1), rgba(128,128,128,0.1));
+	--YesNoActiveBorder: 1px solid rgba(128,128,128,1);
+	--YesNoBg: linear-gradient(to bottom, rgba(128,128,128,1), rgba(128,128,128,0.1));
+	--YesNoBorder: 1px solid #888888;
+	--YesNoHoverBg: linear-gradient(to top, rgba(128,128,128,1), rgba(128,128,128,0.1));
+	--YesNoHoverBorder: 1px solid rgba(255,255,255,1);
+	--YesNoPadding: 0.25em 1em 0.25em 1em;
+	--YesNoShadow: -0.25em 0.425em 0.25em rgba(0, 0, 0, 0.6);
+	--zIndexFooter: 50;
+	--zIndexHeader: 50;
+	--zIndexInfo: 55;
+	--zIndexMain: 0;
+	--zIndexMenu: 50;
+	--ticking: false;
+	--videoPlay: 0;
+	--runFade: 0;
+	--activeScroll: 0;
+	--indexPosition: 0;
+	--timer_on: 0;
+	--picDirection: 'up';
+	--swipeIn: true;
+	--swipePrev: 0;
+	--windowOrientation: "";
+	--videoHeigth: '1080px';
+	--videoWidth: '1920px';
+	--swipeIn: true;
+	--swipePrev: 0;
+}
+
+
+EOF
 
 cat << EOF > test.txt 
 
@@ -4538,417 +5047,10 @@ curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&sho
 echo
 echo 'optical Style installed'
 echo
+}
 
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#                Network Definitions                   #'
-echo '#                                                      #'
-echo '########################################################'
-echo 
 
-#!/bin/sh
-uci -q delete network
-#uci delete network.lan
-
-uci set network.loopback=interface
-uci set network.loopback.ifname='lo'
-uci set network.loopback.proto='static'
-uci set network.loopback.ipaddr='127.0.0.1'
-uci set network.loopback.netmask='255.0.0.0'
-uci set network.loopback.dns='127.0.0.1'
-
-uci set network.globals=globals
-uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='VOICE'
-uci commit network >/dev/null
-uci set network.VOICE.proto='static'
-uci set network.VOICE.type='bridge'
-uci set network.VOICE.ipaddr=$VOICE_ip
-uci set network.VOICE.netmask='255.255.255.0'
-uci set network.VOICE.ip6assign='56'
-uci set network.VOICE.broadcast=$VOICE_broadcast
-uci set network.VOICE.igmp_snooping='1'
-#uci set network.VOICE.gateway='127.0.0.1'
-uci set network.VOICE.gateway=$INET_GW
-uci set network.VOICE.ifname='eth0.105'
-uci set network.VOICE.dns=$VOICE_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network >/dev/null
-uci set network.ENTERTAIN.proto='static'
-uci set network.ENTERTAIN.type='bridge'
-uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
-uci set network.ENTERTAIN.netmask='255.255.255.0'
-uci set network.ENTERTAIN.ip6assign='56'
-uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
-uci set network.ENTERTAIN.igmp_snooping='1'
-#uci set network.ENTERTAIN.gateway='127.0.0.1'
-uci set network.ENTERTAIN.gateway=$INET_GW
-uci set network.ENTERTAIN.ifname='eth0.106'
-uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='GUEST'
-uci commit network >/dev/null
-uci set network.GUEST.proto='static'
-uci set network.GUEST.type='bridge'
-uci set network.GUEST.ipaddr=$GUEST_ip
-uci set network.GUEST.netmask='255.255.255.0'
-uci set network.GUEST.ip6assign='56'
-uci set network.GUEST.broadcast=$GUEST_broadcast
-uci set network.GUEST.igmp_snooping='1'
-#uci set network.GUEST.gateway='127.0.0.1'
-uci set network.GUEST.gateway=$INET_GW
-#uci set network.GUEST.ifname='eth0.107'
-uci set network.GUEST.dns=$GUEST_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='SERVER'
-uci commit network >/dev/null
-uci set network.SERVER.proto='static'
-uci set network.SERVER.type='bridge'
-uci set network.SERVER.ipaddr=$SERVER_ip
-uci set network.SERVER.netmask='255.255.255.0'
-uci set network.SERVER.ip6assign='56'
-uci set network.SERVER.broadcast=$SERVER_broadcast
-uci set network.SERVER.igmp_snooping='1'
-#uci set network.SERVER.gateway='127.0.0.1'
-uci set network.SERVER.gateway=$INET_GW
-uci set network.SERVER.ifname='eth0.101'
-uci set network.SERVER.dns=$SERVER_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='INET'
-uci commit network >/dev/null
-uci set network.INET.proto='static'
-uci set network.INET.type='bridge'
-uci set network.INET.ipaddr=$INET_ip
-uci set network.INET.netmask='255.255.255.0'
-uci set network.INET.ip6assign='56'
-uci set network.INET.broadcast=$INET_broadcast
-uci set network.INET.igmp_snooping='1'
-#uci set network.INET.gateway='127.0.0.1'
-uci set network.INET.gateway=$INET_GW
-uci set network.INET.ifname='eth0.104'
-uci set network.INET.dns=$INET_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='CONTROL'
-uci commit network >/dev/null
-uci set network.CONTROL.proto='static'
-uci set network.CONTROL.type='bridge'
-uci set network.CONTROL.ipaddr=$CONTROL_ip
-uci set network.CONTROL.netmask='255.255.255.0'
-uci set network.CONTROL.ip6assign='56'
-uci set network.CONTROL.broadcast=$CONTROL_broadcast
-uci set network.CONTROL.igmp_snooping='1'
-#uci set network.CONTROL.gateway='127.0.0.1'
-uci set network.CONTROL.gateway=$INET_GW
-uci set network.CONTROL.ifname='eth0.103'
-uci set network.CONTROL.dns=$CONTROL_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='HCONTROL'
-uci commit network >/dev/null
-uci set network.HCONTROL.proto='static'
-uci set network.HCONTROL.type='bridge'
-uci set network.HCONTROL.ipaddr=$HCONTROL_ip
-uci set network.HCONTROL.netmask='255.255.255.0'
-uci set network.HCONTROL.ip6assign='56'
-uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
-uci set network.HCONTROL.igmp_snooping='1'
-#uci set network.HCONTROL.gateway='127.0.0.1'
-uci set network.HCONTROL.gateway=$INET_GW
-uci set network.HCONTROL.ifname='eth0.102'
-uci set network.HCONTROL.dns=$HCONTROL_ip
-uci commit network >/dev/null
-
-uci set network.wan=interface >/dev/null
-uci set network.wan.proto='static'
-uci set network.wan.netmask='255.255.255.0'
-uci set network.wan.ip6assign='60'
-uci set network.wan.gateway=$INET_GW
-uci add_list network.wan.dns="127.0.0.1"
-uci set network.wan.ifname='eth1'
-uci set network.wan.ipaddr=$WAN_ip
-uci set network.wan.peerdns="0"
-uci commit network >/dev/null
-
-uci set network.wan6.proto='dhcpv6'
-uci set network.wan6.reqaddress='try'
-uci set network.wan6.reqprefix='auto'
-uci set network.wan6.ifname='eth1'
-#uci add_list network.wan6.dns="2606:4700:4700::1113"
-#uci add_list network.wan6.dns="2606:4700:4700::1003"
-uci add_list network.wan6.dns="0::1"
-uci set network.wan6.peerdns="0"
-uci commit network >/dev/null
-
-uci set network.@switch[0]=switch
-uci set network.@switch[0].name='switch0'
-uci set network.@switch[0].reset='1'
-uci set network.@switch[0].enable_vlan='1'
-uci commit network >/dev/null
-
-uci set network.@switch_vlan[0]=switch_vlan
-uci set network.@switch_vlan[0].device='switch0'
-uci set network.@switch_vlan[0].vlan='101'
-uci set network.@switch_vlan[0].vid='101'
-uci set network.@switch_vlan[0].ports='0t 1t 2 3t 4t 5t'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='102'
-uci set network.@switch_vlan[-1].vid='102'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3 4t 5t'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vLan='103'
-uci set network.@switch_vlan[-1].vid='103'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='104'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='104'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='105'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='105'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='106'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='106'
-uci commit network >/dev/null
-
-uci add network interface
-uci rename network.@interface[-1]='SWITCH_Port'
-uci commit network >/dev/null
-uci set network.SWITCH_Port.ifname='eth0'
-uci set network.SWITCH_Port.proto='none'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='SWITCH_P101'
-uci commit network >/dev/null
-uci set network.SWITCH_P101.ifname='eth0.101'
-uci set network.SWITCH_P101.proto='none'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='SWITCH_P102'
-uci commit network >/dev/null
-uci set network.SWITCH_P102.ifname='eth0.102'
-uci set network.SWITCH_P102.proto='none'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='SWITCH_P103'
-uci commit network >/dev/null
-uci set network.SWITCH_P103.ifname='eth0.103'
-uci set network.SWITCH_P103.proto='none'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='SWITCH_P104'
-uci commit network >/dev/null
-uci set network.SWITCH_P104.ifname='eth0.104'
-uci set network.SWITCH_P104.proto='none'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='SWITCH_P105'
-uci commit network >/dev/null
-uci set network.SWITCH_P105.ifname='eth0.105'
-uci set network.SWITCH_P105.proto='none'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='SWITCH_P106'
-uci commit network >/dev/null
-uci set network.SWITCH_P106.ifname='eth0.106'
-uci set network.SWITCH_P106.proto='none'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='REPEATER'
-uci commit network >/dev/null
-uci set network.REPEATER.proto='none'
-uci commit  && reload_config >/dev/null
-
- 
-# Save and apply
-uci commit network && reload_config >/dev/null
-#/etc/init.d/network restart
-
-dig www.internic.net @1.1.1.1
-
-uci -q delete wireless  >/dev/null
-
-uci set wireless.radio0=wifi-device
-uci set wireless.radio0.type='mac80211'
-uci set wireless.radio0.path='platform/soc/a000000.wifi'
-uci set wireless.radio0.htmode='HT20'
-uci set wireless.radio0.country='DE'
-uci set wireless.radio0.channel='6'
-uci set wireless.radio0.hwmode='11n'
-
-uci delete wireless.default_radio0
-uci set wireless.default_radio0=wifi-iface
-uci set wireless.default_radio0.device='radio0'
-uci set wireless.default_radio0.mode='ap'
-uci set wireless.default_radio0.key=$WIFI_PASS
-uci set wireless.default_radio0.ssid=$VOICE_ssid
-uci set wireless.default_radio0.encryption='psk2'
-uci set wireless.default_radio0.network='VOICE'
-
-uci delete wireless.wifinet1
-uci set wireless.wifinet1=wifi-iface
-uci set wireless.wifinet1.ssid=$HCONTROL_ssid
-uci set wireless.wifinet1.encryption='psk2'
-uci set wireless.wifinet1.device='radio0'
-uci set wireless.wifinet1.mode='ap'
-uci set wireless.wifinet1.network='HCONTROL'
-uci set wireless.wifinet1.key=$WIFI_PASS
-
-uci delete wireless.wifinet2
-uci set wireless.wifinet2=wifi-iface
-uci set wireless.wifinet2.ssid=$CONTROL_ssid
-uci set wireless.wifinet2.device='radio0'
-uci set wireless.wifinet2.mode='ap'
-uci set wireless.wifinet2.network='CONTROL'
-uci set wireless.wifinet2.key=$WIFI_PASS
-uci set wireless.wifinet2.encryption='psk2'
-
-uci delete wireless.wifinet3
-uci set wireless.wifinet3=wifi-iface
-uci set wireless.wifinet3.ssid=$INET_ssid
-uci set wireless.wifinet3.encryption='psk2'
-uci set wireless.wifinet3.device='radio0'
-uci set wireless.wifinet3.mode='ap'
-uci set wireless.wifinet3.network='INET'
-uci set wireless.wifinet3.key=$WIFI_PASS
-
-uci delete wireless.wifinet4
-uci set wireless.wifinet4=wifi-iface
-uci set wireless.wifinet4.ssid=$ENTERTAIN_ssid
-uci set wireless.wifinet4.encryption='psk2'
-uci set wireless.wifinet4.device='radio0'
-uci set wireless.wifinet4.mode='ap'
-uci set wireless.wifinet4.network='ENTERTAIN'
-uci set wireless.wifinet4.key=$WIFI_PASS
-
-uci delete wireless.wifinet5
-uci set wireless.wifinet5=wifi-iface
-uci set wireless.wifinet5.ssid=$SERVER_ssid
-uci set wireless.wifinet5.encryption='psk2'
-uci set wireless.wifinet5.device='radio0'
-uci set wireless.wifinet5.mode='ap'
-uci set wireless.wifinet5.network='REPEATER'
-uci set wireless.wifinet5.key=$WIFI_PASS
-
-uci delete wireless.wifinet6
-uci set wireless.wifinet6=wifi-iface
-uci set wireless.wifinet6.ssid=$GUEST_ssid
-uci set wireless.wifinet6.encryption='psk2'
-uci set wireless.wifinet6.device='radio0'
-uci set wireless.wifinet6.mode='ap'
-uci set wireless.wifinet6.network='GUEST'
-uci set wireless.wifinet6.key=$WIFI_PASS
-
-uci set wireless.radio1=wifi-device
-uci set wireless.radio1.type='mac80211'
-uci set wireless.radio1.channel='36'
-uci set wireless.radio1.hwmode='11a'
-uci set wireless.radio1.path='platform/soc/a800000.wifi'
-uci set wireless.radio1.htmode='VHT80'
-uci set wireless.radio1.country='DE'
-
-uci delete wireless.default_radio1
-uci set wireless.default_radio1=wifi-iface
-uci set wireless.default_radio1.device='radio1'
-uci set wireless.default_radio1.mode='ap'
-uci set wireless.default_radio1.key=$WIFI_PASS
-uci set wireless.default_radio1.ssid=$VOICE_ssid
-uci set wireless.default_radio1.encryption='psk2'
-uci set wireless.default_radio1.network='VOICE'
-
-uci delete wireless.wifinet7
-uci set wireless.wifinet7=wifi-iface
-uci set wireless.wifinet7.ssid=$INET_ssid
-uci set wireless.wifinet7.encryption='psk2'
-uci set wireless.wifinet7.device='radio1'
-uci set wireless.wifinet7.mode='ap'
-uci set wireless.wifinet7.network='INET'
-uci set wireless.wifinet7.key=$WIFI_PASS
-
-uci delete wireless.wifinet8
-uci set wireless.wifinet8=wifi-iface
-uci set wireless.wifinet8.ssid=$ENTERTAIN_ssid
-uci set wireless.wifinet8.encryption='psk2'
-uci set wireless.wifinet8.device='radio1'
-uci set wireless.wifinet8.mode='ap'
-uci set wireless.wifinet8.network='ENTERTAIN'
-uci set wireless.wifinet8.key=$WIFI_PASS
-
-uci delete wireless.wifinet9
-uci set wireless.wifinet9=wifi-iface
-uci set wireless.wifinet9.device='radio1'
-uci set wireless.wifinet9.mode='ap'
-uci set wireless.wifinet9.ssid=$SERVER_ssid
-uci set wireless.wifinet9.encryption='psk2'
-uci set wireless.wifinet9.key=$WIFI_PASS
-uci set wireless.wifinet9.network='REPEATER'
-
-uci delete wireless.wifinet10
-uci set wireless.wifinet10=wifi-iface
-uci set wireless.wifinet10.encryption='psk2'
-uci set wireless.wifinet10.device='radio1'
-uci set wireless.wifinet10.mode='ap'
-uci set wireless.wifinet10.key=$WIFI_PASS
-uci set wireless.wifinet10.network='GUEST'
-uci set wireless.wifinet10.ssid=$GUEST_ssid
-
-uci delete wireless.radio0.disabled >/dev/null
-uci delete wireless.radio1.disabled >/dev/null
-
-uci commit  && reload_config >/dev/null
-
-echo
-echo 'Networks Settings defined'
-echo
-
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '########################################################'
+view_config()  {
 echo
 echo 'Your Config is:'
 echo
@@ -4980,8 +5082,6 @@ echo 'Guests SSID is:       '$GUEST_ssid
 echo 'Key:                  '$WIFI_PASS
 echo 'IP:                   '$GUEST_net
 echo
-echo
-echo
 echo 'IP-Address:           '$ACCESS_SERVER
 echo 'Gateway:              '$INET_GW
 echo 'Domain:               '$LOCAL_DOMAIN
@@ -4990,7 +5090,316 @@ echo 'GUI-Access:           https://'$INET_ip':8443'
 echo 'User:                 '$USERNAME
 echo 'Password:             password'
 echo
+echo 'Please wait until Reboot ...'
+echo
+}
 
+ask_parameter() {
+release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=')
+revision=$(cat /etc/openwrt_release | grep "DISTRIB_REVISION" | cut -f2 -d '=')
+revision=${revision::-1}
+release=${release::-1}
+revision=${revision:1}
+release=${release:1}
+echo '--------------------------------------------------------'
+echo '       Current Version ' $release, $revision
+echo '--------------------------------------------------------'
+echo 
+
+#Localaddresen
+LOCALADDRESS="127.192.0.1/10"
+
+actLoop=$(ifconfig | grep '^l\w*' -m 1 | cut -f1 -d ' ')
+actEth=$(ifconfig | grep '^e\w*' -m 1 | cut -f1 -d ' ')
+actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
+
+#Internet Gateway
+if [ "$1" != "" ]  
+	then
+		INET_GW=$1
+	else
+		INET_GW=$(ip route | grep default | cut -f3  -d ' ')
+fi
+INET_GW_org=$INET_GW
+
+read -p 'Please give me the WAN-IP (Gateway/Router): ['$INET_GW'] ' INET_GW
+echo
+if [ "$INET_GW" = "" ]
+	then
+		INET_GW=$INET_GW_org	 
+		
+fi
+
+WAN_ip=$(echo $INET_GW | cut -f1 -d '.')
+WAN_ip=$WAN_ip"."$(echo $INET_GW | cut -f2 -d '.')
+WAN_ip=$WAN_ip"."$(echo $INET_GW | cut -f3 -d '.')".250"
+
+WAN_broadcast=$(echo $INET_GW | cut -f1 -d '.')
+WAN_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f2 -d '.')
+WAN_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f3 -d '.')".255"
+
+WAN_MOBILE_ip=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_ip=$WAN_ip"."$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_ip=$WAN_ip"."$(echo $INET_GW | cut -f3 -d '.')".251"
+
+WAN_MOBILE_broadcast=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f3 -d '.')".255"
+
+WAN_MOBILE_GW=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_GW=$WAN_ip"."$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_GW=$WAN_ip"."$(echo $INET_GW | cut -f3 -d '.')".253"
+
+
+#complet Internet
+Internet="0.0.0.0/0"
+
+#all Adresses
+all_IP="0.0.0.0"
+all_IP6="[::]"
+
+#Access to Server
+ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' )
+
+#Lokal LAN
+if [ "$2" != "" ] 
+	then
+		LAN=$2
+	else
+		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
+fi
+
+if [ "$LAN" = "" ]
+        then
+                LAN='192.168.75.254'
+fi
+
+LAN_org=$LAN
+
+read -p 'Type the LAN-IP (Internal Network): ['$( echo $LAN )'] ' LAN
+if [ "$LAN" = "" ]
+        then
+                LAN=$LAN_org
+fi
+
+if [ "$3" != "" ] 
+	then
+		LOCAL_DOMAIN_org=$3
+	else
+		LOCAL_DOMAIN_org='CyberSecBox.local'
+fi
+echo
+read -p  'Your local Domain of your LAN? [CyberSecBox.local] ' LOCAL_DOMAIN
+if [ "$LOCAL_DOMAIN" = "" ]
+	then
+		LOCAL_DOMAIN=$LOCAL_DOMAIN_org
+fi
+
+if [ "$4" != "" ]  
+	then
+		WIFI_SSID=$4
+	else
+		WIFI_SSID='CyberSecBox'
+fi
+WIFI_SSID_org=$WIFI_SSID
+echo
+read -p 'The Main-WiFi-SSID? ['$(echo $WIFI_SSID)'] ' WIFI_SSID
+if [ "$WIFI_SSID" = "" ]
+        then
+                WIFI_SSID=$WIFI_SSID_org
+fi
+
+if [ "$5" != "" ]  
+	then
+		WIFI_PASS=$5
+	else
+		WIFI_PASS='Cyber,Sec9ox'
+fi
+
+WIFI_PASS_org=$WIFI_PASS
+echo
+read -p 'And the WiFi-Key? [Cyber,Sec9ox] ' WIFI_PASS
+if [ "$WIFI_PASS" = "" ]
+	then
+		WIFI_PASS=$WIFI_PASS_org
+fi
+
+USERNAME='root'
+echo
+read -p 'Enter the user for the login: [root] ' -s USERNAME
+echo
+echo
+passwd $USERNAME
+
+SUBNET=$(echo $LAN | cut -f3 -d '.')
+SUBNET_sep=$SUBNET
+
+if [ $SUBNET_sep -lt 125 ]
+        then
+
+                if  [ $SUBNET_sep -lt 5 ]
+                        then
+                                SUBNET_sep=$(($SUBNET_sep + 6))
+                fi
+		SUBNET_sep=$(($SUBNET_sep + 125))
+
+        else
+                if  [ $SUBNET_sep -gt 250 ]
+                        then
+                                SUBNET_sep=$(($SUBNET_sep - 62))
+                fi
+
+fi
+
+DNS_PORT='y'
+echo
+
+read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
+if [ "$DNS_PORT" = "" ]
+        then
+               DNS_Relay_port=$DNS_UNBOUND_port
+        elif [ "$DNS_PORT" = "y" ] 
+		then 
+		DNS_Relay_port=$DNS_UNBOUND_port
+	else
+               DNS_Relay_port=$DNS_TOR_port
+fi
+
+if [ "$6" != "" ]  
+	then
+		SECURE_RULESW=$6
+	else
+		SECURE_RULES='y'
+fi
+
+echo
+echo
+read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 SECURE_RULES
+
+if [ "$SECURE_RULES" = "" ]
+        then
+             FW_HSactive='1'
+             set_HS_Firewall
+        elif [ "$SECURE_RULES" = "y" ]
+                then
+		FW_HSactive='1'
+                set_HS_Firewall
+        else
+              FW_HSactive='0'
+              set_HS_Firewall_disable
+fi
+
+SERVER_range='192.168.'$(($SUBNET_sep - 123))'.2,192.168.'$(($SUBNET_sep - 123))'.200,24h'
+CONTROL_range='192.168.'$(($SUBNET_sep - 119))'.2,192.168.'$(($SUBNET_sep - 119))'.200,24h'
+HCONTROL_range='192.168.'$(($SUBNET_sep - 118))'.2,192.168.'$(($SUBNET_sep - 118))'.200,24h'
+INET_range='192.168.'$SUBNET_sep'.2,192.168.'$SUBNET_sep'.200,24h'
+VOICE_range='192.168.'$(($SUBNET_sep + 1))'.2,192.168.'$(($SUBNET_sep + 1))'.200,24h'
+ENTERTAIN_range='192.168.'$(($SUBNET_sep - 1))'.2,192.168.'$(($SUBNET_sep - 1))'.200,24h'
+GUEST_range='192.168.'$(($SUBNET_sep + 10))'.2,192.168.'$(($SUBNET_sep + 10))'.200,24h'
+CMOVIE_range='192.168.'$(($SUBNET_sep + 9))'.2,192.168.'$(($SUBNET_sep + 9))'.200,24h'
+
+SERVER_ip='192.168.'$(($SUBNET_sep - 123))'.254'
+CONTROL_ip='192.168.'$(($SUBNET_sep - 119))'.254'
+HCONTROL_ip='192.168.'$(($SUBNET_sep - 118))'.254'
+INET_ip='192.168.'$SUBNET_sep'.1'
+VOICE_ip='192.168.'$(($SUBNET_sep + 1))'.1'
+ENTERTAIN_ip='192.168.'$(($SUBNET_sep - 1))'.1'
+GUEST_ip='192.168.'$(($SUBNET_sep + 10))'.1'
+CMOVIE_ip='192.168.'$(($SUBNET_sep + 9))'.1'
+
+SERVER_broadcast='192.168.'$(($SUBNET_sep - 123))'.255'
+CONTROL_broadcast='192.168.'$(($SUBNET_sep - 119))'.255'
+HCONTROL_broadcast='192.168.'$(($SUBNET_sep - 118))'.255'
+INET_broadcast='192.168.'$SUBNET_sep'.255'
+VOICE_broadcast='192.168.'$(($SUBNET_sep + 1))'.255'
+ENTERTAIN_broadcast='192.168.'$(($SUBNET_sep - 1))'.255'
+GUEST_broadcast='192.168.'$(($SUBNET_sep + 10))'.255'
+CMOVIE_broadcast='192.168.'$(($SUBNET_sep + 9))'.255'
+
+SERVER_lan='192.168.'$(($SUBNET_sep - 123))'.0'
+CONTROL_lan='192.168.'$(($SUBNET_sep - 119))'.0'
+HCONTROL_lan='192.168.'$(($SUBNET_sep - 118))'.0'
+INET_lan='192.168.'$SUBNET_sep'.0'
+VOICE_lan='192.168.'$(($SUBNET_sep + 1))'.0'
+ENTERTAIN_lan='192.168.'$(($SUBNET_sep - 1))'.0'
+GUEST_lan='192.168.'$(($SUBNET_sep + 10))'.0'
+CMOVIE_lan='192.168.'$(($SUBNET_sep + 9))'.0'
+
+SERVER_net=$SERVER_ip'/24'
+CONTROL_net=$CONTROL_ip'/24'
+HCONTROL_net=$HCONTROL_ip'/24'
+INET_net=$INET_ip'/24'
+VOICE_net=$VOICE_ip'/24'
+ENTERTAIN_net=$ENTERTAIN_ip'/24'
+GUEST_net=$GUEST_ip'/24'
+CMOVIE_net=$CMOVIE_ip'/24'
+WAN_net=$WAN_ip'/24'
+WAN_MOBILE_net=$WAN_MOBILE_ip'/24'
+
+SERVER_domain='server.'$LOCAL_DOMAIN
+CONTROL_domain='control.'$LOCAL_DOMAIN
+HCONTROL_domain='hcontrol.'$LOCAL_DOMAIN
+INET_domain='inet.'$LOCAL_DOMAIN
+VOICE_domain='voice.local'
+ENTERTAIN_domain='entertain.local'
+GUEST_domain='guest.local'
+CMOVIE_domain='cmovie.local'
+
+
+SERVER_ssid='DMZ-'$WIFI_SSID
+CONTROL_ssid='Control-'$WIFI_SSID
+HCONTROL_ssid='HControl-'$WIFI_SSID
+INET_ssid='iNet-'$WIFI_SSID
+VOICE_ssid='Voice-'$WIFI_SSID
+ENTERTAIN_ssid='Entertain-'$WIFI_SSID
+GUEST_ssid='Guest-'$WIFI_SSID
+CMOVIE_ssid='Free_CMovie_Portal'
+Adversisment_ssid='Telekom'
+
+clear
+view_config
+}
+
+install_update() {
+echo
+echo 'Install Software'
+echo
+echo 'Please wait ....'
+echo
+/etc/init.d/dnsmasq stop >/dev/null
+/etc/init.d/dnsmasq disable >/dev/null
+opkg update >/dev/null
+opkg remove dnsmasq >/dev/null
+opkg update >/dev/null
+opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >/dev/null
+opkg update >/dev/null
+opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >/dev/null
+/etc/init.d/dnsmasq start >/dev/null
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo 'Software Packeges installed'
+view_config
+}
+
+install_adguard() {
+opkg update && opkg install wget
+mkdir /opt/ && cd /opt
+wget -c https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.105.2/AdGuardHome_linux_armv5.tar.gz
+tar xfvz AdGuardHome_linux_armv5.tar.gz
+rm AdGuardHome_linux_armv5.tar.gz
+
+/opt/AdGuardHome/AdGuardHome -s install
+}
+
+
+set_tor() {
 
 /etc/init.d/tor stop >/dev/null
 /etc/init.d/log restart >/dev/null
@@ -5143,7 +5552,9 @@ uci commit tor && reload_config >/dev/null
 echo 
 echo 'Tor-Onion-Services activated'
 echo
+}
 
+set_stubby() {
 
 #Configure stubby
 cat << EOF > /etc/config/stubby
@@ -5211,11 +5622,166 @@ uci commit stubby && reload_config >/dev/null
 echo
 echo 'Stubby Pivaticy over cloudflair.com'
 echo
+#Configure stubby
+}
+
+
+set_unbound() {
 
 /etc/init.d/unbound stop  >/dev/null
 /etc/init.d/log restart  >/dev/null
 
-#Configure stubby
+
+mkdir /etc/unbound/unbound.conf.d >/dev/null
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >/dev/null
+curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
+
+uci set unbound.@unbound[0]=unbound
+uci set unbound.@unbound[0].enabled='1'
+#uci set unbound.@unbound[0].include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
+uci set unbound.@unbound[0].tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
+uci set unbound.@unbound[0].auto_trust_anchor_file='/var/lib/unbound/root.key'
+uci set unbound.@unbound[0].root_hints='/var/lib/unbound/root.hints'
+uci set unbound.@unbound[0].add_extra_dns='0'
+uci set unbound.@unbound[0].add_local_fqdn='1'
+uci set unbound.@unbound[0].add_wan_fqdn='0'
+uci set unbound.@unbound[0].dhcp_link='dnsmasq'
+uci set unbound.@unbound[0].dhcp4_slaac6='0'
+uci set unbound.@unbound[0].do_ip4='yes'
+uci set unbound.@unbound[0].do_ip6='yes'
+uci set unbound.@unbound[0].do_tcp='yes'
+uci set unbound.@unbound[0].do_udp='yes'
+uci set unbound.@unbound[0].dns64='0'
+uci set unbound.@unbound[0].do_not_query_localhost='no'
+uci set unbound.@unbound[0].domain=$LOCAL_DOMAIN
+uci set unbound.@unbound[0].domain_type='static'
+uci set unbound.@unbound[0].edns_size='1280'
+uci set unbound.@unbound[0].edns_buffer_size='1472'
+uci set unbound.@unbound[0].extended_stats='0'
+uci set unbound.@unbound[0].hide_binddata='1'
+uci set unbound.@unbound[0].interface_auto='1'
+uci set unbound.@unbound[0].listen_port=$DNS_UNBOUND_port
+uci set unbound.@unbound[0].localservice='1'
+uci set unbound.@unbound[0].manual_conf='0'
+uci set unbound.@unbound[0].num_threads='1'
+uci set unbound.@unbound[0].protocol='default'
+#uci set unbound.@unbound[0].query_minimize='0'
+uci set unbound.@unbound[0].query_minimize='1'
+uci set unbound.@unbound[0].query_min_strict='1'
+uci set unbound.@unbound[0].rate_limit='0'
+uci set unbound.@unbound[0].rebind_localhost='0'
+uci set unbound.@unbound[0].rebind_protection='1'
+#uci set unbound.@unbound[0].recursion='default'
+#uci set unbound.@unbound[0].resource='default'
+uci set unbound.@unbound[0].recursion='passiv'
+uci set unbound.@unbound[0].resource='medium'
+uci set unbound.@unbound[0].root_age='9'
+uci set unbound.@unbound[0].ttl_min='300'
+uci set unbound.@unbound[0].ttl_max='86400'
+uci set unbound.@unbound[0].cache_min_ttl='300'
+uci set unbound.@unbound[0].cache_max_ttl='86400'
+uci set unbound.@unbound[0].cache_size='10000'
+#uci set unbound.@unbound[0].unbound_control='0'
+uci set unbound.@unbound[0].unbound_control='2'
+uci set unbound.@unbound[0].prefetch='yes'
+uci set unbound.@unbound[0].prefetch_key='yes'
+uci set unbound.@unbound[0].validator='1'
+uci set unbound.@unbound[0].validator_ntp='1'
+uci set unbound.@unbound[0].verbosity='0'
+uci set unbound.@unbound[0].hide_identity='yes'
+uci set unbound.@unbound[0].hide_version='yes'
+uci set unbound.@unbound[0].harden_glue='yes'
+uci set unbound.@unbound[0].harden_dnssec_stripped='yes'
+uci set unbound.@unbound[0].harden_large_queries='yes'
+uci set unbound.@unbound[0].harden_short_bufsize='yes'
+uci set unbound.@unbound[0].harden_below_nxdomain='yes'
+uci set unbound.@unbound[0].use_caps_for_id='yes'
+uci set unbound.@unbound[0].so_reuseport='yes'
+uci set unbound.@unbound[0].msg_cache_slabs='2'
+uci set unbound.@unbound[0].rrset_cache_slabs='2'
+uci set unbound.@unbound[0].infra_cache_slabs='2'
+uci set unbound.@unbound[0].key_cache_slabs='2'
+uci set unbound.@unbound[0].qname_minimisation='yes'
+uci set unbound.@unbound[0].qname_minimisation_strict='yes'
+uci set unbound.@unbound[0].rrset_roundrobin='yes'
+uci set unbound.@unbound[0].serve_expired='yes'
+uci set unbound.@unbound[0].so_rcvbuf='1m'
+uci set unbound.@unbound[0].protocol='ip4_only'
+uci add_list unbound.@unbound[0].private_address='192.168.0.0/16'
+uci add_list unbound.@unbound[0].private_address='169.254.0.0/16'
+uci add_list unbound.@unbound[0].private_address='172.16.0.0/12'
+uci add_list unbound.@unbound[0].private_address='10.0.0.0/8'
+uci add_list unbound.@unbound[0].private_address='fd00::/8'
+uci add_list unbound.@unbound[0].private_address='fe80::/10'
+uci add_list unbound.@unbound[0].access_control='0.0.0.0/0 refuse'
+uci add_list unbound.@unbound[0].access_control='::0/0 refuse'
+uci add_list unbound.@unbound[0].access_control='127.0.0.1 allow'
+uci add_list unbound.@unbound[0].access_control='::1 allow'
+uci add_list unbound.@unbound[0].access_control=$SERVER_net' allow'
+uci add_list unbound.@unbound[0].access_control=$CONTROL_net' allow'
+uci add_list unbound.@unbound[0].access_control=$HCONTROL_net' allow'
+uci add_list unbound.@unbound[0].access_control=$INET_net' allow'
+uci add_list unbound.@unbound[0].trigger_interface='CONTROL'
+uci add_list unbound.@unbound[0].trigger_interface='HCONTROL'
+uci add_list unbound.@unbound[0].trigger_interface='INET_CLIENTS'
+uci add_list unbound.@unbound[0].trigger_interface='SERVER'
+uci add_list unbound.@unbound[0].trigger_interface='VOICE'
+uci add_list unbound.@unbound[0].trigger_interface='ENTERTAIN'
+uci add_list unbound.@unbound[0].trigger_interface='GUEST'
+uci add_list unbound.@unbound[0].trigger_interface='wan6'
+uci set unbound.@unbound[0].domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
+uci add_list unbound.@unbound[0].domain_insecure=$INET_domain
+uci add_list unbound.@unbound[0].domain_insecure=$SERVER_domain
+uci add_list unbound.@unbound[0].domain_insecure=$HCONTROL_domain
+uci add_list unbound.@unbound[0].domain_insecure=$CONTROL_domain
+uci add_list unbound.@unbound[0].domain_insecure=$VOICE_domain
+uci add_list unbound.@unbound[0].domain_insecure=$GUEST_domain
+uci add_list unbound.@unbound[0].domain_insecure=$ENTERTAIN_domain
+uci add_list unbound.@unbound[0].domain_insecure='onion'
+uci add_list unbound.@unbound[0].domain_insecure='exit'
+uci add_list unbound.@unbound[0].private_domain=$INET_domain
+uci add_list unbound.@unbound[0].private_domain=$SERVER_domain
+uci add_list unbound.@unbound[0].private_domain=$HCONTROL_domain
+uci add_list unbound.@unbound[0].private_domain=$CONTROL_domain
+uci add_list unbound.@unbound[0].private_domain=$VOICE_domain
+uci add_list unbound.@unbound[0].private_domain=$GUEST_domain
+uci add_list unbound.@unbound[0].private_domain=$ENTERTAIN_domain
+uci add_list unbound.@unbound[0].private_domain='onion'
+uci add_list unbound.@unbound[0].private_domain='exit'
+
+uci add_list unbound.@unbound[0].outgoing_port_permit=$SDNS_port
+uci add_list unbound.@unbound[0].outgoing_port_permit=$TOR_SOCKS_port
+#uci add_list unbound.@unbound[0].outgoing_port_permit='9150'
+uci add_list unbound.@unbound[0].outgoing_port_permit=$DNS_TOR_port
+#uci add_list unbound.@unbound[0].outgoing_port_permit='9153'
+#uci add_list unbound.@unbound[0].outgoing_port_permit='10240-65335'
+uci add unbound zone
+uci set unbound.@zone[-1].name='onion'
+uci set unbound.@zone[-1].zone_type='forward_zone'
+uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+uci add unbound zone
+uci set unbound.@zone[-1].name='exit'
+uci set unbound.@zone[-1].zone_type='forward_zone'
+uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+uci add unbound zone
+uci set unbound.@zone[-1].name='.'
+uci set unbound.@zone[-1].zone_type='forward_zone'
+uci set unbound.@zone[-1].fallback='0'
+uci set unbound.@zone[-1].tls_upstream='1'
+uci set unbound.@zone[-1].tls_index='dns.cloudflair'
+uci set unbound.@zone[-1].forward_tls_upstream='yes'
+uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
+
+uci commit unbound && reload_config  >/dev/null
+/etc/init.d/unbound start  >/dev/null
+echo
+echo 'Unbound lokal DNS-Resolver with lokal root-files'
+}
+
+
+
+create_unbound_url_filter() {
+
 cat << EOF > /etc/unbound/unbound_srv.conf
 ##############################################################################
 # User custom options added in the server: clause part of UCI 'unbound.conf'
@@ -14442,152 +15008,604 @@ local-zone: "ogp.me" always_null
 local-zone: "*sex*.*" always_null
 
 EOF
+}
 
-mkdir /etc/unbound/unbound.conf.d >/dev/null
-curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >/dev/null
-curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
+create_network() {
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                Network Definitions                   #'
+echo '#                                                      #'
+echo '########################################################'
+echo 
 
-uci set unbound.@unbound[0]=unbound
-uci set unbound.@unbound[0].enabled='1'
-#uci set unbound.@unbound[0].include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
-uci set unbound.@unbound[0].tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
-uci set unbound.@unbound[0].auto_trust_anchor_file='/var/lib/unbound/root.key'
-uci set unbound.@unbound[0].root_hints='/var/lib/unbound/root.hints'
-uci set unbound.@unbound[0].add_extra_dns='0'
-uci set unbound.@unbound[0].add_local_fqdn='1'
-uci set unbound.@unbound[0].add_wan_fqdn='0'
-uci set unbound.@unbound[0].dhcp_link='dnsmasq'
-uci set unbound.@unbound[0].dhcp4_slaac6='0'
-uci set unbound.@unbound[0].do_ip4='yes'
-uci set unbound.@unbound[0].do_ip6='yes'
-uci set unbound.@unbound[0].do_tcp='yes'
-uci set unbound.@unbound[0].do_udp='yes'
-uci set unbound.@unbound[0].dns64='0'
-uci set unbound.@unbound[0].do_not_query_localhost='no'
-uci set unbound.@unbound[0].domain=$LOCAL_DOMAIN
-uci set unbound.@unbound[0].domain_type='static'
-uci set unbound.@unbound[0].edns_size='1280'
-uci set unbound.@unbound[0].edns_buffer_size='1472'
-uci set unbound.@unbound[0].extended_stats='0'
-uci set unbound.@unbound[0].hide_binddata='1'
-uci set unbound.@unbound[0].interface_auto='1'
-uci set unbound.@unbound[0].listen_port=$DNS_UNBOUND_port
-uci set unbound.@unbound[0].localservice='1'
-uci set unbound.@unbound[0].manual_conf='0'
-uci set unbound.@unbound[0].num_threads='1'
-uci set unbound.@unbound[0].protocol='default'
-#uci set unbound.@unbound[0].query_minimize='0'
-uci set unbound.@unbound[0].query_minimize='1'
-uci set unbound.@unbound[0].query_min_strict='1'
-uci set unbound.@unbound[0].rate_limit='0'
-uci set unbound.@unbound[0].rebind_localhost='0'
-uci set unbound.@unbound[0].rebind_protection='1'
-#uci set unbound.@unbound[0].recursion='default'
-#uci set unbound.@unbound[0].resource='default'
-uci set unbound.@unbound[0].recursion='passiv'
-uci set unbound.@unbound[0].resource='medium'
-uci set unbound.@unbound[0].root_age='9'
-uci set unbound.@unbound[0].ttl_min='300'
-uci set unbound.@unbound[0].ttl_max='86400'
-uci set unbound.@unbound[0].cache_min_ttl='300'
-uci set unbound.@unbound[0].cache_max_ttl='86400'
-uci set unbound.@unbound[0].cache_size='10000'
-#uci set unbound.@unbound[0].unbound_control='0'
-uci set unbound.@unbound[0].unbound_control='2'
-uci set unbound.@unbound[0].prefetch='yes'
-uci set unbound.@unbound[0].prefetch_key='yes'
-uci set unbound.@unbound[0].validator='1'
-uci set unbound.@unbound[0].validator_ntp='1'
-uci set unbound.@unbound[0].verbosity='0'
-uci set unbound.@unbound[0].hide_identity='yes'
-uci set unbound.@unbound[0].hide_version='yes'
-uci set unbound.@unbound[0].harden_glue='yes'
-uci set unbound.@unbound[0].harden_dnssec_stripped='yes'
-uci set unbound.@unbound[0].harden_large_queries='yes'
-uci set unbound.@unbound[0].harden_short_bufsize='yes'
-uci set unbound.@unbound[0].harden_below_nxdomain='yes'
-uci set unbound.@unbound[0].use_caps_for_id='yes'
-uci set unbound.@unbound[0].so_reuseport='yes'
-uci set unbound.@unbound[0].msg_cache_slabs='2'
-uci set unbound.@unbound[0].rrset_cache_slabs='2'
-uci set unbound.@unbound[0].infra_cache_slabs='2'
-uci set unbound.@unbound[0].key_cache_slabs='2'
-uci set unbound.@unbound[0].qname_minimisation='yes'
-uci set unbound.@unbound[0].qname_minimisation_strict='yes'
-uci set unbound.@unbound[0].rrset_roundrobin='yes'
-uci set unbound.@unbound[0].serve_expired='yes'
-uci set unbound.@unbound[0].so_rcvbuf='1m'
-uci set unbound.@unbound[0].protocol='ip4_only'
-uci add_list unbound.@unbound[0].private_address='192.168.0.0/16'
-uci add_list unbound.@unbound[0].private_address='169.254.0.0/16'
-uci add_list unbound.@unbound[0].private_address='172.16.0.0/12'
-uci add_list unbound.@unbound[0].private_address='10.0.0.0/8'
-uci add_list unbound.@unbound[0].private_address='fd00::/8'
-uci add_list unbound.@unbound[0].private_address='fe80::/10'
-uci add_list unbound.@unbound[0].access_control='0.0.0.0/0 refuse'
-uci add_list unbound.@unbound[0].access_control='::0/0 refuse'
-uci add_list unbound.@unbound[0].access_control='127.0.0.1 allow'
-uci add_list unbound.@unbound[0].access_control='::1 allow'
-uci add_list unbound.@unbound[0].access_control=$SERVER_net' allow'
-uci add_list unbound.@unbound[0].access_control=$CONTROL_net' allow'
-uci add_list unbound.@unbound[0].access_control=$HCONTROL_net' allow'
-uci add_list unbound.@unbound[0].access_control=$INET_net' allow'
-uci add_list unbound.@unbound[0].trigger_interface='CONTROL'
-uci add_list unbound.@unbound[0].trigger_interface='HCONTROL'
-uci add_list unbound.@unbound[0].trigger_interface='INET_CLIENTS'
-uci add_list unbound.@unbound[0].trigger_interface='SERVER'
-uci add_list unbound.@unbound[0].trigger_interface='VOICE'
-uci add_list unbound.@unbound[0].trigger_interface='ENTERTAIN'
-uci add_list unbound.@unbound[0].trigger_interface='GUEST'
-uci add_list unbound.@unbound[0].trigger_interface='wan6'
-uci set unbound.@unbound[0].domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
-uci add_list unbound.@unbound[0].domain_insecure=$INET_domain
-uci add_list unbound.@unbound[0].domain_insecure=$SERVER_domain
-uci add_list unbound.@unbound[0].domain_insecure=$HCONTROL_domain
-uci add_list unbound.@unbound[0].domain_insecure=$CONTROL_domain
-uci add_list unbound.@unbound[0].domain_insecure=$VOICE_domain
-uci add_list unbound.@unbound[0].domain_insecure=$GUEST_domain
-uci add_list unbound.@unbound[0].domain_insecure=$ENTERTAIN_domain
-uci add_list unbound.@unbound[0].domain_insecure='onion'
-uci add_list unbound.@unbound[0].domain_insecure='exit'
-uci add_list unbound.@unbound[0].private_domain=$INET_domain
-uci add_list unbound.@unbound[0].private_domain=$SERVER_domain
-uci add_list unbound.@unbound[0].private_domain=$HCONTROL_domain
-uci add_list unbound.@unbound[0].private_domain=$CONTROL_domain
-uci add_list unbound.@unbound[0].private_domain=$VOICE_domain
-uci add_list unbound.@unbound[0].private_domain=$GUEST_domain
-uci add_list unbound.@unbound[0].private_domain=$ENTERTAIN_domain
-uci add_list unbound.@unbound[0].private_domain='onion'
-uci add_list unbound.@unbound[0].private_domain='exit'
+#!/bin/sh
+uci -q delete network
+#uci delete network.lan
 
-uci add_list unbound.@unbound[0].outgoing_port_permit=$SDNS_port
-uci add_list unbound.@unbound[0].outgoing_port_permit=$TOR_SOCKS_port
-#uci add_list unbound.@unbound[0].outgoing_port_permit='9150'
-uci add_list unbound.@unbound[0].outgoing_port_permit=$DNS_TOR_port
-#uci add_list unbound.@unbound[0].outgoing_port_permit='9153'
-#uci add_list unbound.@unbound[0].outgoing_port_permit='10240-65335'
-uci add unbound zone
-uci set unbound.@zone[-1].name='onion'
-uci set unbound.@zone[-1].zone_type='forward_zone'
-uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
-uci add unbound zone
-uci set unbound.@zone[-1].name='exit'
-uci set unbound.@zone[-1].zone_type='forward_zone'
-uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
-uci add unbound zone
-uci set unbound.@zone[-1].name='.'
-uci set unbound.@zone[-1].zone_type='forward_zone'
-uci set unbound.@zone[-1].fallback='0'
-uci set unbound.@zone[-1].tls_upstream='1'
-uci set unbound.@zone[-1].tls_index='dns.cloudflair'
-uci set unbound.@zone[-1].forward_tls_upstream='yes'
-uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
+uci set network.loopback=interface
+uci set network.loopback.ifname='lo'
+uci set network.loopback.proto='static'
+uci set network.loopback.ipaddr='127.0.0.1'
+uci set network.loopback.netmask='255.0.0.0'
+uci set network.loopback.dns='127.0.0.1'
 
-uci commit unbound && reload_config  >/dev/null
-/etc/init.d/unbound start  >/dev/null
+uci set network.globals=globals
+uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='VOICE'
+uci commit network >/dev/null
+uci set network.VOICE.proto='static'
+uci set network.VOICE.type='bridge'
+uci set network.VOICE.ipaddr=$VOICE_ip
+uci set network.VOICE.netmask='255.255.255.0'
+uci set network.VOICE.ip6assign='56'
+uci set network.VOICE.broadcast=$VOICE_broadcast
+uci set network.VOICE.igmp_snooping='1'
+#uci set network.VOICE.gateway='127.0.0.1'
+uci set network.VOICE.gateway=$INET_GW
+uci set network.VOICE.ifname='eth0.105'
+uci set network.VOICE.dns=$VOICE_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='ENTERTAIN'
+uci commit network >/dev/null
+uci set network.ENTERTAIN.proto='static'
+uci set network.ENTERTAIN.type='bridge'
+uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
+uci set network.ENTERTAIN.netmask='255.255.255.0'
+uci set network.ENTERTAIN.ip6assign='56'
+uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
+uci set network.ENTERTAIN.igmp_snooping='1'
+#uci set network.ENTERTAIN.gateway='127.0.0.1'
+uci set network.ENTERTAIN.gateway=$INET_GW
+uci set network.ENTERTAIN.ifname='eth0.106'
+uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='GUEST'
+uci commit network >/dev/null
+uci set network.GUEST.proto='static'
+uci set network.GUEST.type='bridge'
+uci set network.GUEST.ipaddr=$GUEST_ip
+uci set network.GUEST.netmask='255.255.255.0'
+uci set network.GUEST.ip6assign='56'
+uci set network.GUEST.broadcast=$GUEST_broadcast
+uci set network.GUEST.igmp_snooping='1'
+#uci set network.GUEST.gateway='127.0.0.1'
+uci set network.GUEST.gateway=$INET_GW
+#uci set network.GUEST.ifname='eth0.107'
+uci set network.GUEST.dns=$GUEST_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SERVER'
+uci commit network >/dev/null
+uci set network.SERVER.proto='static'
+uci set network.SERVER.type='bridge'
+uci set network.SERVER.ipaddr=$SERVER_ip
+uci set network.SERVER.netmask='255.255.255.0'
+uci set network.SERVER.ip6assign='56'
+uci set network.SERVER.broadcast=$SERVER_broadcast
+uci set network.SERVER.igmp_snooping='1'
+#uci set network.SERVER.gateway='127.0.0.1'
+uci set network.SERVER.gateway=$INET_GW
+uci set network.SERVER.ifname='eth0.101'
+uci set network.SERVER.dns=$SERVER_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='INET'
+uci commit network >/dev/null
+uci set network.INET.proto='static'
+uci set network.INET.type='bridge'
+uci set network.INET.ipaddr=$INET_ip
+uci set network.INET.netmask='255.255.255.0'
+uci set network.INET.ip6assign='56'
+uci set network.INET.broadcast=$INET_broadcast
+uci set network.INET.igmp_snooping='1'
+#uci set network.INET.gateway='127.0.0.1'
+uci set network.INET.gateway=$INET_GW
+uci set network.INET.ifname='eth0.104'
+uci set network.INET.dns=$INET_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='CONTROL'
+uci commit network >/dev/null
+uci set network.CONTROL.proto='static'
+uci set network.CONTROL.type='bridge'
+uci set network.CONTROL.ipaddr=$CONTROL_ip
+uci set network.CONTROL.netmask='255.255.255.0'
+uci set network.CONTROL.ip6assign='56'
+uci set network.CONTROL.broadcast=$CONTROL_broadcast
+uci set network.CONTROL.igmp_snooping='1'
+#uci set network.CONTROL.gateway='127.0.0.1'
+uci set network.CONTROL.gateway=$INET_GW
+uci set network.CONTROL.ifname='eth0.103'
+uci set network.CONTROL.dns=$CONTROL_ip
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='HCONTROL'
+uci commit network >/dev/null
+uci set network.HCONTROL.proto='static'
+uci set network.HCONTROL.type='bridge'
+uci set network.HCONTROL.ipaddr=$HCONTROL_ip
+uci set network.HCONTROL.netmask='255.255.255.0'
+uci set network.HCONTROL.ip6assign='56'
+uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
+uci set network.HCONTROL.igmp_snooping='1'
+#uci set network.HCONTROL.gateway='127.0.0.1'
+uci set network.HCONTROL.gateway=$INET_GW
+uci set network.HCONTROL.ifname='eth0.102'
+uci set network.HCONTROL.dns=$HCONTROL_ip
+uci commit network >/dev/null
+
+uci set network.wan=interface >/dev/null
+uci set network.wan.proto='static'
+uci set network.wan.netmask='255.255.255.0'
+uci set network.wan.ip6assign='60'
+uci set network.wan.gateway=$INET_GW
+uci add_list network.wan.dns="127.0.0.1"
+uci set network.wan.ifname='eth1'
+uci set network.wan.ipaddr=$WAN_ip
+uci set network.wan.peerdns="0"
+uci commit network >/dev/null
+
+uci set network.wan6.proto='dhcpv6'
+uci set network.wan6.reqaddress='try'
+uci set network.wan6.reqprefix='auto'
+uci set network.wan6.ifname='eth1'
+#uci add_list network.wan6.dns="2606:4700:4700::1113"
+#uci add_list network.wan6.dns="2606:4700:4700::1003"
+uci add_list network.wan6.dns="0::1"
+uci set network.wan6.peerdns="0"
+uci commit network >/dev/null
+}
+
+create_switch() {
+uci set network.@switch[0]=switch
+uci set network.@switch[0].name='switch0'
+uci set network.@switch[0].reset='1'
+uci set network.@switch[0].enable_vlan='1'
+uci commit network >/dev/null
+
+uci set network.@switch_vlan[0]=switch_vlan
+uci set network.@switch_vlan[0].device='switch0'
+uci set network.@switch_vlan[0].vlan='101'
+uci set network.@switch_vlan[0].vid='101'
+uci set network.@switch_vlan[0].ports='0t 1t 2 3t 4t 5t'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='102'
+uci set network.@switch_vlan[-1].vid='102'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3 4t 5t'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vLan='103'
+uci set network.@switch_vlan[-1].vid='103'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='104'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='104'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='105'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='105'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='106'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='106'
+uci commit network >/dev/null
+
+uci add network interface
+uci rename network.@interface[-1]='SWITCH_Port'
+uci commit network >/dev/null
+uci set network.SWITCH_Port.ifname='eth0'
+uci set network.SWITCH_Port.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P101'
+uci commit network >/dev/null
+uci set network.SWITCH_P101.ifname='eth0.101'
+uci set network.SWITCH_P101.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P102'
+uci commit network >/dev/null
+uci set network.SWITCH_P102.ifname='eth0.102'
+uci set network.SWITCH_P102.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P103'
+uci commit network >/dev/null
+uci set network.SWITCH_P103.ifname='eth0.103'
+uci set network.SWITCH_P103.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P104'
+uci commit network >/dev/null
+uci set network.SWITCH_P104.ifname='eth0.104'
+uci set network.SWITCH_P104.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P105'
+uci commit network >/dev/null
+uci set network.SWITCH_P105.ifname='eth0.105'
+uci set network.SWITCH_P105.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P106'
+uci commit network >/dev/null
+uci set network.SWITCH_P106.ifname='eth0.106'
+uci set network.SWITCH_P106.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='REPEATER'
+uci commit network >/dev/null
+uci set network.REPEATER.proto='none'
+uci commit  && reload_config >/dev/null
+
+ 
+# Save and apply
+uci commit network && reload_config >/dev/null
+#/etc/init.d/network restart
+}
+
+create_wlan() {
+dig www.internic.net @1.1.1.1
+
+uci -q delete wireless  >/dev/null
+
+uci set wireless.radio0=wifi-device
+uci set wireless.radio0.type='mac80211'
+uci set wireless.radio0.path='platform/soc/a000000.wifi'
+uci set wireless.radio0.htmode='HT20'
+uci set wireless.radio0.country='DE'
+uci set wireless.radio0.channel='6'
+uci set wireless.radio0.hwmode='11n'
+
+uci delete wireless.default_radio0
+uci set wireless.default_radio0=wifi-iface
+uci set wireless.default_radio0.device='radio0'
+uci set wireless.default_radio0.mode='ap'
+uci set wireless.default_radio0.key=$WIFI_PASS
+uci set wireless.default_radio0.ssid=$VOICE_ssid
+uci set wireless.default_radio0.encryption='psk2'
+uci set wireless.default_radio0.network='VOICE'
+
+uci delete wireless.wifinet1
+uci set wireless.wifinet1=wifi-iface
+uci set wireless.wifinet1.ssid=$HCONTROL_ssid
+uci set wireless.wifinet1.encryption='psk2'
+uci set wireless.wifinet1.device='radio0'
+uci set wireless.wifinet1.mode='ap'
+uci set wireless.wifinet1.network='HCONTROL'
+uci set wireless.wifinet1.key=$WIFI_PASS
+
+uci delete wireless.wifinet2
+uci set wireless.wifinet2=wifi-iface
+uci set wireless.wifinet2.ssid=$CONTROL_ssid
+uci set wireless.wifinet2.device='radio0'
+uci set wireless.wifinet2.mode='ap'
+uci set wireless.wifinet2.network='CONTROL'
+uci set wireless.wifinet2.key=$WIFI_PASS
+uci set wireless.wifinet2.encryption='psk2'
+
+uci delete wireless.wifinet3
+uci set wireless.wifinet3=wifi-iface
+uci set wireless.wifinet3.ssid=$INET_ssid
+uci set wireless.wifinet3.encryption='psk2'
+uci set wireless.wifinet3.device='radio0'
+uci set wireless.wifinet3.mode='ap'
+uci set wireless.wifinet3.network='INET'
+uci set wireless.wifinet3.key=$WIFI_PASS
+
+uci delete wireless.wifinet4
+uci set wireless.wifinet4=wifi-iface
+uci set wireless.wifinet4.ssid=$ENTERTAIN_ssid
+uci set wireless.wifinet4.encryption='psk2'
+uci set wireless.wifinet4.device='radio0'
+uci set wireless.wifinet4.mode='ap'
+uci set wireless.wifinet4.network='ENTERTAIN'
+uci set wireless.wifinet4.key=$WIFI_PASS
+
+uci delete wireless.wifinet5
+uci set wireless.wifinet5=wifi-iface
+uci set wireless.wifinet5.ssid=$SERVER_ssid
+uci set wireless.wifinet5.encryption='psk2'
+uci set wireless.wifinet5.device='radio0'
+uci set wireless.wifinet5.mode='ap'
+uci set wireless.wifinet5.network='REPEATER'
+uci set wireless.wifinet5.key=$WIFI_PASS
+
+uci delete wireless.wifinet6
+uci set wireless.wifinet6=wifi-iface
+uci set wireless.wifinet6.ssid=$GUEST_ssid
+uci set wireless.wifinet6.encryption='psk2'
+uci set wireless.wifinet6.device='radio0'
+uci set wireless.wifinet6.mode='ap'
+uci set wireless.wifinet6.network='GUEST'
+uci set wireless.wifinet6.key=$WIFI_PASS
+
+uci set wireless.radio1=wifi-device
+uci set wireless.radio1.type='mac80211'
+uci set wireless.radio1.channel='36'
+uci set wireless.radio1.hwmode='11a'
+uci set wireless.radio1.path='platform/soc/a800000.wifi'
+uci set wireless.radio1.htmode='VHT80'
+uci set wireless.radio1.country='DE'
+
+uci delete wireless.default_radio1
+uci set wireless.default_radio1=wifi-iface
+uci set wireless.default_radio1.device='radio1'
+uci set wireless.default_radio1.mode='ap'
+uci set wireless.default_radio1.key=$WIFI_PASS
+uci set wireless.default_radio1.ssid=$VOICE_ssid
+uci set wireless.default_radio1.encryption='psk2'
+uci set wireless.default_radio1.network='VOICE'
+
+uci delete wireless.wifinet7
+uci set wireless.wifinet7=wifi-iface
+uci set wireless.wifinet7.ssid=$INET_ssid
+uci set wireless.wifinet7.encryption='psk2'
+uci set wireless.wifinet7.device='radio1'
+uci set wireless.wifinet7.mode='ap'
+uci set wireless.wifinet7.network='INET'
+uci set wireless.wifinet7.key=$WIFI_PASS
+
+uci delete wireless.wifinet8
+uci set wireless.wifinet8=wifi-iface
+uci set wireless.wifinet8.ssid=$ENTERTAIN_ssid
+uci set wireless.wifinet8.encryption='psk2'
+uci set wireless.wifinet8.device='radio1'
+uci set wireless.wifinet8.mode='ap'
+uci set wireless.wifinet8.network='ENTERTAIN'
+uci set wireless.wifinet8.key=$WIFI_PASS
+
+uci delete wireless.wifinet9
+uci set wireless.wifinet9=wifi-iface
+uci set wireless.wifinet9.device='radio1'
+uci set wireless.wifinet9.mode='ap'
+uci set wireless.wifinet9.ssid=$SERVER_ssid
+uci set wireless.wifinet9.encryption='psk2'
+uci set wireless.wifinet9.key=$WIFI_PASS
+uci set wireless.wifinet9.network='REPEATER'
+
+uci delete wireless.wifinet10
+uci set wireless.wifinet10=wifi-iface
+uci set wireless.wifinet10.encryption='psk2'
+uci set wireless.wifinet10.device='radio1'
+uci set wireless.wifinet10.mode='ap'
+uci set wireless.wifinet10.key=$WIFI_PASS
+uci set wireless.wifinet10.network='GUEST'
+uci set wireless.wifinet10.ssid=$GUEST_ssid
+
+uci delete wireless.radio0.disabled >/dev/null
+uci delete wireless.radio1.disabled >/dev/null
+
+uci commit  && reload_config >/dev/null
+
 echo
-echo 'Unbound lokal DNS-Resolver with lokal root-files'
+echo 'Networks Settings defined'
+echo
 
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo 'Your Config is:'
+echo
+echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$INET_net
+echo
+echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$HCONTROL_net
+echo
+echo 'Voice-Assistent SSID: '$VOICE_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$VOICE_net
+echo
+echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$ENTERTAIN_net
+echo
+echo 'Server-WiFi SSID:     '$SERVER_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$SERVER_net
+echo
+echo 'IR/BT-Control SSID:   '$CONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$CONTROL_net
+echo
+echo 'Guests SSID is:       '$GUEST_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$GUEST_net
+echo
+echo
+echo
+echo 'IP-Address:           '$ACCESS_SERVER
+echo 'Gateway:              '$INET_GW
+echo 'Domain:               '$LOCAL_DOMAIN
+echo
+echo 'GUI-Access:           https://'$INET_ip':8443'
+echo 'User:                 '$USERNAME
+echo 'Password:             password'
+echo
+}
+
+create_firewall_zones() {
+uci set firewall.@zone[0]=zone
+uci set firewall.@zone[0].name="REPEATER"
+uci set firewall.@zone[0].input="ACCEPT"
+uci set firewall.@zone[0].network="REPEATER"
+uci set firewall.@zone[0].output="ACCEPT"
+uci set firewall.@zone[0].forward="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="REPEATER"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="CONTROL"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="CONTROL"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="CONTROL"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="HCONTROL"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="HCONTROL"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="HCONTROL"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="SERVER"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="SERVER"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="SERVER"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="INET"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="INET"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="INET"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="GUEST"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="GUEST"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="GUEST"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="VOICE"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="VOICE"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="VOICE"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="ENTERTAIN"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="ENTERTAIN"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="ENTERTAIN"
+uci commit firewall && reload_config >/dev/null
+
+uci set firewall.@zone[0]=zone
+uci set firewall.@zone[0].name="REPEATER"
+uci set firewall.@zone[0].input="ACCEPT"
+uci set firewall.@zone[0].network="REPEATER"
+uci set firewall.@zone[0].output="ACCEPT"
+uci set firewall.@zone[0].forward="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="REPEATER"
+uci commit firewall && reload_config >/dev/null
+uci -q delete firewall.http_int >/dev/null
+
+}
+
+set_dhcp() {
 uci -q delete dhcp >/dev/null
 uci delete dhcp.BlacklistSERVER >/dev/null
 uci delete dhcp.BlacklistHCONTROL >/dev/null
@@ -14691,7 +15709,7 @@ uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip
 uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
 uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
-uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
+uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_Relay_port
 
 uci set dhcp.CONTROL=dhcp
 uci set dhcp.CONTROL.start='1'
@@ -14705,7 +15723,7 @@ uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
 uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip
 uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
-uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_UNBOUND_port
+uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_Relay_port
 
 uci set dhcp.HCONTROL=dhcp
 uci set dhcp.HCONTROL.start='1'
@@ -14719,7 +15737,7 @@ uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip
 uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
 uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
-uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_UNBOUND_port
+uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_Relay_port
 
 uci set dhcp.INET=dhcp
 uci set dhcp.INET.start='1'
@@ -14733,7 +15751,7 @@ uci add_list dhcp.INET.dhcp_option='6,'$INET_ip
 uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
 uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
-uci set dhcp.INET.server=$INET_ip'#'$DNS_UNBOUND_port
+uci set dhcp.INET.server=$INET_ip'#'$DNS_Relay_port
 
 uci set dhcp.ENTERTAIN=dhcp
 uci set dhcp.ENTERTAIN.start='1'
@@ -14747,7 +15765,7 @@ uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip
 uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
 uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
-uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_UNBOUND_port
+uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_Relay_port
 
 uci set dhcp.VOICE=dhcp
 uci set dhcp.VOICE.start='1'
@@ -14761,7 +15779,7 @@ uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip
 uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
 uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
-uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_UNBOUND_port
+uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_Relay_port
 
 uci set dhcp.GUEST=dhcp
 uci set dhcp.GUEST.start='100'
@@ -14775,7 +15793,7 @@ uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip
 uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
 uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
-uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
+uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_Relay_port
 uci commit && reload_config
 
 
@@ -14802,7 +15820,14 @@ uci commit && reload_config >/dev/null
 uci set dhcp.wan=dhcp
 uci set dhcp.wan.interface='wan'
 uci set dhcp.wan.ignore='1'
+uci commit dhcp && reload_config >/dev/null
 
+/etc/init.d/dnsmasq restart >/dev/null
+cp /usr/share/dnsmasq/trust-anchors.conf /etc/ >/dev/null
+
+}
+
+create_dnsmasq_url_filter() {
 mkdir /etc/dnsmasq.d  >/dev/null
 mkdir /etc/dnsmasq.d/Blacklist >/dev/null
 mkdir /etc/dnsmasq.d/Whitelist >/dev/null
@@ -14867,11 +15892,11 @@ echo 'Please wait until Reboot ....'
 # Configure Black and Whitelsit
 cat << EOF > /etc/dnsmasq.d/Blacklist/z_all_allow
 server=/dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/127.0.0.1
-server=/#/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/#/127.0.0.1#$(echo $DNS_Relay_port)
 EOF
 
 cat << EOF > /etc/dnsmasq.d/AllowAll/all_allow
-server=/#/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/#/127.0.0.1#$(echo $DNS_Relay_port)
 EOF
 
 cat << EOF > /etc/dnsmasq.d/BlockAll/block_all
@@ -19292,441 +20317,441 @@ EOF
 
 cat << EOF > /etc/dnsmasq.d/Blacklist/white
 server=/dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/127.0.0.1#9053
-server=/3sat.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/7tv.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/7tv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/accuweather.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/accuweather.comde/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-control.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-control.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-controls.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/aio-controls.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/akamaihd.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alexasounds.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice-dsl.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/alice-dsl.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonsilk.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazon.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonaws.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/.amazon/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mlis.amazon.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spectrum.s3.amazonaws.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonaws.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonaws.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/a2z.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/images-amazon.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/andreas-stawinski.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/android.clients.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/antenne.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.amazonalexa.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.co.uk.amazonalexa.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.crittercism.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.eu.amazonalexa.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/amazonvideo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api-global.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openwrt.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/raspbery.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/3sat.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/7tv.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/7tv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/accuweather.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/accuweather.comde/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-control.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-controls.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/aio-controls.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/akamaihd.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alexasounds.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice-dsl.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/alice-dsl.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonsilk.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazon.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonaws.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/.amazon/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mlis.amazon.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spectrum.s3.amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonaws.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/a2z.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/images-amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/andreas-stawinski.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/android.clients.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/antenne.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.co.uk.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.crittercism.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.eu.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/amazonvideo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api-global.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openwrt.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/raspbery.org/127.0.0.1#$(echo $DNS_Relay_port)
 
 
-server=/apple.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mzstatic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/apple.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/apple.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mzstatic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/apple.de/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/ard.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ardmediathek.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/arte.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/avm.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bing.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br24.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br-24.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/br-24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cddbp.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/chip.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/chip.smarttv.cellular.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cinepass.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cinepass.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloud.mediola.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloudfront.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloudflare-dns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cloudflare.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/connectors.yonomi.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/connectors.yonomi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/content.dhg.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ct.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.blog/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cyberandi.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/daserste.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/deutschewelle.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/deutschewelle.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/directions.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/directions.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dnssec-or-not.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dnssec.vs.uni-due.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dw.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dw.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/epg.corio.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erf1.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/erste.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/filmstarts.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/focus.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/freestream.nmdn.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/fritz.box/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flip.it/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ftp.stawimedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/github.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/github.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/github.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/galileo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/gallileo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/geonames.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/getinvoked.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ggpht.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/googleapis.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/googlevideo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/gracenote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/gvt1.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmonyremote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmony-remote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmonyremote.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/harmony-remote.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hbbtv.*/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heise.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heise-online.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/heute.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hinter.bibeltv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/home.stawimedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hotmail.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hotmail.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ichnaea.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icloud.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/icloud.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ifttt.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ihealthlabs.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/invokedapps.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/invokedapps.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ipleak.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ipv4_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ipv6_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ism/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/it-business.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/it-business.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/itunes.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ix.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/ard.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ardmediathek.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/arte.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/avm.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bing.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br24.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br-24.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/br-24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cddbp.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/chip.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/chip.smarttv.cellular.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cinepass.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cinepass.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloud.mediola.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloudfront.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloudflare-dns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cloudflare.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/connectors.yonomi.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/connectors.yonomi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/content.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ct.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.blog/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cyberandi.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/daserste.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/deutschewelle.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/deutschewelle.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/directions.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/directions.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dnssec-or-not.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dnssec.vs.uni-due.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dw.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dw.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/epg.corio.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erf1.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/erste.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/filmstarts.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/focus.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/freestream.nmdn.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/fritz.box/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flip.it/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ftp.stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/github.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/github.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/github.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/galileo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/gallileo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/geonames.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/getinvoked.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ggpht.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/googleapis.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/googlevideo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/gracenote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/gvt1.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmonyremote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmony-remote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmonyremote.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/harmony-remote.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hbbtv.*/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heise.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heise-online.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/heute.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hinter.bibeltv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/home.stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hotmail.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hotmail.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ichnaea.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icloud.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/icloud.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ifttt.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ihealthlabs.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/invokedapps.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/invokedapps.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ipleak.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ipv4_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ipv6_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ism/127.0.0.1#$(echo $DNS_Relay_port)
+server=/it-business.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/it-business.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/itunes.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ix.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/joyn.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/api.segment.io/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/seventv.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/route71.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ak-t1p-vod-playout-prod.akamaized.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/prosieben-ctr.live.ott.irdeto.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/p7s1video.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/joyn.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/joyn.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/joyn.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/kabeleins.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/joyn.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/api.segment.io/127.0.0.1#$(echo $DNS_Relay_port)
+server=/seventv.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/route71.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ak-t1p-vod-playout-prod.akamaized.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/prosieben-ctr.live.ott.irdeto.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/p7s1video.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/joyn.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/joyn.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/joyn.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/kabeleins.de/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/laut.fm/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/live.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/live.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/llnwd.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/llnwd.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/logging.dhg.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/m.media-amazon.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/m.tvinfo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/macandi.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mediola.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mediola.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/members.harmonyremote.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/metafilegenerator.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/microsoft.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/microsoft.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mobile.chip.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myfritz.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myharmony.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myharmony.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/myremotesetup.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/mytvscout.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/n24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/push.prod.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nccp.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/uiboot.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/secure.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/customerevents.netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/netflix.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/netflix.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflximg.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflximg.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxvideo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxvideo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxvideo.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxso.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nfximg.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxso.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nfximg.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nflxso.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nfximg.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nodejs.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/no-ip.biz/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nokia.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/nokia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/npmjs.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ntp.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/n-tv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/o2.box/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office365.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/office365.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/onlinewetter.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/onlinewetter.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openstreetmap.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openstreetmap.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/openstreetmap.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/outlook.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/outlook.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/outlook.live.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pcwelt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pc-welt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/philips.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/philips.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/philips.nl/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/phobos.apple.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/phobos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/photos.apple.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/photos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pionieer.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/play.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/playstation.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/prosieben.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ps3.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pubsub.pubnub.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pubnub.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/radio.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/radiogong.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/radiotime.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-control.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-control.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-controls.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotes.aio-controls.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/remotesneo.aio-control.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver1.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver2.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver3.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/resolver4.opendns.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/rtl.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/rtl2.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/s3-directional-w.amazonaws.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/samsung.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sat1.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/script.ioam.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/shoutcast.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spn.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/startpage.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/startpage.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/startpage.nl/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stawimedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stawimedia.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stawimedia.local/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/stream.erf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/streamfarm.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sus.dhg.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/svcs.myharmony.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/t3n.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/telegram.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/t.me/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tagesschau.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tagesschau24.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/time.nist.gov/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/time.windows.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/torproject.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tumblr.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tumblr.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tumblr.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune_in.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune_in.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tunein.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune-in.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tunein.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tune-in.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitter.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitter.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/t.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvtv.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/unifiedlayer.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vevo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vevo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/video.google.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videobuster.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videobuster.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videociety.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/videociety.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vimeo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/vimeo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wbsapi.withings.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/whatismyip.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wpstr.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/waipu.ch/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/weather.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/weather.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/welt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetteronline.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wetter-online.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikimedia.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikipedia.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikipedia.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wikipedia.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/withings.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/withings.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ws.withings.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/wunderlist.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/y2u.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelp.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yelpcdn.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yonomi.co/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/yonomi.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtu.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtube.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtube-nocookie.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ytimg.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/laut.fm/127.0.0.1#$(echo $DNS_Relay_port)
+server=/live.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/live.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/llnwd.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/llnwd.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/logging.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/m.media-amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/m.tvinfo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/macandi.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mediola.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mediola.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/members.harmonyremote.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/metafilegenerator.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/microsoft.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/microsoft.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mobile.chip.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myfritz.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myharmony.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myharmony.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/myremotesetup.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/mytvscout.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/n24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/push.prod.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nccp.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/uiboot.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/secure.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/customerevents.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/netflix.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflximg.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflximg.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxvideo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxvideo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxso.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nfximg.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxso.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nfximg.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nflxso.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nfximg.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nodejs.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/no-ip.biz/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nokia.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/nokia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/npmjs.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ntp.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/n-tv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/o2.box/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office365.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/office365.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/onlinewetter.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/onlinewetter.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openstreetmap.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openstreetmap.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/openstreetmap.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/outlook.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/outlook.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/outlook.live.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pcwelt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pc-welt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/philips.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/philips.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/philips.nl/127.0.0.1#$(echo $DNS_Relay_port)
+server=/phobos.apple.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/phobos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/photos.apple.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/photos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pionieer.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/play.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/playstation.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/prosieben.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ps3.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pubsub.pubnub.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pubnub.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/radio.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/radiogong.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/radiotime.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-control.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-controls.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotes.aio-controls.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/remotesneo.aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver1.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver2.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver3.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/resolver4.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/rtl.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/rtl2.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/s3-directional-w.amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/samsung.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sat1.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/script.ioam.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/shoutcast.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spn.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/startpage.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/startpage.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/startpage.nl/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stawimedia.eu/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stawimedia.local/127.0.0.1#$(echo $DNS_Relay_port)
+server=/stream.erf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/streamfarm.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sus.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/svcs.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/t3n.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/telegram.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/t.me/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tagesschau.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tagesschau24.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/time.nist.gov/127.0.0.1#$(echo $DNS_Relay_port)
+server=/time.windows.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/torproject.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tumblr.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tumblr.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tumblr.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune_in.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune_in.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tunein.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune-in.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tunein.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tune-in.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitter.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitter.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/t.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvtv.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/unifiedlayer.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vevo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vevo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/video.google.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videobuster.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videobuster.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videociety.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/videociety.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vimeo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/vimeo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wbsapi.withings.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/whatismyip.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wpstr.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/waipu.ch/127.0.0.1#$(echo $DNS_Relay_port)
+server=/weather.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/weather.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/welt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetteronline.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wetter-online.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikimedia.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikipedia.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikipedia.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wikipedia.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/withings.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/withings.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ws.withings.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/wunderlist.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/y2u.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelp.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yelpcdn.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yonomi.co/127.0.0.1#$(echo $DNS_Relay_port)
+server=/yonomi.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtu.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtube.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtube-nocookie.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ytimg.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/zattoo.ch/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.co.uk/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zahs.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zattoo.eu/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/zattoo.ch/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zahs.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zattoo.eu/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/zdf.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/zdf-cdn.live.cellular.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/zdf.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/zdf-cdn.live.cellular.de/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/dlive.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dlive.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/dlive.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dlive.tv/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/twitch.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitch.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitch.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitchcdn.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ttvnw.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/jtvnw.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/twitch.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/twitch.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitch.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitch.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitchcdn.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ttvnw.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/jtvnw.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/twitch.tv/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/disneyplus.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney+.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disneyplus.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney+.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disneyplus.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bamgrid.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bam.nr-data.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cdn.registerdisney.go.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/cws.convia.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/d9.flashtalking.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney-portal.my.onetrust.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disneyplus.bn5x.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/js-agent.newrelic.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney-plus.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/dssott.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/adobedtm.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/disney+.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/disneyplus.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney+.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disneyplus.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney+.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disneyplus.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bamgrid.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bam.nr-data.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cdn.registerdisney.go.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/cws.convia.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/d9.flashtalking.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney-portal.my.onetrust.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disneyplus.bn5x.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/js-agent.newrelic.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney-plus.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/dssott.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/adobedtm.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/disney+.tv/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/pluto.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pluto.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pluto.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tvnow.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduck.go/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduckgo.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/duckduckgo.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/pluto.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pluto.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pluto.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tvnow.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduck.go/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduckgo.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/duckduckgo.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/bitchute.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bitchute.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/instagram.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/instagram.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pinterest.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pinterest.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/pinterest.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flickr.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flickr.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/flickr.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.tv/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/imdb.org/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/you2.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/youtu.be/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spotify.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spotify.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/spotify.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/www.bit.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/bit.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/ow.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/tinyurl.com/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/buff.ly/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/trib.al/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/serienstream.sx/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/goo.gl/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/bitchute.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bitchute.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/instagram.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/instagram.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pinterest.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pinterest.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/pinterest.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flickr.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flickr.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/flickr.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.tv/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/imdb.org/127.0.0.1#$(echo $DNS_Relay_port)
+server=/you2.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/youtu.be/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spotify.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spotify.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/spotify.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/www.bit.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/bit.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/ow.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/tinyurl.com/127.0.0.1#$(echo $DNS_Relay_port)
+server=/buff.ly/127.0.0.1#$(echo $DNS_Relay_port)
+server=/trib.al/127.0.0.1#$(echo $DNS_Relay_port)
+server=/serienstream.sx/127.0.0.1#$(echo $DNS_Relay_port)
+server=/goo.gl/127.0.0.1#$(echo $DNS_Relay_port)
 
-server=/.skype/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/.youtube/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/.office/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/.skype/127.0.0.1#$(echo $DNS_Relay_port)
+server=/.youtube/127.0.0.1#$(echo $DNS_Relay_port)
+server=/.office/127.0.0.1#$(echo $DNS_Relay_port)
 server=/.exit/127.0.0.1#9053
 server=/.onion/127.0.0.1#9053
 EOF
 
 cat << EOF > /etc/dnsmasq.d/Blacklist/banking
 
-server=/.banking/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/unicredit.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hvb.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/unicredit.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hvb.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hypovereinsbak.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/hypovereinsbank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/comdirekt.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/comdirect.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/comdirect.net/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/postbank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/satander.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/n26.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/deutschebank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/reiba.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sparkasse.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/sskm.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
-server=/commerzbank.de/127.0.0.1#$(echo $DNS_UNBOUND_port)
+server=/.banking/127.0.0.1#$(echo $DNS_Relay_port)
+server=/unicredit.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hvb.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/unicredit.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hvb.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hypovereinsbak.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/hypovereinsbank.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/comdirekt.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/comdirect.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/comdirect.net/127.0.0.1#$(echo $DNS_Relay_port)
+server=/postbank.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/satander.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/n26.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/deutschebank.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/reiba.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sparkasse.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/sskm.de/127.0.0.1#$(echo $DNS_Relay_port)
+server=/commerzbank.de/127.0.0.1#$(echo $DNS_Relay_port)
 EOF
 
 
@@ -19793,127 +20818,9 @@ echo 'User:                 '$USERNAME
 echo 'Password:             password'
 echo
 echo 'Please wait until Reboot ....'
+}
 
-
-uci set firewall.@zone[0]=zone
-uci set firewall.@zone[0].name="REPEATER"
-uci set firewall.@zone[0].input="ACCEPT"
-uci set firewall.@zone[0].network="REPEATER"
-uci set firewall.@zone[0].output="ACCEPT"
-uci set firewall.@zone[0].forward="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="REPEATER"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="CONTROL"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="CONTROL"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="CONTROL"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="HCONTROL"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="HCONTROL"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="HCONTROL"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="SERVER"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="SERVER"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="SERVER"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="INET"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="INET"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="INET"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="GUEST"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="GUEST"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="GUEST"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="VOICE"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="VOICE"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="VOICE"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="ENTERTAIN"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="ENTERTAIN"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="ENTERTAIN"
-uci commit firewall && reload_config >/dev/null
-
+set_firewall_rules() {
 # Intercept SSH, HTTP and HTTPS traffic
 uci -q delete firewall.ssh_int >/dev/null
 uci set firewall.ssh_int="redirect"
@@ -19962,21 +20869,6 @@ uci set firewall.tcp_tor2_int.proto="tcp"
 uci set firewall.tcp_tor2_int.extra="--syn"
 uci set firewall.tcp_tor2_int.target="DNAT"
 uci commit && reload_config >/dev/null
-
-uci set firewall.@zone[0]=zone
-uci set firewall.@zone[0].name="REPEATER"
-uci set firewall.@zone[0].input="ACCEPT"
-uci set firewall.@zone[0].network="REPEATER"
-uci set firewall.@zone[0].output="ACCEPT"
-uci set firewall.@zone[0].forward="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="REPEATER"
-uci commit firewall && reload_config >/dev/null
-uci -q delete firewall.http_int >/dev/null
 
 #-----------------------------------------------------------------------------
 
@@ -22272,5 +23164,26 @@ echo 'Password:             password'
 echo
 echo 'Please wait until Reboot ....'
 echo
+}
+
+define_variables
+ask_parameter
+set_tor
+set_stubby
+set_unbound
+create_unbound_url_filter
+create_dnsmasq_url_filter
+view_config
+customize_firmware
+create_websites
+
+create_network
+create_switch
+create_wlan
+create_firewall_zones
+view_config
+
+set_dhcp
+set_firewall_rules
 
 reboot 
