@@ -1161,7 +1161,7 @@ echo Sichere alte Konfiguration
 iptables-save > rules.v4_old_$datum.bkp
 }
 
-build_websites() {
+create_websites() {
 mkdir /www/router
 mkdir /www/redirect
 mkdir /www/CaptivePortal
@@ -27661,24 +27661,28 @@ uci commit fstab
 }
 
 #-------------------------start---------------------------------------
+
+define_variables
 ask_parameter $1 $2 $3 $4 $5 $6
 install_update
 #install_adguard
-define_variables
-customize_firmware
-#build_websites
 set_tor
 set_stubby
 set_unbound
-create_url_filter
+create_unbound_url_filter
+create_dnsmasq_url_filter
+view_config
+customize_firmware
+create_websites
+
+create_network
 create_switch
 create_wlan
-create_network
-create_bridge
 create_firewall_zones
-set_dhcp >/dev/null
 view_config
-#set_firewall_rules
+
+set_dhcp
+set_firewall_rules
 #set_mountpoints
 
 clear
