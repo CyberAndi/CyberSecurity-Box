@@ -2,7 +2,7 @@
 # CyberSecurity-Box
 <h4>(inkl. Ad Blocker, <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/Unbound_FC_Shaded_cropped.svg" style="max-width: 100%; vertical-align: middle; background-color: rgba(230,230,230,0.7); padding: 0.15em 0.25em; height:1em" height="14px"> (DNS), <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/tor-logo%402x.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> or optional <img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/pihole.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Pi-Hole (incl. DB) and ntopng) </h4>
 
-<h4><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch"><img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/de.gif" style="width:1.25em;  padding: 0em; height:1em" height="14px"> F&uuml;r Deutsch / For German</a></h4>
+<h4><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch"><img src="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/de.gif" style="width:20px;  padding: 0em; height:1em" height="14px">&nbsp; F&uuml;r Deutsch / For German</a></h4>
 <p>
   First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="14px"></img> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a> 
 <p>
@@ -165,7 +165,7 @@ For more Information in german visit <a href="https://cyberandi.tumblr.com/Smart
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/5b502b53-1cea-4024-afc5-3847ac6cccca.png" width=50%></img>
 <p>
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/3906e52e-3e02-47ae-9b61-ecb9e498955b.png" width=50%></img>
-
+</center>
 ***
 (c) CyberAndi 2019-2023 
 
