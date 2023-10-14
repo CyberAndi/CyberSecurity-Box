@@ -48,7 +48,7 @@
   You will find the Screenshots <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/README.md#screenshots">here</a>. 
   </li>
   
-  <h3><li>Alternative 2 - Installation CyberSecurity-Box ( <img src="/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img> Raspberry-Pi</li>)</h3>
+  <h3><li>Alternative 2 - Installation CyberSecurity-Box ( <img src="/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img> RaspPi</li>)</h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank">Raspbian-SD-Card-Image</a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
