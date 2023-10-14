@@ -23166,6 +23166,47 @@ echo 'Please wait until Reboot ....'
 echo
 }
 
+set_HS_Firewall() {
+uci set firewall.OfficeClient.enabled='1'
+uci set firewall.OfficeWebClient.enabled='1'
+uci set firewall.Amazon_Alexa.enabled='1'
+uci set firewall.Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_only_OfficeClient.enabled='1'
+uci set firewall.Allow_only_OfficeWebClient.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_Only_WebClient1.enabled='1'
+uci set firewall.Allow_Only_WebClient2.enabled='1'
+uci set firewall.Allow_Only_WebClient3.enabled='1'
+uci set firewall.Allow_Only_WebClient4.enabled='1'
+uci set firewall.Allow_Only_WebClient5.enabled='1'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
+set_HS_Firewall_disable() {
+uci set firewall.OfficeClient.enabled='0'
+uci set firewall.OfficeWebClient.enabled='0'
+uci set firewall.Amazon_Alexa.enabled='0'
+uci set firewall.Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_only_OfficeClient.enabled='0'
+uci set firewall.Allow_only_OfficeWebClient.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_Only_WebClient1.enabled='0'
+uci set firewall.Allow_Only_WebClient2.enabled='0'
+uci set firewall.Allow_Only_WebClient3.enabled='0'
+uci set firewall.Allow_Only_WebClient4.enabled='0'
+uci set firewall.Allow_Only_WebClient5.enabled='0'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
+
 define_variables
 ask_parameter
 set_tor
