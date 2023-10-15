@@ -3448,6 +3448,7 @@ uci set wireless.wifinet1.device='radio0'
 uci set wireless.wifinet1.mode='ap'
 uci set wireless.wifinet1.network='HCONTROL'
 uci set wireless.wifinet1.key=$WIFI_PASS
+
 uci delete wireless.wifinet2
 uci set wireless.wifinet2=wifi-iface
 uci set wireless.wifinet2.ssid=$VOICE_ssid
@@ -3456,6 +3457,7 @@ uci set wireless.wifinet2.mode='ap'
 uci set wireless.wifinet2.network='VOICE'
 uci set wireless.wifinet2.key=$WIFI_PASS
 uci set wireless.wifinet2.encryption='psk2'
+
 uci delete wireless.wifinet3
 uci set wireless.wifinet3=wifi-iface
 uci set wireless.wifinet3.ssid=$INET_ssid
@@ -3464,6 +3466,7 @@ uci set wireless.wifinet3.device='radio0'
 uci set wireless.wifinet3.mode='ap'
 uci set wireless.wifinet3.network='INET'
 uci set wireless.wifinet3.key=$WIFI_PASS
+
 uci delete wireless.wifinet4
 uci set wireless.wifinet4=wifi-iface
 uci set wireless.wifinet4.ssid=$ENTERTAIN_ssid
@@ -3472,6 +3475,7 @@ uci set wireless.wifinet4.device='radio0'
 uci set wireless.wifinet4.mode='ap'
 uci set wireless.wifinet4.network='ENTERTAIN'
 uci set wireless.wifinet4.key=$WIFI_PASS
+
 uci delete wireless.wifinet5
 uci set wireless.wifinet5=wifi-iface
 uci set wireless.wifinet5.ssid=$SERVER_ssid
@@ -3480,6 +3484,7 @@ uci set wireless.wifinet5.device='radio0'
 uci set wireless.wifinet5.mode='ap'
 uci set wireless.wifinet5.network='REPEATER'
 uci set wireless.wifinet5.key=$WIFI_PASS
+
 uci delete wireless.wifinet6
 uci set wireless.wifinet6=wifi-iface
 uci set wireless.wifinet6.ssid=$GUEST_ssid
@@ -3488,6 +3493,7 @@ uci set wireless.wifinet6.device='radio0'
 uci set wireless.wifinet6.mode='ap'
 uci set wireless.wifinet6.network='GUEST'
 uci set wireless.wifinet6.key=$WIFI_PASS
+
 uci set wireless.radio1=wifi-device
 uci set wireless.radio1.type='mac80211'
 uci set wireless.radio1.channel='36'
@@ -3495,6 +3501,7 @@ uci set wireless.radio1.hwmode='11a'
 uci set wireless.radio1.path='platform/soc/a800000.wifi'
 uci set wireless.radio1.htmode='VHT80'
 uci set wireless.radio1.country='DE'
+
 uci delete wireless.default_radio1
 uci set wireless.default_radio1=wifi-iface
 uci set wireless.default_radio1.device='radio1'
@@ -3503,6 +3510,7 @@ uci set wireless.default_radio1.key=$WIFI_PASS
 uci set wireless.default_radio1.ssid=$VOICE_ssid
 uci set wireless.default_radio1.encryption='psk2'
 uci set wireless.default_radio1.network='VOICE'
+
 uci delete wireless.wifinet7
 uci set wireless.wifinet7=wifi-iface
 uci set wireless.wifinet7.ssid=$INET_ssid
@@ -3511,6 +3519,7 @@ uci set wireless.wifinet7.device='radio1'
 uci set wireless.wifinet7.mode='ap'
 uci set wireless.wifinet7.network='INET'
 uci set wireless.wifinet7.key=$WIFI_PASS
+
 uci delete wireless.wifinet8
 uci set wireless.wifinet8=wifi-iface
 uci set wireless.wifinet8.ssid=$ENTERTAIN_ssid
@@ -3519,6 +3528,7 @@ uci set wireless.wifinet8.device='radio1'
 uci set wireless.wifinet8.mode='ap'
 uci set wireless.wifinet8.network='ENTERTAIN'
 uci set wireless.wifinet8.key=$WIFI_PASS
+
 uci delete wireless.wifinet9
 uci set wireless.wifinet9=wifi-iface
 uci set wireless.wifinet9.device='radio1'
@@ -3527,6 +3537,7 @@ uci set wireless.wifinet9.ssid=$SERVER_ssid
 uci set wireless.wifinet9.encryption='psk2'
 uci set wireless.wifinet9.key=$WIFI_PASS
 uci set wireless.wifinet9.network='REPEATER'
+
 uci delete wireless.wifinet10
 uci set wireless.wifinet10=wifi-iface
 uci set wireless.wifinet10.encryption='psk2'
@@ -3535,6 +3546,7 @@ uci set wireless.wifinet10.mode='ap'
 uci set wireless.wifinet10.key=$WIFI_PASS
 uci set wireless.wifinet10.network='GUEST'
 uci set wireless.wifinet10.ssid=$GUEST_ssid
+
 uci delete wireless.wifinet11
 uci set wireless.wifinet11=wifi-iface
 uci set wireless.wifinet11.encryption=''
@@ -3801,12 +3813,12 @@ uci set dhcp.HCONTROL.limit='250'
 uci set dhcp.HCONTROL.leasetime='24h'
 uci set dhcp.HCONTROL.domain=$HCONTROL_domain
 uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
-#uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
-uci add_list dhcp.HCONTROL.dhcp_option='6,'$INET_GW
+uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
+#uci add_list dhcp.HCONTROL.dhcp_option='6,'$INET_GW
 uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
 uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
-uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_UNBOUND_port
+uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_Relay_port
 uci set dhcp.HCONTROL.force='1'
 
 uci set dhcp.CONTROL=dhcp
@@ -3822,12 +3834,12 @@ uci set dhcp.CONTROL.limit='250'
 uci set dhcp.CONTROL.leasetime='24h'
 uci set dhcp.CONTROL.domain=$CONTROL_domain
 uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
-#uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip 
-uci add_list dhcp.CONTROL.dhcp_option='6,'$INET_GW
+uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip 
+#uci add_list dhcp.CONTROL.dhcp_option='6,'$INET_GW
 uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
 uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.CONTROL.dhcp_option='15,'$HONTROL_domain
-uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_UNBOUND_port
+uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
+uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_Relay_port
 uci set dhcp.CONTROL.force='1'
 
 uci set dhcp.INET=dhcp
@@ -3843,12 +3855,12 @@ uci set dhcp.INET.limit='250'
 uci set dhcp.INET.leasetime='24h'
 uci set dhcp.INET.domain=$HCONTROL_domain
 uci set dhcp.INET.local='/'$HCONTROL_domain'/'
-#uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
-uci add_list dhcp.INET.dhcp_option='6,'$INET_GW
+uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
+#uci add_list dhcp.INET.dhcp_option='6,'$INET_GW
 uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
 uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
-uci set dhcp.INET.server=$INET_ip'#'$DNS_UNBOUND_port
+uci set dhcp.INET.server=$INET_ip'#'$DNS_Relay_port
 uci set dhcp.INET.force='1'
 
 uci set dhcp.SERVER=dhcp
@@ -3864,12 +3876,12 @@ uci set dhcp.SERVER.limit='250'
 uci set dhcp.SERVER.leasetime='24h'
 uci set dhcp.SERVER.domain=$SERVER_domain
 uci set dhcp.SERVER.local='/'$SERVER_domain'/'
-#uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
-uci add_list dhcp.SERVER.dhcp_option='6,'$INET_GW
+uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
+#uci add_list dhcp.SERVER.dhcp_option='6,'$INET_GW
 uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
 uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
-uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
+uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_Relay_port
 uci set dhcp.SERVER.force='1'
 
 uci set dhcp.VOICE=dhcp
@@ -3885,12 +3897,12 @@ uci set dhcp.VOICE.limit='250'
 uci set dhcp.VOICE.leasetime='24h'
 uci set dhcp.VOICE.domain=$VOICE_domain
 uci set dhcp.VOICE.local='/'$VOICE_domain'/'
-#uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
-uci add_list dhcp.VOICE.dhcp_option='6,'$INET_GW
+uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
+#uci add_list dhcp.VOICE.dhcp_option='6,'$INET_GW
 uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
 uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.VOICE.dhcp_option='15,'$HVOICE_domain
-uci set dhcp.VOICE.server=$VOICEL_ip'#'$DNS_UNBOUND_port
+uci set dhcp.VOICE.server=$VOICEL_ip'#'$DNS_Relay_port
 uci set dhcp.VOICE.force='1'
 
 uci set dhcp.ENTERTAIN=dhcp
@@ -3906,12 +3918,12 @@ uci set dhcp.ENTERTAIN.limit='250'
 uci set dhcp.ENTERTAIN.leasetime='24h'
 uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
 uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
-#uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
-uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$INET_GW
+uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
+#uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$INET_GW
 uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
 uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
-uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_UNBOUND_port
+uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_Relay_port
 uci set dhcp.ENTERTAIN.force='1'
 
 uci set dhcp.GUEST=dhcp
@@ -3927,12 +3939,12 @@ uci set dhcp.GUEST.limit='250'
 uci set dhcp.GUEST.leasetime='24h'
 uci set dhcp.GUEST.domain=$GUEST_domain
 uci set dhcp.GUEST.local='/'$GUEST_domain'/'
-#uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
-uci add_list dhcp.GUEST.dhcp_option='6,'$INET_GW
+uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
+#uci add_list dhcp.GUEST.dhcp_option='6,'$INET_GW
 uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
 uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
-uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
+uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_Relay_port
 uci set dhcp.GUEST.force='1'
 
 uci set dhcp.CMOVIE=dhcp
@@ -3948,12 +3960,12 @@ uci set dhcp.CMOVIE.limit='250'
 uci set dhcp.CMOVIE.leasetime='24h'
 uci set dhcp.CMOVIE.domain=$CMOVIEGUEST_domain
 uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
-#uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
-uci add_list dhcp.CMOVIE.dhcp_option='6,'$INET_GW
+uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
+#uci add_list dhcp.CMOVIE.dhcp_option='6,'$INET_GW
 uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
 uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
 uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
-uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
+uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_Relay_port
 uci set dhcp.CMOVIE.force='1'
 
 uci commit && reload_config
