@@ -27704,7 +27704,7 @@ create_wlan
 view_config
 
 #set_dhcp
-#set_firewall_rules
+set_firewall_rules
 #set_mountpoints
 
 clear
