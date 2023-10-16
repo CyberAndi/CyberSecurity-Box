@@ -4703,6 +4703,14 @@ curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&sho
 
 #uci delete network.@device[0] >/dev/null
 
+uci set network.lan=interface >/dev/null
+uci set network.lan.device='br-lan'
+uci set network.lan.proto='static'
+uci set network.lan.ipaddr='192.168.1.1'
+uci set network.lan.netmask='255.255.255.0'
+uci set network.lan.ip6assign='60'
+uci set network.lan.dns=$WAN_GW
+
 uci set network.loopback=interface
 uci set network.loopback.device='lo'
 uci set network.loopback.ifname='lo'
