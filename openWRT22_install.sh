@@ -4686,7 +4686,7 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-uci -q delete network.lan
+#uci -q delete network.lan
 
 cat << EOF > /etc/hosts
 127.0.0.1 localhost
@@ -4701,7 +4701,7 @@ EOF
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound_ad_servers
 
-uci delete network.@device[0] >/dev/null
+#uci delete network.@device[0] >/dev/null
 
 uci set network.loopback=interface
 uci set network.loopback.device='lo'
@@ -5917,34 +5917,34 @@ uci commit dhcp && reload_config >/dev/null
 }
 
 set_dhcp() {
-uci -q delete dhcp >/dev/null
-#uci delete dhcp.odhcpd >/dev/null
-uci delete dhcp.BlacklistSERVER >/dev/null
-uci delete dhcp.BlacklistHCONTROL >/dev/null
-uci delete dhcp.BlacklistCONTROL >/dev/null
-uci delete dhcp.BlacklistINET >/dev/null
-uci delete dhcp.WhitelistVOICE >/dev/null
-uci delete dhcp.WhitelistENTERTAIN >/dev/null
-uci delete dhcp.WhitelistGUEST >/dev/null
-uci delete dhcp.WhitelistCMOVIE >/dev/null
-uci delete dhcp.SERVER >/dev/null
-uci delete dhcp.HCONTROL >/dev/null
-uci delete dhcp.CONTROL >/dev/null
-uci delete dhcp.INET >/dev/null
-uci delete dhcp.VOICE >/dev/null
-uci delete dhcp.ENTERTAIN >/dev/null
-uci delete dhcp.GUEST >/dev/null
-uci delete dhcp.CMOVIE >/dev/null
-uci delete dhcp.Blacklist>/dev/null
-uci delete dhcp.Whitelist >/dev/null
-uci delete dhcp.lan >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci commit dhcp >/dev/null
+#uci -q delete dhcp >/dev/null
+##uci delete dhcp.odhcpd >/dev/null
+#uci delete dhcp.BlacklistSERVER >/dev/null
+#uci delete dhcp.BlacklistHCONTROL >/dev/null
+#uci delete dhcp.BlacklistCONTROL >/dev/null
+#uci delete dhcp.BlacklistINET >/dev/null
+#uci delete dhcp.WhitelistVOICE >/dev/null
+#uci delete dhcp.WhitelistENTERTAIN >/dev/null
+#uci delete dhcp.WhitelistGUEST >/dev/null
+#uci delete dhcp.WhitelistCMOVIE >/dev/null
+#uci delete dhcp.SERVER >/dev/null
+#uci delete dhcp.HCONTROL >/dev/null
+#uci delete dhcp.CONTROL >/dev/null
+#uci delete dhcp.INET >/dev/null
+#uci delete dhcp.VOICE >/dev/null
+#uci delete dhcp.ENTERTAIN >/dev/null
+#uci delete dhcp.GUEST >/dev/null
+#uci delete dhcp.CMOVIE >/dev/null
+#uci delete dhcp.Blacklist>/dev/null
+#uci delete dhcp.Whitelist >/dev/null
+#uci delete dhcp.lan >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci commit dhcp >/dev/null
 
 uci set dhcp.Blacklist=dnsmasq
 uci set dhcp.Blacklist.domainneeded='1'
