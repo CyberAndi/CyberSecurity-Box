@@ -4272,7 +4272,7 @@ echo '########################################################'
 echo '#                                                      #'
 echo '#                 CyberSecurity-Box                    #'
 echo '#                                                      #'
-echo '#                  Tor Definitions                     #'
+echo '#                 dnsmasq Url-Filter                   #'
 echo '#                                                      #'
 echo '########################################################'
 view_config
@@ -24946,11 +24946,21 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 }
+
 set_unbound() {
 mkdir /etc/unbound/unbound.conf.d >/dev/null
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >/dev/null
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
+cat << EOF > /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+
+::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
 
 uci set unbound.ub_main=unbound
 uci set unbound.ub_main.enabled='1'
