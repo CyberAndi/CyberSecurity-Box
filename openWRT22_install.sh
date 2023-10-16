@@ -1157,6 +1157,9 @@ echo
 #sichere alte Konfiguration
 echo Sichere alte Konfiguration
 iptables-save > rules.v4_old_$datum.bkp
+
+wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.png -P /www/luci-static/bootstrap/
+
 }
 
 set_theme() {
