@@ -29903,14 +29903,14 @@ customize_firmware
 set_theme
 #create_websites
 
-#create_network
+create_network
 create_switch
 #create_custom_switch
 create_wlan
 create_firewall_zones
 view_config
 
-#set_dhcp
+set_dhcp
 set_firewall_rules
 #set_mountpoints
 
