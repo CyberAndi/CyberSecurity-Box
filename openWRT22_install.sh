@@ -27686,11 +27686,11 @@ view_config
 customize_firmware
 #create_websites
 
-create_network
+#create_network
 create_switch
 #create_custom_switch
 create_wlan
-create_firewall_zones
+#create_firewall_zones
 view_config
 
 #set_dhcp
