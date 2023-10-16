@@ -2329,13 +2329,13 @@ uci commit network && reload_config >/dev/null
 
 dig www.internic.net @1.1.1.1
 
-
-uci set firewall.@zone[0]=zone
-uci set firewall.@zone[0].name="REPEATER"
-uci set firewall.@zone[0].input="ACCEPT"
-uci set firewall.@zone[0].network="REPEATER"
-uci set firewall.@zone[0].output="ACCEPT"
-uci set firewall.@zone[0].forward="ACCEPT"
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="REPEATER"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].network="REPEATER"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 uci commit firewall >/dev/null
 uci add firewall forwarding >/dev/null
@@ -27700,7 +27700,7 @@ customize_firmware
 create_switch
 #create_custom_switch
 create_wlan
-#create_firewall_zones
+create_firewall_zones
 view_config
 
 #set_dhcp
