@@ -1401,7 +1401,7 @@ body {
 
 #maincontent {
 	width: 100%;
-	max-width: 940px;
+	max-width: 1024px;
 	margin-left: auto;
 	margin-right: auto;
 	backdrop-filter: blur(3.5px) !important;
@@ -1409,7 +1409,9 @@ body {
 	border-radius: 0.5em !important;
 	border: 0.5px solid rgba(128,128,128,0.5);
 	padding: 0px 5px;
-	zoom:1
+	overflow-wrap: break-word;
+	overflow-x: auto;
+	zoom: 1;
 	}
 
 a {
@@ -1958,7 +1960,7 @@ header a {
 }
 
 header .brand:hover,header ul .active > a {
-	background-color: rgba(255,255,255,0.05);
+	background-color: rgba(32,32,32,0.75);
 	color: #fff;
 	text-decoration: none
 }
@@ -2008,7 +2010,8 @@ header p {
 
 .nav a:hover {
 	color: #fff;
-	text-decoration: none
+	text-decoration: none;
+ 	background: rgba(32,32,32,0.75);
 }
 
 .nav .active > a {
@@ -2158,7 +2161,10 @@ a.menu:after {
 }
 
 .tabs > li:not(.active):hover,.cbi-tabmenu > .cbi-tab-disabled:hover {
-	background: linear-gradient(var(--tab-inactive-hover-background-color) 90%,var(--tab-inactive-border-color) 100%)
+	--focus-color-rgb: 82,168,0;
+	background: linear-gradient(var(--tab-inactive-hover-background-color) 90%,var(--tab-inactive-border-color) 100%);
+	border-color: rgba(var(--focus-color-rgb),0.8)!important;
+	box-shadow: inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
 }
 
 .tabs > li:not(.active),.cbi-tabmenu > .cbi-tab-disabled {
