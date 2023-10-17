@@ -1166,8 +1166,7 @@ set_theme() {
 cat << EOF > /www/luci-static/bootstrap/cascade.css
 
 :root {
-	--background-image: url(
-	CyberSecurity-Box.png);
+	--background-image: url(CyberSecurity-Box.png);
 	--background-color-delta-l-sign: -1;
 	--background-color-h: 0;
 	--background-color-s: 0%;
@@ -2235,10 +2234,19 @@ a.menu:after {
 	padding: 0 5px
 }
 
+div#view div:has(> svg) {
+	background-color: rgba(32,32,32,0.7) !important;
+}
+
 footer {
 	padding-top: 17px;
-	margin-top: auto;
-	border-top: 1px solid var(--border-color-low);
+	margin-top: 0.5em;
+ 	margin-bottom: -5px !important;
+	margin-left: 0px;
+	margin-right: 0px;
+	background-color: rgba(32,32,32,0.5);
+	backdrop-filter: blur(3.5px);
+ 	border-top: 1px solid var(--border-color-low);
 	display: flex;
 	flex-wrap: wrap;
 	align-items: baseline;
