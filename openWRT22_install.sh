@@ -1164,64 +1164,96 @@ wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/Cybe
 
 set_theme() {
 cat << EOF > /www/luci-static/bootstrap/cascade.css
+
 :root {
-	--background-image: url(CyberSecurity-Box.png);
+	--background-image: url(
+	CyberSecurity-Box.png);
 	--background-color-delta-l-sign: -1;
 	--background-color-h: 0;
 	--background-color-s: 0%;
 	--background-color-l: 100%;
-	--background-color-high-hsl: var(--background-color-h),var(--background-color-s),var(--background-color-l);
-	--background-color-high: hsl(var(--background-color-high-hsl));
-	--background-color-medium-hsl: var(--background-color-h),var(--background-color-s),calc(var(--background-color-l) + var(--background-color-delta-l-sign) * calc(6 / 255 * 100%));
-	--background-color-medium: hsl(var(--background-color-medium-hsl));
-	--background-color-low-hsl: var(--background-color-h),var(--background-color-s),calc(var(--background-color-l) + var(--background-color-delta-l-sign) * calc(10 / 255 * 100%));
-	--background-color-low: hsl(var(--background-color-low-hsl));
+	--background-color-high-hsl: var(
+	--background-color-h),var(--background-color-s),var(--background-color-l);
+	--background-color-high: hsl(var(
+	--background-color-high-hsl));
+	--background-color-medium-hsl: var(
+	--background-color-h),var(--background-color-s),calc(var(--background-color-l) + var(--background-color-delta-l-sign) * calc(6 / 255 * 100%));
+	--background-color-medium: hsl(var(
+	--background-color-medium-hsl));
+	--background-color-low-hsl: var(
+	--background-color-h),var(--background-color-s),calc(var(--background-color-l) + var(--background-color-delta-l-sign) * calc(10 / 255 * 100%));
+	--background-color-low: hsl(var(
+	--background-color-low-hsl));
 	--text-color-delta-l-sign: 1;
 	--text-color-h: 0;
 	--text-color-s: 0%;
 	--text-color-l: 0%;
-	--text-color-highest-hsl: var(--text-color-h),var(--text-color-s),var(--text-color-l);
-	--text-color-highest: hsl(var(--text-color-highest-hsl));
-	--text-color-high-hsl: var(--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(64 / 255 * 100%));
-	--text-color-high: hsl(var(--text-color-high-hsl));
-	--text-color-medium-hsl: var(--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(128 / 255 * 100%));
-	--text-color-medium: hsl(var(--text-color-medium-hsl));
-	--text-color-low-hsl: var(--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(191 / 255 * 100%));
-	--text-color-low: hsl(var(--text-color-low-hsl));
+	--text-color-highest-hsl: var(
+	--text-color-h),var(--text-color-s),var(--text-color-l);
+	--text-color-highest: hsl(var(
+	--text-color-highest-hsl));
+	--text-color-high-hsl: var(
+	--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(64 / 255 * 100%));
+	--text-color-high: hsl(var(
+	--text-color-high-hsl));
+	--text-color-medium-hsl: var(
+	--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(128 / 255 * 100%));
+	--text-color-medium: hsl(var(
+	--text-color-medium-hsl));
+	--text-color-low-hsl: var(
+	--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(191 / 255 * 100%));
+	--text-color-low: hsl(var(
+	--text-color-low-hsl));
 	--border-color-delta-l-sign: -1;
-	--border-color-h: var(--background-color-h);
-	--border-color-s: var(--background-color-s);
-	--border-color-l: var(--background-color-l);
-	--border-color-high-hsl: var(--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(51 / 255 * 100%));
-	--border-color-high: hsl(var(--border-color-high-hsl));
-	--border-color-medium-hsl: var(--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(34 / 255 * 100%));
-	--border-color-medium: hsl(var(--border-color-medium-hsl));
-	--border-color-low-hsl: var(--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(17 / 255 * 100%));
-	--border-color-low: hsl(var(--border-color-low-hsl));
+	--border-color-h: var(
+	--background-color-h);
+	--border-color-s: var(
+	--background-color-s);
+	--border-color-l: var(
+	--background-color-l);
+	--border-color-high-hsl: var(
+	--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(51 / 255 * 100%));
+	--border-color-high: hsl(var(
+	--border-color-high-hsl));
+	--border-color-medium-hsl: var(
+	--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(34 / 255 * 100%));
+	--border-color-medium: hsl(var(
+	--border-color-medium-hsl));
+	--border-color-low-hsl: var(
+	--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(17 / 255 * 100%));
+	--border-color-low: hsl(var(
+	--border-color-low-hsl));
 	--primary-color-high: #1976d2;
 	--primary-color-medium: #1564c0;
 	--primary-color-low: #0d46a1;
-	--on-primary-color: var(--background-color-high);
+	--on-primary-color: var(
+	--background-color-high);
 	--error-color-high-rgb: 246,43,18;
-	--error-color-high: rgb(var(--error-color-high-rgb));
+	--error-color-high: rgb(var(
+	--error-color-high-rgb));
 	--error-color-medium: #e8210d;
 	--error-color-low: #d00000;
-	--on-error-color: var(--background-color-high);
+	--on-error-color: var(
+	--background-color-high);
 	--success-color-high-rgb: 0,172,89;
-	--success-color-high: rgb(var(--success-color-high-rgb));
+	--success-color-high: rgb(var(
+	--success-color-high-rgb));
 	--success-color-medium: #009a4c;
 	--success-color-low: #007936;
-	--on-success-color: var(--background-color-high);
+	--on-success-color: var(
+	--background-color-high);
 	--warn-color-high: #efbd0b;
 	--warn-color-medium: #f0c629;
 	--warn-color-low: #f2d24f;
-	--on-warn-color: var(--text-color-highest);
+	--on-warn-color: var(
+	--text-color-highest);
 	--disabled-opacity: .7;
 	color-scheme: light
 }
 
 :root[data-darkmode="true"] {
-	--background-image: url(CyberSecurity-Box.png);
+	--background-image: url(
+	CyberSecurity-Box.png);
 	--background-color-delta-l-sign: 1;
 	--background-color-h: 0;
 	--background-color-s: 0%;
@@ -1231,19 +1263,20 @@ cat << EOF > /www/luci-static/bootstrap/cascade.css
 	--text-color-s: 0%;
 	--text-color-l: 100%;
 	--border-color-delta-l-sign: 1;
-	--primary-color-high: #4da1c0;
-	--primary-color-medium: #448da6;
-	--primary-color-low: #3c7a8d;
+	--primary-color-high: #4da100;
+	--primary-color-medium: #448d00;
+	--primary-color-low: #3c7a00;
 	--error-color-high-rgb: 209,86,83;
 	--error-color-medium: #bf4e4c;
 	--error-color-low: #b14946;
-	--success-color-high-rgb: 0,166,108;
-	--success-color-medium: #00945e;
-	--success-color-low: #008252;
+	--success-color-high-rgb: 100,166,0;
+	--success-color-medium: #009400;
+	--success-color-low: #008200;
 	--warn-color-high: #a69461;
 	--warn-color-medium: #a68d45;
 	--warn-color-low: #a68732;
-	--on-warn-color: var(--background-color-high);
+	--on-warn-color: var(
+	--background-color-high);
 	--disabled-opacity: .4;
 	color-scheme: dark
 }
@@ -1350,12 +1383,13 @@ textarea {
 
 body {
 	background-color: var(--background-color-high);
-	background-image: url("CyberSecurity-Box.png");
+	background-image: var(--background-image);
 	background-repeat: no-repeat;
 	background-blend-mode: normal;
 	background-attachment: fixed;
-	background-position: top;
+	background-position: bottom;
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	text-shadow: 0.1em 0.1em 0.25em rgba(0,0,0,0.8);
 	font-size: 13px;
 	font-weight: 400;
 	line-height: 18px;
@@ -1363,7 +1397,7 @@ body {
 	min-height: 100%;
 	display: flex;
 	flex-direction: column;
-	padding: 5px
+	padding: 5px;
 }
 
 #maincontent {
@@ -1372,10 +1406,12 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	backdrop-filter: blur(3.5px) !important;
-	background-color: rgba(32,32,32,0.3) !important;
-	border-radius: 0.5rem !important;
-	/* border: 0.5px solid rgba(128,128,128,0.5); */
-	zoom:1}
+	background-color: rgba(32,32,32,0.6) !important;
+	border-radius: 0.5em !important;
+	border: 0.5px solid rgba(128,128,128,0.5);
+	padding: 0px 5px;
+	zoom:1
+	}
 
 a {
 	color: var(--primary-color-high);
@@ -1637,7 +1673,7 @@ input,select,.cbi-select,.cbi-dropdown:not(.btn):not(.cbi-button) {
 }
 
 .cbi-dynlist > .item::after {
-	content: "×";
+	content: "Ã—";
 	position: absolute;
 	display: inline-flex;
 	align-items: center;
@@ -1694,7 +1730,7 @@ input,select,.cbi-select,.cbi-dropdown:not(.btn):not(.cbi-button) {
 	top: 0;
 	right: 0;
 	bottom: 0;
-	content: "▾";
+	content: "â–¾";
 	background: linear-gradient(var(--background-color-high),var(--border-color-low));
 	pointer-events: none;
 	border-radius: 3px;
@@ -1790,11 +1826,11 @@ input[type="checkbox"].cbi-input-invalid,input[type="radio"].cbi-input-invalid {
 }
 
 .item:hover::after,.btn:hover,.btn:focus,.cbi-button:hover,.cbi-button:focus,.cbi-select.focus,.cbi-dropdown:focus,.cbi-dropdown[open],.cbi-dynlist > .item:focus,input[type="checkbox"]:focus::before,input[type="radio"]:focus::before,input:focus,button:hover,textarea:focus,select:focus {
-	--focus-color-rgb: 82,168,236;
+	--focus-color-rgb: 82,168,0;
 	outline: 0;
 	box-shadow: inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
 	text-decoration: none;
-	border-color: rgba(var(--focus-color-rgb),0.8)!important
+	border-color: rgba(var(--focus-color-rgb),0.8)!important;
 }
 
 .cbi-input-invalid:focus,.cbi-select.cbi-input-invalid,input[type="checkbox"].cbi-input-invalid:focus::before,input[type="radio"].cbi-input-invalid:focus::before {
@@ -1911,7 +1947,7 @@ header {
 	overflow: visible;
 	color: #BFBFBF;
 	display: flex;
-	background: linear-gradient(#333,#222);
+	background: linear-gradient(to bottom,rgba(9,32,0,0.9),rgba(0,16,0,0.9));
 	box-shadow: 0 1px 3px hsla(var(--border-color-low-hsl),.25),inset 0 -1px 0 hsla(var(--border-color-low-hsl),.01);
 	margin: -5px -5px 15px;
 	padding: 0 calc((100% - 940px) / 2) 0 calc((100% - 940px) / 2)
@@ -1981,11 +2017,12 @@ header p {
 }
 
 .nav a.menu:hover {
-	background: rgba(255,255,255,0.05)
+	background: rgba(32,32,32,0.75);
 }
 
 .nav .dropdown-menu {
-	background-color: #333
+	background-color: rgba(48,48,48,0.8);
+	backdrop-filter: blur(2.5px);
 }
 
 .nav .dropdown-menu li a {
@@ -1995,9 +2032,9 @@ header p {
 }
 
 .nav .dropdown-menu li a:hover {
-	background-color: #191919;
+	/* background-color: #091900; */
 	background-repeat: repeat-x;
-	background-image: linear-gradient(to bottom,#292929,#191919);
+	background-image: linear-gradient(to bottom,rgba(9,32,0,0.9),rgba(0,16,0,0.9));
 	color: #fff
 }
 
@@ -2229,6 +2266,7 @@ footer ul.breadcrumb {
 	top: 0;
 	bottom: 0;
 	background: rgba(0,0,0,0.7);
+	backdrop-filter: blur(1.5px);
 	z-index: 900;
 	overflow: auto;
 	transition: opacity .125s ease-in;
@@ -2309,13 +2347,17 @@ body.modal-overlay-active #modal_overlay {
 }
 
 .item::after,.btn,.cbi-button {
-	--default-btn-background: linear-gradient(var(--background-color-high),var(--background-color-high) 25%,var(--background-color-low));
-	--on-color: var(--text-color-high);
+	--default-btn-background: linear-gradient(var(
+	--background-color-high),var(--background-color-high) 25%,var(--background-color-low));
+	--on-color: var(
+	--text-color-high);
 	cursor: pointer;
 	display: inline-block;
 	background: var(--default-btn-background);
 	color: var(--on-color);
+	/* text-shadow: 0.15em 0.15em 0.2em rgba(233,233,233,0.5); */
 	font-size: 13px;
+	font-weight: bold;
 	line-height: 2em;
 	border: 1px solid var(--border-color-high);
 	border-radius: 4px;
@@ -2329,12 +2371,14 @@ body.modal-overlay-active #modal_overlay {
 }
 
 .cbi-button-positive,.cbi-button-fieldadd,.cbi-button-add,.cbi-button-save {
-	--on-color: var(--success-color-high);
-	border-color: var(--on-color)
+	--on-color: var(
+	--success-color-high);
+	border-color: var(--on-color);
 }
 
 .btn.primary,.cbi-button-action,.cbi-button-apply,.cbi-button-reload,.cbi-button-edit {
-	--on-color: var(--primary-color-high);
+	--on-color: var(
+	--primary-color-high);
 	border-color: var(--on-color)
 }
 
@@ -2355,7 +2399,10 @@ body.modal-overlay-active #modal_overlay {
 }
 
 .btn.primary,.cbi-button-action.important,.cbi-page-actions .cbi-button-apply,.cbi-section-actions .cbi-button-edit {
-	--on-color: var(--on-primary-color);
+	--on-color: var(
+	--on-primary-color);
+	text-shadow: 0.15em 0.15em 0.25em rgba(233,233,233,0.8);
+	text-shadow: none;
 	background: linear-gradient(var(--primary-color-medium),var(--primary-color-low));
 	border-color: var(--primary-color-high)
 }
@@ -2442,7 +2489,7 @@ body.modal-overlay-active #modal_overlay {
 	flex-grow: 1;
 	align-items: center;
 	align-self: center;
-	color: inherit
+	color: inherit;
 }
 
 .cbi-dropdown > ul.dropdown > li,.cbi-dropdown:not(.btn):not(.cbi-button) > ul > li {
@@ -2528,7 +2575,7 @@ body.modal-overlay-active #modal_overlay {
 }
 
 .cbi-title-ref::after {
-	content: "➙"
+	content: "âž™"
 }
 
 .cbi-tooltip-container {
@@ -3295,7 +3342,8 @@ label[for],header [data-indicator][data-clickable],th[data-sortable-row] {
 }
 
 li.menu,.dropdown,.cbi-dropdown[open] {
-	position: relative
+	position: relative;
+	border-radius: 0.25em;
 }
 
 .tab-content > .tab-pane,.tab-content > div,.cbi-dropdown > ul.preview,.cbi-dropdown > ul > li .hide-close,.cbi-dropdown[open] > ul.dropdown > li .hide-open,.hidden,#modemenu li:last-child span.divider {
