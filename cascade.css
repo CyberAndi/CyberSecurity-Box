@@ -1083,6 +1083,8 @@ div#view div:has(> svg) {
 }
 
 footer {
+	position: sticky;
+	bottom: 0px;
 	padding-top: 17px;
 	margin-top: 0.5em;
  	margin-bottom: -5px !important;
@@ -1303,7 +1305,8 @@ body.modal-overlay-active #modal_overlay {
 }
 
 .cbi-dropdown.btn > ul:not(.dropdown),.cbi-dropdown.cbi-button > ul:not(.dropdown) {
-	margin: 0 0 0 13px!important
+	margin: 0 0 0 13px!important;
+	text-shadow: none !important;
 }
 
 .cbi-dropdown.btn.spinning > ul:not(.dropdown),.cbi-dropdown.cbi-button.spinning > ul:not(.dropdown) {
@@ -1564,7 +1567,8 @@ button.btn::-moz-focus-inner,input[type=submit].btn::-moz-focus-inner {
 	box-shadow: 1px 1px 1px var(--border-color-low);
 	white-space: unset;
 	border-color: var(--border-color-high) var(--border-color-high) var(--border-color-low);
-	padding: .5em .5em .25em
+	padding: .5em .5em .25em;
+	text-shadow: none;
 }
 
 .alert-message .close {
@@ -1787,7 +1791,8 @@ th[data-sort-direction="desc"]::after {
 
 .ifacebox .ifacebox-head.active {
 	background: var(--primary-color-high);
-	color: var(--on-primary-color)
+	color: var(--on-primary-color);
+	text-shadow: none;
 }
 
 [data-darkmode="true"] .zonebadge[style],[data-darkmode="true"] .ifacebox-head[style] {
@@ -2179,6 +2184,7 @@ label[for],header [data-indicator][data-clickable],th[data-sortable-row] {
 .cbi-select select option:checked,.cbi-dropdown[open] > ul.dropdown > li[selected] {
 	background: var(--primary-color-medium);
 	color: var(--on-primary-color)
+	text-shadow: none;
 }
 
 ::placeholder,.breadcrumb .active a {
@@ -2222,6 +2228,10 @@ li.menu,.dropdown,.cbi-dropdown[open] {
 .network-status-table .ifacebox-body .ifacebadge > span,.uci-change-list > var > * {
 	overflow: hidden;
 	text-overflow: ellipsis
+}
+
+#mwan3-service-status {
+	text-shadow: none !important;
 }
 
 [data-tab-active="true"],.cbi-filebrowser.open {
