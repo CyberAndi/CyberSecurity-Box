@@ -1158,7 +1158,10 @@ echo
 echo Sichere alte Konfiguration
 iptables-save > rules.v4_old_$datum.bkp
 
+rm /www/luci-static/bootstrap/cascade.css
+
 wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.png -P /www/luci-static/bootstrap/
+wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/cascade.css -P /www/luci-static/bootstrap/
 
 }
 
@@ -29984,7 +29987,7 @@ create_unbound_url_filter
 create_dnsmasq_url_filter
 view_config
 customize_firmware
-set_theme
+#set_theme
 #create_websites
 
 create_network
