@@ -19,6 +19,9 @@
 [newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>.<br><br>
   Download the Installscript. It starts automatically.<br>
+  for OpenWRT Version 23.x.xx<br><br>
+  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/openWRT23_install.sh && sh openWRT23_install.sh</code></pre>
+  <br>
   for OpenWRT Version 22.x.xx<br><br>
   <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/openWRT22_install.sh && sh openWRT22_install.sh</code></pre>
   <br>
