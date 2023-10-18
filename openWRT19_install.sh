@@ -821,6 +821,7 @@ iptables-save > rules.v4_old_$datum.bkp
 set_theme() {
 cat << EOF > /www/luci-static/bootstrap/cascade.css
 
+
 :root {
 	--background-image: url(CyberSecurity-Box.png);
 	--background-color-delta-l-sign: -1;
@@ -878,9 +879,9 @@ cat << EOF > /www/luci-static/bootstrap/cascade.css
 	--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(17 / 255 * 100%));
 	--border-color-low: hsl(var(
 	--border-color-low-hsl));
-	--primary-color-high: #1976d2;
-	--primary-color-medium: #1564c0;
-	--primary-color-low: #0d46a1;
+	--primary-color-high: #197600;
+	--primary-color-medium: #156400
+	--primary-color-low: #0d4600;
 	--on-primary-color: var(
 	--background-color-high);
 	--error-color-high-rgb: 246,43,18;
@@ -1109,6 +1110,10 @@ h1,h2,h3,legend,h4,h5,h6 {
 
 h1 small,h2 small,h3 small,h4 small,h5 small,h6 small {
 	color: var(--text-color-low)
+}
+
+h1, h2, h3, .brand {
+	font-family: "OCR-A";
 }
 
 h1 {
@@ -1589,7 +1594,7 @@ input[readonly],select[readonly],textarea[readonly] {
 }
 
 .tr.drag-over-above,.tr.drag-over-below {
-	border: 2px solid #0069d6;
+	border: 2px solid #006900;
 	border-width: 2px 0 0
 }
 
@@ -1778,7 +1783,7 @@ a.menu:after {
 	--tab-inactive-text-color: hsl(var(--tab-inactive-background-color-hsl));
 	--tab-inactive-hover-background-color: var(--background-color-high);
 	--tab-active-background-color: var(--background-color-high);
-	--tab-active-text-color: #0069d6;
+	--tab-active-text-color: #006900;
 	--tab-active-border-color: var(--border-color-medium);
 	list-style: none;
 	display: flex;
@@ -1936,10 +1941,10 @@ footer ul.breadcrumb {
 	top: 0;
 	bottom: 0;
 	background: rgba(0,0,0,0.7);
-	backdrop-filter: blur(1.5px);
+	backdrop-filter: blur(2.5px);
 	z-index: 900;
 	overflow: auto;
-	transition: opacity .125s ease-in;
+	transition: opacity .25s ease-in;
 	opacity: 0;
 	visibility: hidden
 }
@@ -2721,12 +2726,12 @@ th[data-sort-direction="desc"]::after {
 
 div.cbi-value var,.td.cbi-value-field var {
 	font-style: italic;
-	color: #0069d6
+	color: #006900
 }
 
 div.cbi-value var[data-tooltip],.td.cbi-value-field var[data-tooltip],div.cbi-value var.cbi-tooltip-container,.td.cbi-value-field var.cbi-tooltip-container {
 	cursor: help;
-	border-bottom: 1px dotted #0069d6
+	border-bottom: 1px dotted #006900
 }
 
 div.cbi-value var.cbi-tooltip-container,.td.cbi-value-field var.cbi-tooltip-container .cbi-tooltip {
@@ -3049,6 +3054,12 @@ li.menu,.dropdown,.cbi-dropdown[open] {
 	transition: opacity .25s ease-in
 }
 
+.active {
+	#text-shadow: 0 0 0.25em rgba(230,230,230,0.5);
+	color: #000;
+}
+
+
 @keyframes flash {
 	50% {
 		opacity: .5
@@ -3078,6 +3089,8 @@ li.menu,.dropdown,.cbi-dropdown[open] {
 		opacity: 0
 	}
 }
+
+
 
 EOF
 }
