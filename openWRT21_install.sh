@@ -35,14 +35,18 @@ echo 'Software Packeges installed'
 echo
 }
 
-ask_parameter {
+ask_parameter() {
 release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=')
 revision=$(cat /etc/openwrt_release | grep "DISTRIB_REVISION" | cut -f2 -d '=')
 revision=${revision::-1}
 release=${release::-1}
 revision=${revision:1}
 release=${release:1}
-echo $release $revision
+echo '--------------------------------------------------------'
+echo '       Current Version ' $release, $revision
+echo '--------------------------------------------------------'
+echo 
+
 #Localaddresen
 LOCALADDRESS="127.192.0.1/10"
 
@@ -51,11 +55,15 @@ actEth=$(ifconfig | grep '^e\w*' -m 1 | cut -f1 -d ' ')
 actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
 
 #Internet Gateway
-INET_GW=$(ip route | grep default | cut -f3  -d ' ')
+if [ "$1" != "" ]  
+	then
+		INET_GW=$1
+	else
+		INET_GW=$(ip route | grep default | cut -f3  -d ' ')
+fi
 INET_GW_org=$INET_GW
 
-echo 'Please give me the WAN-IP (Gateway/Router): ('$INET_GW')'
-read INET_GW
+read -p 'Please give me the WAN-IP (Gateway/Router): ['$INET_GW'] ' INET_GW
 echo
 if [ "$INET_GW" = "" ]
 	then
@@ -71,6 +79,19 @@ WAN_broadcast=$(echo $INET_GW | cut -f1 -d '.')
 WAN_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f2 -d '.')
 WAN_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f3 -d '.')".255"
 
+WAN_MOBILE_ip=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_ip=$WAN_ip"."$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_ip=$WAN_ip"."$(echo $INET_GW | cut -f3 -d '.')".251"
+
+WAN_MOBILE_broadcast=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f3 -d '.')".255"
+
+WAN_MOBILE_GW=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_GW=$WAN_ip"."$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_GW=$WAN_ip"."$(echo $INET_GW | cut -f3 -d '.')".253"
+
+
 #complet Internet
 Internet="0.0.0.0/0"
 
@@ -82,41 +103,63 @@ all_IP6="[::]"
 ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' )
 
 #Lokal LAN
-LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
+if [ "$2" != "" ] 
+	then
+		LAN=$2
+	else
+		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
+fi
+
+if [ "$LAN" = "" ]
+        then
+                LAN='192.168.1.1'
+fi
+
 LAN_org=$LAN
 
-echo 'Type the LAN-IP (Internal Network): ('$LAN')'
-read LAN
-if [ "$LAN" = "" ]  
-	then
-		LAN=$LAN_org
+read -p 'Type the LAN-IP (Internal Network): ['$( echo $LAN )'] ' LAN
+if [ "$LAN" = "" ]
+        then
+                LAN=$LAN_org
 fi
 
-LOCAL_DOMAIN='CyberSecBox.local'
+if [ "$3" != "" ] 
+	then
+		LOCAL_DOMAIN_org=$3
+	else
+		LOCAL_DOMAIN_org='CyberSecBox.local'
+fi
 echo
-echo 'Your local Domain of your LAN? (CyberSecBox.local)'
-read LOCAL_DOMAIN
+read -p  'Your local Domain of your LAN? [CyberSecBox.local] ' LOCAL_DOMAIN
 if [ "$LOCAL_DOMAIN" = "" ]
 	then
-		LOCAL_DOMAIN='CyberSecBox.local'
+		LOCAL_DOMAIN=$LOCAL_DOMAIN_org
 fi
 
-WIFI_SSID='CyberSecBox'
+if [ "$4" != "" ]  
+	then
+		WIFI_SSID=$4
+	else
+		WIFI_SSID='CyberSecBox'
+fi
 WIFI_SSID_org=$WIFI_SSID
 echo
-echo 'The Main-WiFi-SSID? ('$WIFI_SSID')'
-read WIFI_SSID
+read -p 'The Main-WiFi-SSID? ['$(echo $WIFI_SSID)'] ' WIFI_SSID
 if [ "$WIFI_SSID" = "" ]
         then
                 WIFI_SSID=$WIFI_SSID_org
 fi
 
+if [ "$5" != "" ]  
+	then
+		WIFI_PASS=$5
+	else
+		WIFI_PASS='Cyber,Sec9ox'
+fi
 
-WIFI_PASS='Cyber,Sec9ox'
 WIFI_PASS_org=$WIFI_PASS
 echo
-echo 'And the WiFi-Key? (Cyber,Sec9ox)'
-read WIFI_PASS
+read -p 'And the WiFi-Key? [Cyber,Sec9ox] ' WIFI_PASS
 if [ "$WIFI_PASS" = "" ]
 	then
 		WIFI_PASS=$WIFI_PASS_org
@@ -124,8 +167,9 @@ fi
 
 USERNAME='root'
 echo
-echo 'Enter the user for the login: (default: root)'
-read -s USERNAME
+read -p 'Enter the user for the login: [root] ' -s USERNAME
+echo
+echo
 passwd $USERNAME
 
 SUBNET=$(echo $LAN | cut -f3 -d '.')
@@ -133,11 +177,12 @@ SUBNET_sep=$SUBNET
 
 if [ $SUBNET_sep -lt 125 ]
         then
-                SUBNET=$(($SUBNET + 125))
+
                 if  [ $SUBNET_sep -lt 5 ]
                         then
                                 SUBNET_sep=$(($SUBNET_sep + 6))
                 fi
+		SUBNET_sep=$(($SUBNET_sep + 125))
 
         else
                 if  [ $SUBNET_sep -gt 250 ]
@@ -147,6 +192,44 @@ if [ $SUBNET_sep -lt 125 ]
 
 fi
 
+DNS_PORT='y'
+echo
+
+read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
+if [ "$DNS_PORT" = "" ]
+        then
+               DNS_Relay_port='5353'
+        elif [ "$DNS_PORT" = "y" ] 
+		then 
+		DNS_Relay_port='5353'
+	else
+               DNS_Relay_port='9053'
+fi
+
+if [ "$6" != "" ]  
+	then
+		SECURE_RULESW=$6
+	else
+		SECURE_RULES='y'
+fi
+
+echo
+echo
+read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 SECURE_RULES
+
+if [ "$SECURE_RULES" = "" ]
+        then
+             FW_HSactive='1'
+             set_HS_Firewall
+        elif [ "$SECURE_RULES" = "y" ]
+                then
+		FW_HSactive='1'
+                set_HS_Firewall
+        else
+              FW_HSactive='0'
+              set_HS_Firewall_disable
+fi
+
 SERVER_range='192.168.'$(($SUBNET_sep - 123))'.2,192.168.'$(($SUBNET_sep - 123))'.200,24h'
 CONTROL_range='192.168.'$(($SUBNET_sep - 119))'.2,192.168.'$(($SUBNET_sep - 119))'.200,24h'
 HCONTROL_range='192.168.'$(($SUBNET_sep - 118))'.2,192.168.'$(($SUBNET_sep - 118))'.200,24h'
@@ -154,6 +237,7 @@ INET_range='192.168.'$SUBNET_sep'.2,192.168.'$SUBNET_sep'.200,24h'
 VOICE_range='192.168.'$(($SUBNET_sep + 1))'.2,192.168.'$(($SUBNET_sep + 1))'.200,24h'
 ENTERTAIN_range='192.168.'$(($SUBNET_sep - 1))'.2,192.168.'$(($SUBNET_sep - 1))'.200,24h'
 GUEST_range='192.168.'$(($SUBNET_sep + 10))'.2,192.168.'$(($SUBNET_sep + 10))'.200,24h'
+CMOVIE_range='192.168.'$(($SUBNET_sep + 9))'.2,192.168.'$(($SUBNET_sep + 9))'.200,24h'
 
 SERVER_ip='192.168.'$(($SUBNET_sep - 123))'.254'
 CONTROL_ip='192.168.'$(($SUBNET_sep - 119))'.254'
@@ -162,6 +246,7 @@ INET_ip='192.168.'$SUBNET_sep'.1'
 VOICE_ip='192.168.'$(($SUBNET_sep + 1))'.1'
 ENTERTAIN_ip='192.168.'$(($SUBNET_sep - 1))'.1'
 GUEST_ip='192.168.'$(($SUBNET_sep + 10))'.1'
+CMOVIE_ip='192.168.'$(($SUBNET_sep + 9))'.1'
 
 SERVER_broadcast='192.168.'$(($SUBNET_sep - 123))'.255'
 CONTROL_broadcast='192.168.'$(($SUBNET_sep - 119))'.255'
@@ -170,6 +255,7 @@ INET_broadcast='192.168.'$SUBNET_sep'.255'
 VOICE_broadcast='192.168.'$(($SUBNET_sep + 1))'.255'
 ENTERTAIN_broadcast='192.168.'$(($SUBNET_sep - 1))'.255'
 GUEST_broadcast='192.168.'$(($SUBNET_sep + 10))'.255'
+CMOVIE_broadcast='192.168.'$(($SUBNET_sep + 9))'.255'
 
 SERVER_lan='192.168.'$(($SUBNET_sep - 123))'.0'
 CONTROL_lan='192.168.'$(($SUBNET_sep - 119))'.0'
@@ -178,6 +264,7 @@ INET_lan='192.168.'$SUBNET_sep'.0'
 VOICE_lan='192.168.'$(($SUBNET_sep + 1))'.0'
 ENTERTAIN_lan='192.168.'$(($SUBNET_sep - 1))'.0'
 GUEST_lan='192.168.'$(($SUBNET_sep + 10))'.0'
+CMOVIE_lan='192.168.'$(($SUBNET_sep + 9))'.0'
 
 SERVER_net=$SERVER_ip'/24'
 CONTROL_net=$CONTROL_ip'/24'
@@ -186,7 +273,9 @@ INET_net=$INET_ip'/24'
 VOICE_net=$VOICE_ip'/24'
 ENTERTAIN_net=$ENTERTAIN_ip'/24'
 GUEST_net=$GUEST_ip'/24'
+CMOVIE_net=$CMOVIE_ip'/24'
 WAN_net=$WAN_ip'/24'
+WAN_MOBILE_net=$WAN_MOBILE_ip'/24'
 
 SERVER_domain='server.'$LOCAL_DOMAIN
 CONTROL_domain='control.'$LOCAL_DOMAIN
@@ -195,6 +284,7 @@ INET_domain='inet.'$LOCAL_DOMAIN
 VOICE_domain='voice.local'
 ENTERTAIN_domain='entertain.local'
 GUEST_domain='guest.local'
+CMOVIE_domain='cmovie.local'
 
 
 SERVER_ssid='DMZ-'$WIFI_SSID
@@ -204,8 +294,13 @@ INET_ssid='iNet-'$WIFI_SSID
 VOICE_ssid='Voice-'$WIFI_SSID
 ENTERTAIN_ssid='Entertain-'$WIFI_SSID
 GUEST_ssid='Guest-'$WIFI_SSID
+CMOVIE_ssid='Free_CMovie_Portal'
 Adversisment_ssid='Telekom'
+
+clear
+view_config
 }
+
 
 define_variables {
 
