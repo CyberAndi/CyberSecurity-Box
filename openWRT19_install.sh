@@ -5178,7 +5178,7 @@ fi
 
 if [ "$LAN" = "" ]
         then
-                LAN='192.168.75.254'
+                LAN='192.168.1.1'
 fi
 
 LAN_org=$LAN
@@ -5264,12 +5264,12 @@ echo
 read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
 if [ "$DNS_PORT" = "" ]
         then
-               DNS_Relay_port=$DNS_UNBOUND_port
+               DNS_Relay_port='5353'
         elif [ "$DNS_PORT" = "y" ] 
 		then 
-		DNS_Relay_port=$DNS_UNBOUND_port
+		DNS_Relay_port='5353'
 	else
-               DNS_Relay_port=$DNS_TOR_port
+               DNS_Relay_port='9053'
 fi
 
 if [ "$6" != "" ]  
