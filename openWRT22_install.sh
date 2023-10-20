@@ -131,7 +131,7 @@ fi
 
 if [ "$LAN" = "" ]
         then
-                LAN='192.168.75.254'
+                LAN='192.168.1.1'
 fi
 
 LAN_org=$LAN
