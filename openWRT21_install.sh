@@ -5844,8 +5844,8 @@ NumCPUs 1
 #Nur sichere Exitnodes Benutzen
 StrictExitNodes 1 # war aktiv
 
-ExcludeNodes {AU}, {CA}, {FR}, {GB}, {NZ}, {US}, {DE}, {CH}, {JP}, {FR}, {FX}, {SE}, {DK}, {NL}, {NO}, {IT}, {ES}, {BE}, {IL}, {SG}, {KR}
-ExitNodes {LI}, {AT}, {LU}, {LT}, {LV}, {EE}, {TW}
+ExcludeNodes {AU}, {CA}, {FR}, {GB}, {NZ}, {US}, {DE}, {CH}, {JP}, {FR}, {SE}, {DK}, {NL}, {NO}, {IT}, {ES}, {BE}, {BG}, {EE}, {FI}, {GR}, {IL}, {SG}, {KR}, {HR}, {LV}, {LT}, {LU}, {MT}, {NO}, {AT}, {PL}, {PT}, {RO}, {RU}, {SE}, {SK}, {SI}, {CZ}, {HU}, {CY}, {EU}, {UM}, {HU}, {UA}, {SZ}, {FX}, {UK}, {CS}, {SH}, {SJ}, {TR}, {TA}, {RS}, {MF}, {BL}, {RE}, {MK}, {AN}, {ME}, {MY}, {HR}, {IE}, {HM}, {PF}, {GF}, {FX}, {CK}, {BA}, {AC}   
+ExitNodes {CL}, {LI}, {AT}, {LU}, {LT}, {LV}, {EE}, {TW}
 
 
 SafeSocks 1
