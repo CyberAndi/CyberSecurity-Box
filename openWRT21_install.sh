@@ -5868,6 +5868,305 @@ echo
 
 }
 
+
+create_switch() {
+uci set network.@switch[0]=switch
+uci set network.@switch[0].name='switch0'
+uci set network.@switch[0].reset='1'
+uci set network.@switch[0].enable_vlan='1'
+uci commit network >/dev/null
+
+uci set network.@switch_vlan[0]=switch_vlan
+uci set network.@switch_vlan[0].device='switch0'
+uci set network.@switch_vlan[0].vlan='101'
+uci set network.@switch_vlan[0].vid='101'
+uci set network.@switch_vlan[0].ports='0t 1t 2 3t 4t 5t'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='102'
+uci set network.@switch_vlan[-1].vid='102'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3 4t 5t'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vLan='103'
+uci set network.@switch_vlan[-1].vid='103'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='104'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='104'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='105'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='105'
+uci commit network >/dev/null
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='106'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].vid='106'
+uci commit network >/dev/null
+
+uci add network interface
+uci rename network.@interface[-1]='SWITCH_Port'
+uci commit network >/dev/null
+uci set network.SWITCH_Port.ifname='eth0'
+uci set network.SWITCH_Port.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P101'
+uci commit network >/dev/null
+uci set network.SWITCH_P101.ifname='eth0.101'
+uci set network.SWITCH_P101.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P102'
+uci commit network >/dev/null
+uci set network.SWITCH_P102.ifname='eth0.102'
+uci set network.SWITCH_P102.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P103'
+uci commit network >/dev/null
+uci set network.SWITCH_P103.ifname='eth0.103'
+uci set network.SWITCH_P103.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P104'
+uci commit network >/dev/null
+uci set network.SWITCH_P104.ifname='eth0.104'
+uci set network.SWITCH_P104.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P105'
+uci commit network >/dev/null
+uci set network.SWITCH_P105.ifname='eth0.105'
+uci set network.SWITCH_P105.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='SWITCH_P106'
+uci commit network >/dev/null
+uci set network.SWITCH_P106.ifname='eth0.106'
+uci set network.SWITCH_P106.proto='none'
+uci commit network >/dev/null
+
+uci add network interface >/dev/null
+uci rename network.@interface[-1]='REPEATER'
+uci commit network >/dev/null
+uci set network.REPEATER.proto='none'
+uci commit  && reload_config >/dev/null
+
+ 
+# Save and apply
+uci commit network && reload_config >/dev/null
+#/etc/init.d/network restart
+
+dig www.internic.net @1.1.1.1
+}
+
+create_wlan() {
+uci -q delete wireless  >/dev/null
+
+uci set wireless.radio0=wifi-device
+uci set wireless.radio0.type='mac80211'
+uci set wireless.radio0.path='platform/soc/a000000.wifi'
+uci set wireless.radio0.htmode='HT20'
+uci set wireless.radio0.country='DE'
+uci set wireless.radio0.channel='6'
+uci set wireless.radio0.hwmode='11n'
+
+uci delete wireless.default_radio0
+uci set wireless.default_radio0=wifi-iface
+uci set wireless.default_radio0.device='radio0'
+uci set wireless.default_radio0.mode='ap'
+uci set wireless.default_radio0.key=$WIFI_PASS
+uci set wireless.default_radio0.ssid=$VOICE_ssid
+uci set wireless.default_radio0.encryption='psk2'
+uci set wireless.default_radio0.network='VOICE'
+
+uci delete wireless.wifinet1
+uci set wireless.wifinet1=wifi-iface
+uci set wireless.wifinet1.ssid=$HCONTROL_ssid
+uci set wireless.wifinet1.encryption='psk2'
+uci set wireless.wifinet1.device='radio0'
+uci set wireless.wifinet1.mode='ap'
+uci set wireless.wifinet1.network='HCONTROL'
+uci set wireless.wifinet1.key=$WIFI_PASS
+
+uci delete wireless.wifinet2
+uci set wireless.wifinet2=wifi-iface
+uci set wireless.wifinet2.ssid=$CONTROL_ssid
+uci set wireless.wifinet2.device='radio0'
+uci set wireless.wifinet2.mode='ap'
+uci set wireless.wifinet2.network='CONTROL'
+uci set wireless.wifinet2.key=$WIFI_PASS
+uci set wireless.wifinet2.encryption='psk2'
+
+uci delete wireless.wifinet3
+uci set wireless.wifinet3=wifi-iface
+uci set wireless.wifinet3.ssid=$INET_ssid
+uci set wireless.wifinet3.encryption='psk2'
+uci set wireless.wifinet3.device='radio0'
+uci set wireless.wifinet3.mode='ap'
+uci set wireless.wifinet3.network='INET'
+uci set wireless.wifinet3.key=$WIFI_PASS
+
+uci delete wireless.wifinet4
+uci set wireless.wifinet4=wifi-iface
+uci set wireless.wifinet4.ssid=$ENTERTAIN_ssid
+uci set wireless.wifinet4.encryption='psk2'
+uci set wireless.wifinet4.device='radio0'
+uci set wireless.wifinet4.mode='ap'
+uci set wireless.wifinet4.network='ENTERTAIN'
+uci set wireless.wifinet4.key=$WIFI_PASS
+
+uci delete wireless.wifinet5
+uci set wireless.wifinet5=wifi-iface
+uci set wireless.wifinet5.ssid=$SERVER_ssid
+uci set wireless.wifinet5.encryption='psk2'
+uci set wireless.wifinet5.device='radio0'
+uci set wireless.wifinet5.mode='ap'
+uci set wireless.wifinet5.network='REPEATER'
+uci set wireless.wifinet5.key=$WIFI_PASS
+
+uci delete wireless.wifinet6
+uci set wireless.wifinet6=wifi-iface
+uci set wireless.wifinet6.ssid=$GUEST_ssid
+uci set wireless.wifinet6.encryption='psk2'
+uci set wireless.wifinet6.device='radio0'
+uci set wireless.wifinet6.mode='ap'
+uci set wireless.wifinet6.network='GUEST'
+uci set wireless.wifinet6.key=$WIFI_PASS
+
+uci set wireless.radio1=wifi-device
+uci set wireless.radio1.type='mac80211'
+uci set wireless.radio1.channel='36'
+uci set wireless.radio1.hwmode='11a'
+uci set wireless.radio1.path='platform/soc/a800000.wifi'
+uci set wireless.radio1.htmode='VHT80'
+uci set wireless.radio1.country='DE'
+
+uci delete wireless.default_radio1
+uci set wireless.default_radio1=wifi-iface
+uci set wireless.default_radio1.device='radio1'
+uci set wireless.default_radio1.mode='ap'
+uci set wireless.default_radio1.key=$WIFI_PASS
+uci set wireless.default_radio1.ssid=$VOICE_ssid
+uci set wireless.default_radio1.encryption='psk2'
+uci set wireless.default_radio1.network='VOICE'
+
+uci delete wireless.wifinet7
+uci set wireless.wifinet7=wifi-iface
+uci set wireless.wifinet7.ssid=$INET_ssid
+uci set wireless.wifinet7.encryption='psk2'
+uci set wireless.wifinet7.device='radio1'
+uci set wireless.wifinet7.mode='ap'
+uci set wireless.wifinet7.network='INET'
+uci set wireless.wifinet7.key=$WIFI_PASS
+
+uci delete wireless.wifinet8
+uci set wireless.wifinet8=wifi-iface
+uci set wireless.wifinet8.ssid=$ENTERTAIN_ssid
+uci set wireless.wifinet8.encryption='psk2'
+uci set wireless.wifinet8.device='radio1'
+uci set wireless.wifinet8.mode='ap'
+uci set wireless.wifinet8.network='ENTERTAIN'
+uci set wireless.wifinet8.key=$WIFI_PASS
+
+uci delete wireless.wifinet9
+uci set wireless.wifinet9=wifi-iface
+uci set wireless.wifinet9.device='radio1'
+uci set wireless.wifinet9.mode='ap'
+uci set wireless.wifinet9.ssid=$SERVER_ssid
+uci set wireless.wifinet9.encryption='psk2'
+uci set wireless.wifinet9.key=$WIFI_PASS
+uci set wireless.wifinet9.network='REPEATER'
+
+uci delete wireless.wifinet10
+uci set wireless.wifinet10=wifi-iface
+uci set wireless.wifinet10.encryption='psk2'
+uci set wireless.wifinet10.device='radio1'
+uci set wireless.wifinet10.mode='ap'
+uci set wireless.wifinet10.key=$WIFI_PASS
+uci set wireless.wifinet10.network='GUEST'
+uci set wireless.wifinet10.ssid=$GUEST_ssid
+
+uci delete wireless.radio0.disabled >/dev/null
+uci delete wireless.radio1.disabled >/dev/null
+
+uci commit  && reload_config >/dev/null
+
+echo
+echo 'Networks Settings defined'
+echo
+
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo 'Your Config is:'
+echo
+echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$INET_net
+echo
+echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$HCONTROL_net
+echo
+echo 'Voice-Assistent SSID: '$VOICE_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$VOICE_net
+echo
+echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$ENTERTAIN_net
+echo
+echo 'Server-WiFi SSID:     '$SERVER_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$SERVER_net
+echo
+echo 'IR/BT-Control SSID:   '$CONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$CONTROL_net
+echo
+echo 'Guests SSID is:       '$GUEST_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$GUEST_net
+echo
+echo
+echo
+echo 'IP-Address:           '$ACCESS_SERVER
+echo 'Gateway:              '$INET_GW
+echo 'Domain:               '$LOCAL_DOMAIN
+echo
+echo 'GUI-Access:           https://'$INET_ip':8443'
+echo 'User:                 '$USERNAME
+echo 'Password:             password'
+echo
+
+}
+
 set_tor() {
 /etc/init.d/tor stop >/dev/null
 /etc/init.d/log restart >/dev/null
