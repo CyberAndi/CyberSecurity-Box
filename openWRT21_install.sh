@@ -1051,6 +1051,126 @@ echo "variables defineds"
 echo
 }
 
+customize_firmware() {
+uci set system.@system[0]=system
+uci set system.@system[0].ttylogin='0'
+uci set system.@system[0].log_size='64'
+uci set system.@system[0].urandom_seed='0'
+uci set system.@system[0].log_proto='udp'
+uci set system.@system[0].conloglevel='1'
+uci set system.@system[0].cronloglevel='9'
+uci set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
+uci set system.@system[0].zonename='Europe/Berlin'
+uci set system.@system[0].hostname='CyberSecurity-Box'
+uci set system.@system[0].description='CyberSecurity-Box with Tor-Onion-Services'
+uci delete system.ntp.server
+uci add_list system.ntp.server=$INET_GW 
+uci add_list system.ntp.server='0.openwrt.pool.ntp.org'
+uci add_list system.ntp.server='1.pool.ntp.org'
+uci add_list system.ntp.server='2.openwrt.pool.ntp.org'
+uci add_list system.ntp.server='3.pool.ntp.org'
+uci set uhttpd.defaults.country='DE'
+uci set uhttpd.defaults.state=''
+uci set uhttpd.defaults.location='DMZ'
+uci set uhttpd.defaults.commonname=$LAN
+uci -q delete uhttpd.main.listen_http
+uci add_list uhttpd.main.listen_http="0.0.0.0:80"
+uci add_list uhttpd.main.listen_http="[::]:80"
+uci -q delete uhttpd.main.listen_https
+uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
+uci add_list uhttpd.main.listen_https="[::]:8443"
+uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
+uci set uhttpd.main.redirect_https='1'
+uci commit  && reload_config  >/dev/null
+/etc/init.d/uhttpd restart  >/dev/null
+
+echo
+echo 'Default Country-Settings'
+echo 
+
+
+echo
+echo 'https activated'
+echo
+
+cat << EOF > /etc/banner
+
+  +++         +                  +++               +++++
+ +   +        +                 +   +              +    +
++             +                 +                  +    + 
++             +                 +                  +    +
++      +   +  +++    ++   +  ++  +++    ++    ++   +++++    ++   +   +
++       + +   +  +  +  +  + +       +  +  +  +  +  +    +  +  +   + +
++        +    +  +  +++   ++        +  +++   +     +    +  +  +    +
+ +   +   +    +  +  +     +     +   +  +     +  +  +    +  +  +   + +
+  +++    +    +++    +++  +      +++    +++   ++   +++++    ++   +   +
+ 
+      local Privacy for Voice-Assistents, Smart-TVs and SmartHome 
+	   
+--------------------------------------------------------------------------
+   powered by OpenWrt $(echo $release), $(echo $revision)
+--------------------------------------------------------------------------
+
+
+EOF
+
+cat << EOF > /etc/openwrt_release
+DISTRIB_ID='CyberSecurity-Box'
+DISTRIB_RELEASE='$(echo $release)'
+DISTRIB_REVISION='$(echo $revision)'
+DISTRIB_TARGET='ipq40xx/generic'
+DISTRIB_ARCH='arm_cortex-a7_neon-vfpv4'
+DISTRIB_DESCRIPTION='CyberSecurity-Box $(echo $revision)'
+DISTRIB_TAINTS=''
+EOF
+
+
+cat << EOF > /etc/device_info
+DEVICE_MANUFACTURER='@CyberAndi'
+DEVICE_MANUFACTURER_URL='https://cyberandi.tumblr.com/'
+DEVICE_PRODUCT='CyberSecurity-Box'
+DEVICE_REVISION='v0.75'
+
+EOF
+
+cp openWRT21_install.sh /etc/openWRT_install.sh
+chmod 0755 /etc/openWRT_install.sh
+
+cat << EOF > /etc/sysupgrade.conf
+## This file contains files and directories that should
+## be preserved during an upgrade.
+
+# /etc/example.conf
+# /etc/openvpn/
+/etc/openWRT_install.sh
+/etc/banner
+/etc/device_info
+/etc/openwrt_release
+/etc/config/
+/www/
+EOF
+
+#Datum erstellen
+#actdate(date --utc --date "$1" +%F)
+datum=$(date +"%y%d%m%H%M")
+echo
+
+#sichere alte Konfiguration
+echo Sichere alte Konfiguration
+iptables-save > rules.v4_old_$datum.bkp
+
+processes=$(rm /www/luci-static/bootstrap/c*.css)
+wait $processes
+processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
+wait $processes
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/cascade.css -P /www/luci-static/bootstrap/)
+wait $processes1
+wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/custom.css -P /www/luci-static/resources/view/dashboard/css/
+
+}
+
 create_hotspotwebsite() {
 cat << EOF > test.txt 
 
@@ -5844,9 +5964,8 @@ NumCPUs 1
 #Nur sichere Exitnodes Benutzen
 StrictExitNodes 1 # war aktiv
 
-ExcludeNodes {AU}, {CA}, {FR}, {GB}, {NZ}, {US}, {DE}, {CH}, {JP}, {FR}, {SE}, {DK}, {NL}, {NO}, {IT}, {ES}, {BE}, {BG}, {EE}, {FI}, {GR}, {IL}, {SG}, {KR}, {HR}, {LV}, {LT}, {LU}, {MT}, {NO}, {AT}, {PL}, {PT}, {RO}, {RU}, {SE}, {SK}, {SI}, {CZ}, {HU}, {CY}, {EU}, {UM}, {HU}, {UA}, {SZ}, {FX}, {UK}, {CS}, {SH}, {SJ}, {TR}, {TA}, {RS}, {MF}, {BL}, {RE}, {MK}, {AN}, {ME}, {MY}, {HR}, {IE}, {HM}, {PF}, {GF}, {FX}, {CK}, {BA}, {AC}   
-ExitNodes {CL}, {LI}, {AT}, {LU}, {LT}, {LV}, {EE}, {TW}
-
+ExcludeNodes {AU}, {CA}, {FR}, {GB}, {NZ}, {US}, {DE}, {CH}, {JP}, {FR}, {SE}, {DK}, {NL}, {NO}, {IT}, {ES}, {BE}, {BG}, {EE}, {FI}, {GR}, {IL}, {SG}, {KR}, {HR}, {LV}, {LT}, {LU}, {MT}, {NO}, {AT}, {PL}, {PT}, {RO}, {RU}, {SE}, {SK}, {SI}, {CZ}, {HU}, {CY}, {EU}, {HU}, {UA}, {SZ}, {CS}, {TR}, {RS}, {MF}, {BL}, {RE}, {MK}, {ME}, {MY}, {HR}, {IE}, {PF}, {GF}, {CK}, {BA}  
+ExitNodes {CL}, {LI}, {LV}, {TW}, {AE}, {TH}, {IS}, {KW}, {PA}
 
 SafeSocks 1
 WarnUnsafeSocks 1
@@ -18537,55 +18656,6 @@ uci set firewall.filter6_fwd.target="ACCEPT"
 uci commit firewall && reload_config >/dev/null
 /etc/init.d/firewall restart >/dev/null
 
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '########################################################'
-echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
-echo 'Please wait until Reboot ....'
-
 cat << "EOF" > /etc/firewall.nat6 
 iptables-save -t nat \
 | sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
@@ -18653,7 +18723,7 @@ uci commit fstab
 }
 
 #-------------------------start---------------------------------------
-define_variables >> install.log
+define_variables > install.log
 ask_parameter $1 $2 $3 $4 $5 $6
 install_update >> install.log
 #install_adguard >> install.log
@@ -18662,18 +18732,19 @@ set_stubby >> install.log
 set_unbound >> install.log
 create_unbound_url_filter >> install.log
 create_dnsmasq_url_filter >> install.log
-view_config >> install.log
+view_config
+
 customize_firmware >> install.log
 #create_websites >> install.log
 
-create_network >> install.log
-create_switch >> install.log
-create_wlan >> install.log
-create_firewall_zones >> install.log
-view_config >> install.log
+#create_network >> install.log
+#create_switch >> install.log
+#create_wlan >> install.log
+#create_firewall_zones >> install.log
+view_config
 
-set_dhcp >> install.log
-set_firewall_rules >> install.log
+#set_dhcp >> install.log
+#set_firewall_rules >> install.log
 #set_mountpoints >> install.log
 
 clear
