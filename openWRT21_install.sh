@@ -5880,7 +5880,7 @@ uci set network.@switch_vlan[0].device='switch0'
 uci set network.@switch_vlan[0].vlan='1'
 uci set network.@switch_vlan[0].vid='1'
 uci set network.@switch_vlan[0].ports='0 1 2 3 4 5t'
-uci set network.@switch_vlan[0].description='default'
+uci set network.@switch_vlan[0].description='LAN'
 uci commit network >/dev/null
 
 uci add network switch_vlan
@@ -5889,7 +5889,7 @@ uci set network.@switch_vlan[-1].vlan='101'
 uci set network.@switch_vlan[-1].vid='101'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2 3t 4t 5t'
-uci set network.@switch_vlan[-1].description='server'
+uci set network.@switch_vlan[-1].description='SERVER'
 uci commit network >/dev/null
 
 uci add network switch_vlan
@@ -5898,7 +5898,7 @@ uci set network.@switch_vlan[-1].vlan='102'
 uci set network.@switch_vlan[-1].vid='102'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1 2t 3 4t 5t'
-uci set network.@switch_vlan[-1].description='hcontrol'
+uci set network.@switch_vlan[-1].description='HCONTROL'
 uci commit network >/dev/null
 
 uci add network switch_vlan
@@ -5907,7 +5907,7 @@ uci set network.@switch_vlan[-1].vLan='103'
 uci set network.@switch_vlan[-1].vid='103'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].description='control'
+uci set network.@switch_vlan[-1].description='CONTROL'
 uci commit network >/dev/null
 
 uci add network switch_vlan
@@ -5916,7 +5916,7 @@ uci set network.@switch_vlan[-1].vlan='104'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4 5t'
 uci set network.@switch_vlan[-1].vid='104'
-uci set network.@switch_vlan[-1].description='inet'
+uci set network.@switch_vlan[-1].description='INET'
 uci commit network >/dev/null
 
 uci add network switch_vlan
@@ -5925,7 +5925,7 @@ uci set network.@switch_vlan[-1].vlan='105'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='105'
-uci set network.@switch_vlan[-1].description='voice'
+uci set network.@switch_vlan[-1].description='VOICE'
 uci commit network >/dev/null
 
 uci add network switch_vlan
@@ -5934,7 +5934,7 @@ uci set network.@switch_vlan[-1].vlan='106'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='106'
-uci set network.@switch_vlan[-1].description='entertain'
+uci set network.@switch_vlan[-1].description='ENTERTAIN'
 uci commit network >/dev/null
 
 uci add network switch_vlan
@@ -5943,7 +5943,7 @@ uci set network.@switch_vlan[-1].vlan='107'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='107'
-uci set network.@switch_vlan[-1].description='guest'
+uci set network.@switch_vlan[-1].description='GUEST'
 uci commit network >/dev/null
 
 uci add network switch_vlan
@@ -5952,7 +5952,7 @@ uci set network.@switch_vlan[-1].vlan='108'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='108'
-uci set network.@switch_vlan[-1].description='cmovie'
+uci set network.@switch_vlan[-1].description='CMOVIE'
 uci commit network >/dev/null
 
 uci add network switch_vlan
@@ -5961,7 +5961,7 @@ uci set network.@switch_vlan[-1].vlan='110'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='110'
-uci set network.@switch_vlan[-1].description='t-online'
+uci set network.@switch_vlan[-1].description='T-ONLINE'
 uci commit network >/dev/null
 
 uci add network interface
@@ -5976,7 +5976,7 @@ uci rename network.@interface[-1]='SWITCH_P101'
 uci commit network >/dev/null
 uci set network.SWITCH_P101.ifname='eth0.101'
 uci set network.SWITCH_P101.proto='none'
-uci set network.@switch_vlan[-1].description='server'
+uci set network.SWITCH_P101.description='SERVER'
 uci commit network >/dev/null
 
 uci add network interface >/dev/null
@@ -5984,7 +5984,7 @@ uci rename network.@interface[-1]='SWITCH_P102'
 uci commit network >/dev/null
 uci set network.SWITCH_P102.ifname='eth0.102'
 uci set network.SWITCH_P102.proto='none'
-uci set network.SWITCH_P102.description='hcontrol'
+uci set network.SWITCH_P102.description='HCONTROL'
 uci commit network >/dev/null
 
 uci add network interface >/dev/null
@@ -5992,7 +5992,7 @@ uci rename network.@interface[-1]='SWITCH_P103'
 uci commit network >/dev/null
 uci set network.SWITCH_P103.ifname='eth0.103'
 uci set network.SWITCH_P103.proto='none'
-uci set network.SWITCH_P103.description='comtrol'
+uci set network.SWITCH_P103.description='CONTROL'
 uci commit network >/dev/null
 
 uci add network interface >/dev/null
@@ -6000,7 +6000,7 @@ uci rename network.@interface[-1]='SWITCH_P104'
 uci commit network >/dev/null
 uci set network.SWITCH_P104.ifname='eth0.104'
 uci set network.SWITCH_P104.proto='none'
-uci set network.SWITCH_P104.description='inet'
+uci set network.SWITCH_P104.description='INET'
 uci commit network >/dev/null
 
 uci add network interface >/dev/null
@@ -6008,7 +6008,7 @@ uci rename network.@interface[-1]='SWITCH_P105'
 uci commit network >/dev/null
 uci set network.SWITCH_P105.ifname='eth0.105'
 uci set network.SWITCH_P105.proto='none'
-uci set network.SWITCH_P105.description='voice'
+uci set network.SWITCH_P105.description='VOICE'
 uci commit network >/dev/null
 
 uci add network interface >/dev/null
@@ -6016,7 +6016,7 @@ uci rename network.@interface[-1]='SWITCH_P106'
 uci commit network >/dev/null
 uci set network.SWITCH_P106.ifname='eth0.106'
 uci set network.SWITCH_P106.proto='none'
-uci set network.SWITCH_P106.description='entertain'
+uci set network.SWITCH_P106.description='ENTERTAIN'
 uci commit network >/dev/null
 
 uci add network interface >/dev/null
@@ -6024,7 +6024,7 @@ uci rename network.@interface[-1]='SWITCH_P107'
 uci commit network >/dev/null
 uci set network.SWITCH_P107.ifname='eth0.107'
 uci set network.SWITCH_P107.proto='none'
-uci set network.SWITCH_P107.description='guest'
+uci set network.SWITCH_P107.description='GUEST'
 uci commit network >/dev/null
 
 uci add network interface >/dev/null
@@ -6032,7 +6032,7 @@ uci rename network.@interface[-1]='SWITCH_P108'
 uci commit network >/dev/null
 uci set network.SWITCH_P108.ifname='eth0.108'
 uci set network.SWITCH_P108.proto='none'
-uci set network.SWITCH_P108.description='cmovie'
+uci set network.SWITCH_P108.description='CMOVIE'
 uci commit network >/dev/null
 
 uci add network interface >/dev/null
@@ -6040,7 +6040,7 @@ uci rename network.@interface[-1]='SWITCH_P110'
 uci commit network >/dev/null
 uci set network.SWITCH_P110.ifname='eth0.110'
 uci set network.SWITCH_P110.proto='none'
-uci set network.SWITCH_P110.description='t-online'
+uci set network.SWITCH_P110.description='T-ONLINE'
 uci commit network >/dev/null
 
 # Save and apply
@@ -22277,7 +22277,7 @@ clear
 
 }
 
-create_firewall_zoes() {
+create_firewall_zones() {
 uci add firewall zone >/dev/null
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="REPEATER"
