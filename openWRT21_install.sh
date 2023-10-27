@@ -22506,9 +22506,9 @@ uci add_list dhcp.@dnsmasq[0].notinterface='br-GUEST'
 uci add_list dhcp.@dnsmasq[0].notinterface='br-ENTERTAIN'
 uci add_list dhcp.@dnsmasq[0].notinterface='br-CMOVIE'
 uci add_list dhcp.@dnsmasq[0].notinterface='br-INET'
-uci add_list dhcp.@dnsmasq[0].interface='br-HCONTROL'
-uci add_list dhcp.@dnsmasq[0].interface='br-CONTROL'
-uci add_list dhcp.@dnsmasq[0].interface='br-SERVER'
+uci add_list dhcp.@dnsmasq[0].notinterface='br-HCONTROL'
+uci add_list dhcp.@dnsmasq[0].notinterface='br-CONTROL'
+uci add_list dhcp.@dnsmasq[0].notinterface='br-SERVER'
 
 uci set dhcp.Blacklist=dnsmasq
 uci set dhcp.Blacklist.domainneeded='1'
@@ -25285,7 +25285,7 @@ view_config
 customize_firmware >> install.log
 #create_websites >> install.log
 
-#create_network >> install.log
+create_network >> install.log
 create_switch >> install.log
 create_wlan >> install.log
 create_firewall_zones >> install.log
