@@ -1178,6 +1178,28 @@ mkdir /www/redirect
 mkdir /www/CaptivePortal
 mkdir /www/generate_204
 mkdir /www/CaptivePortal/pic
+
+
+wait $processes
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/index.htm -P /www/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/captiveportal.htm -O /www/CaptivePortal/index.htm)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/theme.css -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/theme_variable.css -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/ -A .jpg, .png -P /www/CaptivePortal/pic/)
+
+}
+
+create_hotspot_test() {
+
+mkdir /www/router
+mkdir /www/redirect
+mkdir /www/CaptivePortal
+mkdir /www/generate_204
+mkdir /www/CaptivePortal/pic
 echo
 
 cat << EOF > /www/index.html
