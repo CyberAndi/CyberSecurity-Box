@@ -22501,6 +22501,7 @@ set_dhcp() {
 #uci delete dhcp.@dnsmasq[-1] >/dev/null
 #uci commit dhcp >/dev/null
 
+uci add_list dhcp.@dnsmasq[0].interface='br-lan'
 uci add_list dhcp.@dnsmasq[0].notinterface='br-VOICE'
 uci add_list dhcp.@dnsmasq[0].notinterface='br-GUEST'
 uci add_list dhcp.@dnsmasq[0].notinterface='br-ENTERTAIN'
@@ -25111,6 +25112,14 @@ uci set firewall.Allow_Only_WebClient4.dest_port="$all_other_OfficeWebClient_por
 
 
 uci set firewall.Allow_Only_WebClient5=rule
+uci set firewall.Allow_Only_WebClient5.src='LAN'
+uci set firewall.Allow_Only_WebClient5.dest='wan'
+uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_GUEST'
+uci set firewall.Allow_Only_WebClient5.target='REJECT'
+uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
+
+
+uci set firewall.Allow_Only_WebClient5=rule
 uci set firewall.Allow_Only_WebClient5.src='ENTERTAIN'
 uci set firewall.Allow_Only_WebClient5.dest='wan'
 uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_ENTERTAIN'
@@ -25289,7 +25298,7 @@ create_network >> install.log
 create_switch >> install.log
 create_wlan >> install.log
 create_firewall_zones >> install.log
-create_MWAN >> install.log
+#create_MWAN >> install.log
 view_config
 
 set_dhcp >> install.log
