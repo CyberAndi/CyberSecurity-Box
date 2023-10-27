@@ -1171,6 +1171,4094 @@ wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/cust
 
 }
 
+create_hotspot() {
+
+mkdir /www/router
+mkdir /www/redirect
+mkdir /www/CaptivePortal
+mkdir /www/generate_204
+mkdir /www/CaptivePortal/pic
+echo
+
+cat << EOF > /www/index.html
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+	<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+			<meta http-equiv="refresh" content="20; URL=CaptivePortal/index.htm" />
+		</head>
+		<body style="background-color: black">
+			<a style="color: #008800; font-family: arial, helvetica, sans-serif" href="cgi-bin/luci/" >
+				LuCI - Lua Configuration Interface
+			</a>
+		</body>
+	</html>
+
+EOF
+
+echo
+echo writes Redirect
+echo
+cat << EOF > /www/CaptivePortal/theme_variable.css
+
+:root {
+	--acceptBgColor: linear-gradient(to left bottom, rgba(0,128,0,0.8), rgba(0,128,0,0.1));
+	--activeView: -10;
+	--adjust: 100%;
+	--alertBgColor: var(--lightRed);
+	--alertColor: var(--lightRed);
+	--alertRed: #cc0000;
+	--alertTop: 3em;
+	--AnswerBoxBg: var(--lightRed);
+	--animiImage: url('pic/Corona_2.svg');
+	--animiStartPosX: 0;
+	--animiStartPosY: 0;
+	--animiStartPosZ: 0;
+	--animiStartPerspective: 150px;
+	--animiStopPosX: 0;
+	--animiStopPosY: 0;
+	--animiStopPosZ: 0;
+	--animiStopPerspective: 7000px;
+	--animiTransformStyle: preserve-3d;
+	--appearance: none;
+	--aspectRatio: 16/9;
+	--aspectRatioLT: 16/6.7467;
+	--autoHeight: auto;
+	--autoTop: auto;
+	--bgBlur: blur(2.5px);
+	--bgLight: rgba(238,238,238,0.75);
+	--bgGradientDark: linear-gradient(to bottom, rgba(16,96,0,0.8), rgba(16,96,0,0.7), rgba(16,96,0,0));
+	--bgGradientDiagDark: linear-gradient(to top right, rgba(16,96,0,0.8), rgba(16,96,0,0.7), rgba(16,96,0,0));
+	--bgGradientDiagLight: linear-gradient(to bottom left, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+	--bgGradientDiagLightActive: linear-gradient(to top right, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+	--bgGradientLight: linear-gradient(to right, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+	--bgGradientLightActive: linear-gradient(to top, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
+	--bgModal: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.3), rgba(0,0,0,1) );
+	--bgPosFixed: fixed;
+	--bgTransparent: transparent;
+	--bgRepeate: no-repeat;
+	--bibleTextTransition: 0.75s;
+	--bibleTextDisplay: block;
+	--bibleTextHidden: none;
+	--bibleTextImageDisplay: inline-block;
+	--bibleImageShadow: 0.1em 0.1em 0.125em rgb(0 0 0 / 50%), 0 0 0.05em rgba(0, 0, 0, 0.25);
+	--blackColor: #000000;
+	--bookTextColor: #201000;
+	--bookBGColor: #ffeed8;
+	--blackGradient: radial-gradient(rgba(0,0,0,.3), rgba(0,0,0,1));
+	--blackTrans: rgba(0,0,0,0.5);
+	--blockBgColor: linear-gradient(to bottom left, rgba(224,224,0,0.8), rgba(224,224,0,0.1));
+	--blueGradient: radial-gradient(rgba(47, 121,160,.3), rgba(47, 121,160,1));
+	--blueGradient3: radial-gradient(rgba(47, 121,160,1), rgba(47, 121,160,0.15));
+	--blueGradientRight: linear-gradient(to right, rgba(17,17,17,.9), var(--colorBlueMid));
+	--blueGradientLeft: linear-gradient(to left, var(--colorBlueTrans), var(--colorBlue));
+	--blueScrollPic: rgba(94,149,183,.4);
+	--bookBGImage: linear-gradient(to right,rgba(135,100,0,1),  rgba(135,100,0,0.1), rgba(135,100,0,0.1), rgba(135,100,0,0.1), rgba(135,100,0,0.1), rgba(135,100,0,1));
+	--bookFont: var(--fontBook);
+	--borderDark: 1px solid #000000;
+	--borderColorDark: rgba(81,81,81,0.6);
+	--borderColorDark: var(--buttonBorderColorDark);
+	--borderColorLight: var(--borderLight);
+	--borderColorMiddle: rgba(128,128,128,0.6);
+	--borderColorMiddle: var(--buttonBorderColorMiddle);
+	--borderDark: 0.75px solid rgba(81,81,81,0.6);
+	--borderLoader: 2px solid rgb(32,128,0);
+	--borderLoader2: 7px solid #aaaaaa;
+	--borderLoaderRadius: 50%;
+	--borderLoaderTop: 7px solid rgb(32,128,0);
+	--borderMiddle: 0.75px solid rgba(128,128,128,0.6);
+	--borderNone: 1px solid #44cc00;
+	--borderRadius: 5px;
+	--borderRadiusNone: 0;
+	--borderRadiusNormal: 7px;
+	--borderRadiusSmall: 3px;
+	--borderRadiusTouch: 15px;
+	--borderSelect: 1px solid #cccccc;
+	--borderTerminal: 2px solid rgba(68,204,0,0.5);
+	--boxBg: rgba(128,128,128,0.6);
+	--boxBgDrk: rgba(48,48,48,0.85);
+	--boxBgDrkGreen: rgba(0,48,0,0.85);
+	--boxBgImage: linear-gradient(to bottom left, rgba(128,128,128,0.8), rgba(128,128,128,0.1));
+	--boxBgLgtDrk: rgba(81,81,81,0.6);
+	--boxBgLight: rgba(204,204,204,0.85);
+	--boxBgLightGreen: rgba(0,204,0,0.6);
+	--boxBgMidGreen: rgba(68,136,68,0.85);
+	--boxBGView: 49;
+	--boxHighLightBorder: rgba(0,224,0,0.9)!important; 
+	--boxHighLightBorder: rgba(82,236,168,0.9)!important; 
+	--boxHighLightShadow: inset 0 1px 3px rgb(0 0 0 / 10%), 0 0 8px rgb(0 224 0 / 60%);
+	--boxPadding: 1em 1.5em;
+	--boxShadow: 0.25em 0.25em 0.5em var(--blackTrans);
+	--boxShadow: 0.2em 0.2em 0.5em rgba(0,0,0,0.7), 0 0 0.05em #000000;
+	--boxShadow2: -0.5em 0.95em 0.5em rgba(0, 0, 0, 0.6);
+	--boxSizeingNorm: content-box;
+	--boxSizeingBorder: border-box;
+	--boxView: 50;
+	--bsLogoHeight: 51;
+	--buttonBorderColorDark: rgba(81,81,81,0.6);
+	--buttonBorderColorMiddle: rgba(128,128,128,0.6);
+	--buttonBorderDark: 0.75px solid rgba(81,81,81,0.6);
+	--buttonBorderMiddle: 0.75px solid rgba(128,128,128,0.6);
+	--buttonBorderMiddle: 0.75px solid rgba(128,128,128,0.6);
+	--buttonBoxHeight: 2.1vw;
+	--buttonColorNorm: rgba(0,0,0,0.35);
+	--buttonColorSelect: rgba(224,0,0,0.75);
+	--buttonColorDark: var(--fontDark);
+	--buttonColorLight: var(--fontLight);
+	--buttonColorStd: rgba(000,113,000,0.75);
+	--buttonHeight: 16px;
+	--buttonFloat: right;
+	--buttonHeightTouch: 60px;
+	--buttonTop: -.05em;
+	--buttonRight: 0em;
+	--buttonPadding: 0 0em 0.25em 0.5em;
+	--buttonCursor: pointer;
+	--canLeft: 60%;
+	--canSize: 30em;
+	--centerMargin: auto;
+	--centerPos: 50%;
+	--colorBlueTrans: rgba(47, 121,160,.3);
+	--colorBlue: rgba(47, 121,160,1);
+	--colorBlueMid: rgba(94,149,183,0.8);
+	--colorBlueDrk: rgba(7, 81,120,1);
+	--colorBlueLgth: rgba(107, 181,220,1);
+	--colorDrkGrey: rgba(17,17,17,0.75);
+	--colorDrkGreyTrans: rgba(17,17,17,0.25);
+	--colorLgtGrey: #eeeeee;
+	--configHeight: var(--menuHeight);
+	--configLableMax: var(--popupMaxWidth);
+	--configLableMin: var(--popupMinWidth);
+	--configMax: 40em;
+	--configMin: 6em;
+	--cursorHand: pointer;
+	--cursorWait: wait;
+	--containerBibleTextWidth: 80vw;
+	--default: 0em;
+	--defaultValue: unset;
+	--devColor: #ff0000;
+	--devColorTrans: rgba(255,0,0,0.25);
+	--devColor1: #880000;
+	--devColor1Trans: rgba(128,0,0,0.25);
+	--devColor2: #008800;
+	--devColor2Trans: rgba(0,128,0,0.25);
+	--devColor3: #00ff00;
+	--devColor3Trans: rgba(0,255,0,0.25);
+	--devColor4: #000088;
+	--devColor4Trans: rgba(0,0,128,0.25);
+	--devColor5: #0000ff;
+	--devColor5Trans: rgba(0,0,255,0.25);
+	--devColor6: #888800;
+	--devColor6Trans: rgba(128,128,0,0.25);
+	--devColor7: #ffff00;
+	--devColor7Trans: rgba(255,255,0,0.25);
+	--devColorBG: #AA00AA;
+	--devColorBGTrans: rgba(172,0,172,0.25);
+	--devColorOverL: #AAAAAA;
+	--devColorOverLTrans: rgba(172,172,172,0.25);
+	--displayNone: none;
+	--displayBlock: block;
+	--displayInlineBlock: inline-block;
+	--drk-bg: #000000;
+	--drkGreen: #004400;
+	--blueGradient: radial-gradient(rgba(47, 121,160,.3), rgba(47, 121,160,1));
+	--blueGradient2: radial-gradient(rgba(94,149,183,.3), rgba(94,149,183,1));
+	--blueTransparent: rgba(47, 121,160, 0.75);
+	--dropBgColor: linear-gradient(to bottom left, rgba(224,0,0,0.8), rgba(224,0,0,0.1));
+	--dropShadow: var(--boxShadow);
+	--factorHDVideo: 56.25;
+	--factorHDVideoVW: var(--factorHDVideo) + 'vw';
+	--factorLetterBoxSmallVideo: 37.5;
+	--factorLetterBoxSmallVideoVW: var(--factorLetterBoxSmallVideo) + 'vw';
+	--factorLetterBoxVideo: 48.92;
+	--factorLetterBoxVideoVW: var(--factorLetterBoxVideo) + 'vw';
+	--fillHeadHeight: var(--lineBoxHeadHeight);
+	--flowLeft: left;
+	--flowRight: right;
+	--focusShadow: 0 0 0.15em var(--colorBlueMid);
+	--footerHeight: calc(var(--fontSizeEm) * 2);
+	--fontActiveShadow: var(--fontShadow);
+	--fontBigShadow: -0.25em 0.425em 0.25em rgba(0, 0, 0, 0.6);
+	--fontBold: bold;
+	--fontDark: #222222;
+	--fontLight: #cccccc;
+	--fontNormal: normal;
+	--fontSelectShadow: -0.125em 0.2125em 0.125em rgba(224, 224, 224, 0.6);
+	--fontShadow: 0.2em 0.2em 0.5em rgb(0 0 0 / 75%), 0 0 0.2em #000000;
+	--fontSize: 1.2831vw;
+	--fontSizeEm: 16px;
+	--fontSizeButton: var(--fontSizeSmall);
+	--fontSizeHead: var(--fontSizeNorm);
+	--fontSizeHead1: 2.370816vw;
+	--fontSizeHead2: 1.97568vw;
+	--fontSizeHead3: 1.6464vw;
+	--fontSizeHelp: var(--fontSizeXXSmall);
+	--fontSizeIfBox: var(--fontSizeXSmall);
+	--fontSizeIfBoxHead: var(--fontSizeSmall);
+	--fontSizeLabel: 1.15248vw; 
+	--fontSizeLabel: var(--fontSizeXSmall);
+	--fontSizeMenu: var(--fontSizeSmall);
+	--fontSizeMobile: 1.6vw;
+	--fontSizeNorm: 1.4vw;
+	--fontSizeSmall: 1.1662vw;
+	--fontSizeTable: var(--fontSizeXSmall);
+	--fontSizeXSmall: 1.029vw;
+	--fontSizeXXSmall: 0.8232vw;
+	--fontWeight: 650;
+	--fontTerminal: var(--mainColor);
+	--fontXDrk: var(--drk-bg);
+	--fontXLight: var(--lightColor);
+	--fontBook: "Times New Roman", Times, serif;
+	--footerHeight: 1.5em;
+	--footerBGColor: linear-gradient(to left,rgba(17,17,17,.9), var(--colorBlueMid));
+	--forwardBgColor: linear-gradient(to left bottom, rgba(0,255,0,0.8), rgba(0,255,0,0.1));
+	--fwStateDynWidth: 260px;
+	--gray: #444444;
+	--halfTransparent: 0.8;
+	--headerBgColor: rgba(0,0,0,0.8);
+	--headerBGImage: url("pic/CMovie.svg"), var(--blueGradientRight);
+	--headerBGImageSmall: var(--blueGradientRight);
+	--headerBGSize: 10%, auto;
+	--headerBGSizeSmall: auto;
+	--headerBGPosX: 7%, 0px;
+	--headerBGPosXBig: 10%, 0px;
+	--headerBGPosY: 55%, 0px;
+	--headerBGPosXSmall: 0px;
+	--headerBGPosYSmall: 0px;
+	--headerBoxHeight: var(--lineBoxHeadHeight);
+	--headerBoxItem: var(--lineBoxHeadHeight);
+	--headerH1: "Willkommen bei C&grave;Movie dem Hoffnungsportal";
+	--headerH1Small: "C&grave;Movie das Hoffnungsportal";
+	--headerH3: "Der Gegenpol zu Chaos und Panik seitens der Medien und Politik";
+	--headerH3Small: "Der Gegenpol zu Chaos und Panik";
+	--headerHeight: var(--lineHeadHeight);
+	--headerHeight: calc(var(--fontSizeEm) * 9.5);
+	--headerHeightLarge: calc(var(--fontSizeEm) * 9.5);
+	--headerHeightSmall: calc(var(--fontSizeEm) * 4.5);
+	--headerItem: var(--lineHeadHeight);
+	--headerAlign: center;
+	--headerTop: -1em;
+	--headerTopH3: -0.4em;
+	--headerLineHeight: 1.2;
+	--headFont: var(--mainFont);
+	--heightTerm: 31em;
+	--hidden: none;
+	--hoverView: 10;
+	--hyphens: auto;
+	--inlineVisible: inline-block;
+	--inpBoxWidth: 210px;
+	--inpFill-bg: var(--lightGray);
+	--inpFocus-bg: #ffffcc;
+	--inpHeight: var(--mainTextHeight);
+	--inpMarginTop: 0.75em;
+	--inpPadding: 0.25em 0.5em;
+	--inpTxt: #0000aa;
+	--inputShadow: inset 1px 1px 3px rgba(0,0,0,0.4);
+	--infoBG: var(--bgLight);
+	--infoPosLeft: calc(50% - 225px);
+	--infoPosTop: 5em;
+	--infoMargin: auto;
+	--infoWidth: 90vw;
+	--infoMaxWidth: 450px;
+	--infoMaxHeight: 80vh;
+	--infoTextShadow: var(--textNoShadow);
+	--infoPadding: 0.25em 0.5em;
+	--infoFont: Arial, sans-serif;
+	--infoTextWidth: auto;
+	--infoImageHeight: 1em;
+	--infoFontButtonHeight: 1em;
+	--inpWidth: 92%;
+	--lastScrollY: 0;
+	--lastScrollX: 0;
+	--layer2View: 20;
+	--layer3View: 30;
+	--leftTerm: 16em;
+	--light-bg: #cccccc;
+	--lightColor: #ffffff;
+	--lightGray: #aaaaaa;
+	--lightgreen: rgb(32,128,0);
+	--lightRed: rgba(196,0,0,0.6);
+	--lightRed: rgba(224,0,0,0.75);
+	--lineBoxHeadHeight: 3.92vw;
+	--lineBoxHeight: 2.1vw;
+	--lineBoxInputHeight: var(--buttonBoxHeight);
+	--lineHeadHeight: 2.8em;
+	--lineHeight: 1.5em;
+	--lineInputHeight: var(--buttonHeight);
+	--loaderAnimation: spin 2s linear infinite;
+	--loaderPadding: 30px;
+	--loaderSize: 1.5em;
+	--loaderStartAnimation: rotate(0deg);
+	--loaderStopAnimation: rotate(360deg);
+	--logoWidth: 16.3vw;
+	--logoHeight: 8.645833vw;
+	--logoPosTop: calc(100vh - var(--logoHeight) - 16px) !important;
+	--logoPosPortraiTop: calc(var(--factorHDVideoVW) - var(--logoHeight) - 16px) !important;
+	--logoPosLeft: 0em;
+	--logoBackShadow: unset;
+	--logoShadow: var(--boxShadow);
+	--logoPic: url("pic/Title.png");
+	--logoSize: cover;
+	--logoRepeate: no-repeat;
+	--main-bg-color: var(--xDrkGreen);
+	--mainBoxTextHeight: 1.68vw;
+	--mainColor: #44cc00;
+	--mainFont: "OCR A","OCR A Std", "OCR-A","OCR-A Std",Monaco,Andale Mono,Courier New,Courier,monospace;
+	--mainHeight: 1em;
+	--mainMargin: 0;
+	--mainOverflow: hidden;
+	--mainPadding: 0;
+	--mainPadding: 1em;
+	--mainTextHeight: 1.2em;
+	--mainVisible: inline;
+	--mainZoom: 100%;
+	--maxHeight:100%;
+	--maxWidth: var(--widthMax);
+	--maxTerm: 70%;
+	--menuActiveBg: var(--bgGradientLightActive);
+	--menuActiveBorder: 1px solid rgba(0, 0, 0,0.8);
+	--menuBg: var(--bgGradientLight);
+	--menuBorder: 1px solid rgba(0,0,0,0.8);
+	--menuBottom: -1.4em;
+	--menuBoxHeight: var(--buttonBoxHeight);
+	--menuBoxMaxWidth: 13.3vw;
+	--menuBoxMinWidth: 11.2vw;
+	--menuBtn: 43;
+	--menuHeight: var(--mainTextHeight);
+	--menuHoverBg: var(--bgGradientLight);
+	--menuHoverBorder: 1px solid rgba(196,196,196,0.8);
+	--menuMargin: 0 0.5em;
+	--menuMaxWidth: 9.5em;
+	--menuMinWidth: 8em;
+	--menuPadding: 0 0.5em;
+	--menuPadding2: 0.5em 1em;
+	--menuShadow: 0 0 0.15em rgb(224 224 224 / 50%), 0.25em 0.25em 0.35em rgb(0 0 0 / 50%);
+	--menuTop: 3.5em;
+	--menuTopTop: 0.25em;
+	--menuTopLow: 6.1em;
+	--menuTopWidth: max-content;
+	--menuView: 40;
+	--midGray: #888888;
+	--minTerm: 20%;
+	--modalView: 100;
+	--msgBoxMax: 80%;
+	--msgBoxMin: 15%;
+	--msgPadding: 1em;
+	--noBorder: none;
+	--noneBorder: none;
+	--noShadow: none;
+	--noTransparent: 1;
+	--noMarginPadding: 0;
+	--opacity: 0.8;
+	--overflowAuto: auto;
+	--overflowHidden: hidden;
+	--overflowNone: none;
+	--overflowCut: clip;
+	--overflowOverlay: overlay;
+	--overflowScroll: scroll;
+	--overflowScrollTouch: touch;
+	--overflowVisible: visible;
+	--overlayDiverence: 0;
+	--overlayHeight: 0;
+	--overlayCalcHeight: 0;
+	--overlayCalcLayerHeight: 0;
+	--overlayTop: 0;
+	--overlayLayerTop: 0;
+	--overlayHeadTop: 0;
+	--overlayScreenTop: 0;
+	--overlayScreenBottom: 0;
+	--overlayBottom: 0;
+	--overlayHeadBottom: 0;
+	--overlayPos: 0;
+	--overlayPosTop: 0;
+	--overlayPosHalfTop: 0;
+	--overlayPosOverlayTop: 0;
+	--overlayPosScreenTop: 0;
+	--overlayPosBottom: 0;
+	--overlayPosHeadBottom: 0;
+	--overlayPosScreenBottom: 0;
+	--overlayPosHeadScreenBottom: 0;
+	--overlayPosOverlayBottom: 0;
+	--overlayPosHeadOverlayBottom: 0;
+	--overlayPosHeadTop: 0;
+	--overlayPosHeadHalfTop: 0;
+	--overlayPosHeadOverlayTop: 0;
+	--overlayPosHeadScreenTop: 0;
+	--overlayPositionScreenTop: 0;
+	--overlayPositionTop: 0;
+	--overlayPositionBottom: 0;
+	--overlayPositionScreenBottom: 0;
+	--overlayTransition: var(--transitionLong);
+	--overlayHeightPC: 684;
+	--overlay1HeightPC: calc(100vh - 1em);
+	--overlay2HeightPC: calc(100vh - 1em);
+	--overlay3HeightPC: calc(100vh - 1em);
+	--overlay4HeightPC: calc(100vh - 1em);
+	--overlay1TopPC: 40px;
+	--overlay2TopPC: 804px;
+	--overlay3TopPC: 1568px;
+	--overlay4TopPC: 2440px;
+	--overlayHeightPad: 684;
+	--overlay1HeightPad: 554;
+	--overlay2HeightPad: 697;
+	--overlay3HeightPad: 576;
+	--overlay4HeightPad: 697;
+	--overlayHeightWPad: 684;
+	--overlay1HeightWPad: 684;
+	--overlay2HeightWPad: 684;
+	--overlay3HeightWPad: 684;
+	--overlay4HeightWPad: 684;
+	--overlayHeightPhone: 684;
+	--overlay1HeightPhone: 280;
+	--overlay2HeightPhone: 1477;
+	--overlay3HeightPhone: 211;
+	--overlay4HeightPhone: 697px;
+	--overlayHeightWPhone: 684px;
+	--overlay1HeightWPhone: 684;
+	--overlay2HeightWPhone: 684;
+	--overlay3HeightWPhone: 684;
+	--overlay4HeightWPhone: 684;
+	--parentValue: inherit;
+	--popupActiveBg: var(--bgGradientLightActive);
+	--popupActiveBorder: var(--menuActiveBorder);
+	--popupActiveColorBg: var(--drk-bg);
+	--popupBg: var(--bgGradientDiagLight);
+	--popupBorder: var(--menuBorder);
+	--popupBorder2: 1px solid var(--xDrkGreen);
+	--popupBtn: 48;
+	--popupChildMargin: var(--mainMargin);
+	--popupChildMarginBottom: -1em;
+	--popupChildPadding: 0.5em 1em 0.5em 2em;
+	--popupHeight: 33.15em;
+	--popupHoverBg: var(--bgGradientLight);
+	--popupHoverBorder: var(--menuHoverBorder);
+	--popupHoverColorBg: var(--light-bg);
+	--popupItemBg: transparent;
+	--popupItemMargin: var(--mainMargin);
+	--popupItemPadding: var(--menuPadding);
+	--popupMarginRight: 2em;
+	--popupMarginTop: -0.5em;
+	--popupMaxWidth: 12em;
+	--popupMinWidth: 6em;
+	--popupPosleft: 1em;
+	--popupPosTop: 3em;
+	--popupView: 45;
+	--posBg: center 4.2em;
+	--posAbsolute: absolute;
+	--posRelative: relative;
+	--posFixed: fixed;
+	--posStatic: static;
+	--posSticky: sticky;
+	--posTitle: var(--mainTextHeight);
+	--progressbarBoxHeight: 2.1vw;
+	--progressbarHeight: 1.5em;
+	--repeateBg: no-repeat;
+	--ratioHDVideo: 16/9;
+	--ratioLetterBox: 16/7;
+	--screenHeight: 100vh;
+	--screenWide: 100vw;
+	--scrollTouch: touch;
+	--scrollPos: 0;
+	--scrollOpacity: var(--transparent);
+	--scrollFixOpacity: var(--noTransparent);
+	--scrollPicTransition: var(--transitionXLong);
+	--scrollPosFixTop: 0;
+	--scrollPosFixBottom: 100vh;
+	--scrollPic: 4;
+	--scrollPicImage1: url("pic/Unwetter2.jpg");
+	--scrollPicImage2: var(--animiImage);
+	--scrollPicImage3: '',var(--blueGradient);
+	--scrollPicImage4: url("pic/War.jpg");
+	--scrollPic1activeTop: var(--scrollPic1TopPC);
+	--scrollPic2activeTop: var(--scrollPic2TopPC);
+	--scrollPic3activeTop: var(--scrollPic3TopPC);
+	--scrollPic4activeTop: var(--scrollPic4TopPC);
+	--scrollPic1TopPC: 0px;
+	--scrollPic2TopPC: 764;
+	--scrollPic3TopPC: 1528;
+	--scrollPic4TopPC: 2292;
+	--scrollPicHeightPC: 764;
+	--scrollPic1HeightPC: 764;
+	--scrollPic2HeightPC: 764;
+	--scrollPic3HeightPC: 764;
+	--scrollPic4HeightPC: 764;
+	--scrollPic1TopPad: 0;
+	--scrollPic2TopPad: 634;
+	--scrollPic3TopPad: 1411;
+	--scrollPic4TopPad: 2067;
+	--scrollPicHeightPad: 777;
+	--scrollPic1HeightPad: 634;
+	--scrollPic2HeightPad: 777;
+	--scrollPic3HeightPad: 656;
+	--scrollPic4HeightPad: 777;
+	--scrollPic1TopWPad: 0;
+	--scrollPic2TopWPad: 764;
+	--scrollPic3TopWPad: 1528;
+	--scrollPic4TopWPad: 2292;
+	--scrollPicHeightWPad: 764;
+	--scrollPic1HeightWPad: 764;
+	--scrollPic2HeightWPad: 764;
+	--scrollPic3HeightWPad: 764;
+	--scrollPic4HeightWPad: 764;
+	--scrollPic1TopPhone: 0;
+	--scrollPic2TopPhone: 320;
+	--scrollPic3TopPhone: 1877;
+	--scrollPic4TopPhone: 2088;
+	--scrollPicHeightPhone: 320;
+	--scrollPic1HeightPhone: 320;
+	--scrollPic2HeightPhone: 1557;
+	--scrollPic3HeightPhone: 211;
+	--scrollPic4HeightPhone: 777;
+	--scrollPic1TopWPhone: 0;
+	--scrollPic2TopWPhone: 764;
+	--scrollPic3TopWPhone: 1528;
+	--scrollPic4TopWPhone: 2292;
+	--scrollPicHeightWPhone: 764;
+	--scrollPicSize: cover;
+	--scrollPosScreenTop: var(--scrollPos);
+	--scrollPosHeader: calc(var(--scrollPos) + var(--headerHeight));
+	--scrollPosScreenBottom: calc(var(--scrollPos) + 100vh);
+	--scrollPosFooter: calc(var(--scrollPos) + (100vh - var(--footerHeight)));
+	--scrollPosHeaderBottom: calc(var(--scrollPosScreenTop) + var(--headerHeight));
+	--scrollPosFooterTop: calc(var(--scrollPosScreenTop) + var(--screenHeight) - var(--footerHeight));
+	--scrollPic1TopVisible: calc(var(--scrollPic1activeTop) - var(--scrollPosHeader));
+	--scrollPic2TopVisible: calc(var(--scrollPic2activeTop) - var(--scrollPosHeader));
+	--scrollPic3TopVisible: calc(var(--scrollPic3activeTop) - var(--scrollPosHeader));
+	--scrollPic4TopVisible: calc(var(--scrollPic4activeTop) - var(--scrollPosHeader));
+	--scrollSnapStop: always;
+	--scrollSnapXMan: x mandatory;
+	--scrollSnapYMan: y mandatory;
+	--scrollBehaviorSmooth: smooth;
+	--scrollSnapAlign: start;
+	--selectColor: rgba(0,0,0,0.4);
+	--show: visible;
+	--sizeBg: contain;
+	--startPos: 0px;
+	--stdTerm: 25%;
+	--tableColor: var(--lightgreen);
+	--tableEven: #000000;
+	--tableFont: Courier;
+	--tableMargin: 1em;
+	--tableMarginH4: 0.75em;
+	--tableOdd: #222222;
+	--tablePadding: 0.5em;
+	--tablePaddingH4: 1.5em;
+	--tableSelect: #44cc00;
+	--tableThTop: 4.1em;
+	--terminalFont: "OCR A","OCR A Std", "OCR-A","OCR-A Std",Monaco,Andale Mono,Courier New,Courier,monospace;
+	--terminalH4Top: -0.5em;
+	--terminalMarginLeft: 0.75em;
+	--terminalMax: 65%;
+	--terminalMin: 25%;
+	--terminalPaddingH4: 1.5em;
+	--terminalSelect: text;
+	--terminalThpadding: 0.5em;
+	--terminalTop: 4.1em;
+	--terminalTopCorrect: -0.5em;
+	--textCenter: center;
+	--textDecoration: underline;
+	--textDecoNo: none;
+	--textLeft: left;
+	--textRight: right;
+	--textShadow: var(--fontShadow);
+	--textNoShadow: none;
+	--textTop: top;
+	--thikBorder: 2px;
+	--titleHeight: 7.5vw;
+	--titleTop: calc(-7.5vw + 1em);
+	--titleFontSize: 2vw;
+	--titleWidth: 82vw;
+	--titleLeft: 4.25em;
+	--titleLineHeight: 1;
+	--titleVAlign: middle;
+	--titleAlign: left;
+	--titlePadding: 1em 0.5em;
+	--topFix: sticky;
+	--topFixMoz: -moz-sticky;
+	--topFixWebkit: -webkit-sticky;
+	--topTerm: 10em;
+	--topLeft: 0;
+	--touchAction: none;
+	--transBgColor: linear-gradient(to left bottom, rgba(0,224,224,0.8), rgba(0,224,224,0.1));
+	--transDiagram: translate(-19%, -50%);
+	--transFX: display visibility width height 0.5s;
+	--translateCenter: translate(-50%, -50%);
+	--transState: translateY(-30%);
+	--transparent: 0.0;
+	--transitionXLong: 3s;
+	--transitionLong: 1.5s;
+	--transition: 1s;
+	--transitionFaster: 0.75s;
+	--transitionNone: 0.0s;
+	--transitionFast: 0.5s;
+	--transitionXFast: 0.25s;
+	--unshow: hidden;
+	--user-select: none;
+	--userSelect: none;
+	--userSelectYes: text;
+	--visible: block;
+	--whiteColor: #ffffff;
+	--whiteTrans: rgba(255,255,255,0.5);
+	--widthMax: 100%;
+	--xDrkGreen: #001000;
+	--xLightGreen: #00c100;
+	--YesNoActiveBg: linear-gradient(to top, rgba(128,128,128,1), rgba(128,128,128,0.1));
+	--YesNoActiveBorder: 1px solid rgba(128,128,128,1);
+	--YesNoBg: linear-gradient(to bottom, rgba(128,128,128,1), rgba(128,128,128,0.1));
+	--YesNoBorder: 1px solid #888888;
+	--YesNoHoverBg: linear-gradient(to top, rgba(128,128,128,1), rgba(128,128,128,0.1));
+	--YesNoHoverBorder: 1px solid rgba(255,255,255,1);
+	--YesNoPadding: 0.25em 1em 0.25em 1em;
+	--YesNoShadow: -0.25em 0.425em 0.25em rgba(0, 0, 0, 0.6);
+	--zIndexFooter: 50;
+	--zIndexHeader: 50;
+	--zIndexInfo: 55;
+	--zIndexMain: 0;
+	--zIndexMenu: 50;
+	--ticking: false;
+	--videoPlay: 0;
+	--runFade: 0;
+	--activeScroll: 0;
+	--indexPosition: 0;
+	--timer_on: 0;
+	--picDirection: 'up';
+	--swipeIn: true;
+	--swipePrev: 0;
+	--windowOrientation: '';
+	--videoHeigth: '1080px';
+	--videoWidth: '1920px';
+	--swipeIn: true;
+	--swipePrev: 0;
+}
+
+
+EOF
+echo
+echo Theme Variable
+echo
+
+cat << EOF > /www/CaptivePortal/theme.css
+
+html, body {
+	overflow-x: var(--overflowCut);
+	width: var(--screenWide);
+	#touch-action: var(--touchAction);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	-webkit-overflow-x: var(--overflowCut);
+	-moz-overflow-x: var(--overflowCut);
+	-ms-overflow-x: var(--overflowCut);
+	left: var(--topLeft);
+
+
+}
+
+body {
+	background-color: var(--drk-bg);
+	background-image: var(--blueGradient3);
+	font-family: var(--mainFont);
+	color: var(--colorLgtGrey);
+	background-repeat: var(--repeateBg);
+	background-attachment: var(--bgPosFixed);
+	-webkit-text-size-adjust: var(--adjust);
+	-moz-text-size-adjust: var(--adjust);
+	-ms-text-size-adjust: var(--adjust);
+	text-size-adjust: var(--adjust);
+	width: var(--screenWide) !important;
+	height: var(--screenHeight) !important;
+	display: var(--displayBlock) !important;
+	padding: var(--noMarginPadding);
+	margin: var(--noMarginPadding);
+	text-shadow: var(--fontShadow);
+	overflow: var(--overflowHidden);
+	-webkit-overflow-x: var(--overflowHidden);
+	-moz-overflow-x: var(--overflowHidden);
+	-ms-overflow-x: var(--overflowHidden);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	left: var(--topLeft);
+	z-index: 0;
+}
+
+body * {
+	box-sizing: var(--boxSizeingBorder) ;
+	/*overflow-x: var(--overflowCut);
+	-webkit-overflow-x: var(--overflowCut);
+	-moz-overflow-x: var(--overflowCut);
+	-ms-overflow-x: var(--overflowCut);*/
+	/*touch-action: var(--touchAction);*/
+	-webkit-overflow-x-scrolling: var(--overflowNone);
+	-webkit-overflow-y-scrolling: var(--overflowAuto);
+	text-size-adjust: var(--adjust);
+	-webkit-text-size-adjust: var(--adjust);
+	-moz-text-size-adjust: var(--adjust);
+	-ms-text-size-adjust: var(--adjust);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	-webkit-overflow-scrolling: var(--overflowScrollTouch);
+}
+
+:is(#impressum, #datenschutz, #haftung, #Screen) .Info {
+	border-radius: var(--borderRadius);
+	background-color: var(--infoBG);
+	backdrop-filter: var(--bgBlur);
+	color: var(--colorDrkGrey);
+	position: var(--posFixed);
+	margin: var(--infoMargin);
+	display: var(--displayBlock);
+	top: var(--infoPosTop);
+	left: var(--infoPosLeft);
+	width: var(--infoWidth);
+	text-shadow: var(--infoTextShadow);
+	box-sizing: var(--boxSizeingNorm);
+	max-width: var(--infoMaxWidth);
+	border: var(--borderDark);
+	max-height: var(--infoMaxHeight);
+	overflow-y: var(--overflowHidden);
+	overflow-x: var(--overflowHidden); 
+	box-shadow: var(--boxShadow);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 55;
+}
+
+:is(#impressum, #datenschutz, #haftung, #Screen) > .Info > .InfoText{
+	margin: var(--noMarginPadding);
+	padding: var(--infoPadding);
+	overflow-y: var(--overflowAuto);
+	overflow-x: var(--overflowHidden); 
+	width: var(--infoTextWidth);
+	max-height: var(--infoMaxHeight);
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+	z-index: 55;
+}
+
+:is(#impressum, #datenschutz, #haftung, #Screen) a{ 
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+:is(#impressum, #datenschutz, #haftung, #Screen) img{
+	display: var(--displayInlineBlock);
+	height: calc(var(--infoImageHeight) * 0.9);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	line-height: 1;
+	vertical-align: baseline;
+
+}
+
+:is(#impressum, #datenschutz, #haftung, #Screen) .buttonModal {
+	background-color: var(--buttonColorNorm);
+	font-family: var(--infoFont);
+	display: var(--displayInlineBlock);
+	color: var(--colorDrkGrey);
+	float: var(--buttonFloat);
+	font-size: var(--infoFontButtonHeight);
+	margin: var(--noMarginPadding) !important;
+	position: var(--posAbsolute);
+	top: var(--buttonTop) !important;
+	right:var(--buttonRight)!important;
+	width: var(--buttonHeight) !important;
+	height: var(--buttonHeight) !important;
+	box-sizing: var(--boxSizeingNorm);
+	padding: var(--buttonPadding);
+	border-top-right-radius: var(--borderRadius);
+	cursor: var(--buttonCursor);
+	z-index: 54;
+}
+
+:is(#impressum, #datenschutz, #haftung, #Screen) .buttonModal:hover, :is(#impressum, #datenschutz, #haftung, #Screen) .info .buttonModal:active {
+	background-color: var(--buttonColorSelect);
+	font-family: var(--infoFont);
+	display: var(--displayInlineBlock);
+	color: var(--lightColor);
+	text-decoration: var(--textDecoNo) !important;
+}
+
+#impressum:target {
+	display: var(--displayBlock);
+}
+
+#datenschutz:target {
+	display: var(--displayBlock);
+}
+
+#haftung:target {
+	display: var(--displayBlock);
+}
+
+
+
+header {
+	background-image: var(--headerBGImage);
+	background-color: var(--colorDrkGrey);
+	background-repeat: var(--repeateBg);
+	backdrop-filter: var(--bgBlur);
+	background-position-x: var(--headerBGPosX);
+	background-position-y: var(--headerBGPosY);
+	background-size: var(--headerBGSize);
+	backdrop-filter: var(--bgBlur);
+	color: var(--colorLgtGrey);
+	width: var(--maxWidth);
+	height: var(--headerHeightLarge) +'em';
+	position: var(--posFixed);
+	text-align: var(--headerAlign);
+	top: var(--headerTop);
+	margin: var(--noMarginPadding) auto;
+	display: var(--displayBlock);
+	overflow: var(--overflowHidden);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 50;
+
+}
+
+.headerText {
+	text-align: var(--headerAlign);	
+}
+
+
+.headerText h3{
+	position: var(--posRelative);
+	top: var(--headerTopH3) !important;
+	line-height: var(--headerLineHeight);
+}
+
+
+#topMenu {
+	position: var(--posFixed);
+	display: var(--displayBlock);
+	top: var(--menuTopTop) !important;
+	padding: 0.5em;
+	margin: var(--noMarginPadding) !important;
+	width: var(--menuTopWidth);
+	left: 0em;
+	text-shadow: none;
+	cursor: pointer;
+	max-height: 2.8em;
+	-webkit-overflow-x: var(--overflowCut);
+	-moz-overflow-x: var(--overflowCut);
+	-ms-overflow-x: var(--overflowCut);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	border-radius: var(--borderRadius);
+	transition: var(--transitionFast);
+	z-index: 50;
+}
+
+
+#topMenu:active, #topMenu:hover, #topMenu:focus, #topMenu:focus-within, #topMenu:focus-visible {
+	background-color: var(--colorDrkGrey);
+	box-shadow: var(--boxShadow);
+	backdrop-filter: var(--bgBlur);
+	max-height: unset;
+}
+
+
+#topMenu a, #topMenu a:hover, #topMenu a:active, #topMenu a:focus, #topMenu a:focus-within, #topMenu a:focus-visible {
+	text-decoration: var(--textDecoNo) !important;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+nav :is(a:hover, a:active, a:focus, a:focus-within, a:focus-visible) {
+	text-decoration: var(--textDecoNo);
+	color: var(--colorLgtGrey);
+	text-shadow: var(--fontShadow);
+}
+/*
+nav > ul {
+	background-color: var(--blueTransparent);
+	padding: .5em;
+	border-radius: 7px;
+}
+*/
+#topMenu:hover > ul, #topMenu:active > ul, #topMenu:focus > ul, #topMenu:focus-within > ul, #topMenu:focus-visible > ul {
+	width: 14em;
+	margin: var(--noMarginPadding);
+	visibility: var(--show);
+	height: auto;
+	background-color: var(--blueTransparent);
+	box-shadow: var(--boxShadow);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+#topMenu > ul {
+	width: 14em;
+	margin: var(--noMarginPadding);
+	margin-bottom: 0.25em;
+	visibility: collapse;
+	height: 1;
+	width: 1;
+	display:var(--displayBlock);
+	list-style-type: none;
+	padding: 0.25em 0;
+	border-radius: var(--borderRadius);
+	-webkit-overflow-x: var(--overflowCut);
+	-moz-overflow-x: var(--overflowCut);
+	-ms-overflow-x: var(--overflowCut);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 50;
+
+}
+
+#topMenu li:hover, #topMenu li:active, #topMenu li:focus, #topMenu li:focus-within, #topMenu li:focus-visible{
+	text-shadow: var(--fontShadow);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+}
+
+#topMenu li {
+	display:var(--displayBlock);
+	position: var(--posRelative);
+	margin: var(--noMarginPadding);
+	padding-left: 1em;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	border-radius: var(--borderRadius);
+}
+
+#topMenu li > ul {
+	visibility: collapse;
+	list-style-type: none;
+	height: 0em;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+}
+
+#topMenu li:hover > ul, #topMenu li:active > ul, #topMenu li:focus > ul, #topMenu li:focus-within > ul, #topMenu li:focus-visible > ul{
+	visibility: var(--show);
+	height:auto;
+	display:var(--displayInlineBlock);
+	left: -4em;
+	margin: auto var(--noMarginPadding);
+	padding-left:5em;
+	position: var(--posRelative);
+	width: 14em;
+	color: var(--lightColor);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 50;
+}
+
+.iconMenu {
+	box-shadow: var(--menuShadow);
+	background-color: var(--colorDrkGreyTrans);
+	margin: var(--noMarginPadding);
+	padding: 0.25em 0.25em 0.25em 0.5em;
+	border-radius: var(--borderRadius);
+	float: left;
+	z-index: 50;
+}
+
+.containerIcon {
+	display: var(--displayBlock);
+	height: 2em;
+	vertical-align: middle;
+	position: var(--posRelative);
+	left: -0.85em;
+	opacity: var(--noTransparent);
+	z-index: 50;
+}
+
+.iconText {
+	position: var(--posRelative);
+	top: 0.4em;
+	padding-left: 0.25em;
+	display: var(--displayInlineBlock);
+	text-shadow: var(--fontShadow);
+	z-index: 50;
+}
+
+.iconMenu div {
+	width: 1em;
+	height: 0.14em;
+	background-color: var(--colorLgtGrey);
+	margin: 0.20em 0.5em;
+	box-shadow: var(--boxShadow);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 50;
+}
+
+a {
+	text-decoration: var(--textDecoNo);
+	color: var(--parentValue);
+	opacity: var(--halfTransparent);
+	cursor: pointer !important;
+	user-select: var(--userSelect) !important;
+	-webkit-user-select: var(--userSelect) !important;
+	-moz-user-select: var(--userSelect) !important;
+
+}
+
+a:hover, a:active {
+	text-decoration: var(--textDecoration);
+	cursor: pointer !important;
+	opacity: unset;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+#Main {
+	background: unset;
+	height: var(--screenHeight) !important;
+	width: var(--screenWide) !important;
+	background-attachment: var(--bgPosFixed);
+	background-size: cover;
+	background-repeat: none;
+	box-sizing: border-box ;
+	overflow-x: var(--overflowHidden);
+	-webkit-overflow-x: var(--overflowHidden);
+	-moz-overflow-x: var(--overflowHidden);
+	-ms-overflow-x: var(--overflowHidden);
+	-webkit-overflow-x-scrolling: var(--overflowNone);
+	overflow-y: var(--overflowAuto);
+	text-size-adjust: var(--adjust);
+	-webkit-text-size-adjust: var(--adjust);
+	-moz-text-size-adjust: var(--adjust);
+	-ms-text-size-adjust: var(--adjust);
+	left: 0em !important;
+	top: 0em !important;
+	position: absolute;
+	scroll-snap-stop: always;
+	scroll-snap-type: y mandatory;
+	scroll-behavior: smooth;
+}
+
+main#start {
+	overflow-x: var(--overflowHidden);
+}
+
+cite::before, cite::after {
+	font-size: 1.5em !important;
+	display: inline-block;
+}
+
+cite::before {
+	top: 0em !important;
+}
+
+
+cite::after {
+	top: .3em !important;
+}
+
+.Title cite::before {
+	top: 0.15em !important;
+}
+ 
+.Title cite::after {
+	top: 0.85em !important;
+}
+
+
+.containerDiashow{
+	background-size: contain;
+	background-repeat: var(--repeateBg);
+	background-origin: border-box;
+	margin: var(--noMarginPadding);
+	padding: var(--noMarginPadding);
+	top: 0;
+	left: -2.5em;
+	width: var(--screenWide) !important;
+	min-height: calc(calc(var(--screenWide) / 16) * 6);
+	max-height: calc(calc(var(--screenWide) / 16) * 9);
+	overflow-x: clip !important;
+	overflow-y: clip !important;
+	-webkit-aspect-ratio: var(--aspectRatio);
+	aspect-ratio: var(--aspectRatio);
+	text-align: center;
+	position: var(--posRelative) !important;
+	-webkit-overflow-scrolling: var(--overflowScrollTouch);
+	-webkit-overflow-x: var(--overflowCut);
+	-webkit-overflow-y: var(--overflowCut);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+.containerOverlay{
+	display: var(--displayBlock);
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	scroll-behavior: smooth;
+	margin: var(--noMarginPadding);
+	padding: var(--noMarginPadding);
+	width: var(--screenWide);
+	background-attachment: var(--bgPosFixed);
+	background-size: cover;
+	background-repeat: var(--repeateBg);
+	overflow-x: clip;
+	overflow-y: auto;
+	height: var(--overlayHeightPC);
+	min-height: var(--factorLetterBoxSmallVideoVW);
+	z-index:10;
+}
+
+.containerOverlay:not(> .containerDiashow, .Diashow) {
+	text-align: center;
+	vertical-align: middle;
+	padding: 0em 2.5em 0em 2.5em !important;
+}
+
+.containerOverlay:nth-child(1) {
+	top: var(--overlay1TopPC);
+	height: var(--overlay1HeightPC);
+	position: var(--posAbsolute);
+}
+
+.containerOverlay:nth-child(2) {
+	top: -100vh;
+	height: var(--overlay2HeightPC);
+	position: var(--posRelative);
+}
+
+.containerOverlay:nth-child(3) {
+	top: var(--overlay3TopPC);
+	height: var(--overlay3HeightPC);
+	position: var(--posAbsolute);
+	overflow: var(--overflowHidden);
+}
+
+.containerOverlay:nth-child(4) {
+	top: var(--overlay4TopPC);
+	height: var(--overlay4HeightPC);
+	position: var(--posAbsolute);
+}
+
+
+.containerBibleText {
+	width: var(--containerBibleTextWidth);
+}
+
+.containerBibleText img{
+	position: var(--posRelative) !important;
+	display: var(--bibleTextImageDisplay);
+	box-shadow: var(--bibleImageShadow) !important;
+	height: 1em;
+	top: 0.25em;
+}
+
+.containerBibleText:nth-child(1){
+	display: var(--bibleTextDisplay);
+	position: var(--posAbsolute);
+	animation-name: aniBibleTxt1;
+	animation-duration: 15s;
+	animation-iteration-count: infinite;
+	visibility: var(--show);
+}	
+
+.containerBibleText:nth-child(2) {
+	display: var(--bibleTextDisplay);
+	animation-name: aniBibleTxt2;
+	animation-duration: 15s;
+	animation-iteration-count: infinite;
+	visibility: var(--unshow);
+}
+
+
+@keyframes aniBibleTxt1 {
+ 	0% {
+		opacity: var(--transparent);
+		display: var(--bibleTextHidden);
+		visibility: var(--unshow);
+  	}
+	5% {
+		opacity: var(--noTransparent);
+		display: var(--bibleTextDisplay);
+		visibility: var(--show);
+	}
+	45% {
+		opacity: var(--noTransparent);
+		display: var(--bibleTextDisplay);
+		visibility: var(--show);
+	}
+	50% {
+		opacity: var(--transparent);
+		display: var(--bibleTextHidden);
+		visibility: var(--unshow);
+
+	}
+	100% {
+		opacity: var(--transparent);
+		display: var(--bibleTextHidden);
+		visibility: var(--unshow);
+	}
+}
+
+@keyframes aniBibleTxt2 {
+	0% {
+		opacity: var(--noTransparent);
+		display: var(--bibleTextDisplay);
+		visibility: var(--show);
+	}
+	5% {
+		opacity: var(--transparent);
+		display: var(--bibleTextHidden);
+		visibility: var(--unshow);
+	}
+	45% {
+		opacity: var(--transparent);
+		display: var(--bibleTextHidden);
+		visibility: var(--unshow);
+	}
+	50% {
+		opacity: var(--noTransparent);
+		display: var(--bibleTextDisplay);
+		visibility: var(--show);
+	}
+	100% {
+		opacity: var(--noTransparent);
+		display: var(--bibleTextDisplay);
+		visibility: var(--show);
+	}
+}
+
+
+
+.Content {
+	font-family: var(--infoFont);
+	background: var(--bgTransparent);
+	color: var(--colorLgtGrey) !important;
+	text-align: center;
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+	-moz-hyphens: var(--hyphens);
+	-o-hyphens: var(--hyphens);
+	-ms-hyphens: var(--hyphens);
+	hyphens: var(--hyphens);
+	z-index: 15;
+}
+
+.ContentText{
+	font-family: var(--mainFont);
+	text-align: justify !important;
+	word-break: break-word;
+	background: var(--bgTransparent);
+	backdrop-filter: var(--bgBlur);
+	color: var(--colorLgtGrey) !important;
+	height: auto;
+	padding: 6.5em 2.5em 2.5em 2.5em !important;
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+	-o-user-select: var(--userSelectYes);
+	-ms-user-select: var(--userSelectYes);
+	-webkit-hyphens: var(--hyphens);
+	-moz-hyphens: var(--hyphens);
+	-o-hyphens: var(--hyphens);
+	-ms-hyphens: var(--hyphens);
+	hyphens: var(--hyphens);
+	z-index: 16;
+	
+}
+
+.ContentText::before, cite::before {
+	position: var(--posRelative);
+	font-size: 2.5em;
+	vertical-align: bottom;
+	content: '“';
+	top: 0.35em;
+	left: -0.15em;
+	font-family: var(--fontBook);
+}
+
+.ContentText::after, cite::after {
+	position: var(--posRelative);
+	font-size: 2.5em;
+	vertical-align: top;
+	content: '”';
+	top: 0em;
+	left: 0em;
+	font-family: var(--fontBook);
+}
+
+.Content ,.containerDiashow{
+	display: var(--displayBlock);
+	margin: var(--noMarginPadding);
+	padding: var(--noMarginPadding);
+	width: var(--screenWide);
+	background-attachment: var(--bgPosFixed);
+	background-size: cover;
+	background-repeat: unset;
+	min-height: var(--factorHDVideo)+'vw';
+	z-index:10;
+}
+
+
+.contentOverlay {
+	top: calc(var(--headerHeight) + 2em) !important;
+	position: var(--posRelative);
+	display: var(--displayBlock);
+	margin: var(--noMarginPadding);
+	text-align: center;
+}
+
+.contentOverlay:has(:not(a .bibleText)){
+	min-height:  var(--factorHDVideo) + 'vw';
+}
+
+main .containerOverlay .Overlay.Book {
+	margin: var(--headerHeight) auto auto !important;
+	overflow-y: var(--overflowScroll) !important;
+}
+
+.Content .Book {
+	width: 90% !important;
+	font-family: var(--fontBook);
+	color: var(--bookTextColor);
+	text-shadow: none;
+	display: var(--displayInlineBlock) !important;
+	position: var(--posRelative);
+	text-align: justify;
+	padding: var(--noMarginPadding);
+	width: var(--maxWidth);
+	background-color: #000000;
+	box-shadow: var(--boxShadow);
+	margin: auto;
+	box-sizing: border-box!important;
+	height: calc(var(--screenHeight) - var(--headerHeight) - 3em) !important;
+	overflow-x: var(--overflowCut) !important;
+	overflow-y: var(--overflowCut);
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+	-webkit-hyphens: var(--hyphens);
+	-moz-hyphens: var(--hyphens);
+	-o-hyphens: var(--hyphens);
+	-ms-hyphens: var(--hyphens);
+	hyphens: var(--hyphens);
+}
+
+.Content .Book .BookContainerLeft{
+	display: var(--displayInlineBlock);
+	width: 50%;
+	height: 100vh;
+	top:0;
+	left:0;
+	box-sizing: var(--boxSizeingNorm) !important;
+	position: var(--posRelative);
+	float: left;
+	overflow-y:var(--overflowCut);
+	overflow-x:var(--overflowCut);
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+}
+
+.Content .Book .BookContainerRight{
+	display: var(--displayInlineBlock);
+	width: 50%;
+	height: 100vh;
+	left:0;
+	box-sizing: var(--boxSizeingNorm) !important;
+	position: var(--posRelative);
+	float: left;
+	overflow-y:var(--overflowCut);
+	overflow-x:var(--overflowCut);
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+
+}
+
+
+.Content .Book .BookContent{
+	width: var(--maxWidth);
+	height: 100vh !important;
+	color: var(--bookTextColor);
+	text-shadow: none;
+	display: var(--displayBlock);
+	box-sizing: var(--boxSizeingNorm) !important;
+	position: var(--posRelative);
+	top: 0;
+	left: 0;
+	text-align: justify;
+	float: left;
+	overflow-y:var(--overflowVisible);
+	overflow-x:var(--overflowCut);
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+
+}
+
+.Content .Book .leftLast{
+	width: var(--maxWidth);
+	height: 100vh;
+	background-color: var(--bookBGColor);
+	background-image: var(--bookBGImage);
+	display: var(--displayInlineBlock);
+	box-sizing: border-box !important;
+	padding: 0.8em 2em 1.5em 1.15em;
+	position: var(--posRelative);
+	top: 0;
+	left: 0;
+	float:left;
+	overflow: var(--overflowHidden);
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+
+}
+
+
+.Content .Book .left{
+	width: var(--maxWidth);
+	height: 100vh;
+	background-color: var(--bookBGColor);
+	background-image: var(--bookBGImage);
+	display: var(--displayBlock);
+	box-sizing: border-box !important;
+	padding: 0.8em 2em 1.5em 1.15em;
+	position: var(--posAbsolute);
+	top: 0;
+	left:0;
+	transform-origin: 100%;
+	transform: rotateY(0deg);
+	transition: var(--transitionFast);
+	overflow: var(--overflowHidden);
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+
+}
+
+.Content .Book .rightNext{
+	width: var(--maxWidth);
+	height: 100vh;
+	background-color: var(--bookBGColor);
+	background-image: var(--bookBGImage);
+	display: var(--displayInlineBlock);
+	padding: 0.8em 1.15em 1.5em 2em;
+	position: var(--posAbsolute);
+	box-sizing: border-box !important;
+	top: 0;
+	right: 0;
+	float: right;
+	overflow: var(--overflowHidden);
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+
+}
+
+
+.Content .Book .right{
+	width: var(--maxWidth);
+	height: 100vh;
+	background-color: var(--bookBGColor);
+	background-image: var(--bookBGImage);
+	display: var(--displayBlock);
+	padding: 0.8em 1.15em 1.5em 2em;
+	position: var(--posAbsolute);
+	box-sizing: border-box !important;
+	top: 0;
+	right: 0;
+	float: right;
+	transform-origin: 0%;
+	transform: rotateY(0deg);
+	transition: var(--transiitionFast) ;
+	overflow: var(--overflowHidden);
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+
+}
+
+
+
+.PlayerOverlay {
+	box-shadow: var(--logoBackShadow);
+	left: var(--logoPosLeft);
+	top: var(--logoPosTop);
+	display: var(--displayBlock);
+	position: var(--posAbsolute);
+	vertical-align: middle;
+	text-align: center;
+	width: var(--screenWide);
+	height: var(--logoHeight);
+	background-image: var(--logoPic);
+	background-size: var(--logoSize);
+	background-repeat: var(--logoRepeate);
+	margin: var(--noMarginPadding);
+	padding: var(--noMarginPadding);
+	overflow-x: var(--overflowCut);
+	overflow-y: var(--overflowCut);
+	transition: var(--transitionFast) ease;
+	-webkit-overflow-scrolling: auto;
+	-webkit-overflow-x: var(--overflowCut);
+	-webkit-overflow-y: var(--overflowCut);
+	z-index: 13;
+}
+
+.PlayerOverlay:hover, .PlayerOverlay:active{
+	visibility: var(--show);
+}
+
+.channelLogo {
+	box-shadow: var(--logoShadow);
+	height: var(--logoHeight);
+	width: var(--logoWidth);
+	top: var(--logoPosTop) !important;
+	position: var(--posAbsolute);
+	background-image: var(--logoPic);
+	background-size: var(--logoSize);
+	background-repeat: var(--logoRepeate);
+	z-index: 20;
+}
+
+
+.Diashow{
+	--items: 9;
+	--runs: calc((100 - var(--items) *2) -2);
+	--factor: calc(100 / var(--runs));
+	scroll-snap-type: x mandatory;
+	scroll-snap-stop: always;
+	scroll-behavior: smooth;
+	background-size: contain;
+	background-repeat: var(--repeateBg);
+	background-origin: border-box;
+	top:0;
+	left:0;
+	/*width: 900vw;*/
+	height: var(--factorLetterBoxVideoVW);
+	margin: auto !important;
+	display: var(--displayBlock);
+	box-shadow: none;
+	opacity: var(--noTransparent) !important;
+	overflow: var(--overflowHidden);
+	position: var(--posAbsolute);
+	/*-webkit-overflow-scrolling: auto;*/
+	/*-webkit-overflow-x: var(--overflowCut);*/
+	-webkit-overflow-x: var(--overflowScroll);
+	-webkit-overflow-scrolling: var(--overflowScrollTouch);
+	-webkit-overflow-y: var(--overflowCut);
+	/*overflow-x: var(--overflow);*/
+	overflow-x: var(--overflowScroll);
+	overflow-y: var(--overflowCut);
+	transition: left var(--transitionXLong) ease, right var(--transitionXLong) ease;
+	transition-property: width, height, position, top, left, right, bottom;
+	animation-name: aniDiashow;
+	animation-duration: 240s;
+	animation-iteration-count: infinite;
+}
+
+
+@keyframes aniDiashow {
+	0% {
+		left: 0vw;
+		visibility: visible !important;
+	}
+	4.05% {
+		left: 0vw;
+		visibility: hidden !important;
+	}
+	4.55% {
+		left: -100vw;
+		visibility: visible !important;
+	}
+	10.10% {
+		left: -100vw;
+		visibility: hidden !important;
+	}
+	10.60% {
+		left: -200vw;
+		visibility: visible !important;
+	}
+	16.15% {
+		left: -200vw;
+		visibility: hidden !important;
+	}
+	16.55% {
+		left: -300vw;
+		visibility: visible !important;
+	}
+	23.10% {
+		left: -300vw;
+		visibility: hidden !important;
+	}
+	23.60% {
+		left: -400vw;
+		visibility: visible !important;
+	}
+	30.15% {
+		left: -400vw;
+		visibility: hidden !important;
+	}
+	30.55% {
+		left: -500vw;
+		visibility: visible !important;
+	}
+	36.10% {
+		left: -500vw;
+		visibility: hidden !important;
+	}
+	36.60% {
+		left: -600vw;
+		visibility: visible !important;
+	}
+	42.15% {
+		left: -600vw;
+		visibility: hidden !important;
+	}
+	42.65% {
+		left: -700vw;
+		visibility: visible !important;
+	}
+	48.20% {
+		left: -700vw;
+	}
+	48.70% {
+		left: -700vw;
+	}
+	54.25% {
+		left: -700vw;
+		visibility: hidden !important;
+	}
+	54.75% {
+		left: -600vw;
+		visibility: visible !important;
+	}
+	60.30% {
+		left: -600vw;
+		visibility: hidden !important;
+	}
+	60.85% {
+		left: -500vw;
+		visibility: visible !important;
+	}
+	66.40% {
+		left: -500vw;
+		visibility: hidden !important;
+	}
+	66.90% {
+		left: -400vw;
+		visibility: visible !important;
+	}
+	72.45% {
+		left: -400vw;
+		visibility: hidden !important;
+	}
+	72.95% {
+		left: -300vw;
+		visibility: visible !important;
+	}
+	78.50% {
+		left: -300vw;
+		visibility: hidden !important;
+	}
+	79.00% {
+		left: -200vw;
+		visibility: visible !important;
+	}
+	84.55% {
+		left: -200vw;
+		visibility: hidden !important;
+	}
+	85.05% {
+		left: -100vw;
+		visibility: visible !important;
+
+	}
+	90.60% {
+		left: -100vw;
+		visibility: hidden !important;
+	}
+	91.10% {
+		left: 0vw;
+		visibility: visible !important;
+	}
+	96.55% {
+		left: 0vw;
+	}
+	97.05% {
+		left: 0vw;
+	}
+}
+
+#explainEnd {
+	transition: var(--transitionXLong);
+}
+
+#explainEnd .Overlay{
+	opacity: 0.3;
+	transition: var(--transitionFast);
+	backdrop-filter: var(--bgBlur);
+}
+
+
+#explainEnd:target > .Overlay, #explainEnd:focus > .Overlay, #explainEnd:focus-visible > .Overlay, #explainEnd:focus-within > .Overlay, #explainEnd:active > .Overlay, #explainEnd:hover > .Overlay, #explainEnd:visited > .Overlay {
+	opacity: 1;
+}
+
+#explainStart {
+	perspective: var(--animiStopPerspective) !important;
+	transition: var(--transitionXLong);
+	overflow: var(--defaultValue) !important;
+	overflow-y: var(--overflowOverlay);
+}
+
+#explainStart .image {
+	perspective: var(--animiStopPerspective) !important;
+	transition: var(--transitionXLong);
+}
+
+
+#explainStart .Overlay{
+	opacity: 0.3;
+	transition: var(--transitionFast);
+	backdrop-filter: var(--bgBlur);
+}
+
+
+#explainStart:target, #explainStart:focus, #explainStart:focus-visible, #explainStart:focus-within, #explainStart:active, #explainStart:hover {
+	perspective: var(--animiStartPerspective) !important;
+}
+
+#explainStart:target > .Overlay, #explainStart:focus > .Overlay, #explainStart:focus-visible > .Overlay, #explainStart:focus-within > .Overlay, #explainStart:active > .Overlay, #explainStart:hover > .Overlay, #explainStart:visited > .Overlay{
+	opacity: 1;
+}
+
+
+header:not(:not([style*="visibility: hidden"]))  #NaviDown{
+	visibility: var(--show) !important;
+}
+
+header:not([style*="visibility: hidden"]) > #NaviDown{
+	visibility: var(--show);
+}
+
+.containerDiashow:hover .PlayerOverlay{
+	width: var(--logoWidth);
+}
+
+.containerDiashow:hover .Title, .containerDiashow:hover .Navi, .containerDiashow:hover .dotBackground{
+	visibility: var(--unshow) !important;
+}
+
+.backgroundTitle:hover .PlayerOverlay{
+	width: var(--screenWide) !important;
+}
+
+
+:is(.Content > .containerOverlay > .containerDiashow:hover ) :is(.dotBackground, .Title, .Navi) {
+	visibility: var(--unshow) !important;
+}
+
+.containerDiashow:hover .Diashow, body .Diashow:hover, body .Diashow:active, body .Diashow:focus, body .Diashow:focus-within {
+	animation-play-state: paused;
+}
+
+body:is( > .Content > .containerOverlay > .containerDiashow:hover) :is( > .header){
+	visibility: hidden !important;
+}
+
+.contSlide {
+	height: calc(var(--screenWide) * 0.5625); 
+	width: var(--screenWide);
+	display: var(--displayInlineBlock);
+	scroll-snap-align: var(--scrollSnapAlign);
+	padding: var(--noMarginPadding);
+	margin: var(--noMarginPadding);
+	text-align: center;
+	float: var(--flowLeft);
+	top: var(--topLeft);
+	position: var(--posRelative);
+	border: solid;
+}
+/*
+.contSlide {
+	display: var(--displayBlock);
+	background-color: rgba(0, 0, 0, 0.75);
+	margin: var(--noMarginPadding);
+	padding: var(--noMarginPadding);
+	width: var(--screenWide);
+	height: var(--screenHeight);
+	/*height: var(--factorHDVideo) + 'vw';*/
+	-webkit-aspect-ratio: var(--aspectRatio);
+	aspect-ratio: var(--aspectRatio);
+	box-sizing: border-box;
+	position: var(--posRelative);
+	float: left;
+	overflow-x: var(--overflowCut);
+	overflow-y: var(--overflowCut);
+	/*-webkit-overflow-scrolling: auto;*/
+	-webkit-overflow-x: var(--overflowCut);
+	-webkit-overflow-y: var(--overflowCut);
+}*/
+
+
+.Diashow .containerSlide {
+	display: var(--displayInlineBlock);
+	background-color: rgba(0, 0, 0, 0.75);
+	margin: var(--noMarginPadding);
+	padding: var(--noMarginPadding);
+	width: var(--screenWide);
+	height: var(--factorHDVideo) + 'vw';
+	-webkit-aspect-ratio: var(--aspectRatio);
+	aspect-ratio: var(--aspectRatio);
+	box-sizing: border-box;
+	float: left;
+	overflow-x: var(--overflowCut);
+	overflow-y: var(--overflowCut);
+	-webkit-overflow-scrolling: auto;
+	-webkit-overflow-x: var(--overflowCut);
+	-webkit-overflow-y: var(--overflowCut);
+}
+/*
+.Diashow1 .Slide{
+	opacity: var(--noTransparent);
+	margin: var(--noMarginPadding);
+	width: var(--screenWide) !important;
+	height:  var(--factorHDVideo) + 'vw' !important;
+	-webkit-aspect-ratio: var(--aspectRatio);
+	aspect-ratio: var(--aspectRatio);
+	display: var(--displayInlineBlock);
+	float:left;
+	-webkit-overflow-scrolling: auto;
+	-webkit-overflow-x: var(--overflowCut);
+	-webkit-overflow-y: var(--overflowCut);
+	overflow-x: var(--overflowCut);
+	overflow-y: var(--overflowCut);
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	scroll-behavior: smooth;
+}
+
+.Diashow1 a {
+	padding: var(--noMarginPadding);
+	margin: var(--noMarginPadding);
+	display: var(--displayInlineBlock);
+	width: var(--screenWide);
+	top: 0;
+	left: 0;
+	float: left;
+	text-decoration: var(--textDecoNo) !important;
+	color: var(--parentValue) !important; 
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+.Diashow1 a div{
+	text-decoration: var(--textDecoNo) !important;
+	color: var(--colorLgtGrey) !important;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+.Diashow1 .Title a{
+	color: var(--parentValue) !important;
+}
+
+
+	
+.Diashow1 .Overlay {
+	margin: auto !important;
+	display: var(--displayInlineBlock) !important;
+	text-align: center;
+	position: var(--posAbsolute) !important;
+	top: 0em;
+	left: 0em;
+	height:  var(--factorHDVideo) + 'vw';
+	width: var(--screenWide);
+	-webkit-aspect-ratio: var(--aspectRatio);
+	aspect-ratio: var(--aspectRatio);
+	overflow: var(--overflowHidden);
+	overflow-x: var(--overflowCut);
+	overflow-y: var(--overflowCut);
+	-webkit-overflow-scrolling: auto;
+	-webkit-overflow-x: var(--overflowCut);
+	-webkit-overflow-y: var(--overflowCut);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+.Diashow1 .Overlay img {
+	display: var(--displayInlineBlock) !important;
+	text-align: center;
+	position: var(--posRelative) !important;
+	border-radius: var(--borderRadius);
+	top: 0.5em;
+	width: 12.51vw;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+}
+
+.Diashow1 .Overlay .contentOverlay{
+	margin: auto !important;
+	display: inline !important;
+	text-align: center;
+	position: var(--posRelative) !important;
+	top: 5em;
+	left: 0em;
+ }
+*/
+figure.image {
+	overflow-x: var(--overflowCut);
+	height: inherit;
+	width: var(--screenWide) !important;
+	border: 2px solid #eeee00;
+	padding: var(--noMarginPadding);
+	margin: var(--noMarginPadding);
+	transform: translateZ(-1px);
+}
+
+.Overlay{
+	left: 0;
+	opacity: var(--noTransparent);
+	position: var(--posRelative);
+	display: var(--displayInlineBlock);
+	#width: var(--screenWide);
+	margin: auto;
+	#top: calc(-28.125vw - 7.5em);
+	left: 0px;
+	text-align: center;
+	vertical-align: middle;
+	backdrop-filter: var(--bgBlur);
+	#background-color: rgba(0,0,128,0.4);
+	#padding-bottom: 8.5em;
+	color: var(--colorLgtGrey);
+	font-size: 20px;
+	overflow-x: var(--overflowCut);
+	-webkit-overflow-scrolling: auto;
+	-webkit-overflow-x: var(--overflowCut);
+	-webkit-overflow-y: var(--overflowCut);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	text-select: var(--userSelect);
+	z-index: 20;
+}
+
+.Overlay img {
+	border-radius: var(--borderRadius);
+	box-shadow: var(--boxShadow);
+	-webkit-overflow-scrolling: auto;
+	-webkit-overflow-x: var(--overflowCut);
+	-webkit-overflow-y: var(--overflowCut);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+
+.Overlay:nth-child(2) {
+	background-size: cover;
+	background-repeat: var(--repeateBg);
+	background-position: center;
+	width: var(--screenWide);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+.Overlay:nth-child(3) {
+	background-size: cover;
+	background-repeat: var(--repeateBg);
+	background-position: center;
+	background-color: rgba(0,0,0,1);
+	max-height:  var(--factorHDVideo) + 'vw';
+	width: var(--screenWide);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	-webkit-overflow-scrolling: auto;
+	-webkit-overflow-x: var(--overflowCut);
+	overflow-x: var(--overflowCut);
+
+}
+
+.dotContainer {
+	position: var(--posAbsolute);
+	top: 40.65vw;
+	margin: var(--noMarginPadding);
+	padding: var(--noMarginPadding);
+	width: var(--maxWidth);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+.dot {
+	height: 15px;
+	width: 15px;
+	margin: 0 2px;
+	background-color: rgba(255,255,255,0.75);
+	border-radius: 50%;
+	display: var(--displayInlineBlock);
+	transition: background-color var(--transitionFast) ease;
+	position: var(--posRelative);
+	bottom: 0px;
+	box-shadow: var(--boxShadow);
+	user-select: var(--userSelect)
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 14;
+}
+
+.dotBackground {
+	text-align:center;
+	background-color: var(--colorDrkGreyTrans);
+	backdrop-filter: var(--bgBlur);
+	display:var(--displayInlineBlock);
+	border-radius: 0.5em;
+	width: auto;
+	padding:0.125em	0.25em;
+	box-shadow:var(--menuShadow);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	visibility: var(--unshow);
+}
+
+.containerNavi {
+	position: var(--posAbsolute);
+	margin: var(--noMarginPadding);
+	padding: var(--noMarginPadding);
+	display: var(--displayBlock);
+	left: 0;
+	top: calc(-  (var(--factorHDVideo) + 'vw') - 8.645833vw);
+	background: var(--bgTransparent);
+	width: var(--screenWide);
+	height:  var(--factorHDVideo) + 'vw';
+	-webkit-aspect-ratio: var(--aspectRatio);
+	aspect-ratio: var(--aspectRatio);
+	overflow: var(--overflowHidden);
+	overflow-x: var(--overflowCut);
+	overflow-y: var(--overflowCut);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 14;
+}
+
+.Navi {
+	position: var(--posAbsolute);
+	top: calc(28.125vw - 1.75em);
+	width: 2.5em;
+	color: rgba(255, 255, 255, 1);
+	background-color: var(--colorDrkGreyTrans);
+	backdrop-filter: var(--bgBlur);
+	display: var(--displayBlock);
+	text-decoration: var(--textDecoNo) !important;
+	vertical-align: middle;
+	text-align: center;
+	height: fit-content;
+	box-shadow: var(--menuShadow);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	cursor: pointer;
+	padding: 1em var(--noMarginPadding);
+	margin: var(--noMarginPadding);;
+	z-index: 14;
+}
+
+.Navi:hover, .Navi:active {
+	text-decoration: var(--textDecoNo) !important;
+}
+
+#NaviLeft {
+	left: 0px;
+	position: var(--posRelative);
+	float:left;
+	border-top-right-radius: 0.5em;
+	border-bottom-right-radius: 0.5em;
+	visibility: var(--unshow);
+}
+
+#NaviRight {
+	right: 0px;
+	position: var(--posRelative);
+	float:right;
+	border-top-left-radius: 0.5em;
+	border-bottom-left-radius: 0.5em;
+	visibility: var(--unshow);
+}
+
+#NaviPlay {
+	left: 45.2vw !important;
+	position: var(--posRelative);
+	float: left;
+	border: unset;
+	background: none !important;
+	width: 4.5vw;
+	visibility: var(--unshow);
+	box-shadow: unset !important;
+	transistion: visibility var(--transitionXLong);
+}
+
+#NaviDown {
+	position: var(--posAbsolute);
+	top: 1.75em;
+	right: 2em;
+	min-width: 1.5em !important;
+	height: 1.5em !important;
+	color: var(--lightColor);
+	text-shadow: var(--fontShadow);
+	display: var(--displayBlock);
+	vertical-align: middle;
+	text-align: center;
+	box-shadow: var(--menuShadow);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	padding: 5px;
+	margin: var(--noMarginPadding);
+	border-radius: 50%;
+	background-color: var(--colorDrkGreyTrans);
+	visibility: var(--unshow);
+	z-index: 14;
+}
+
+#NaviLeft:hover,
+#NaviRight:hover{
+	background-color: var(--colorBlueMid);
+	color: var(--lightColor);
+}
+
+.scrollPic{
+	scroll-snap-align: var(--scrollSnapAlign);
+	scroll-behavior: var(--scrollBehaviorSmooth);
+	scroll-snap-stop: var(--scrollSnapStop);
+	height: var(--screenHeight);
+	width: var(--screenWide);
+	overflow-x: var(--overflowHidden);
+	display: var(--displayBlock);
+	position: var(--posRelative);
+}
+
+.scrollPic .Slide, .scrollPic iframe, .Overlay .Slide, .Overlay iframe{
+	display: var(--displayBlock);
+	margin: var(--noMarginPadding);
+	padding: var(--noMarginPadding);
+	width: var(--screenWide);
+	background-attachment: var(--bgPosFixed);
+	background-size: var(--scrollPicSize);
+	background-repeat: var(--repeateBg);
+	min-height: var(--factorLetterBoxSmallVideoVW);
+	height: calc(var(--screenWide) * 0.5625);
+	z-index: 10 !important;
+}
+
+.scrollPic .img{
+	display: var(--displayBlock);
+	margin: var(--noMarginPadding);
+	padding: var(--noMarginPadding);
+	background-repeat: var(--repeateBg);
+	z-index: 10 !important;
+}
+
+
+.containerDiashow{
+	position: var(--posAbsolute);
+	height: calc(var(--screenWide) * 0.5625) !important;
+}
+
+.scrollPic:nth-child(1) {
+	background-image: var(--scrollPicImage1);
+	background-size: var(--scrollPicSize);
+	background-repeat: var(--repeateBg);
+	background-position: bottom;
+	overflow: var(--overflowHidden);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 10 !important;
+}
+
+.scrollPic:nth-child(2) {
+	background-size: var(--scrollPicSize);
+	background-repeat: var(--repeateBg);
+	background-position: bottom;
+	user-select: var(--userSelect);
+	height: var(--screenHeight);
+	overflow: var(--overflowHidden);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 10 !important;
+}
+.scrollPic:nth-child(3) {
+	background-image: var(--scrollPicImage3);
+	background-size: var(--scrollPicSize);
+	background-repeat: var(--repeateBg);
+	background-position: bottom;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 10 !important;
+}
+
+.scrollPic:nth-child(4) {
+	background-image: var(--scrollPicImage4);
+	background-size: var(--scrollPicSize);
+	background-color: var(--blueScrollPic);
+	background-blend-mode: overlay;
+	background-repeat: var(--repeateBg);
+	background-position: top;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	z-index: 10 !important;
+}
+
+.scrollPic:nth-child(2) .img:nth-child(1) {
+	position: var(--posAbsolute);
+	transform: translateZ(-436px) translateX(-3%) translateY(4%) scale(22%);
+	-webkit-transform: translateZ(-436px) translateX(-3%) translateY(4%) scale(0.22);
+	filter:blur(6.5px);
+	transform-style: var(--animiTransformStyle);
+	-webkit-transform-style: var(--animiTransformStyle);
+	z-index: 10 !important;	
+}
+
+.scrollPic:nth-child(2) .img:nth-child(2) {
+	position: var(--posAbsolute);
+	transform: translateZ(-300px) translateX(45%) translateY(32%) scale(30.7%);
+	-webkit-transform: translateZ(-300px) translateX(45%) translateY(32%) scale(0.307);
+	filter: blur(4.68px);
+	transform-style: var(--animiTransformStyle);
+	-webkit-transform-style: var(--animiTransformStyle);
+	z-index: 10 !important;
+}
+
+.scrollPic:nth-child(2) .img:nth-child(3) {
+	position: var(--posAbsolute);
+	transform: translateZ(-220px) translateX(8%) translateY(-42%) scale(45%);
+	-webkit-transform: translateZ(-220px) translateX(8%) translateY(-42%) scale(0.45);
+	filter: blur(2.75px);
+	transform-style: var(--animiTransformStyle);
+	-webkit-transform-style: var(--animiTransformStyle);
+	z-index: 10 !important;	
+}
+
+.scrollPic:nth-child(2) .img:nth-child(4) {
+	position: var(--posAbsolute);
+	transform: translateZ(-100px) translateX(47%) translateY(-18%) scale(75%);
+	-webkit-transform: translateZ(-100px) translateX(47%) translateY(-18%) scale(0.75);
+	filter: blur(1.34px);
+	transform-style: var(--animiTransformStyle);
+	-webkit-transform-style: var(--animiTransformStyle);
+	z-index: 10 !important;
+}
+
+.scrollPic:nth-child(2) .img:nth-child(5) {
+	position: var(--posAbsolute);
+	transform: translateZ(-20px) translateX(25%) translateY(0%) scale(100%);
+	-webkit-transform: translateZ(-20px) translateX(25%) translateY(0%) scale(1);
+	transform-style: var(--animiTransformStyle);
+	-webkit-transform-style: var(--animiTransformStyle);
+	z-index: 10 !important;
+}
+
+.scrollPic:nth-child(2) .img:nth-child(6){
+	position: var(--posAbsolute);
+	transform: translateZ(100px) translateX(-22%) translateY(68%) scale(135%);
+	-webkit-transform: translateZ(100px) translateX(-22%) translateY(68%) scale(1.35);
+	filter: blur(2.68px);
+	transform-style: var(--animiTransformStyle);
+	-webkit-transform-style: var(--animiTransformStyle);
+	z-index: 10 !important;	
+}
+
+.scrollPic:nth-child(2) .img{
+	background-image: var(--scrollPicImage2);
+	width: var(--maxWidth);
+	height: 100%;
+	overflow-y: var(--overflowCut) !important;
+	z-index: 10 !important;	
+}
+
+.Title {
+	position: var(--posRelative);
+	top: var(--titleTop);
+	text-align: var(--titleAlign) !important;
+	font-family: var(--mainFont);
+	font-size: var(--titleFontSize);
+	left: var(--titleLeft);
+	display: var(--displayInlineBlock);
+	vertical-align: var(--titleVAlign) !important;
+	width: var(--titleWidth);
+	height: var(--titleHeight);
+	visibility: var(--show);
+	color: var(--parentValue) !important;
+	-moz-hyphens: var(--hyphens);
+	-o-hyphens: var(--hyphens);
+	-ms-hyphens: var(--hyphens);
+	hyphens: var(--hyphens);
+	z-index: 16;
+}
+
+#ueber {
+	height: var(--screenHeight);
+	overflow-y: var(--overflowAuto);
+	position: var(--posRelative);
+	top: 1em;
+}
+
+.modal{
+	background-color: rgba(0,0,0,0.75);
+	backdrop-filter: blur(2.2px);
+	width: var(--maxWidth);
+	height: var(--maxHeight);
+	display: var(--displayNone);
+	opacity: var(--noTransparent);
+	position: var(--posFixed);
+	top: var(--topLeft);
+	left: var(--topLeft);
+	transition: var(--transitionFaster);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+}
+
+footer {
+	position: var(--posFixed);
+	bottom: 0;
+	background-color: var(--colorDrkGrey);
+	background-image: var(--footerBGColor);
+	display: var(--displayBlock);
+	width: var(--maxWidth);
+	z-index: 100;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+}
+
+
+footer .footerText {
+	text-align: center;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+::scrollbar {
+	width: 4px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::scrollbar:hover {
+	width: 12px;
+}
+
+
+::scrollbar:horizontal {
+	height:5px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::scrollbar:horizontal:hover {
+	height: 13px;
+}
+
+
+::scrollbar-button {
+	width: 5px;
+	height: 10px;
+}
+
+::scrollbar-button:hover {
+	color: #000000;
+	width: 12px;
+	height: 24px;
+}
+
+::scrollbar-button:horizontal {
+	width: 10px;
+	height: 5px;
+}
+
+::scrollbar-button:horizontal:hover {
+	color: #000000;
+	height: 13px;
+	width: 26px;
+}
+
+::scrollbar-track {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+::scrollbar-track:horizontal {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+
+::scrollbar-thumb {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::scrollbar-thumb:horizontal {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::scrollbar-thumb:hover {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+::scrollbar-thumb:horizontal:hover {
+	background: var(--colorBlueLgth);
+	border: var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+
+::-webkit-scrollbar {
+	width: 4px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::-webkit-scrollbar:hover {
+	width: 12px;
+}
+
+
+::-webkit-scrollbar:horizontal {
+	height:5px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::-webkit-scrollbar:horizontal:hover {
+	height: 13px;
+}
+
+
+::-webkit-scrollbar-button {
+	width: 5px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-button:hover {
+	color: #000000;
+	width: 12px;
+	height: 24px;
+}
+
+::-webkit-scrollbar-button:horizontal {
+	width: 10px;
+	height: 5px;
+}
+
+::-webkit-scrollbar-button:horizontal:hover {
+	color: #000000;
+	height: 13px;
+	width: 26px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+::-webkit-scrollbar-track:horizontal {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+
+::-webkit-scrollbar-thumb {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+	background: var(--colorBlueLgth);
+	border: var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+
+
+::-moz-scrollbar {
+	width: 4px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::-moz-scrollbar:hover {
+	width: 12px;
+}
+
+
+::-moz-scrollbar:horizontal {
+	height:5px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::-moz-scrollbar:horizontal:hover {
+	height: 13px;
+}
+
+
+::-moz-scrollbar-button {
+	width: 5px;
+	height: 10px;
+}
+
+::-moz-scrollbar-button:hover {
+	color: #000000;
+	width: 12px;
+	height: 24px;
+}
+
+::-moz-scrollbar-button:horizontal {
+	width: 10px;
+	height: 5px;
+}
+
+::-moz-scrollbar-button:horizontal:hover {
+	color: #000000;
+	height: 13px;
+	width: 26px;
+}
+
+::-moz-scrollbar-track {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+::-moz-scrollbar-track:horizontal {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+
+::-moz-scrollbar-thumb {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::-moz-scrollbar-thumb:horizontal {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::-moz-scrollbar-thumb:hover {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+::-moz-scrollbar-thumb:horizontal:hover {
+	background: var(--colorBlueLgth);
+	border: var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+
+EOF
+
+echo
+echo Theme
+echo
+cat << EOF > /www/CaptivePortal/mobile.css
+
+.scrollPic:not(:nth-child(2)) .containerOverlay{
+	overflow-y: var(--overflowCut);
+}
+
+.containerOverlay:not(> .containerDiashow, .Diashow) {
+	text-align: center;
+	vertical-align: middle;
+	padding: 0em 2.5em 0em 2.5em !important;
+}
+
+.contentOverlay:has(:not(a .bibleText)){
+	min-height:  var(--factorHDVideo) + 'vw';
+}
+
+.Content {
+	font-family: var(--infoFont);
+	background: var(--bgTransparent);
+	/*position: var(--posAbsolute);
+	top: 0px; */
+	color: var(--colorLgtGrey) !important;
+	/*height: calc(100vh * 4);
+	#background-image: var(--blueGradientLeft);
+	#padding: 2.5em 2.5em 0em 2.5em !important;*/
+	text-align: center;
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+	-moz-hyphens: var(--hyphens);
+	-o-hyphens: var(--hyphens);
+	-ms-hyphens: var(--hyphens);
+	hyphens: var(--hyphens);
+	z-index: 15;
+}
+
+.ContentText{
+	font-family: var(--mainFont);
+	text-align: justify !important;
+	word-break: break-word;
+	background: var(--bgTransparent);
+	backdrop-filter: var(--bgBlur);
+	color: var(--colorLgtGrey) !important;
+	height: auto;
+	#background-image: var(--blueGradientLeft);
+	padding: 6.5em 2.5em 2.5em 2.5em !important;
+	user-select: var(--userSelectYes);
+	-webkit-user-select: var(--userSelectYes);
+	-moz-user-select: var(--userSelectYes);
+	-o-user-select: var(--userSelectYes);
+	-ms-user-select: var(--userSelectYes);
+	-webkit-hyphens: var(--hyphens);
+	-moz-hyphens: var(--hyphens);
+	-o-hyphens: var(--hyphens);
+	-ms-hyphens: var(--hyphens);
+	hyphens: var(--hyphens);
+	z-index: 16;
+	
+}
+
+.ContentText::before, cite::before {
+	position: var(--posRelative);
+	font-size: 2.5em;
+	vertical-align: bottom;
+	content: '“';
+	top: 0.35em;
+	left: -0.15em;
+	font-family: var(--fontBook);
+}
+
+.ContentText::after, cite::after {
+	position: var(--posRelative);
+	font-size: 2.5em;
+	vertical-align: top;
+	content: '”';
+	top: 0em;
+	left: 0em;
+	font-family: var(--fontBook);
+}
+
+/*section.Overlay{
+	left: 0;
+	opacity: var(--noTransparent);
+	position: var(--posRelative);
+	display: var(--displayInlineBlock);
+	#width: var(--screenWide);
+	margin: auto;
+	#top: calc(-28.125vw - 7.5em);
+	left: 0px;
+	text-align: center;
+	vertical-align: middle;
+	backdrop-filter: var(--bgBlur);
+	#background-color: rgba(0,0,128,0.4);
+	#padding-bottom: 8.5em;
+	color: var(--colorLgtGrey);
+	font-size: 20px;
+	overflow-x: var(--overflowCut);
+	-webkit-overflow-scrolling: auto;
+	-webkit-overflow-x: var(--overflowCut);
+	-webkit-overflow-y: var(--overflowCut);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+	text-select: var(--userSelect);
+	z-index: 20;
+}
+*/
+section.Overlay:nth-child(1) {
+	height: -webkit-fill-available;
+}
+
+.scrollPic:nth-child(1) .containerOverlay{
+	height: -webkit-fill-available;
+}
+
+section#ueber {
+}
+
+
+.modal{
+	background-color: rgba(0,0,0,0.75);
+	backdrop-filter: blur(2.2px);
+	width: var(--maxWidth);
+	height: var(--maxHeight);
+	display: var(--displayNone);
+	opacity: var(--noTransparent);
+	position: var(--posFixed);
+	top: var(--topLeft);
+	left: var(--topLeft);
+	transition: var(--transitionFaster);
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+}
+
+footer {
+	position: var(--posFixed);
+	bottom: 0;
+	background-color: var(--colorDrkGrey);
+	background-image: var(--footerBGColor);
+	display: var(--displayBlock);
+	width: var(--maxWidth);
+	z-index: 100;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+}
+
+
+footer .footerText {
+	text-align: center;
+	user-select: var(--userSelect);
+	-webkit-user-select: var(--userSelect);
+	-moz-user-select: var(--userSelect);
+
+}
+
+::scrollbar {
+	width: 4px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::scrollbar:hover {
+	width: 12px;
+}
+
+
+::scrollbar:horizontal {
+	height:5px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::scrollbar:horizontal:hover {
+	height: 13px;
+}
+
+
+::scrollbar-button {
+	width: 5px;
+	height: 10px;
+}
+
+::scrollbar-button:hover {
+	color: #000000;
+	width: 12px;
+	height: 24px;
+}
+
+::scrollbar-button:horizontal {
+	width: 10px;
+	height: 5px;
+}
+
+::scrollbar-button:horizontal:hover {
+	color: #000000;
+	height: 13px;
+	width: 26px;
+}
+
+::scrollbar-track {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+::scrollbar-track:horizontal {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+
+::scrollbar-thumb {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::scrollbar-thumb:horizontal {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::scrollbar-thumb:hover {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+::scrollbar-thumb:horizontal:hover {
+	background: var(--colorBlueLgth);
+	border: var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+
+::-webkit-scrollbar {
+	width: 4px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::-webkit-scrollbar:hover {
+	width: 12px;
+}
+
+
+::-webkit-scrollbar:horizontal {
+	height:5px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::-webkit-scrollbar:horizontal:hover {
+	height: 13px;
+}
+
+
+::-webkit-scrollbar-button {
+	width: 5px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-button:hover {
+	color: #000000;
+	width: 12px;
+	height: 24px;
+}
+
+::-webkit-scrollbar-button:horizontal {
+	width: 10px;
+	height: 5px;
+}
+
+::-webkit-scrollbar-button:horizontal:hover {
+	color: #000000;
+	height: 13px;
+	width: 26px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+::-webkit-scrollbar-track:horizontal {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+
+::-webkit-scrollbar-thumb {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+	background: var(--colorBlueLgth);
+	border: var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+
+
+::-moz-scrollbar {
+	width: 4px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::-moz-scrollbar:hover {
+	width: 12px;
+}
+
+
+::-moz-scrollbar:horizontal {
+	height:5px;
+	box-shadow: 0.25em -0.5em 0.5em rgba(0,0,0,0.75);
+}
+
+::-moz-scrollbar:horizontal:hover {
+	height: 13px;
+}
+
+
+::-moz-scrollbar-button {
+	width: 5px;
+	height: 10px;
+}
+
+::-moz-scrollbar-button:hover {
+	color: #000000;
+	width: 12px;
+	height: 24px;
+}
+
+::-moz-scrollbar-button:horizontal {
+	width: 10px;
+	height: 5px;
+}
+
+::-moz-scrollbar-button:horizontal:hover {
+	color: #000000;
+	height: 13px;
+	width: 26px;
+}
+
+::-moz-scrollbar-track {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+::-moz-scrollbar-track:horizontal {
+	background: var(--colorDrkGrey);
+	box-shadow: 0px 0px 0px;
+	border-radius: var(--borderRadiusSmall);
+}
+
+
+::-moz-scrollbar-thumb {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::-moz-scrollbar-thumb:horizontal {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(0,0,0,0.75);
+}
+
+::-moz-scrollbar-thumb:hover {
+	background: var(--colorBlueLgth);
+	border:  var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+::-moz-scrollbar-thumb:horizontal:hover {
+	background: var(--colorBlueLgth);
+	border: var(--borderMiddle);
+	border-radius: var(--borderRadiusSmall);
+	box-shadow: 0em 0em 0.5em rgba(255,255,255,0.75);
+}
+
+@media screen and (orientation: landscape)  {
+	header h1:before {
+		content: var(--headerH1);
+	}
+
+	header h3:before {
+		content: var(--headerH3);
+	}
+
+	
+}
+
+/*Ipad Portrait */
+@media screen and (orientation: portrait)  {
+	header {
+		background-image: var(--headerBGImage);
+		background-color: var(--colorDrkGrey);
+		background-repeat: var(--bgRepeate);
+		backdrop-filter: var(--bgBlur);
+		background-size: var(--headerBGSize);
+		color: var(--colorLgtGrey);
+		background-position-x: var(--headerBGPosX);
+		background-position-y: var(--headerBGPosY);
+	}
+
+	header h1:before {
+		content: var(--headerH1Small);
+
+	}
+	
+	header h1{
+		margin-block-end: 0em !important;
+	}
+
+	header h3:before {
+		content: var(--headerH3Small);
+	}
+
+	#topMenu {
+		top: var(--menuTopLow) !important;
+	}
+
+	#Main {
+		overflow-x: clip;
+		overflow-y: scroll;
+	}
+
+/*	.scrollPic{
+		overflow-x: var(--overflowHidden);
+		scroll-snap-align: var(--scrollSnapAlign);
+		scroll-behavior: var(--scrollBehaviorSmooth);
+		scroll-snap-stop: var(--scrollSnapStop);
+		height: var(--screenHeight);
+		width: var(--screenWide);
+		transition: var(--transitionFast);
+		display: var(--displayBlock);
+	}
+*/
+	.scrollPic .img{
+		display: var(--displayBlock);
+		margin: var(--noMarginPadding);
+		padding: var(--noMarginPadding);
+		background-repeat: var(--repeateBg);
+		z-index: 10 !important;
+	}
+
+	figure.image {
+		overflow-x: clip !important;
+		height: inherit;
+		width: var(--screenWide) !important;
+		border: 2px solid #eeee00;
+		padding: var(--noMarginPadding);
+		margin: var(--noMarginPadding);
+		transform: translateZ(-1px);
+	}
+
+	.scrollPic:nth-child(1) {
+		background-size: 1024px 576px;
+		background-position-y: var(--headerHeight);
+		height: calc(56.25 * 10.24px + var(--headerHeight)) !important;
+		background-image: var(--scrollPicImage1);
+		background-repeat: var(--repeateBg);
+		background-position: bottom;
+		user-select: var(--userSelect);
+		-webkit-user-select: var(--userSelect);
+		-moz-user-select: var(--userSelect);
+		z-index: 10 !important;
+	}
+
+
+/*	.scrollPic:nth-child(2) {
+		background-size: var(--scrollPicSize);
+		background-repeat: var(--repeateBg);
+		background-position: bottom;
+		user-select: var(--userSelect);
+		height: var(--screenHeight);
+		/*overflow: var(--overflowHidden);*/
+		overflow-x: clip;
+		/*overflow-y: clip;*/
+		-webkit-user-select: var(--userSelect);
+		-moz-user-select: var(--userSelect);
+		z-index: 10 !important;
+	}
+*/
+	.scrollPic:nth-child(2) .img{
+		background-image: var(--scrollPicImage2);
+		width: var(--maxWidth);
+		height: 100%;
+		overflow-y: var(--overflowCut) !important;
+		z-index: 10 !important;	
+	}
+
+	.scrollPic:nth-child(2) .img:nth-child(1) {
+		position: var(--posAbsolute);
+		transform: translateZ(-436px) translateX(-3%) translateY(4%) scale(22%);
+		-webkit-transform: translateZ(-436px) translateX(-3%) translateY(4%) scale(0.22);
+		filter:blur(6.5px);
+		transform-style: var(--animiTransformStyle);
+		-webkit-transform-style: var(--animiTransformStyle);
+		z-index: 10 !important;	
+	}
+
+	.scrollPic:nth-child(2) .img:nth-child(2) {
+		position: var(--posAbsolute);
+		transform: translateZ(-300px) translateX(45%) translateY(32%) scale(30.7%);
+		-webkit-transform: translateZ(-300px) translateX(45%) translateY(32%) scale(0.307);
+		filter: blur(4.68px);
+		transform-style: var(--animiTransformStyle);
+		-webkit-transform-style: var(--animiTransformStyle);
+		z-index: 10 !important;
+	}
+
+	.scrollPic:nth-child(2) .img:nth-child(3) {
+		position: var(--posAbsolute);
+		transform: translateZ(-220px) translateX(8%) translateY(-42%) scale(45%);
+		-webkit-transform: translateZ(-220px) translateX(8%) translateY(-42%) scale(0.45);
+		filter: blur(2.75px);
+		transform-style: var(--animiTransformStyle);
+		-webkit-transform-style: var(--animiTransformStyle);
+		z-index: 10 !important;	
+	}
+
+	.scrollPic:nth-child(2) .img:nth-child(4) {
+		position: var(--posAbsolute);
+		transform: translateZ(-100px) translateX(47%) translateY(-18%) scale(75%);
+		-webkit-transform: translateZ(-100px) translateX(47%) translateY(-18%) scale(0.75);
+		filter: blur(1.34px);
+		transform-style: var(--animiTransformStyle);
+		-webkit-transform-style: var(--animiTransformStyle);
+		z-index: 10 !important;
+	}
+
+	.scrollPic:nth-child(2) .img:nth-child(5) {
+		position: var(--posAbsolute);
+		transform: translateZ(-20px) translateX(25%) translateY(0%) scale(100%);
+		-webkit-transform: translateZ(-20px) translateX(25%) translateY(0%) scale(1);
+		transform-style: var(--animiTransformStyle);
+		-webkit-transform-style: var(--animiTransformStyle);
+		z-index: 10 !important;
+	}
+
+	.scrollPic:nth-child(2) .img:nth-child(6){
+		position: var(--posAbsolute);
+		transform: translateZ(100px) translateX(-22%) translateY(68%) scale(135%);
+		-webkit-transform: translateZ(100px) translateX(-22%) translateY(68%) scale(1.35);
+		filter: blur(2.68px);
+		transform-style: var(--animiTransformStyle);
+		-webkit-transform-style: var(--animiTransformStyle);
+		z-index: 10 !important;	
+	}
+
+	
+	.scrollPic:nth-child(3) {
+		background-color: #000088;
+		height: calc(56.25 * 10.24px + var(--headerHeight)) !important;
+		background-image: var(--scrollPicImage3);
+		background-size: var(--scrollPicSize);
+		background-repeat: var(--repeateBg);
+		background-position: bottom;
+		user-select: var(--userSelect);
+		-webkit-user-select: var(--userSelect);
+		-moz-user-select: var(--userSelect);
+		z-index: 10 !important;
+	}
+
+	.scrollPic:nth-child(4) {
+		background-image: var(--scrollPicImage4);
+		background-size: var(--scrollPicSize);
+		background-color: var(--blueScrollPic);
+		background-blend-mode: overlay;
+		background-repeat: var(--repeateBg);
+		background-position: top;
+		user-select: var(--userSelect);
+		-webkit-user-select: var(--userSelect);
+		-moz-user-select: var(--userSelect);
+		z-index: 10 !important;
+	}
+
+	
+	.Diashow1 {
+		height: calc(var(--screenWide) * 0.5625) !important;
+		width: calc(var(--screenWide) * 9) !important;
+		border: 3px solid green;
+		margin: var(--mainMargin) !important;
+		top: var(--topLeft) !important;
+		/*float: var(--flowLeft);*/
+		/*text-align: var(--textLeft) !important;*/
+		position: var(--posRelative);
+		background-color: rgba(128,128,128,0.5);
+		display: var(--displayInlineBlock);
+		scroll-snap-type: var(--scrollSnapXMan);
+		scroll-behavior: var(--scrollBehaviorSmooth);
+		overflow-x: var(--overflowScroll);
+		overflow-y: var(--overflowCut);
+		scroll-snap-stop: var(--scrollSnapStop);
+	}
+
+	.txt{
+		font-size: 48pt;
+		line-height: 1;
+		top: 4em;
+		position: relative;
+		display: inline;
+	}
+}
+/* Phone Portrait*/
+@media screen and (min-height: 600px) and (max-width: 668px) and (orientation: portrait)  {
+
+	:root{
+		font-weight: var(--fontWeight);
+	}
+	header {
+		background-image: var(--blueGradientRight) !important;
+		background-color: var(--colorDrkGrey);
+		background-repeat: var(--bgRepeate);
+		backdrop-filter: var(--bgBlur);
+		color: var(--colorLgtGrey);
+		background-position-x: var(--headerBGPosXSmall);
+		background-position-y: var(--headerBGPosYSmall);
+		background-size: auto !important;
+		height: var(--headerHeightLarge);
+	}
+	
+	header h1:before {
+		content: var(--headerH1Small);
+	}
+
+	header h1{
+		margin-block-end: -0.25em !important;
+	}
+
+	header h3:before {
+		content: var(--headerH3Small);
+	}
+
+	header h4{
+		display: none;
+	}
+
+	#topMenu {
+		top: var(--menuTopLow) !important;
+		border-radius: var(--borderRadius);
+	}
+
+}
+
+@media screen and (min-width: 600px) and (max-height: 668px) and (orientation: landscape)  {
+	:root {
+		--headerHeight: var(--headerHeightSmall);
+		font-weight: var(--fontWeight);
+	}
+
+	header {
+		height: var(--headerHeightSmall);
+		background-image: var(--blueGradientRight);
+		background-color: var(--colorDrkGrey);
+		background-repeat: var(--bgRepeate);
+		backdrop-filter: var(--bgBlur);
+		color: var(--colorLgtGrey);
+		background-position-x: var(--headerBGPosXSmall);
+		background-position-y: var(--headerBGPosYSmall);
+		background-size: auto;
+	}
+
+	header h1:before {
+		content: var(--headerH1);
+	}
+
+	header h3:before {
+		content: var(--headerH3);
+	}
+
+	#topMenu {
+		top: var(--menuTop) !important;
+		border-radius: var(--borderRadius);
+	}
+
+}
+
+/* Window PC Landscapemode 16:9 */
+
+@media screen and (min-width:1280px) and (max-width: 1920px) and (min-height: 720px) and (max-height: 1080px) and (orientation: landscape) and (max-resolution: 192dpi)   {
+	header {
+		background-position-x: var(--headerBGPosXBig);
+	
+	}
+	header h1:before {
+		content: var(--headerH1);
+	}
+
+	header h3:before {
+		content: var(--headerH3);
+	}
+}
+
+
+@media screen and (min-width:689px) and (max-width: 1280px) and (min-height: 720px) and (max-height: 1080px) and (orientation: landscape) and (max-resolution: 192dpi)   {
+	header {
+		background-position-x: 2.5%;
+	}
+
+	header h1:before {
+		content: var(--headerH1);
+	}
+
+	header h3:before {
+		content: var(--headerH3);
+	}
+	
+	#topMenu {
+		top: var(--menuTopTop) !important;
+		border-radius: var(--borderRadius);
+	}
+
+}
+
+
+EOF
+
+echo
+echo mobile
+echo
+
+cat << EOF > /www/CaptivePortal/index.htm
+
+<!DOCTYPE html>
+<html lang="de">
+	
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="1">
+	<meta http-equiv="content-type" content="text/html, charset=utf-8">
+	<meta charset="utf-8">	
+	<meta name="Description" content="C&grave;Movie das Hoffnungsportal mit Videostreaming. Als den Gegenpol zu Panik und Chaos seitens der Medien und Politik">
+	<link rel="icon" type="image/x-icon" href="/pic/favicon.ico">
+	<link rel="alternate" href="index_en.htm" hreflang="en">
+	<link href="theme_variable.css" rel="stylesheet" type="text/css" />	
+	<link href="theme.css" rel="stylesheet" type="text/css" />
+	<link href="mobile.css" rel="stylesheet" type="text/css" />
+	<!--link href="mobile_org.css" rel="stylesheet" type="text/css" /-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+	<script src="framewrk.js"></script>
+	<head>
+		<title>C&grave;Movie das Hoffnungsportal</title>
+	</head>	
+
+	<body onload="" onresize="">
+		
+		<header class="header" id="headerHidden">
+			
+			<div class="headerText">
+			<h1>
+				<!-- Text insert by css Tag '.header h1' -->
+			</h1>
+			<h3>
+				<!-- Text insert by css Tag '.header h3' -->
+			</h3>
+			<h4>
+				<a href ="https://www.bibleserver.com/LUT/Offenbarung13%2C1" target="_blank">Sei vorbereitet, auf das was kommt</a>.
+			</h4>
+			</div>
+
+			<a href="index.htm#explainEnd" id="NaviDown">
+				<div>
+					&#9660;
+				</div>
+			</a>
+			
+		</header>
+
+	
+		<nav id="topMenu" class="menu">
+    			<a class="containerIcon" href="index.htm#start">
+				<div class="iconMenu">
+        				<div></div>
+        				<div></div>
+        				<div></div>  
+    				</div>
+				<div class="iconText">
+					Men&uuml;
+				</div>
+			</a>
+			<ul>
+        	        	<li>
+					<a href="index.htm#explainStart">Beweggr&uuml;nde</a>
+				</li>
+				<li><a href="index.htm#mainDiashow">Filme / Podcast</a>
+				</li>
+				<li>
+					<a href="index.htm#Pos7">Glaube</a>
+					<ul>
+    						<li><a href="index.htm#Pos7">Gottesdienste</a></li>
+						<li><a href="index.htm#Pos5">Vortr&auml;ge</a></li>
+						<li><a href="prophetie.htm">Prophetien</a></li>
+    						<li><a href="index.htm#GScripte">Scripte</a></li>
+    						
+					</ul>
+				</li>   
+        			<li>
+					<a href="index.htm#Pos5">IT / Multimedia</a> 
+  					<ul>
+      						<li><a href="https://www.cyberandi.de/DatenschutzMeinungsfreiheit" target="_blank">Datenschutz</a></li>
+      						<li><a href="https://www.cyberandi.de" target="_blank">IT-Security / Multimedia</a></li> 
+  					</ul>
+	 			</li>
+        			<li>
+					<a href="index.htm#Pos1">Krisenvorsorge</a> 
+					<ul>
+    						<li><a href="index.htm#Pos1">Beitr&auml;ge</a></li>
+    						<li><a href="index.htm#KScripte">Scripte</a></li> 
+					</ul>
+				</li>
+				<li>
+					Nachschlagewerke 
+  					<ul>
+      						<li><a href="https://www.wikipedia.de" target="_blank">Wikipedia</a></li>
+      						<li><a href="https://www.bibleserver.com" target="_blank">Bibel</a></li> 
+  					</ul>
+	 			</li>
+				<li>
+					<a href="#impressum">Impressum</a>
+				</li>
+
+    			</ul>
+		</nav>
+		<div id="Main">	
+			<main class="Content" id="start">
+				<div class="scrollPic">
+					<div class="containerOverlay">
+						<section class="Overlay">
+							<div class="contentOverlay">
+								<a href="https://www.bibleserver.com/LUT/Johannes16%2C33" target="_blank" class="containerBibleText">		
+									<h1 class="bibleText">Jesus spricht:<br>
+										<cite>In der Welt habt Ihr Angst;<br>
+											aber seid getrost,
+											<br>ich habe die Welt &uuml;berwunden</cite>														<br>
+										Johannes 16:33<br>
+										<img src="pic/Bibelserver.png"> 
+									</h1>
+								
+								</a>
+								<a href ="https://www.bibleserver.com/LUT/Offenbarung13%2C1" target="_blank" class="containerBibleText">
+									<h1 class="bibleText"><br>
+										Sei vorbereitet, auf das was kommt.<br><br>
+										<br>
+										Siehe: Offenbarung 13:1<br>
+										<img src="pic/Bibelserver.png"> 
+									</h1>
+								</a>
+							</div>
+						</section>	
+					</div>
+				</div>
+
+				<div class="scrollPic" id="explainStart">
+					<figure class="image">
+						<div class="img"> </div>
+						<div class="img"> </div>
+						<div class="img"> </div>
+						<div class="img"> </div>
+						<div class="img"> </div>
+						<div class="img"> </div>
+					</figure>
+					<div class="containerOverlay">
+						<section class="Overlay" id="ueber">
+							<article class="ContentText">Noch kurz eine Erkl&auml;rung zu meinem Glaubensverst&auml;ndnis. Gott Vater hat, schon vor der Sch&ouml;pfung der Erde, einen Plan f&uuml;r die ganze Menschheit. Die Menschen sind als Kinder Gottes erschaffen worden. Aber durch die S&uuml;nde, also das Essen der Frucht, des Baumes der Erkenntnisse, durch Adam und Eva, kam die Trennung von der pers&ouml;nlichen und direkten Begegnung mit Gott Vater. Deshalb sind wir alle Menschen, als Nachfahren Adam und Evas, als S&uuml;nder (von Gott getrennt) geboren. Der Sch&ouml;pfer wollte, da&szlig; wir seine Kinder sein sollen. Daher sind wir die Akteure, welche nach eigenem Willen und Handel, diesen Plan beschleunigen, ausbremsen oder um Verschiebung bitten k&ouml;nnen. Z.B. Bin ich mir sicher, g&auml;be es nicht Nebukadnezar, so h&auml;tte es einen anderen Herrscher gegeben, der die Juden verfolgt und Daniel und seine Freunde vernichten wollte. W&auml;re der Pharao Mose nicht gefolgt, h&auml;tte sicherlich ein anderer K&ouml;nig Mose ins Rote-Meer verfolgt und w&uuml;rde dort umkommen. Genauso sehe ich es mit der neusten Geschichte des 20. Jahrhunderts. H&auml;tte es Hitler und seine Gefolgschaft nicht gegeben, h&auml;tte vermutlich ein Lenin, Mussolini oder sonstiger Diktator die Welt in Chaos, Aufruhr und in die schlimmsten Verbrechen der Menschheit gef&uuml;hrt. Da Gott Vater es zu unserem Heil will. Damit wir verstehen und begreifen, er will uns erl&ouml;sen und in die ewige Verbundenheit und Seligkeit mit Ihm bringen. Deshalb hat er, auch vor ca. 2000 Jahren, seinen Sohn Jesus Christus, als Jungfrauengeburt, auf die Erde geschickt, damit dieser s&uuml;ndfrei, stellvertretend f&uuml;r all unsere Fehler, Vergehen und S&uuml;nden, am Kreuz sterben konnte. So da&szlig; die an Ihn glauben und Ihm nachfolgen, f&uuml;r immer bei Ihm sein k&ouml;nnen. Auch denke ich, da&szlig; Leute wie Abraham, Noah, Jona, Luther, Pabst Benedikt XVI und Andere von Gott eingesetzt wurden. W&auml;ren es nicht diese Menschen gewesen, so w&auml;ren es andere gewesen, die diese Taten in Namen Gottes h&auml;tten ausf&uuml;hren m&uuml;ssen...</article>
+											
+						</section>
+					</div>
+				</div>
+				<div class="scrollPic" id="mainDiashow">
+					<div class="containerOverlay">
+						<section class="Overlay containerDiashow" id="mainDiashow">
+							<div class="Diashow1" >
+								<div class="contSlide" id="Pos1">
+									<div class="txt">
+										Pos 1
+									</div>
+								</div>
+								<div class="contSlide" id="Pos2">
+									<div class="txt">
+										Pos 2
+									</div>
+								</div>
+								<div class="contSlide" id="Pos3">
+									<div class="txt">
+										Pos 3
+									</div>
+								</div>
+								<div class="contSlide" id="Pos4">
+									<div class="txt">
+										Pos 4
+									</div>
+								</div>
+								<div class="contSlide" id="Pos5">
+									<div class="txt">
+										Pos 5
+									</div>
+								</div>
+								<div class="contSlide" id="Pos6">
+									<div class="txt">
+										Pos 6
+									</div>
+								</div>
+								<div class="contSlide" id="Pos7">
+									<div class="txt">
+										Pos 7
+									</div>
+								</div>
+								<div class="contSlide" id="Pos8">
+									<div class="txt">
+										Pos 8
+									</div>
+			
+								</div>
+								<div class="contSlide" id="Pos9">
+									<div class="txt">
+										Pos 9
+									</div>
+								</div>
+		
+							</div>
+						</section>
+					</div>
+				</div>	
+				<div class="scrollPic" id="explainEnd">
+					<div class="containerOverlay">
+						<section class="Overlay">
+							<article class="ContentText">... Selbst die Wiedervereinigung Deutschlands, mit dem Zerfall der UdSSR sind f&uuml;r mich ein Zeichen der Vergebung der S&uuml;nden des 3. Reiches. Und damit es der letzte Ungl&auml;ubige begreift, wurde Benedikt XVI zum Papst ernannt. Auch denke ich, da&szlig; die aktuellen Ereignisse in Europa (Seuchen, Pandemien, Migrationspolitik, Wirtschaftskrise, Konflikte, Kriege, Naturkatastrophen usw.) auch von Gott Vater zugelassen werden. Damit wir Menschen wieder einmal an die Offenbarung erinnert werden. Da er will, da&szlig; wir endlich in Einklang, Freude und Liebe mit Ihm leben. Auch sehe ich, da&szlig; eigene Leben so, da&szlig; wir hier auf der Welt sind, unsere Berufung / Begabung / Charisma zu finden, um es dann im Reich Gottes f&uuml;r immer verwalten zu d&uuml;rfen. So zu sagen als Bew&auml;hrung f&uuml;r unsere Aufgabe / Position im Reich Gottes, sobald wir an Jesus glauben. Jeder kann und darf entscheiden, ob er es will, aber wenn nicht er, wird es ein Anderer machen m&uuml;ssen. Aber wer Jesus als Retter und Erl&ouml;ser sieht und sich als Werkzeug des Hl. Geistes hingibt, darf dann den Weg gehen. Auch denke ich, da&szlig; es in der gegengesetzten Richtung &auml;hnlich ist. Wer Jesus und Gott verneint, wird vom Satan oder Anti-Christen benutzt, um dann den von Gott gewollten B&ouml;sen Gegenpart voranzubringen. Auch da hat jeder seinen eigenen Willen und es kann dann auch eine andere Person sein. Aber wenn wir unsere Aufgaben, Erf&uuml;llung der Mission Gottes usw. getan haben, wird Gott uns aus dem diesigen Leben entziehen und uns in die Position zu versetzen, welche wir in Ewigkeit mit Ihm haben werden. Daher ist der Tod, immer nur eine Gl&uuml;ckliche Position, f&uuml;r den Sterbenden auf Erden, denn er ist gerade auf dem Weg zum Herrn. Nur f&uuml;r die weltlich orientierten Freunde und Angeh&ouml;rigen ist dies ein gro&szlig;er Schmerz und Verlust. Daher w&uuml;nsche ich uns die Weisheit und den Durchblick des Heiligen Geistes, damit wir erkennen was Jesus von uns will.</article>	
+						</section>
+					</div>
+				</div>
+			</main>
+		</div>
+		<footer>
+			<aside>		
+				<div id="impressum" class="modal">
+					<div class="Info">
+						<a href="#start" class="buttonModal" onclick="">x</a>
+						<div class="InfoText">
+							<p>Verantwortlicher im Sinne des Pressegesetzes:
+							</p>
+							<address>Stawinski Andreas<br>
+							Jaspersallee 22<br>
+							81245 M&uuml;nchen<br>
+							Telefon: 089/74792- 201<br>
+							Telefax: 089/74792- 202<br>
+							E-Mail: cyberandi&#00064;outlook.de <br>
+							Web: <a href="https://www.cyberandi.de" target="_blank">https://cyberandi.tumblr.com</a>
+							</address>
+							<p>
+							Diese Seite nutzt <a href="https://www.torproject.org/">DNS over TOR(onion)<img src="pic/tor.png"></a>. Deshalb gibt es hier keine Zensur durch URL-Filter, der Povider(Telekom, Vodafone, O2 usw.), Geheimdienste und Regierungen.<br>
+							Sondern nur einen Porno- und Werbungsblocker, der gegen das Tracking durch Google, Apple, Amazon, Facebook, Otto Group, VG Wort und der Sendeanstalten usw. fungiert.<br>
+							Die Technik dahinter ist die Freeware <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank">CyberSecurity-Box</a> <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank"><img src="pic/csb.png"></a>.
+							</p>
+							Bitte lesen Sie auch die <a href="#datenschutz" onclick="datenschutz();">Datenschutzbestimmungen</a> sowie den <a href="#haftung" onclick="haftung();">Hauftungsausschluss</a> durch.
+						</div>
+					</div>
+				</div>
+				<div id="datenschutz" class="modal">
+					<div class="Info">
+						<a href="#start" class="buttonModal" onclick="">x</a>
+						<div class="InfoText">
+							<p>Die Nutzung unserer Webseite ist in der Regel ohne Angabe personenbezogener Daten m&ouml;glich. Soweit auf unseren Seiten personenbezogene Daten (beispielsweise name, Anschrift oder eMail-Adreßen) erhoben werden, erfolgt dies, soweit m&ouml;glich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdr&uuml;ckliche Zustimmung nicht an Dritte weitergegeben.
+							</p>
+							<p>Wir weisen darauf hin, daß die Daten&uuml;bertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitsl&uuml;cken aufweisen kann. Ein l&uuml;ckenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht m&ouml;glich.
+							</p
+			
+							<p>Der Nutzung von im Rahmen der Impreßumspflicht ver&ouml;ffentlichten Kontaktdaten durch Dritte zur &uuml;bersendung von nicht ausdr&uuml;cklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdr&uuml;cklich widersprochen. Die Betreiber der Seiten behalten sich ausdr&uuml;cklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.
+							</p>
+							<p>
+								Diese Seite nutzt <a href="https://www.torproject.org/">DNS over TOR(onion)<img src="pic/tor.png"></a>. Deshalb gibt es hier keine Zensur durch URL-Filter, der Povider(Telekom, Vodafone, O2 usw.), Geheimdienste und Regierungen.<br>
+								Sondern nur einen Porno- und Werbungsblocker, der gegen das Tracking durch Google, Apple, Amazon, Facebook, Otto Group, VG Wort und der Sendeanstalten usw. fungiert.<br>
+								Die Technik dahinter ist die Freeware <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank">CyberSecurity-Box</a> <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank"><img src="pic/csb.png"></a>.
+							</p>
+							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Facebook-Plugins (Like-Button)<br>
+	
+								Auf unseren Seiten sind Plugins des sozialen Netzwerks Facebook (“Meta”,“Facebook”,Meta Platforms Inc., 1601 Willow Road, Menlo Park, California, 94025, USA) integriert. Die Facebook-Plugins erkennen Sie an dem Facebook-Logo oder dem “Like-Button” (“Gef&auml;llt mir”) auf unserer Seite. Eine &uuml;bersicht &uuml;ber die Facebook-Plugins finden Sie hier: <a href="https://developers.facebook.com/docs/plugins/" target="_blank">https://developers.facebook.com/docs/plugins/</a>.
+								Wenn Sie unsere Seiten besuchen, wird &uuml;ber das Plugin eine direkte Verbindung zwischen Ihrem Browser und dem Facebook-Server hergestellt. Facebook erh&auml;lt dadurch die Information, daß Sie mit Ihrer IP-Adreße unsere Seite besucht haben. Wenn Sie den Facebook “Like-Button” anklicken w&auml;hrend Sie in Ihrem Facebook-Account eingeloggt sind, k&ouml;nnen Sie die Inhalte unserer Seiten auf Ihrem Facebook-Profil verlinken. Dadurch kann Facebook den Besuch unserer Seiten Ihrem Benutzerkonto zuordnen. Wir weisen darauf hin, daß wir als Anbieter der Seiten keine Kenntnis vom Inhalt der &uuml;bermittelten Daten sowie deren Nutzung durch Facebook erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerkl&auml;rung von facebook unter <a href="https://de-de.facebook.com/policy.php" target="_blank">https://de-de.facebook.com/policy.php</a><br>
+				
+								Wenn Sie nicht w&uuml;nschen, daß Facebook den Besuch unserer Seiten Ihrem Facebook-Nutzerkonto zuordnen kann, loggen Sie sich bitte aus Ihrem Facebook-Benutzerkonto aus.
+							</p>
+					
+							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Google Analytics<br>
+					
+								Diese Website benutzt Google Analytics, einen Webanalysedienst der Alphabet Inc. (“Google”, “Alphabet”). Google Analytics verwendet sog. “Cookies”, Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie erm&ouml;glichen. Die durch den Cookie erzeugten Informationen &uuml;ber Ihre Benutzung dieser Website werden in der Regel an einen Server von Google in den USA &uuml;bertragen und dort gespeichert. Im Falle der Aktivierung der IP-Anonymisierung auf dieser Webseite wird Ihre IP-Adreße von Google jedoch innerhalb von Mitgliedstaaten der Europ&auml;ischen Union oder in anderen Vertragßtaaten des Abkommens &uuml;ber den Europ&auml;ischen Wirtschaftsraum zuvor gek&uuml;rzt.<br>
+					
+								Nur in Ausnahmef&auml;llen wird die volle IP-Adreße an einen Server von Google in den USA &uuml;bertragen und dort gek&uuml;rzt. Im Auftrag des Betreibers dieser Website wird Google diese Informationen benutzen, um Ihre Nutzung der Website auszuwerten, um Reports &uuml;ber die Websiteaktivit&auml;ten zusammenzustellen und um weitere mit der Websitenutzung und der Internetnutzung verbundene Dienstleistungen gegen&uuml;ber dem Websitebetreiber zu erbringen. Die im Rahmen von Google Analytics von Ihrem Browser &uuml;bermittelte IP-Adreße wird nicht mit anderen Daten von Google zusammengef&uuml;hrt.<br>
+					
+								Sie k&ouml;nnen die Speicherung der Cookies durch eine entsprechende Einstellung Ihrer Browser-Software verhindern; wir weisen Sie jedoch darauf hin, daß Sie in diesem Fall gegebenenfalls nicht s&auml;mtliche Funktionen dieser Website vollumf&auml;nglich werden nutzen k&ouml;nnen. Sie k&ouml;nnen dar&uuml;ber hinaus die Erfaßung der durch das Cookie erzeugten und auf Ihre Nutzung der Website bezogenen Daten (inkl. Ihrer IP-Adreße) an Google sowie die Verarbeitung dieser Daten durch Google verhindern, indem sie das unter dem folgenden Link verf&uuml;gbare Browser-Plugin herunterladen und installieren: <a href="https://tools.google.com/dlpage/gaoptout?hl=de">https://tools.google.com/dlpage/gaoptout?hl=de</a>.
+							</p>
+					
+							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Google Adsense<br>
+					
+								Diese Website benutzt Google AdSense, einen Dienst zum Einbinden von Werbeanzeigen der Alphabet Inc. (“Google”, “Alphabet”). Google AdSense verwendet sog. “Cookies”, Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website erm&ouml;glicht. Google AdSense verwendet auch so genannte Web Beacons (unsichtbare Grafiken). Durch diese Web Beacons k&ouml;nnen Informationen wie der Besucherverkehr auf diesen Seiten ausgewertet werden.
+			
+								Die durch Cookies und Web Beacons erzeugten Informationen &uuml;ber die Benutzung dieser Website (einschließlich Ihrer IP-Adreße) und Auslieferung von Werbeformaten werden an einen Server von Google in den USA &uuml;bertragen und dort gespeichert. Diese Informationen k&ouml;nnen von Google an Vertragspartner von Google weiter gegeben werden. Google wird Ihre IP-Adreße jedoch nicht mit anderen von Ihnen gespeicherten Daten zusammenf&uuml;hren.
+					
+								Sie k&ouml;nnen die Installation der Cookies durch eine entsprechende Einstellung Ihrer Browser Software verhindern; wir weisen Sie jedoch darauf hin, daß Sie in diesem Fall gegebenenfalls nicht s&auml;mtliche Funktionen dieser Website voll umf&auml;nglich nutzen k&ouml;nnen. Durch die Nutzung dieser Website erkl&auml;ren Sie sich mit der Bearbeitung der &uuml;ber Sie erhobenen Daten durch Google in der zuvor beschriebenen Art und Weise und zu dem zuvor benannten Zweck einverstanden.
+							</p>
+					
+							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Google +1<br>
+					
+								Erfaßung und Weitergabe von Informationen:
+								Mithilfe der Google +1-Schaltfl&auml;che k&ouml;nnen Sie Informationen weltweit ver&ouml;ffentlichen. &uuml;ber die Google +1-Schaltfl&auml;che erhalten Sie und andere Nutzer personalisierte Inhalte von Google und unseren Partnern. Google speichert sowohl die Information, daß Sie f&uuml;r einen Inhalt +1 gegeben haben, als auch Informationen &uuml;ber die Seite, die Sie beim Klicken auf +1 angesehen haben. Ihre +1 k&ouml;nnen als Hinweise zusammen mit Ihrem Profilnamen und Ihrem Foto in Google-Diensten, wie etwa in Suchergebnißen oder in Ihrem Google-Profil, oder an anderen Stellen auf Websites und Anzeigen im Internet eingeblendet werden.
+								Google zeichnet Informationen &uuml;ber Ihre +1-Aktivit&auml;ten auf, um die Google-Dienste f&uuml;r Sie und andere zu verbeßern. Um die Google +1-Schaltfl&auml;che verwenden zu k&ouml;nnen, ben&ouml;tigen Sie ein weltweit sichtbares, &ouml;ffentliches Google-Profil, das zumindest den f&uuml;r das Profil gew&auml;hlten namen enthalten muß. Dieser name wird in allen Google-Diensten verwendet. In manchen F&auml;llen kann dieser name auch einen anderen namen ersetzen, den Sie beim Teilen von Inhalten &uuml;ber Ihr Google-Konto verwendet haben. Die Identit&auml;t Ihres Google-Profils kann Nutzern angezeigt werden, die Ihre E-Mail-Adreße kennen oder &uuml;ber andere identifizierende Informationen von Ihnen verf&uuml;gen.<br>
+				
+								Verwendung der erfaßten Informationen:
+								Neben den oben erl&auml;uterten Verwendungszwecken werden die von Ihnen bereitgestellten Informationen gem&auml;ß den geltenden Google-Datenschutzbestimmungen genutzt. Alphabet ver&ouml;ffentlicht m&ouml;glicherweise zusammengefaßte Statistiken &uuml;ber die +1-Aktivit&auml;ten der Nutzer bzw. gibt diese an Nutzer und Partner weiter, wie etwa Publisher, Inserenten oder verbundene Websites.
+							</p>
+					
+							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Twitter<br>
+							
+								Auf unseren Seiten sind Funktionen des Dienstes Twitter eingebunden. Diese Funktionen werden angeboten durch die Twitter Inc., Twitter, Inc. 1355 Market St, Suite 900, San Francisco, CA 94103, USA. Durch das Benutzen von Twitter und der Funktion “Re-Tweet” werden die von Ihnen besuchten Webseiten mit Ihrem Twitter-Account verkn&uuml;pft und anderen Nutzern bekannt gegeben. Dabei werden auch Daten an Twitter &uuml;bertragen.<br>
+					
+								Wir weisen darauf hin, daß wir als Anbieter der Seiten keine Kenntnis vom Inhalt der &uuml;bermittelten Daten sowie deren Nutzung durch Twitter erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerkl&auml;rung von Twitter unter <a href="http://twitter.com/privacy" target="_blank">http://twitter.com/privacy</a>.<br>
+					
+								Ihre Datenschutzeinstellungen bei Twitter k&ouml;nnen Sie in den Konto-Einstellungen unter <a href="http://twitter.com/account/settings" target="_blank">https://twitter.com/account/settings</a> &auml;ndern.
+								<br>
+								Quellverweis: Datenschutzerkl&auml;rung von <a href="https://www.erecht24.de" terget="_blank">eRecht24</a>, dem Portal zum Internetrecht von Rechtsanwalt S&ouml;ren Siebert, Facebook Datenschutzerkl&auml;rung, Google Analytics Bedingungen, Google Adsense Datenschutzerkl&auml;rung, Google +1 Bedingungen, Datenschutzerkl&auml;rung f&uuml;r Twitter
+							</p>				
+						</div>
+					</div>
+				</div>
+				<div id="haftung" class="modal">
+					<div class="Info">
+						<a href="#start" class="buttonModal" onclick="">x</a>
+						<div class="InfoText">
+							<p>Haftung f&uuml;r Inhalte<br>
+								Als Diensteanbieter sind wir gem&auml;ß § 7 Abs.1 TMG f&uuml;r eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, &uuml;bermittelte oder gespeicherte fremde Informationen zu &uuml;berwachen oder nach Umst&auml;nden zu forschen, die auf eine rechtswidrige T&auml;tigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unber&uuml;hrt. Eine diesbez&uuml;gliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung m&ouml;glich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
+							</p>
+							<p>
+								Haftung f&uuml;r Links<br>
+								Unser Angebot enth&auml;lt Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb k&ouml;nnen wir f&uuml;r diese fremden Inhalte auch keine Gew&auml;hr &uuml;bernehmen. F&uuml;r die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf m&ouml;gliche Rechtsverst&ouml; e &uuml;berpr&uuml;ft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
+							</p>
+							<p>
+								Urheberrecht<br>
+
+								Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielf&auml;ltigung, Bearbeitung, Verbreitung und jede Art der Verwertung au erhalb der Grenzen des Urheberrechtes bed&uuml;rfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur f&uuml;r den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.
+							</p>
+							<p>
+								Quellenangaben: eRecht24 Disclaimer, Disclaimer von <a href="https://www.erecht24.de" terget="_blank">eRecht24</a>, dem Portal zum Internetrecht von Rechtsanwalt S&ouml;ren Siebert
+							</p>
+						</div>
+					</div>
+				</div>	
+				<div id="Screen" class="modal">
+					<div class="Info">
+						<a href="#start" class="buttonModal" onclick="">x</a>
+						<div class="InfoText">
+						</div>
+					</div>		
+				</div>
+			</aside>
+			<div class="footerText">
+				&#00169; 2023 &#00064;CyberAndi <a href="#impressum" onclick="">Impressum</a>
+			</div>
+		</footer>
+	</body>
+</html>
+
+
+EOF
+echo
+echo index.htm
+echo
+
+cat << EOF > /www/CaptivePortal/prophetie.htm
+
+<!DOCTYPE html>
+<html lang="de">
+	
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="1">
+	<meta http-equiv="content-type" content="text/html, charset=utf-8">
+	<meta charset="utf-8">	
+	<meta name="Description" content="C&grave;Movie das Hoffnungsportal mit Videostreaming. Als den Gegenpol zu Panik und Chaos seitens der Medien und Politik">
+	<link rel="icon" type="image/x-icon" href="/pic/favicon.ico">
+	<link rel="alternate" href="prophetie_en.htm" hreflang="en">
+	<link href="theme_variable.css" rel="stylesheet" type="text/css" />	
+	<link href="theme.css" rel="stylesheet" type="text/css" />
+	<link href="mobile.css" rel="stylesheet" type="text/css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+	<script src="framewrk.js"></script>
+	<head>
+		<title>C&grave;Movie das Hoffnungsportal</title>
+	</head>	
+	<body onload="" onresize="">
+		
+		<header class="header" id="headerHidden">
+			
+			<div class="headerText">
+			<h1>
+				<!-- Text insert by css Tag '.header h1' -->
+			</h1>
+			<h3>
+				<!-- Text insert by css Tag '.header h3' -->
+			</h3>
+			<h4>
+				<a href ="https://www.bibleserver.com/LUT/Offenbarung13%2C1" target="_blank">Sei vorbereitet, auf das was kommt</a>.
+			</h4>
+			</div>
+
+			<a href="#explainEnd" id="NaviDown">
+				<div>
+					&#9660;
+				</div>
+			</a>
+			
+		</header>
+
+	
+		<nav id="topMenu" class="menu">
+    			<a class="containerIcon" href="#start">
+				<div class="iconMenu">
+        				<div></div>
+        				<div></div>
+        				<div></div>  
+    				</div>
+				<div class="iconText">
+					Men&uuml;
+				</div>
+			</a>
+			<ul>
+        	        	<li>
+					<a href="index.htm#explainStart">Beweggr&uuml;nde</a>
+				</li>
+				<li>
+					<a href="index.htm#mainDiashow">Filme / Podcast</a>
+				</li>
+				<li>
+					<a href="index.htm#Pos7">Glaube</a>
+					<ul>
+    						<li><a href="index.htm#Pos7">Gottesdienste</a></li>
+						<li><a href="index.htm#Pos5">Vortr&auml;ge</a></li>
+						<li><a href="prophetie.htm">Prophetien</a></li>
+    						<li><a href="index.htm#GScripte">Scripte</a></li>
+    						
+					</ul>
+				</li>   
+        			<li>
+					<a href="index.htm#Pos5">IT / Multimedia</a> 
+  					<ul>
+      						<li><a href="https://www.cyberandi.de/DatenschutzMeinungsfreiheit" target="_blank">Datenschutz</a></li>
+      						<li><a href="https://www.cyberandi.de" target="_blank">IT-Security / Multimedia</a></li> 
+  					</ul>
+	 			</li>
+        			<li>
+					<a href="index.htm#Pos1">Krisenvorsorge</a> 
+					<ul>
+    						<li><a href="index.htm#Pos1">Beitr&auml;ge</a></li>
+    						<li><a href="index.htm#KScripte">Scripte</a></li> 
+					</ul>
+				</li>
+				<li>
+					Nachschlagewerke 
+  					<ul>
+      						<li><a href="https://www.wikipedia.de" target="_blank">Wikipedia</a></li>
+      						<li><a href="https://www.bibleserver.com" target="_blank">Bibel</a></li> 
+  					</ul>
+	 			</li>
+				<li>
+					<a href="#impressum">Impressum</a>
+				</li>
+
+    			</ul>
+		</nav>
+		<div id="Main">	
+			<main class="Content" id="start">
+				<div class="containerOverlay">
+						<section class="Overlay Book">
+							<div class="leftLast">
+							<article class="left"><p>
+								Ich rede schon seit Jahren, was noch alles kommen k&ouml;nnte. Warum, weil ich es schon vor Jahrzehnten das erste mal davon tr&auml;umte. Und ich tr&auml;umte diesen identischen Traum mehrfach und es waren Jahre dazwischen. Zuletzt 2020/21. Ich hatte auch schon immer das Datum ca. 20 Jahre nach der Jahrtausendwende. 
+								Als N&auml;chstes wird sich noch eine Art B&uuml;rgerkrieg weltweit ausbreiten. Und da werden Juden/Christen gegen Moslems, Arm gegen Reich, Umweltsch&uuml;tzer gegen Klimasch&uuml;tzer, LQBT- gegen Biologische Geschlechter-Bef&uuml;rworter, Demokratie- gegen Sozialismus-/Kommunismus-Bef&uuml;rworter usw. aufstehen. Ich wollte es Jahrzehnte nicht wahrhaben. Als ich aber 2020 wieder den selben Traum hatte, viel es mir wie Schuppen von den Augen. Da einige Wochen sp&auml;ter einer dieser Ereignisse des Traumes war wurde. Genauso wurden noch einige weiter Ereignisse des Traumes 2021 wahr. Ich habe mich, seit Jahren, mit  diesen Traum und Eindr&uuml;cke auf verschiedene Weise besch&auml;ftigt.
+								</p> 
+								<ol>
+									<li>
+										<b>Wissenschaftlich und Wirtschaftlich</b><br><br>
+										Es gab mal eine Theorie von 7 guten Jahren und 7 schlechten Jahren. Dies war f&uuml;r die Wissenschaft und Wirtschaft bis in die 1990er klar. 
+										Also:<br>
+										Die Finanzkrise um Lehman Brothers 2008 usw.<br>
+										Schuldenbremse in der BRD<br>
+										Deutschland als der gr&ouml;&szlig;te Finanzier der EU und auch der Welt wir nicht immer diese Leistung bringen.<br>
+										Also nahm ich an, da&szlig; es 2018 mit den Finazproblem los gehen wird, die sich jetzt 2022 richtig zeigen. Dazu der Energiewandel. Es wurde halt von der Politik und EZB versucht alles zu verschieben und diese Zyklen, welche fast 2000 Jahre funktionierten, zu ignorieren und zu bek&auml;mpfen.
+									</li>
+									<br>
+									<li>
+										<b>Soziologisch und geschichtlich</b><br><br>
+										Die ungebremste Einwanderung und das Aufheben aller Traditionen wird fr&uuml;her oder sp&auml;ter zu einer Spaltung der Gesellschaft und der EU f&uuml;hren. Da ab dem Zeitpunkt, wo Deutschland nicht mehr f&uuml;r die EU zahlen kann, die restlichen EU-Staaten aus dem Euro bzw. EU-Raum austreten werden und wir als die EU-Vorreiter dann alleine die Zeche des Euros und der EU zahlen werden m&uuml;ssen. Da aber in Deutschland seit Jahrzehnten versucht wird, jegliche Ethnie, Rasse und Geschlecht zu zerst&ouml;ren, dachte ich immer an Soziale Unruhen welche in einem B&uuml;rgerkrieg enden werden. Und dieser sich dann auch Weltweit ausbreitet. Da ja laut meinen Recherchen &uuml;ber 60% in der BRD nicht deutscher Abstammung sind.  
+									</li>
+									<br>
+									<li>
+										<b>Glaubensm&auml;&szlig;ig</b><br>
+										<p>
+											Aber dies ist ja schon seit ca. 2000 Jahren bekannt. Einfach mal aus der Bibel die Offenbarung 13 und Daniel 2 lesen.<br><br> 
+											<cite>	<b>1</b> Und ich sah ein Tier aus dem Meer steigen, das hatte zehn H&ouml;rner und sieben H&auml;upter und auf seinen H&ouml;rnern zehn Kronen und auf seinen H&auml;uptern l&auml;sterliche Namen. 
+												<b>2</b> Und das Tier, das ich sah, war gleich einem Panther und seine F&uuml;&szlig;e wie B&auml;renf&uuml;&szlig;e und sein Rachen wie ein L&ouml;wenrachen. Und der Drache gab ihm seine Kraft und seinen Thron und gro&szlig;e Macht.	
+												<b>3</b> Und ich sah eines seiner H&auml;upter, als w&auml;re es t&ouml;dlich verwundet, und seine t&ouml;dliche Wunde wurde heil. Und die ganze Erde wunderte sich &uuml;ber das Tier, 
+												<b>4</b> und sie beteten den Drachen an, weil er dem Tier die Macht gab, und beteten das Tier an und sprachen: Wer ist dem Tier gleich und wer kann mit ihm k&auml;mpfen? 
+												<b>5</b> Und es wurde ihm ein Maul gegeben, zu reden gro&szlig;e Dinge und L&auml;sterungen, und ihm wurde Macht gegeben, es zu tun zweiundvierzig Monate lang. 
+												<b>6</b> Und es tat sein Maul auf zur L&auml;sterung gegen Gott, zu l&auml;stern seinen Namen und seine H&uuml;tte und die im Himmel wohnen. 
+												<b>7</b> Und es wurde ihm gegeben, zu k&auml;mpfen mit den Heiligen und sie zu &uuml;berwinden; und es wurde ihm gegeben Macht &uuml;ber alle St&auml;mme und V&ouml;lker und Sprachen und Nationen. 
+												<b>8</b> Und alle, die auf Erden wohnen, werden ihn anbeten, alle, deren Namen nicht vom Anfang der Welt an geschrieben stehen in dem Lebensbuch des Lammes, das geschlachtet ist. 
+												<b>9</b> Hat jemand Ohren, der h&ouml;re! 
+												<b>10</b> Wenn jemand ins Gef&auml;ngnis soll, dann wird er ins Gef&auml;ngnis kommen; wenn jemand mit dem Schwert get&ouml;tet werden soll, dann wird er mit dem Schwert get&ouml;tet. Hier ist Geduld und Glaube der Heiligen! 
+												<b>11</b> Und ich sah ein zweites Tier aufsteigen aus der Erde; das hatte zwei H&ouml;rner wie ein Lamm und redete wie ein Drache. 
+												<b>12</b> Und es &uuml;bt alle Macht des ersten Tieres aus vor seinen Augen und es macht, dass die Erde und die darauf wohnen, das erste Tier anbeten, dessen t&ouml;dliche Wunde heil geworden war. 
+												<b>13</b> Und es tut gro&szlig;e Zeichen, sodass es auch Feuer vom Himmel auf die Erde fallen l&auml;sst vor den Augen der Menschen; 
+												<b>14</b> und es verf&uuml;hrt, die auf Erden wohnen, durch die Zeichen, die zu tun vor den Augen des Tieres ihm Macht gegeben ist; und sagt denen, die auf Erden wohnen, dass sie ein Bild machen sollen dem Tier, das die Wunde vom Schwert hatte und lebendig geworden war. 
+												<b>15</b> Und es wurde ihm gegeben, Geist zu verleihen dem Bild des Tieres, damit das Bild des Tieres reden und machen k&ouml;nne, dass alle, die das Bild des Tieres nicht anbeteten, get&ouml;tet w&uuml;rden. 
+												<b>16</b> Und es macht, dass sie allesamt, die Kleinen und Gro&szlig;en, die Reichen und Armen, die Freien und Sklaven, sich ein Zeichen machen an ihre rechte Hand oder an ihre Stirn
+												<b>17</b> und dass niemand kaufen oder verkaufen kann, wenn er nicht das Zeichen hat, n&auml;mlich den Namen des Tieres oder die Zahl seines Namens. 
+												<b>18</b> Hier ist Weisheit! Wer Verstand hat, der &uuml;berlege die Zahl des Tieres; denn es ist die Zahl eines Menschen, und seine Zahl ist sechshundertsechsundsechzig
+											</cite><br>
+											Quelle: <a href="https://www.bibleserver.com/LUT/Offenbarung13" target="_blank">https://www.bibleserver.com/LUT/Offenbarung13</a>
+										</p>
+										<p>	
+											Es wird vermutet, da&szlig; das Tier aus dem Meer die EU oder UN(Vereinte Nationen), welche Beschl&uuml;sse zu Klima, Gendern, Abtreibung, Migration usw. erlassen haben, sind. Da es aus dem Gebiet des R&ouml;mischen Reiches(Mittelmeerraum und EU, Naher Osten und Nord Afrika) kommen wird. Wobei die Nordamerikaner auch als ausgewanderte und vertriebene Europ&auml;er dazu z&auml;hlen.
+										</p>
+										<p id="explainEnd">
+											Als Erkl&auml;rung dient hier Daniel 2:25 ff.<br>
+											<cite>
+												<b>25</b> Arjoch brachte Daniel eilends hinein vor den K&ouml;nig und sprach zu ihm: Ich habe einen Mann gefunden unter den Gefangenen aus Juda, der dem K&ouml;nig die Deutung sagen kann.
+												<b>26</b> Der K&ouml;nig antwortete und sprach zu Daniel, den sie Beltschazar nannten: Bist du es, der mir den Traum, den ich gesehen habe, und seine Deutung kundtun kann?
+												<b>27</b> Daniel fing an vor dem K&ouml;nig und sprach: Das Geheimnis, nach dem der K&ouml;nig fragt, verm&ouml;gen die Weisen, Zauberer, Zeichendeuter und Sternkundigen dem K&ouml;nig nicht zu sagen.
+												<b>28</b> Aber es ist ein Gott im Himmel, der Geheimnisse offenbart. Der hat dem K&ouml;nig Nebukadnezar kundgetan, was am Ende der Tage geschehen soll. Mit deinem Traum und deinen Gesichten, als du schliefst, verhielt es sich so:
+												<b>29</b> Du, K&ouml;nig, dachtest auf deinem Bett, was dereinst geschehen w&uuml;rde; und der, der Geheimnisse offenbart, hat dir kundgetan, was geschehen wird.
+												<b>30</b> Mir aber ist dies Geheimnis offenbart worden, nicht als w&auml;re meine Weisheit gr&ouml;&szlig;er als die Weisheit aller, die da leben, sondern damit dem K&ouml;nig die Deutung kundw&uuml;rde und du deines Herzens Gedanken erf&uuml;hrest.
+												<b>31</b> Du, K&ouml;nig, schautest, und siehe, ein sehr gro&szlig;es und hohes und hell gl&auml;nzendes Bild stand vor dir, das war schrecklich anzusehen.
+												<b>32</b> Das Haupt dieses Bildes war von feinem Gold, seine Brust und seine Arme waren von Silber, sein Bauch und seine Lenden waren von Bronze,
+												<b>33</b> seine Schenkel waren von Eisen, seine F&uuml;&szlig;e waren teils von Eisen und teils von Ton.
+												<b>34</b> Das schautest du, bis ein Stein herunterkam, ohne Zutun von Menschenh&auml;nden; der traf das Bild an seinen F&uuml;&szlig;en, die von Eisen und Ton waren, und zermalmte sie.
+												<b>35</b> Da wurden miteinander zermalmt Eisen, Ton, Bronze, Silber und Gold und wurden wie Spreu auf der Sommertenne, und der Wind verwehte sie, dass man sie nirgends mehr finden konnte. Der Stein aber, der das Bild zerschlug, wurde zu einem gro&szlig;en Berg und f&uuml;llte die ganze Welt.
+												<b>36</b> Das ist der Traum. Nun wollen wir die Deutung vor dem K&ouml;nig sagen.
+												<b>37</b> Du, K&ouml;nig, K&ouml;nig aller K&ouml;nige, dem der Gott des Himmels K&ouml;nigreich, Macht, St&auml;rke und Ehre gegeben hat
+												<b>38</b> und dem er alle L&auml;nder, in denen Leute wohnen, dazu die Tiere auf dem Felde und die V&ouml;gel unter dem Himmel in die H&auml;nde gegeben und dem er &uuml;ber alles Gewalt verliehen hat! Du bist das goldene Haupt.
+												<b>39</b> Nach dir wird ein anderes K&ouml;nigreich aufkommen, geringer als deines, und dann ein drittes K&ouml;nigreich, das aus Bronze ist und &uuml;ber alle L&auml;nder herrschen wird.
+												<b>40</b> Und das vierte K&ouml;nigreich wird hart sein wie Eisen; denn wie Eisen alles zermalmt und zerschl&auml;gt, so wird es auch alles zermalmen und zerbrechen.
+												<b>41</b> Dass du aber die F&uuml;&szlig;e und Zehen teils von Ton und teils von Eisen gesehen hast, bedeutet: Das wird ein zerteiltes K&ouml;nigreich sein; doch wird etwas von des Eisens H&auml;rte darin bleiben, wie du ja gesehen hast Eisen mit Ton vermengt.
+												<b>42</b> Und dass die Zehen an seinen F&uuml;&szlig;en teils von Eisen und teils von Ton sind, bedeutet: Zum Teil wird's ein starkes und zum Teil ein schwaches Reich sein.
+												<b>43</b> Und dass du gesehen hast Eisen mit Ton vermengt, bedeutet: Sie werden sich zwar durch Heiraten miteinander vermischen, aber sie werden doch nicht aneinander festhalten, so wie sich Eisen mit Ton nicht mengen l&auml;sst.
+												<b>44</b> Aber zur Zeit dieser K&ouml;nige wird der Gott des Himmels ein Reich aufrichten, das nimmermehr zerst&ouml;rt wird; und sein Reich wird auf kein anderes Volk kommen. Es wird alle diese K&ouml;nigreiche zermalmen und zerst&ouml;ren; aber es selbst wird ewig bleiben,
+												<b>45</b> wie du ja gesehen hast, dass ein Stein ohne Zutun von Menschenh&auml;nden vom Berg herunterkam, der Eisen, Bronze, Ton, Silber und Gold zermalmte. Ein gro&szlig;er Gott hat dem K&ouml;nig kundgetan, was dereinst geschehen wird. Der Traum ist zuverl&auml;ssig und die Deutung ist richtig.
+												<b>46</b> Da fiel der K&ouml;nig Nebukadnezar auf sein Angesicht und warf sich nieder vor Daniel und befahl, man sollte ihm Speisopfer und R&auml;ucheropfer darbringen.
+												<b>47</b> Und der K&ouml;nig antwortete Daniel und sprach: Wahrhaftig, euer Gott ist ein Gott &uuml;ber alle G&ouml;tter und ein Herr &uuml;ber alle K&ouml;nige, der Geheimnisse offenbaren kann, wie du dies Geheimnis hast offenbaren k&ouml;nnen
+											</cite>	
+											</p>
+											Quelle: <a href="https://www.bibleserver.com/LUT/Daniel2%2C25" target="_blank">https://www.bibleserver.com/LUT/Daniel2:25</a>
+									</li>
+								</ol>
+							</article>
+							</div>		
+						</section>
+				</div>
+			</main>
+		</div>
+		<footer>
+			<aside>		
+				<div id="impressum" class="modal">
+					<div class="Info">
+						<a href="#start" class="buttonModal" onclick="">x</a>
+						<div class="InfoText">
+							<p>Verantwortlicher im Sinne des Pressegesetzes:
+							</p>
+							<address>Stawinski Andreas<br>
+							Jaspersallee 22<br>
+							81245 M&uuml;nchen<br>
+							Telefon: 089/74792- 201<br>
+							Telefax: 089/74792- 202<br>
+							E-Mail: cyberandi&#00064;outlook.de <br>
+							Web: <a href="https://www.cyberandi.de" target="_blank">https://cyberandi.tumblr.com</a>
+							</address>
+							<p>
+							Diese Seite nutzt <a href="https://www.torproject.org/">DNS over TOR(onion)<img src="pic/tor.png"></a>. Deshalb gibt es hier keine Zensur durch URL-Filter, der Povider(Telekom, Vodafone, O2 usw.), Geheimdienste und Regierungen.<br>
+							Sondern nur einen Porno- und Werbungsblocker, der gegen das Tracking durch Google, Apple, Amazon, Facebook, Otto Group, VG Wort und der Sendeanstalten usw. fungiert.<br>
+							Die Technik dahinter ist die Freeware <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank">CyberSecurity-Box</a> <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank"><img src="pic/csb.png"></a>.
+							</p>
+							Bitte lesen Sie auch die <a href="#datenschutz" onclick="datenschutz();">Datenschutzbestimmungen</a> sowie den <a href="#haftung" onclick="haftung();">Hauftungsausschluss</a> durch.
+						</div>
+					</div>
+				</div>
+				<div id="datenschutz" class="modal">
+					<div class="Info">
+						<a href="#start" class="buttonModal" onclick="">x</a>
+						<div class="InfoText">
+							<p>Die Nutzung unserer Webseite ist in der Regel ohne Angabe personenbezogener Daten m&ouml;glich. Soweit auf unseren Seiten personenbezogene Daten (beispielsweise name, Anschrift oder eMail-Adre&szlig;en) erhoben werden, erfolgt dies, soweit m&ouml;glich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdr&uuml;ckliche Zustimmung nicht an Dritte weitergegeben.
+							</p>
+							<p>Wir weisen darauf hin, da&szlig; die Daten&uuml;bertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitsl&uuml;cken aufweisen kann. Ein l&uuml;ckenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht m&ouml;glich.
+							</p
+			
+							<p>Der Nutzung von im Rahmen der Impre&szlig;umspflicht ver&ouml;ffentlichten Kontaktdaten durch Dritte zur &uuml;bersendung von nicht ausdr&uuml;cklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdr&uuml;cklich widersprochen. Die Betreiber der Seiten behalten sich ausdr&uuml;cklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.
+							</p>
+							<p>
+								Diese Seite nutzt <a href="https://www.torproject.org/">DNS over TOR(onion)<img src="pic/tor.png"></a>. Deshalb gibt es hier keine Zensur durch URL-Filter, der Povider(Telekom, Vodafone, O2 usw.), Geheimdienste und Regierungen.<br>
+								Sondern nur einen Porno- und Werbungsblocker, der gegen das Tracking durch Google, Apple, Amazon, Facebook, Otto Group, VG Wort und der Sendeanstalten usw. fungiert.<br>
+								Die Technik dahinter ist die Freeware <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank">CyberSecurity-Box</a> <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank"><img src="pic/csb.png"></a>.
+							</p>
+							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Facebook-Plugins (Like-Button)<br>
+	
+								Auf unseren Seiten sind Plugins des sozialen Netzwerks Facebook (“Meta”,“Facebook”,Meta Platforms Inc., 1601 Willow Road, Menlo Park, California, 94025, USA) integriert. Die Facebook-Plugins erkennen Sie an dem Facebook-Logo oder dem “Like-Button” (“Gef&auml;llt mir”) auf unserer Seite. Eine &uuml;bersicht &uuml;ber die Facebook-Plugins finden Sie hier: <a href="https://developers.facebook.com/docs/plugins/" target="_blank">https://developers.facebook.com/docs/plugins/</a>.
+								Wenn Sie unsere Seiten besuchen, wird &uuml;ber das Plugin eine direkte Verbindung zwischen Ihrem Browser und dem Facebook-Server hergestellt. Facebook erh&auml;lt dadurch die Information, da&szlig; Sie mit Ihrer IP-Adre&szlig;e unsere Seite besucht haben. Wenn Sie den Facebook “Like-Button” anklicken w&auml;hrend Sie in Ihrem Facebook-Account eingeloggt sind, k&ouml;nnen Sie die Inhalte unserer Seiten auf Ihrem Facebook-Profil verlinken. Dadurch kann Facebook den Besuch unserer Seiten Ihrem Benutzerkonto zuordnen. Wir weisen darauf hin, da&szlig; wir als Anbieter der Seiten keine Kenntnis vom Inhalt der &uuml;bermittelten Daten sowie deren Nutzung durch Facebook erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerkl&auml;rung von facebook unter <a href="https://de-de.facebook.com/policy.php" target="_blank">https://de-de.facebook.com/policy.php</a><br>
+				
+								Wenn Sie nicht w&uuml;nschen, da&szlig; Facebook den Besuch unserer Seiten Ihrem Facebook-Nutzerkonto zuordnen kann, loggen Sie sich bitte aus Ihrem Facebook-Benutzerkonto aus.
+							</p>
+					
+							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Google Analytics<br>
+					
+								Diese Website benutzt Google Analytics, einen Webanalysedienst der Alphabet Inc. (“Google”, “Alphabet”). Google Analytics verwendet sog. “Cookies”, Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie erm&ouml;glichen. Die durch den Cookie erzeugten Informationen &uuml;ber Ihre Benutzung dieser Website werden in der Regel an einen Server von Google in den USA &uuml;bertragen und dort gespeichert. Im Falle der Aktivierung der IP-Anonymisierung auf dieser Webseite wird Ihre IP-Adre&szlig;e von Google jedoch innerhalb von Mitgliedstaaten der Europ&auml;ischen Union oder in anderen Vertrag&szlig;taaten des Abkommens &uuml;ber den Europ&auml;ischen Wirtschaftsraum zuvor gek&uuml;rzt.<br>
+					
+								Nur in Ausnahmef&auml;llen wird die volle IP-Adre&szlig;e an einen Server von Google in den USA &uuml;bertragen und dort gek&uuml;rzt. Im Auftrag des Betreibers dieser Website wird Google diese Informationen benutzen, um Ihre Nutzung der Website auszuwerten, um Reports &uuml;ber die Websiteaktivit&auml;ten zusammenzustellen und um weitere mit der Websitenutzung und der Internetnutzung verbundene Dienstleistungen gegen&uuml;ber dem Websitebetreiber zu erbringen. Die im Rahmen von Google Analytics von Ihrem Browser &uuml;bermittelte IP-Adre&szlig;e wird nicht mit anderen Daten von Google zusammengef&uuml;hrt.<br>
+					
+								Sie k&ouml;nnen die Speicherung der Cookies durch eine entsprechende Einstellung Ihrer Browser-Software verhindern; wir weisen Sie jedoch darauf hin, da&szlig; Sie in diesem Fall gegebenenfalls nicht s&auml;mtliche Funktionen dieser Website vollumf&auml;nglich werden nutzen k&ouml;nnen. Sie k&ouml;nnen dar&uuml;ber hinaus die Erfa&szlig;ung der durch das Cookie erzeugten und auf Ihre Nutzung der Website bezogenen Daten (inkl. Ihrer IP-Adre&szlig;e) an Google sowie die Verarbeitung dieser Daten durch Google verhindern, indem sie das unter dem folgenden Link verf&uuml;gbare Browser-Plugin herunterladen und installieren: <a href="https://tools.google.com/dlpage/gaoptout?hl=de">https://tools.google.com/dlpage/gaoptout?hl=de</a>.
+							</p>
+					
+							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Google Adsense<br>
+					
+								Diese Website benutzt Google AdSense, einen Dienst zum Einbinden von Werbeanzeigen der Alphabet Inc. (“Google”, “Alphabet”). Google AdSense verwendet sog. “Cookies”, Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website erm&ouml;glicht. Google AdSense verwendet auch so genannte Web Beacons (unsichtbare Grafiken). Durch diese Web Beacons k&ouml;nnen Informationen wie der Besucherverkehr auf diesen Seiten ausgewertet werden.
+			
+								Die durch Cookies und Web Beacons erzeugten Informationen &uuml;ber die Benutzung dieser Website (einschlie&szlig;lich Ihrer IP-Adre&szlig;e) und Auslieferung von Werbeformaten werden an einen Server von Google in den USA &uuml;bertragen und dort gespeichert. Diese Informationen k&ouml;nnen von Google an Vertragspartner von Google weiter gegeben werden. Google wird Ihre IP-Adre&szlig;e jedoch nicht mit anderen von Ihnen gespeicherten Daten zusammenf&uuml;hren.
+					
+								Sie k&ouml;nnen die Installation der Cookies durch eine entsprechende Einstellung Ihrer Browser Software verhindern; wir weisen Sie jedoch darauf hin, da&szlig; Sie in diesem Fall gegebenenfalls nicht s&auml;mtliche Funktionen dieser Website voll umf&auml;nglich nutzen k&ouml;nnen. Durch die Nutzung dieser Website erkl&auml;ren Sie sich mit der Bearbeitung der &uuml;ber Sie erhobenen Daten durch Google in der zuvor beschriebenen Art und Weise und zu dem zuvor benannten Zweck einverstanden.
+							</p>
+					
+							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Google +1<br>
+					
+								Erfa&szlig;ung und Weitergabe von Informationen:
+								Mithilfe der Google +1-Schaltfl&auml;che k&ouml;nnen Sie Informationen weltweit ver&ouml;ffentlichen. &uuml;ber die Google +1-Schaltfl&auml;che erhalten Sie und andere Nutzer personalisierte Inhalte von Google und unseren Partnern. Google speichert sowohl die Information, da&szlig; Sie f&uuml;r einen Inhalt +1 gegeben haben, als auch Informationen &uuml;ber die Seite, die Sie beim Klicken auf +1 angesehen haben. Ihre +1 k&ouml;nnen als Hinweise zusammen mit Ihrem Profilnamen und Ihrem Foto in Google-Diensten, wie etwa in Suchergebni&szlig;en oder in Ihrem Google-Profil, oder an anderen Stellen auf Websites und Anzeigen im Internet eingeblendet werden.
+								Google zeichnet Informationen &uuml;ber Ihre +1-Aktivit&auml;ten auf, um die Google-Dienste f&uuml;r Sie und andere zu verbe&szlig;ern. Um die Google +1-Schaltfl&auml;che verwenden zu k&ouml;nnen, ben&ouml;tigen Sie ein weltweit sichtbares, &ouml;ffentliches Google-Profil, das zumindest den f&uuml;r das Profil gew&auml;hlten namen enthalten mu&szlig;. Dieser name wird in allen Google-Diensten verwendet. In manchen F&auml;llen kann dieser name auch einen anderen namen ersetzen, den Sie beim Teilen von Inhalten &uuml;ber Ihr Google-Konto verwendet haben. Die Identit&auml;t Ihres Google-Profils kann Nutzern angezeigt werden, die Ihre E-Mail-Adre&szlig;e kennen oder &uuml;ber andere identifizierende Informationen von Ihnen verf&uuml;gen.<br>
+				
+								Verwendung der erfa&szlig;ten Informationen:
+								Neben den oben erl&auml;uterten Verwendungszwecken werden die von Ihnen bereitgestellten Informationen gem&auml;&szlig; den geltenden Google-Datenschutzbestimmungen genutzt. Alphabet ver&ouml;ffentlicht m&ouml;glicherweise zusammengefa&szlig;te Statistiken &uuml;ber die +1-Aktivit&auml;ten der Nutzer bzw. gibt diese an Nutzer und Partner weiter, wie etwa Publisher, Inserenten oder verbundene Websites.
+							</p>
+					
+							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Twitter<br>
+							
+								Auf unseren Seiten sind Funktionen des Dienstes Twitter eingebunden. Diese Funktionen werden angeboten durch die Twitter Inc., Twitter, Inc. 1355 Market St, Suite 900, San Francisco, CA 94103, USA. Durch das Benutzen von Twitter und der Funktion “Re-Tweet” werden die von Ihnen besuchten Webseiten mit Ihrem Twitter-Account verkn&uuml;pft und anderen Nutzern bekannt gegeben. Dabei werden auch Daten an Twitter &uuml;bertragen.<br>
+					
+								Wir weisen darauf hin, da&szlig; wir als Anbieter der Seiten keine Kenntnis vom Inhalt der &uuml;bermittelten Daten sowie deren Nutzung durch Twitter erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerkl&auml;rung von Twitter unter <a href="http://twitter.com/privacy" target="_blank">http://twitter.com/privacy</a>.<br>
+					
+								Ihre Datenschutzeinstellungen bei Twitter k&ouml;nnen Sie in den Konto-Einstellungen unter <a href="http://twitter.com/account/settings" target="_blank">https://twitter.com/account/settings</a> &auml;ndern.
+								<br>
+								Quellverweis: Datenschutzerkl&auml;rung von <a href="https://www.erecht24.de" terget="_blank">eRecht24</a>, dem Portal zum Internetrecht von Rechtsanwalt S&ouml;ren Siebert, Facebook Datenschutzerkl&auml;rung, Google Analytics Bedingungen, Google Adsense Datenschutzerkl&auml;rung, Google +1 Bedingungen, Datenschutzerkl&auml;rung f&uuml;r Twitter
+							</p>				
+						</div>
+					</div>
+				</div>
+				<div id="haftung" class="modal">
+					<div class="Info">
+						<a href="#start" class="buttonModal" onclick="">x</a>
+						<div class="InfoText">
+							<p>Haftung f&uuml;r Inhalte<br>
+								Als Diensteanbieter sind wir gem&auml;&szlig; § 7 Abs.1 TMG f&uuml;r eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, &uuml;bermittelte oder gespeicherte fremde Informationen zu &uuml;berwachen oder nach Umst&auml;nden zu forschen, die auf eine rechtswidrige T&auml;tigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unber&uuml;hrt. Eine diesbez&uuml;gliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung m&ouml;glich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
+							</p>
+							<p>
+								Haftung f&uuml;r Links<br>
+								Unser Angebot enth&auml;lt Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb k&ouml;nnen wir f&uuml;r diese fremden Inhalte auch keine Gew&auml;hr &uuml;bernehmen. F&uuml;r die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf m&ouml;gliche Rechtsverst&ouml; e &uuml;berpr&uuml;ft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
+							</p>
+							<p>
+								Urheberrecht<br>
+
+								Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielf&auml;ltigung, Bearbeitung, Verbreitung und jede Art der Verwertung au erhalb der Grenzen des Urheberrechtes bed&uuml;rfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur f&uuml;r den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.
+							</p>
+							<p>
+								Quellenangaben: eRecht24 Disclaimer, Disclaimer von <a href="https://www.erecht24.de" terget="_blank">eRecht24</a>, dem Portal zum Internetrecht von Rechtsanwalt S&ouml;ren Siebert
+							</p>
+						</div>
+					</div>
+				</div>	
+				<div id="Screen" class="modal">
+					<div class="Info">
+						<a href="#start" class="buttonModal" onclick="">x</a>
+						<div class="InfoText">
+						</div>
+					</div>		
+				</div>
+			</aside>
+			<div class="footerText">
+				&#00169; 2023 &#00064;CyberAndi <a href="#impressum" onclick="">Impressum</a>
+			</div>
+		</footer>
+	</body>
+</html>
+
+EOF
+
+echo
+echo prophetie
+echo
+
+
+cp /www/index.html /www/generate_204.html
+cp /www/index.html /www/hotspot-detect.html
+
+}
+
+
 create_hotspotwebsite() {
 cat << EOF > test.txt 
 
@@ -25292,6 +29380,7 @@ create_dnsmasq_url_filter >> install.log
 view_config
 
 customize_firmware >> install.log
+create_hotspot >> install.log
 #create_websites >> install.log
 
 create_network >> install.log
