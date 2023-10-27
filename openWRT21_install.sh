@@ -22277,13 +22277,14 @@ clear
 
 }
 
-set_firewall_rules() {
-uci set firewall.@zone[0]=zone
-uci set firewall.@zone[0].name="REPEATER"
-uci set firewall.@zone[0].input="ACCEPT"
-uci set firewall.@zone[0].network="REPEATER"
-uci set firewall.@zone[0].output="ACCEPT"
-uci set firewall.@zone[0].forward="ACCEPT"
+create_firewall_zoes() {
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="REPEATER"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].network="REPEATER"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 uci commit firewall >/dev/null
 uci add firewall forwarding >/dev/null
@@ -22397,6 +22398,38 @@ uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="ENTERTAIN"
 uci commit firewall && reload_config >/dev/null
 
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="CMOVIE"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="CMOVIE"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="CMOVIE"
+uci commit firewall && reload_config >/dev/null
+
+uci add firewall zone >/dev/null
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="TONLINE"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="TONLINE"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >/dev/null
+uci add firewall forwarding >/dev/null
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="TONLINE"
+uci commit firewall && reload_config >/dev/null
+}
+
+set_firewall_rules() {
 # Intercept SSH, HTTP and HTTPS traffic
 uci -q delete firewall.ssh_int >/dev/null
 uci set firewall.ssh_int="redirect"
