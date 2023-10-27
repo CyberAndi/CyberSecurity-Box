@@ -22139,144 +22139,6 @@ echo '########################################################'
 view_config
 }
 
-set_HS_Firewall() {
-uci set firewall.OfficeClient.enabled='1'
-uci set firewall.OfficeWebClient.enabled='1'
-uci set firewall.Amazon_Alexa.enabled='1'
-uci set firewall.Amazon_Alexa_UDP.enabled='1'
-uci set firewall.Allow_only_OfficeClient.enabled='1'
-uci set firewall.Allow_only_OfficeWebClient.enabled='1'
-uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
-uci set firewall.Allow_Only_WebClient1.enabled='1'
-uci set firewall.Allow_Only_WebClient2.enabled='1'
-uci set firewall.Allow_Only_WebClient3.enabled='1'
-uci set firewall.Allow_Only_WebClient4.enabled='1'
-uci set firewall.Allow_Only_WebClient5.enabled='1'
-uci set firewall.otherProt.enabled='1'
-uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
-}
-
-set_HS_Firewall_disable() {
-uci set firewall.OfficeClient.enabled='0'
-uci set firewall.OfficeWebClient.enabled='0'
-uci set firewall.Amazon_Alexa.enabled='0'
-uci set firewall.Amazon_Alexa_UDP.enabled='0'
-uci set firewall.Allow_only_OfficeClient.enabled='0'
-uci set firewall.Allow_only_OfficeWebClient.enabled='0'
-uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
-uci set firewall.Allow_Only_WebClient1.enabled='0'
-uci set firewall.Allow_Only_WebClient2.enabled='0'
-uci set firewall.Allow_Only_WebClient3.enabled='0'
-uci set firewall.Allow_Only_WebClient4.enabled='0'
-uci set firewall.Allow_Only_WebClient5.enabled='0'
-uci set firewall.otherProt.enabled='1'
-uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
-}
-
-
-set_firewall_ipset() {
-# Configure IP sets
-uci -q delete firewall.filter
-uci set firewall.filter="ipset"
-uci set firewall.filter.name="filter"
-uci set firewall.filter.family="ipv4"
-uci set firewall.filter.storage="hash"
-uci set firewall.filter.match="ip"
-
-uci -q delete firewall.filter6
-uci set firewall.filter6="ipset"
-uci set firewall.filter6.name="filter6"
-uci set firewall.filter6.family="ipv6"
-uci set firewall.filter6.storage="hash"
-uci set firewall.filter6.match="ip"
- 
-# Filter LAN client traffic with IP sets
-uci -q delete firewall.filter_fwd
-uci set firewall.filter_fwd="rule"
-uci set firewall.filter_fwd.name="Filter_IPset_DNS_Forward"
-uci set firewall.filter_fwd.src="INET"
-uci set firewall.filter_fwd.dest="wan"
-uci set firewall.filter_fwd.ipset="filter dest"
-uci set firewall.filter_fwd.family="ipv4"
-uci set firewall.filter_fwd.proto="all"
-uci set firewall.filter_fwd.target="ACCEPT"
-
-uci -q delete firewall.filter6_fwd
-uci set firewall.filter6_fwd="rule"
-uci set firewall.filter6_fwd.name="Filter_IPset_DNS_Forward"
-uci set firewall.filter6_fwd.src="INET"
-uci set firewall.filter6_fwd.dest="wan"
-uci set firewall.filter6_fwd.ipset="filter6 dest"
-uci set firewall.filter6_fwd.family="ipv6"
-uci set firewall.filter6_fwd.proto="all"
-uci set firewall.filter6_fwd.target="ACCEPT"
-
-
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
-if [ "$SECURE_RULES" = "" ]
-        then
-             FW_HSactive='1'
-             set_HS_Firewall
-        elif [ "$SECURE_RULES" = "y" ]
-                then
-		FW_HSactive='1'
-                set_HS_Firewall
-        else
-              FW_HSactive='0'
-              set_HS_Firewall_disable
-fi
-
-view_config
-
-cat << "EOF" > /etc/firewall.nat6 
-iptables-save -t nat \
-| sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
-| ip6tables-restore -T nat
-EOF
-uci -q delete firewall.nat6 >/dev/null
-uci set firewall.nat6="include" >/dev/null
-uci set firewall.nat6.path="/etc/firewall.nat6" >/dev/null
-uci set firewall.nat6.reload="1" >/dev/null
- 
-# Disable LAN to WAN forwarding
-uci rename firewall.@forwarding[0]="INET_INTERNET" >/dev/null
-uci set firewall.INET_INTERNET.enabled="0" >/dev/null
-uci commit firewall >/dev/null
-/etc/init.d/firewall restart >/dev/null
- 
-# Configure ipset-dns
-uci set ipset-dns.@ipset-dns[0].ipset="filter" >/dev/null
-uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >/dev/null
-uci commit ipset-dns >/dev/null
-/etc/init.d/ipset-dns restart >/dev/null
- 
-# Resolve race conditions for ipset-dns
-cat << "EOF" > /etc/firewall.ipsetdns 
-/etc/init.d/ipset-dns restart 
-EOF 
-cat << "EOF" >> /etc/sysupgrade.conf
-/etc/firewall.ipsetdns
-EOF
-uci -q delete firewall.ipsetdns >/dev/null
-uci set firewall.ipsetdns="include" >/dev/null
-uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >/dev/null
-uci set firewall.ipsetdns.reload="1" >/dev/null
-uci commit firewall >/dev/null
-
-/etc/init.d/firewall restart >/dev/null
-/etc/init.d/dnsmasq restart >/dev/null
-/etc/init.d/network restart >/dev/null
-clear
-
-}
-
 create_firewall_zones() {
 uci add firewall zone >/dev/null
 uci set firewall.@zone[-1]=zone
@@ -22427,6 +22289,144 @@ uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="TONLINE"
 uci commit firewall && reload_config >/dev/null
+}
+
+set_HS_Firewall() {
+uci set firewall.OfficeClient.enabled='1'
+uci set firewall.OfficeWebClient.enabled='1'
+uci set firewall.Amazon_Alexa.enabled='1'
+uci set firewall.Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_only_OfficeClient.enabled='1'
+uci set firewall.Allow_only_OfficeWebClient.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_Only_WebClient1.enabled='1'
+uci set firewall.Allow_Only_WebClient2.enabled='1'
+uci set firewall.Allow_Only_WebClient3.enabled='1'
+uci set firewall.Allow_Only_WebClient4.enabled='1'
+uci set firewall.Allow_Only_WebClient5.enabled='1'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
+set_HS_Firewall_disable() {
+uci set firewall.OfficeClient.enabled='0'
+uci set firewall.OfficeWebClient.enabled='0'
+uci set firewall.Amazon_Alexa.enabled='0'
+uci set firewall.Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_only_OfficeClient.enabled='0'
+uci set firewall.Allow_only_OfficeWebClient.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_Only_WebClient1.enabled='0'
+uci set firewall.Allow_Only_WebClient2.enabled='0'
+uci set firewall.Allow_Only_WebClient3.enabled='0'
+uci set firewall.Allow_Only_WebClient4.enabled='0'
+uci set firewall.Allow_Only_WebClient5.enabled='0'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
+
+set_firewall_ipset() {
+# Configure IP sets
+uci -q delete firewall.filter
+uci set firewall.filter="ipset"
+uci set firewall.filter.name="filter"
+uci set firewall.filter.family="ipv4"
+uci set firewall.filter.storage="hash"
+uci set firewall.filter.match="ip"
+
+uci -q delete firewall.filter6
+uci set firewall.filter6="ipset"
+uci set firewall.filter6.name="filter6"
+uci set firewall.filter6.family="ipv6"
+uci set firewall.filter6.storage="hash"
+uci set firewall.filter6.match="ip"
+ 
+# Filter LAN client traffic with IP sets
+uci -q delete firewall.filter_fwd
+uci set firewall.filter_fwd="rule"
+uci set firewall.filter_fwd.name="Filter_IPset_DNS_Forward"
+uci set firewall.filter_fwd.src="INET"
+uci set firewall.filter_fwd.dest="wan"
+uci set firewall.filter_fwd.ipset="filter dest"
+uci set firewall.filter_fwd.family="ipv4"
+uci set firewall.filter_fwd.proto="all"
+uci set firewall.filter_fwd.target="ACCEPT"
+
+uci -q delete firewall.filter6_fwd
+uci set firewall.filter6_fwd="rule"
+uci set firewall.filter6_fwd.name="Filter_IPset_DNS_Forward"
+uci set firewall.filter6_fwd.src="INET"
+uci set firewall.filter6_fwd.dest="wan"
+uci set firewall.filter6_fwd.ipset="filter6 dest"
+uci set firewall.filter6_fwd.family="ipv6"
+uci set firewall.filter6_fwd.proto="all"
+uci set firewall.filter6_fwd.target="ACCEPT"
+
+
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+if [ "$SECURE_RULES" = "" ]
+        then
+             FW_HSactive='1'
+             set_HS_Firewall
+        elif [ "$SECURE_RULES" = "y" ]
+                then
+		FW_HSactive='1'
+                set_HS_Firewall
+        else
+              FW_HSactive='0'
+              set_HS_Firewall_disable
+fi
+
+view_config
+
+cat << "EOF" > /etc/firewall.nat6 
+iptables-save -t nat \
+| sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
+| ip6tables-restore -T nat
+EOF
+uci -q delete firewall.nat6 >/dev/null
+uci set firewall.nat6="include" >/dev/null
+uci set firewall.nat6.path="/etc/firewall.nat6" >/dev/null
+uci set firewall.nat6.reload="1" >/dev/null
+ 
+# Disable LAN to WAN forwarding
+uci rename firewall.@forwarding[0]="INET_INTERNET" >/dev/null
+uci set firewall.INET_INTERNET.enabled="0" >/dev/null
+uci commit firewall >/dev/null
+/etc/init.d/firewall restart >/dev/null
+ 
+# Configure ipset-dns
+uci set ipset-dns.@ipset-dns[0].ipset="filter" >/dev/null
+uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >/dev/null
+uci commit ipset-dns >/dev/null
+/etc/init.d/ipset-dns restart >/dev/null
+ 
+# Resolve race conditions for ipset-dns
+cat << "EOF" > /etc/firewall.ipsetdns 
+/etc/init.d/ipset-dns restart 
+EOF 
+cat << "EOF" >> /etc/sysupgrade.conf
+/etc/firewall.ipsetdns
+EOF
+uci -q delete firewall.ipsetdns >/dev/null
+uci set firewall.ipsetdns="include" >/dev/null
+uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >/dev/null
+uci set firewall.ipsetdns.reload="1" >/dev/null
+uci commit firewall >/dev/null
+
+/etc/init.d/firewall restart >/dev/null
+/etc/init.d/dnsmasq restart >/dev/null
+/etc/init.d/network restart >/dev/null
+clear
+
 }
 
 set_firewall_rules() {
