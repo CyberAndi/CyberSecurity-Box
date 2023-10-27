@@ -22471,6 +22471,229 @@ echo '########################################################'
 view_config
 }
 
+set_dhcp() {
+
+#uci -q delete dhcp >/dev/null
+#uci delete dhcp.BlacklistSERVER >/dev/null
+#uci delete dhcp.BlacklistHCONTROL >/dev/null
+#uci delete dhcp.BlacklistCONTROL >/dev/null
+#uci delete dhcp.BlacklistINET >/dev/null
+#uci delete dhcp.WhitelistVOICE >/dev/null
+#uci delete dhcp.WhitelistENTERTAIN >/dev/null
+#uci delete dhcp.WhitelistGUEST >/dev/null
+#uci delete dhcp.WhitelistCMOVIE >/dev/null
+#uci delete dhcp.SERVER >/dev/null
+#uci delete dhcp.HCONTROL >/dev/null
+#uci delete dhcp.CONTROL >/dev/null
+#uci delete dhcp.INET >/dev/null
+#uci delete dhcp.VOICE >/dev/null
+#uci delete dhcp.ENTERTAIN >/dev/null
+#uci delete dhcp.GUEST >/dev/null
+#uci delete dhcp.CMOVIE >/dev/null
+#uci delete dhcp.Blacklist>/dev/null
+#uci delete dhcp.Whitelist >/dev/null
+#uci delete dhcp.lan >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci commit dhcp >/dev/null
+
+uci add_list dhcp.@dnsmasq[0].notinterface='br-VOICE'
+uci add_list dhcp.@dnsmasq[0].notinterface='br-GUEST'
+uci add_list dhcp.@dnsmasq[0].notinterface='br-ENTERTAIN'
+uci add_list dhcp.@dnsmasq[0].notinterface='br-CMOVIE'
+uci add_list dhcp.@dnsmasq[0].notinterface='br-INET'
+uci add_list dhcp.@dnsmasq[0].interface='br-HCONTROL'
+uci add_list dhcp.@dnsmasq[0].interface='br-CONTROL'
+uci add_list dhcp.@dnsmasq[0].interface='br-SERVER'
+
+uci set dhcp.Blacklist=dnsmasq
+uci set dhcp.Blacklist.domainneeded='1'
+uci set dhcp.Blacklist.localise_queries='1'
+uci set dhcp.Blacklist.rebind_protection='1'
+uci set dhcp.Blacklist.rebind_localhost='1'
+uci set dhcp.Blacklist.filterwin2k='1'
+uci set dhcp.Blacklist.local='/'$INET_domain'/'
+uci set dhcp.Blacklist.expandhosts='1'
+uci set dhcp.Blacklist.authoritative='1'
+uci set dhcp.Blacklist.readethers='1'
+uci set dhcp.Blacklist.leasefile='/tmp/dhcp.blacklist.leases'
+uci set dhcp.Blacklist.resolvfile='/tmp/resolv.blacklist.conf.auto'
+uci set dhcp.Blacklist.localservice='1'
+uci set dhcp.Blacklist.cachesize='1'
+uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
+uci set dhcp.Blacklist.boguspriv='1'
+uci set dhcp.Blacklist.logqueries='0'
+uci set dhcp.Blacklist.logfacility='/var/log/dnsmasq.blacklist.log'
+uci add_list dhcp.Blacklist.notinterface='br-VOICE'
+uci add_list dhcp.Blacklist.notinterface='br-GUEST'
+uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN'
+uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
+uci set dhcp.Blacklist.interface='br-INET'
+uci add_list dhcp.Blacklist.interface='br-HCONTROL'
+uci add_list dhcp.Blacklist.interface='br-CONTROL'
+uci add_list dhcp.Blacklist.interface='br-SERVER'
+uci set dhcp.Blacklist.domain=$INET_domain
+
+uci set dhcp.Whitelist=dnsmasq
+uci set dhcp.Whitelist.domainneeded='1'
+uci set dhcp.Whitelist.localise_queries='1'
+uci set dhcp.Whitelist.rebind_protection='1'
+uci set dhcp.Whitelist.rebind_localhost='1'
+uci set dhcp.Whitelist.filterwin2k='1'
+uci set dhcp.Whitelist.local='/'$VOICE_domain'/'
+uci set dhcp.Whitelist.expandhosts='1'
+uci set dhcp.Whitelist.authoritative='1'
+uci set dhcp.Whitelist.readethers='1'
+uci set dhcp.Whitelist.leasefile='/tmp/dhcp.whitelist.leases'
+uci set dhcp.Whitelist.resolvfile='/tmp/resolv.whitelist.conf.auto'
+uci set dhcp.Whitelist.localservice='1'
+uci set dhcp.Whitelist.cachesize='1'
+uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
+uci set dhcp.Whitelist.boguspriv='1'
+uci set dhcp.Whitelist.logqueries='0'
+uci set dhcp.Whitelist.logfacility='/var/log/dnsmasq.whitelist.log'
+uci set dhcp.Whitelist.interface='br-VOICE' 
+uci add_list dhcp.Whitelist.interface='br-GUEST'
+uci add_list dhcp.Whitelist.interface='br-ENTERTAIN'
+uci add_list dhcp.Whitelist.interface='br-CMOVIE'
+uci set dhcp.Whitelist.notinterface='br-INET'
+uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-SERVER'
+uci set dhcp.Whitelist.domain=$VOICE_domain
+
+uci set dhcp.wan=dhcp
+uci set dhcp.wan.interface='wan'
+uci set dhcp.wan.ignore='1'
+
+uci set dhcp.SERVER=dhcp
+uci set dhcp.SERVER.start='1'
+uci set dhcp.SERVER.limit='250'
+uci set dhcp.SERVER.interface='SERVER'
+uci set dhcp.SERVER.leasetime='24h'
+uci set dhcp.SERVER.dhcpv6='server'
+uci set dhcp.SERVER.domain=$SERVER_domain
+uci set dhcp.SERVER.local='/'$SERVER_domain'/'
+uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
+uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
+uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
+uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.CONTROL=dhcp
+uci set dhcp.CONTROL.start='1'
+uci set dhcp.CONTROL.limit='250'
+uci set dhcp.CONTROL.interface='CONTROL'
+uci set dhcp.CONTROL.leasetime='24h'
+uci set dhcp.CONTROL.dhcpv6='server'
+uci set dhcp.CONTROL.domain=$CONTROL_domain
+uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
+uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
+uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip
+uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
+uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.HCONTROL=dhcp
+uci set dhcp.HCONTROL.start='1'
+uci set dhcp.HCONTROL.limit='250'
+uci set dhcp.HCONTROL.interface='HCONTROL'
+uci set dhcp.HCONTROL.leasetime='24h'
+uci set dhcp.HCONTROL.dhcpv6='server'
+uci set dhcp.HCONTROL.domain=$HCONTROL_domain
+uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
+uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
+uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
+uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
+uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.INET=dhcp
+uci set dhcp.INET.start='1'
+uci set dhcp.INET.limit='250'
+uci set dhcp.INET.interface='INET'
+uci set dhcp.INET.leasetime='24h'
+uci set dhcp.INET.dhcpv6='server'
+uci set dhcp.INET.domain=$INET_domain
+uci set dhcp.INET.local='/'$INET_domain'/'
+uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
+uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
+uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
+uci set dhcp.INET.server=$INET_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.ENTERTAIN=dhcp
+uci set dhcp.ENTERTAIN.start='1'
+uci set dhcp.ENTERTAIN.limit='250'
+uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
+uci set dhcp.ENTERTAIN.leasetime='24h'
+uci set dhcp.ENTERTAIN.dhcpv6='server'
+uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
+uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
+uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
+uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.VOICE=dhcp
+uci set dhcp.VOICE.start='1'
+uci set dhcp.VOICE.limit='250'
+uci set dhcp.VOICE.interface='VOICE'
+uci set dhcp.VOICE.leasetime='24h'
+uci set dhcp.VOICE.dhcpv6='server'
+uci set dhcp.VOICE.domain=$VOICE_domain
+uci set dhcp.VOICE.local='/'$VOICE_domain'/'
+uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
+uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
+uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
+uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.GUEST=dhcp
+uci set dhcp.GUEST.start='100'
+uci set dhcp.GUEST.limit='150'
+uci set dhcp.GUEST.interface='GUEST'
+uci set dhcp.GUEST.leasetime='24h'
+uci set dhcp.GUEST.dhcpv6='server'
+uci set dhcp.GUEST.domain=$GUEST_domain
+uci set dhcp.GUEST.local='/'$GUEST_domain'/'
+uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
+uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
+uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
+uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
+uci commit && reload_config
+
+uci set dhcp.CMOVIE=dhcp
+uci set dhcp.CMOVIE.start='100'
+uci set dhcp.CMOVIE.limit='150'
+uci set dhcp.CMOVIE.interface='CMOVIE'
+uci set dhcp.CMOVIE.leasetime='24h'
+uci set dhcp.CMOVIE.dhcpv6='server'
+uci set dhcp.CMOVIE.domain=$CMOVIE_domain
+uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
+uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
+uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
+uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
+uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
+uci commit && reload_config
+
+
+mkdir /etc/dnsmasq.d  >/dev/null
+mkdir /etc/dnsmasq.d/Blacklist >/dev/null
+mkdir /etc/dnsmasq.d/Whitelist >/dev/null
+mkdir /etc/dnsmasq.d/BlockAll >/dev/null
+mkdir /etc/dnsmasq.d/AllowAll >/dev/null
+
+uci commit dhcp && reload_config >/dev/null
+}
+
 create_firewall_zones() {
 uci add firewall zone >/dev/null
 uci set firewall.@zone[-1]=zone
@@ -25069,7 +25292,7 @@ create_firewall_zones >> install.log
 create_MWAN >> install.log
 view_config
 
-#set_dhcp >> install.log
+set_dhcp >> install.log
 set_firewall_rules >> install.log
 #set_mountpoints >> install.log
 
