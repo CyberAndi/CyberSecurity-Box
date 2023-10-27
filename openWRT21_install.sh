@@ -24731,13 +24731,13 @@ customize_firmware >> install.log
 #create_websites >> install.log
 
 #create_network >> install.log
-#create_switch >> install.log
-#create_wlan >> install.log
-#create_firewall_zones >> install.log
+create_switch >> install.log
+create_wlan >> install.log
+create_firewall_zones >> install.log
 view_config
 
 #set_dhcp >> install.log
-#set_firewall_rules >> install.log
+set_firewall_rules >> install.log
 #set_mountpoints >> install.log
 
 clear
