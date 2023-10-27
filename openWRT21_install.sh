@@ -25111,12 +25111,12 @@ uci set firewall.Allow_Only_WebClient4.target='REJECT'
 uci set firewall.Allow_Only_WebClient4.dest_port="$all_other_OfficeWebClient_port"
 
 
-uci set firewall.Allow_Only_WebClient5=rule
-uci set firewall.Allow_Only_WebClient5.src='LAN'
-uci set firewall.Allow_Only_WebClient5.dest='wan'
-uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_GUEST'
-uci set firewall.Allow_Only_WebClient5.target='REJECT'
-uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
+#uci set firewall.Allow_Only_WebClient5=rule
+#uci set firewall.Allow_Only_WebClient5.src='LAN'
+#uci set firewall.Allow_Only_WebClient5.dest='wan'
+#uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_GUEST'
+#uci set firewall.Allow_Only_WebClient5.target='REJECT'
+#uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
 
 
 uci set firewall.Allow_Only_WebClient5=rule
@@ -25171,8 +25171,6 @@ uci set firewall.blockIncoming.dest="*"
 uci set firewall.blockIncoming.target="REJECT"
 uci set firewall.blockIncoming.enabled="1"
 
-
-
 # Configure IP sets
 uci -q delete firewall.filter
 uci set firewall.filter="ipset"
@@ -25213,11 +25211,12 @@ uci set firewall.filter6_fwd.target="ACCEPT"
 uci commit firewall && reload_config >/dev/null
 /etc/init.d/firewall restart >/dev/null
 
-cat << "EOF" > /etc/firewall.nat6 
+cat << EOF > /etc/firewall.nat6 
 iptables-save -t nat \
 | sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
 | ip6tables-restore -T nat
 EOF
+
 uci -q delete firewall.nat6 >/dev/null
 uci set firewall.nat6="include" >/dev/null
 uci set firewall.nat6.path="/etc/firewall.nat6" >/dev/null
@@ -25236,10 +25235,11 @@ uci commit ipset-dns >/dev/null
 /etc/init.d/ipset-dns restart >/dev/null
  
 # Resolve race conditions for ipset-dns
-cat << "EOF" > /etc/firewall.ipsetdns 
+cat << EOF > /etc/firewall.ipsetdns 
 /etc/init.d/ipset-dns restart 
 EOF 
-cat << "EOF" >> /etc/sysupgrade.conf
+
+cat << EOF >> /etc/sysupgrade.conf
 /etc/firewall.ipsetdns
 EOF
 uci -q delete firewall.ipsetdns >/dev/null
