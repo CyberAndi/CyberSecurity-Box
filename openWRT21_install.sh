@@ -1189,8 +1189,55 @@ processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-P
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/theme_variable.css -P /www/CaptivePortal/)
 wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/ -A .jpg, .png -P /www/CaptivePortal/pic/)
-
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCRAStd.woff -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/Unwetter2.jpg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/Bibelserver.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/CMovie.svg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/CMovie-Logo.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/CMovie-Play.svg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/Corona_2.svg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/csb.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/Münzen.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/search.svg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/search-128.svg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War.jpg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_Foreground_Maske.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_Foreground_Maske_o.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_Maske.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeDust.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeDust2.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeFlammen.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeFlammen_o.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeHimmel.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeSchutt.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMaske.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMAskeSky.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMAskeSky_.png -P /www/CaptivePortal/pic/)
 }
 
 create_hotspot_test() {
