@@ -22479,20 +22479,20 @@ uci set firewall.tcp_tor2_int.extra="--syn"
 uci set firewall.tcp_tor2_int.target="DNAT"
 uci commit && reload_config >/dev/null
 
-uci set firewall.@zone[0]=zone
-uci set firewall.@zone[0].name="REPEATER"
-uci set firewall.@zone[0].input="ACCEPT"
-uci set firewall.@zone[0].network="REPEATER"
-uci set firewall.@zone[0].output="ACCEPT"
-uci set firewall.@zone[0].forward="ACCEPT"
+#uci set firewall.@zone[0]=zone
+#uci set firewall.@zone[0].name="REPEATER"
+#uci set firewall.@zone[0].input="ACCEPT"
+#uci set firewall.@zone[0].network="REPEATER"
+#uci set firewall.@zone[0].output="ACCEPT"
+#uci set firewall.@zone[0].forward="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="REPEATER"
-uci commit firewall && reload_config >/dev/null
-uci -q delete firewall.http_int >/dev/null
+#uci commit firewall >/dev/null
+#uci add firewall forwarding >/dev/null
+#uci set firewall.@forwarding[-1]=forwarding
+#uci set firewall.@forwarding[-1].dest="wan"
+#uci set firewall.@forwarding[-1].src="REPEATER"
+#uci commit firewall && reload_config >/dev/null
+#uci -q delete firewall.http_int >/dev/null
 
 #-----------------------------------------------------------------------------
 
