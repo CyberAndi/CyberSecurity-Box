@@ -6465,6 +6465,334 @@ echo
 
 }
 
+set_unbound() {
+mkdir /etc/unbound/unbound.conf.d >/dev/null
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >/dev/null
+curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
+
+cat << EOF > /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+
+::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+
+uci set unbound.ub_main=unbound
+uci set unbound.ub_main.enabled='1'
+#uci set unbound.ub_main.include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
+uci set unbound.ub_main.tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
+uci set unbound.ub_main.auto_trust_anchor_file='/var/lib/unbound/root.key'
+uci set unbound.ub_main.root_hints='/var/lib/unbound/root.hints'
+uci set unbound.ub_main.add_extra_dns='0'
+uci set unbound.ub_main.add_local_fqdn='1'
+uci set unbound.ub_main.add_wan_fqdn='0'
+uci set unbound.ub_main.dhcp_link='dnsmasq'
+uci set unbound.ub_main.dhcp4_slaac6='0'
+uci set unbound.ub_main.do_ip4='yes'
+uci set unbound.ub_main.do_ip6='yes'
+uci set unbound.ub_main.do_tcp='yes'
+uci set unbound.ub_main.do_udp='yes'
+uci set unbound.ub_main.dns64='0'
+uci set unbound.ub_main.do_not_query_localhost='no'
+uci set unbound.ub_main.domain=$LOCAL_DOMAIN
+uci set unbound.ub_main.domain_type='static'
+uci set unbound.ub_main.edns_size='1280'
+uci set unbound.ub_main.edns_buffer_size='1472'
+uci set unbound.ub_main.extended_stats='0'
+uci set unbound.ub_main.hide_binddata='1'
+uci set unbound.ub_main.interface_auto='1'
+uci set unbound.ub_main.listen_port=$DNS_UNBOUND_port
+uci set unbound.ub_main.localservice='1'
+uci set unbound.ub_main.manual_conf='0'
+uci set unbound.ub_main.num_threads='1'
+uci set unbound.ub_main.protocol='default'
+#uci set unbound.ub_main.query_minimize='0'
+uci set unbound.ub_main.query_minimize='1'
+uci set unbound.ub_main.query_min_strict='1'
+uci set unbound.ub_main.rate_limit='0'
+uci set unbound.ub_main.rebind_localhost='0'
+uci set unbound.ub_main.rebind_protection='1'
+#uci set unbound.ub_main.recursion='default'
+#uci set unbound.ub_main.resource='default'
+uci set unbound.ub_main.recursion='passiv'
+uci set unbound.ub_main.resource='medium'
+uci set unbound.ub_main.root_age='9'
+uci set unbound.ub_main.ttl_min='300'
+uci set unbound.ub_main.ttl_max='86400'
+uci set unbound.ub_main.cache_min_ttl='300'
+uci set unbound.ub_main.cache_max_ttl='86400'
+uci set unbound.ub_main.cache_size='10000'
+#uci set unbound.ub_main.unbound_control='0'
+uci set unbound.ub_main.unbound_control='2'
+uci set unbound.ub_main.prefetch='yes'
+uci set unbound.ub_main.prefetch_key='yes'
+uci set unbound.ub_main.validator='1'
+uci set unbound.ub_main.validator_ntp='1'
+uci set unbound.ub_main.verbosity='0'
+uci set unbound.ub_main.hide_identity='yes'
+uci set unbound.ub_main.hide_version='yes'
+uci set unbound.ub_main.harden_glue='yes'
+uci set unbound.ub_main.harden_dnssec_stripped='yes'
+uci set unbound.ub_main.harden_large_queries='yes'
+uci set unbound.ub_main.harden_short_bufsize='yes'
+uci set unbound.ub_main.harden_below_nxdomain='yes'
+uci set unbound.ub_main.use_caps_for_id='yes'
+uci set unbound.ub_main.so_reuseport='yes'
+uci set unbound.ub_main.msg_cache_slabs='2'
+uci set unbound.ub_main.rrset_cache_slabs='2'
+uci set unbound.ub_main.infra_cache_slabs='2'
+uci set unbound.ub_main.key_cache_slabs='2'
+uci set unbound.ub_main.qname_minimisation='yes'
+uci set unbound.ub_main.qname_minimisation_strict='yes'
+uci set unbound.ub_main.rrset_roundrobin='yes'
+uci set unbound.ub_main.serve_expired='yes'
+uci set unbound.ub_main.so_rcvbuf='1m'
+uci set unbound.ub_main.protocol='ip4_only'
+uci add_list unbound.ub_main.private_address='192.168.0.0/16'
+uci add_list unbound.ub_main.private_address='169.254.0.0/16'
+uci add_list unbound.ub_main.private_address='172.16.0.0/12'
+uci add_list unbound.ub_main.private_address='10.0.0.0/8'
+uci add_list unbound.ub_main.private_address='fd00::/8'
+uci add_list unbound.ub_main.private_address='fe80::/10'
+uci add_list unbound.ub_main.access_control='0.0.0.0/0 refuse'
+uci add_list unbound.ub_main.access_control='::0/0 refuse'
+uci add_list unbound.ub_main.access_control='127.0.0.1 allow'
+uci add_list unbound.ub_main.access_control='::1 allow'
+uci add_list unbound.ub_main.access_control=$SERVER_net' allow'
+uci add_list unbound.ub_main.access_control=$CONTROL_net' allow'
+uci add_list unbound.ub_main.access_control=$HCONTROL_net' allow'
+uci add_list unbound.ub_main.access_control=$INET_net' allow'
+uci add_list unbound.ub_main.iface_trig='CONTROL'
+uci add_list unbound.ub_main.iface_trig='HCONTROL'
+uci add_list unbound.ub_main.iface_trig='INET_CLIENTS'
+uci add_list unbound.ub_main.iface_trig='SERVER'
+uci add_list unbound.ub_main.iface_trig='VOICE'
+uci add_list unbound.ub_main.iface_trig='ENTERTAIN'
+uci add_list unbound.ub_main.iface_trig='CMOVIE'
+uci add_list unbound.ub_main.iface_trig='GUEST'
+uci add_list unbound.ub_main.iface_trig='wan6'
+uci add_list unbound.ub_main..iface_trig='lo'
+uci del_list unbound.ub_main.iface_trig='lan'
+uci set unbound.ub_main.domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
+uci add_list unbound.ub_main.domain_insecure=$INET_domain
+uci add_list unbound.ub_main.domain_insecure=$SERVER_domain
+uci add_list unbound.ub_main.domain_insecure=$HCONTROL_domain
+uci add_list unbound.ub_main.domain_insecure=$CONTROL_domain
+uci add_list unbound.ub_main.domain_insecure=$VOICE_domain
+uci add_list unbound.ub_main.domain_insecure=$GUEST_domain
+uci add_list unbound.ub_main.domain_insecure=$ENTERTAIN_domain
+uci add_list unbound.ub_main.domain_insecure=$CMOVIE_domain
+uci add_list unbound.ub_main.domain_insecure='onion'
+uci add_list unbound.ub_main.domain_insecure='exit'
+uci add_list unbound.ub_main.private_domain=$INET_domain
+uci add_list unbound.ub_main.private_domain=$SERVER_domain
+uci add_list unbound.ub_main.private_domain=$HCONTROL_domain
+uci add_list unbound.ub_main.private_domain=$CONTROL_domain
+uci add_list unbound.ub_main.private_domain=$VOICE_domain
+uci add_list unbound.ub_main.private_domain=$GUEST_domain
+uci add_list unbound.ub_main.private_domain=$ENTERTAIN_domain
+uci add_list unbound.ub_main.private_domain=$CMOVIE_domain
+uci add_list unbound.ub_main.private_domain='onion'
+uci add_list unbound.ub_main.private_domain='exit'
+
+uci add_list unbound.ub_main.outgoing_port_permit=$SDNS_port
+uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS_port
+#uci add_list unbound.ub_main.outgoing_port_permit='9150'
+uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
+#uci add_list unbound.ub_main.outgoing_port_permit='9153'
+#uci add_list unbound.ub_main.outgoing_port_permit='10240-65335'
+
+#uci add unbound zone
+#uci set unbound.@zone[-1].name='onion'
+#uci set unbound.@zone[-1].zone_type='forward_zone'
+#uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+#uci add unbound zone
+#uci set unbound.@zone[-1].name='exit'
+#uci set unbound.@zone[-1].zone_type='forward_zone'
+#uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+#uci add unbound zone
+#uci set unbound.@zone[-1].name='.'
+#uci set unbound.@zone[-1].zone_type='forward_zone'
+#uci set unbound.@zone[-1].fallback='0'
+#uci set unbound.@zone[-1].tls_upstream='1'
+#uci set unbound.@zone[-1].tls_index='dns.cloudflair'
+#uci set unbound.@zone[-1].forward_tls_upstream='yes'
+#uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
+
+#uci set unbound.@unbound[0]=unbound
+#uci set unbound.@unbound[0].enabled='1'
+#uci set unbound.@unbound[0].include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
+#uci set unbound.@unbound[0].tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
+#uci set unbound.@unbound[0].auto_trust_anchor_file='/var/lib/unbound/root.key'
+#uci set unbound.@unbound[0].root_hints='/var/lib/unbound/root.hints'
+#uci set unbound.@unbound[0].add_extra_dns='0'
+#uci set unbound.@unbound[0].add_local_fqdn='1'
+#uci set unbound.@unbound[0].add_wan_fqdn='0'
+#uci set unbound.@unbound[0].dhcp_link='dnsmasq'
+#uci set unbound.@unbound[0].dhcp4_slaac6='0'
+#uci set unbound.@unbound[0].do_ip4='yes'
+#uci set unbound.@unbound[0].do_ip6='yes'
+#uci set unbound.@unbound[0].do_tcp='yes'
+#uci set unbound.@unbound[0].do_udp='yes'
+#uci set unbound.@unbound[0].dns64='0'
+#uci set unbound.@unbound[0].do_not_query_localhost='no'
+#uci set unbound.@unbound[0].domain=$LOCAL_DOMAIN
+#uci set unbound.@unbound[0].domain_type='static'
+#uci set unbound.@unbound[0].edns_size='1280'
+#uci set unbound.@unbound[0].edns_buffer_size='1472'
+#uci set unbound.@unbound[0].extended_stats='0'
+#uci set unbound.@unbound[0].hide_binddata='1'
+#uci set unbound.@unbound[0].interface_auto='1'
+#uci set unbound.@unbound[0].listen_port=$DNS_UNBOUND_port
+#uci set unbound.@unbound[0].localservice='1'
+#uci set unbound.@unbound[0].manual_conf='0'
+#uci set unbound.@unbound[0].num_threads='1'
+#uci set unbound.@unbound[0].protocol='default'
+#uci set unbound.@unbound[0].query_minimize='0'
+#uci set unbound.@unbound[0].query_minimize='1'
+#uci set unbound.@unbound[0].query_min_strict='1'
+#uci set unbound.@unbound[0].rate_limit='0'
+#uci set unbound.@unbound[0].rebind_localhost='0'
+#uci set unbound.@unbound[0].rebind_protection='1'
+#uci set unbound.@unbound[0].recursion='default'
+#uci set unbound.@unbound[0].resource='default'
+#uci set unbound.@unbound[0].recursion='passiv'
+#uci set unbound.@unbound[0].resource='medium'
+#uci set unbound.@unbound[0].root_age='9'
+#uci set unbound.@unbound[0].ttl_min='300'
+#uci set unbound.@unbound[0].ttl_max='86400'
+#uci set unbound.@unbound[0].cache_min_ttl='300'
+#uci set unbound.@unbound[0].cache_max_ttl='86400'
+#uci set unbound.@unbound[0].cache_size='10000'
+#uci set unbound.@unbound[0].unbound_control='0'
+#uci set unbound.@unbound[0].unbound_control='2'
+#uci set unbound.@unbound[0].prefetch='yes'
+#uci set unbound.@unbound[0].prefetch_key='yes'
+#uci set unbound.@unbound[0].validator='1'
+#uci set unbound.@unbound[0].validator_ntp='1'
+#uci set unbound.@unbound[0].verbosity='0'
+#uci set unbound.@unbound[0].hide_identity='yes'
+#uci set unbound.@unbound[0].hide_version='yes'
+#uci set unbound.@unbound[0].harden_glue='yes'
+#uci set unbound.@unbound[0].harden_dnssec_stripped='yes'
+#uci set unbound.@unbound[0].harden_large_queries='yes'
+#uci set unbound.@unbound[0].harden_short_bufsize='yes'
+#uci set unbound.@unbound[0].harden_below_nxdomain='yes'
+#uci set unbound.@unbound[0].use_caps_for_id='yes'
+#uci set unbound.@unbound[0].so_reuseport='yes'
+#uci set unbound.@unbound[0].msg_cache_slabs='2'
+#uci set unbound.@unbound[0].rrset_cache_slabs='2'
+#uci set unbound.@unbound[0].infra_cache_slabs='2'
+#uci set unbound.@unbound[0].key_cache_slabs='2'
+#uci set unbound.@unbound[0].qname_minimisation='yes'
+#uci set unbound.@unbound[0].qname_minimisation_strict='yes'
+#uci set unbound.@unbound[0].rrset_roundrobin='yes'
+#uci set unbound.@unbound[0].serve_expired='yes'
+#uci set unbound.@unbound[0].so_rcvbuf='1m'
+#uci set unbound.@unbound[0].protocol='ip4_only'
+#uci add_list unbound.@unbound[0].private_address='192.168.0.0/16'
+#uci add_list unbound.@unbound[0].private_address='169.254.0.0/16'
+#uci add_list unbound.@unbound[0].private_address='172.16.0.0/12'
+#uci add_list unbound.@unbound[0].private_address='10.0.0.0/8'
+#uci add_list unbound.@unbound[0].private_address='fd00::/8'
+#uci add_list unbound.@unbound[0].private_address='fe80::/10'
+#uci add_list unbound.@unbound[0].access_control='0.0.0.0/0 refuse'
+#uci add_list unbound.@unbound[0].access_control='::0/0 refuse'
+#uci add_list unbound.@unbound[0].access_control='127.0.0.1 allow'
+#uci add_list unbound.@unbound[0].access_control='::1 allow'
+#uci add_list unbound.@unbound[0].access_control=$SERVER_net' allow'
+#uci add_list unbound.@unbound[0].access_control=$CONTROL_net' allow'
+#uci add_list unbound.@unbound[0].access_control=$HCONTROL_net' allow'
+#uci add_list unbound.@unbound[0].access_control=$INET_net' allow'
+#uci add_list unbound.@unbound[0].trigger_interface='CONTROL'
+#uci add_list unbound.@unbound[0].trigger_interface='HCONTROL'
+#uci add_list unbound.@unbound[0].trigger_interface='INET_CLIENTS'
+#uci add_list unbound.@unbound[0].trigger_interface='SERVER'
+#uci add_list unbound.@unbound[0].trigger_interface='VOICE'
+#uci add_list unbound.@unbound[0].trigger_interface='ENTERTAIN'
+#uci add_list unbound.@unbound[0].trigger_interface='CMOVIE'
+#uci add_list unbound.@unbound[0].trigger_interface='GUEST'
+#uci add_list unbound.@unbound[0].trigger_interface='wan6'
+#uci set unbound.@unbound[0].domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
+#uci add_list unbound.@unbound[0].domain_insecure=$INET_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$SERVER_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$HCONTROL_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$CONTROL_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$VOICE_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$GUEST_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$ENTERTAIN_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$CMOVIE_domain
+#uci add_list unbound.@unbound[0].domain_insecure='onion'
+#uci add_list unbound.@unbound[0].domain_insecure='exit'
+#uci add_list unbound.@unbound[0].private_domain=$INET_domain
+#uci add_list unbound.@unbound[0].private_domain=$SERVER_domain
+#uci add_list unbound.@unbound[0].private_domain=$HCONTROL_domain
+#uci add_list unbound.@unbound[0].private_domain=$CONTROL_domain
+#uci add_list unbound.@unbound[0].private_domain=$VOICE_domain
+#uci add_list unbound.@unbound[0].private_domain=$GUEST_domain
+#uci add_list unbound.@unbound[0].private_domain=$ENTERTAIN_domain
+#uci add_list unbound.@unbound[0].private_domain=$CMOVIE_domain
+#uci add_list unbound.@unbound[0].private_domain='onion'
+#uci add_list unbound.@unbound[0].private_domain='exit'
+
+#uci add_list unbound.@unbound[0].outgoing_port_permit=$SDNS_port
+#uci add_list unbound.@unbound[0].outgoing_port_permit=$TOR_SOCKS_port
+##uci add_list unbound.@unbound[0].outgoing_port_permit='9150'
+#uci add_list unbound.@unbound[0].outgoing_port_permit=$DNS_TOR_port
+##uci add_list unbound.@unbound[0].outgoing_port_permit='9153'
+##uci add_list unbound.@unbound[0].outgoing_port_permit='10240-65335'
+
+
+uci add unbound zone
+uci set unbound.@zone[-1].name='onion'
+uci set unbound.@zone[-1].zone_type='forward_zone'
+uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+uci add unbound zone
+uci set unbound.@zone[-1].name='exit'
+uci set unbound.@zone[-1].zone_type='forward_zone'
+uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+uci add unbound zone
+uci set unbound.@zone[-1].name='.'
+uci set unbound.@zone[-1].zone_type='forward_zone'
+uci set unbound.@zone[-1].fallback='0'
+uci set unbound.@zone[-1].tls_upstream='1'
+uci set unbound.@zone[-1].tls_index='dns.cloudflair'
+uci set unbound.@zone[-1].forward_tls_upstream='yes'
+uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
+
+uci commit unbound && reload_config  >/dev/null
+/etc/init.d/unbound start  >/dev/null
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+
+/etc/init.d/unbound restart  >/dev/null
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                AD- and Porn-Filter installed         #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+}
+
 create_dnsmasq_url_filter() {
 clear
 echo '########################################################'
@@ -21811,6 +22139,143 @@ echo '########################################################'
 view_config
 }
 
+set_HS_Firewall() {
+uci set firewall.OfficeClient.enabled='1'
+uci set firewall.OfficeWebClient.enabled='1'
+uci set firewall.Amazon_Alexa.enabled='1'
+uci set firewall.Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_only_OfficeClient.enabled='1'
+uci set firewall.Allow_only_OfficeWebClient.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_Only_WebClient1.enabled='1'
+uci set firewall.Allow_Only_WebClient2.enabled='1'
+uci set firewall.Allow_Only_WebClient3.enabled='1'
+uci set firewall.Allow_Only_WebClient4.enabled='1'
+uci set firewall.Allow_Only_WebClient5.enabled='1'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
+set_HS_Firewall_disable() {
+uci set firewall.OfficeClient.enabled='0'
+uci set firewall.OfficeWebClient.enabled='0'
+uci set firewall.Amazon_Alexa.enabled='0'
+uci set firewall.Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_only_OfficeClient.enabled='0'
+uci set firewall.Allow_only_OfficeWebClient.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_Only_WebClient1.enabled='0'
+uci set firewall.Allow_Only_WebClient2.enabled='0'
+uci set firewall.Allow_Only_WebClient3.enabled='0'
+uci set firewall.Allow_Only_WebClient4.enabled='0'
+uci set firewall.Allow_Only_WebClient5.enabled='0'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
+
+set_firewall_ipset() {
+# Configure IP sets
+uci -q delete firewall.filter
+uci set firewall.filter="ipset"
+uci set firewall.filter.name="filter"
+uci set firewall.filter.family="ipv4"
+uci set firewall.filter.storage="hash"
+uci set firewall.filter.match="ip"
+
+uci -q delete firewall.filter6
+uci set firewall.filter6="ipset"
+uci set firewall.filter6.name="filter6"
+uci set firewall.filter6.family="ipv6"
+uci set firewall.filter6.storage="hash"
+uci set firewall.filter6.match="ip"
+ 
+# Filter LAN client traffic with IP sets
+uci -q delete firewall.filter_fwd
+uci set firewall.filter_fwd="rule"
+uci set firewall.filter_fwd.name="Filter_IPset_DNS_Forward"
+uci set firewall.filter_fwd.src="INET"
+uci set firewall.filter_fwd.dest="wan"
+uci set firewall.filter_fwd.ipset="filter dest"
+uci set firewall.filter_fwd.family="ipv4"
+uci set firewall.filter_fwd.proto="all"
+uci set firewall.filter_fwd.target="ACCEPT"
+
+uci -q delete firewall.filter6_fwd
+uci set firewall.filter6_fwd="rule"
+uci set firewall.filter6_fwd.name="Filter_IPset_DNS_Forward"
+uci set firewall.filter6_fwd.src="INET"
+uci set firewall.filter6_fwd.dest="wan"
+uci set firewall.filter6_fwd.ipset="filter6 dest"
+uci set firewall.filter6_fwd.family="ipv6"
+uci set firewall.filter6_fwd.proto="all"
+uci set firewall.filter6_fwd.target="ACCEPT"
+
+
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+if [ "$SECURE_RULES" = "" ]
+        then
+             FW_HSactive='1'
+             set_HS_Firewall
+        elif [ "$SECURE_RULES" = "y" ]
+                then
+		FW_HSactive='1'
+                set_HS_Firewall
+        else
+              FW_HSactive='0'
+              set_HS_Firewall_disable
+fi
+
+view_config
+
+cat << "EOF" > /etc/firewall.nat6 
+iptables-save -t nat \
+| sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
+| ip6tables-restore -T nat
+EOF
+uci -q delete firewall.nat6 >/dev/null
+uci set firewall.nat6="include" >/dev/null
+uci set firewall.nat6.path="/etc/firewall.nat6" >/dev/null
+uci set firewall.nat6.reload="1" >/dev/null
+ 
+# Disable LAN to WAN forwarding
+uci rename firewall.@forwarding[0]="INET_INTERNET" >/dev/null
+uci set firewall.INET_INTERNET.enabled="0" >/dev/null
+uci commit firewall >/dev/null
+/etc/init.d/firewall restart >/dev/null
+ 
+# Configure ipset-dns
+uci set ipset-dns.@ipset-dns[0].ipset="filter" >/dev/null
+uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >/dev/null
+uci commit ipset-dns >/dev/null
+/etc/init.d/ipset-dns restart >/dev/null
+ 
+# Resolve race conditions for ipset-dns
+cat << "EOF" > /etc/firewall.ipsetdns 
+/etc/init.d/ipset-dns restart 
+EOF 
+cat << "EOF" >> /etc/sysupgrade.conf
+/etc/firewall.ipsetdns
+EOF
+uci -q delete firewall.ipsetdns >/dev/null
+uci set firewall.ipsetdns="include" >/dev/null
+uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >/dev/null
+uci set firewall.ipsetdns.reload="1" >/dev/null
+uci commit firewall >/dev/null
+
+/etc/init.d/firewall restart >/dev/null
+/etc/init.d/dnsmasq restart >/dev/null
+/etc/init.d/network restart >/dev/null
+clear
+
+}
 
 set_firewall_rules() {
 uci set firewall.@zone[0]=zone
