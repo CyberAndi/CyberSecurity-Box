@@ -326,15 +326,15 @@ echo 'Install Software'
 echo
 echo 'Please wait ....'
 echo
-/etc/init.d/dnsmasq stop >/dev/null
-/etc/init.d/dnsmasq disable >/dev/null
-opkg update >/dev/null
-opkg remove dnsmasq >/dev/null
-opkg update >/dev/null
-opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >/dev/null
-opkg update >/dev/null
-opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >/dev/null
-/etc/init.d/dnsmasq start >/dev/null
+/etc/init.d/dnsmasq stop >> install.log
+/etc/init.d/dnsmasq disable >> install.log
+opkg update >> install.log
+opkg remove dnsmasq >> install.log
+opkg update >> install.log
+opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
+opkg update >> install.log
+opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >> install.log
+/etc/init.d/dnsmasq start >> install.log
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -1081,8 +1081,8 @@ uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
 uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
 uci set uhttpd.main.redirect_https='1'
-uci commit  && reload_config  >/dev/null
-/etc/init.d/uhttpd restart  >/dev/null
+uci commit  && reload_config  >> install.log
+/etc/init.d/uhttpd restart  >> install.log
 
 echo
 echo 'Default Country-Settings'
@@ -9601,9 +9601,9 @@ uci set network.loopback.dns='127.0.0.1'
 uci set network.globals=globals
 uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='TONLINE'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.TONLINE.proto='static'
 uci set network.TONLINE.type='bridge'
 uci set network.TONLINE.ipaddr=$CMOVIE_ip
@@ -9615,11 +9615,11 @@ uci set network.TONLINE.igmp_snooping='1'
 uci set network.TONLINE.gateway=$INET_GW
 uci set network.TONLINE.ifname='eth0.110'
 uci set network.TONLINE.dns=$CMOVIE_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='CMOVIE'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.CMOVIE.proto='static'
 uci set network.CMOVIE.type='bridge'
 uci set network.CMOVIE.ipaddr=$CMOVIE_ip
@@ -9631,11 +9631,11 @@ uci set network.CMOVIE.igmp_snooping='1'
 uci set network.CMOVIE.gateway=$INET_GW
 uci set network.CMOVIE.ifname='eth0.108'
 uci set network.CMOVIE.dns=$CMOVIE_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='GUEST'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.GUEST.proto='static'
 uci set network.GUEST.type='bridge'
 uci set network.GUEST.ipaddr=$GUEST_ip
@@ -9647,11 +9647,11 @@ uci set network.GUEST.igmp_snooping='1'
 uci set network.GUEST.gateway=$INET_GW
 #uci set network.GUEST.ifname='eth0.107'
 uci set network.GUEST.dns=$GUEST_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.ENTERTAIN.proto='static'
 uci set network.ENTERTAIN.type='bridge'
 uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
@@ -9663,11 +9663,11 @@ uci set network.ENTERTAIN.igmp_snooping='1'
 uci set network.ENTERTAIN.gateway=$INET_GW
 uci set network.ENTERTAIN.ifname='eth0.106'
 uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='VOICE'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.VOICE.proto='static'
 uci set network.VOICE.type='bridge'
 uci set network.VOICE.ipaddr=$VOICE_ip
@@ -9679,11 +9679,11 @@ uci set network.VOICE.igmp_snooping='1'
 uci set network.VOICE.gateway=$INET_GW
 uci set network.VOICE.ifname='eth0.105'
 uci set network.VOICE.dns=$VOICE_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='INET'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.INET.proto='static'
 uci set network.INET.type='bridge'
 uci set network.INET.ipaddr=$INET_ip
@@ -9695,11 +9695,11 @@ uci set network.INET.igmp_snooping='1'
 uci set network.INET.gateway=$INET_GW
 uci set network.INET.ifname='eth0.104'
 uci set network.INET.dns=$INET_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='CONTROL'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.CONTROL.proto='static'
 uci set network.CONTROL.type='bridge'
 uci set network.CONTROL.ipaddr=$CONTROL_ip
@@ -9711,11 +9711,11 @@ uci set network.CONTROL.igmp_snooping='1'
 uci set network.CONTROL.gateway=$INET_GW
 uci set network.CONTROL.ifname='eth0.103'
 uci set network.CONTROL.dns=$CONTROL_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='HCONTROL'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.HCONTROL.proto='static'
 uci set network.HCONTROL.type='bridge'
 uci set network.HCONTROL.ipaddr=$HCONTROL_ip
@@ -9727,11 +9727,11 @@ uci set network.HCONTROL.igmp_snooping='1'
 uci set network.HCONTROL.gateway=$INET_GW
 uci set network.HCONTROL.ifname='eth0.102'
 uci set network.HCONTROL.dns=$HCONTROL_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SERVER'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SERVER.proto='static'
 uci set network.SERVER.type='bridge'
 uci set network.SERVER.ipaddr=$SERVER_ip
@@ -9743,9 +9743,9 @@ uci set network.SERVER.igmp_snooping='1'
 uci set network.SERVER.gateway=$INET_GW
 uci set network.SERVER.ifname='eth0.101'
 uci set network.SERVER.dns=$SERVER_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci set network.wan=interface >/dev/null
+uci set network.wan=interface >> install.log
 uci set network.wan.proto='static'
 uci set network.wan.netmask='255.255.255.0'
 uci set network.wan.ip6assign='60'
@@ -9754,7 +9754,7 @@ uci add_list network.wan.dns="127.0.0.1"
 uci set network.wan.ifname='eth1'
 uci set network.wan.ipaddr=$WAN_ip
 uci set network.wan.peerdns="0"
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci set network.wan6.proto='dhcpv6'
 uci set network.wan6.reqaddress='try'
@@ -9764,7 +9764,7 @@ uci set network.wan6.ifname='eth1'
 #uci add_list network.wan6.dns="2606:4700:4700::1003"
 uci add_list network.wan6.dns="0::1"
 uci set network.wan6.peerdns="0"
-uci commit network >/dev/null
+uci commit network >> install.log
 
 }
 
@@ -9919,7 +9919,7 @@ uci set mwan3.wan_mobile6.enabled='1'
 uci set mwan3.wan_mobile6.family='ipv6'
 uci set mwan3.wan_mobile6.track_ip='2606:4700:4700::1113'
 uci set mwan3.wan_mobile6.reliability='2'
-uci commit mwan3 && reload_config >/dev/null
+uci commit mwan3 && reload_config >> install.log
 }
 
 create_network_org() {
@@ -9949,9 +9949,9 @@ uci set network.loopback.dns='127.0.0.1'
 uci set network.globals=globals
 uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='VOICE'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.VOICE.proto='static'
 uci set network.VOICE.type='bridge'
 uci set network.VOICE.ipaddr=$VOICE_ip
@@ -9963,11 +9963,11 @@ uci set network.VOICE.igmp_snooping='1'
 uci set network.VOICE.gateway=$INET_GW
 uci set network.VOICE.ifname='eth0.105'
 uci set network.VOICE.dns=$VOICE_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.ENTERTAIN.proto='static'
 uci set network.ENTERTAIN.type='bridge'
 uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
@@ -9979,11 +9979,11 @@ uci set network.ENTERTAIN.igmp_snooping='1'
 uci set network.ENTERTAIN.gateway=$INET_GW
 uci set network.ENTERTAIN.ifname='eth0.106'
 uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='GUEST'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.GUEST.proto='static'
 uci set network.GUEST.type='bridge'
 uci set network.GUEST.ipaddr=$GUEST_ip
@@ -9995,11 +9995,11 @@ uci set network.GUEST.igmp_snooping='1'
 uci set network.GUEST.gateway=$INET_GW
 #uci set network.GUEST.ifname='eth0.107'
 uci set network.GUEST.dns=$GUEST_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SERVER'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SERVER.proto='static'
 uci set network.SERVER.type='bridge'
 uci set network.SERVER.ipaddr=$SERVER_ip
@@ -10011,11 +10011,11 @@ uci set network.SERVER.igmp_snooping='1'
 uci set network.SERVER.gateway=$INET_GW
 uci set network.SERVER.ifname='eth0.101'
 uci set network.SERVER.dns=$SERVER_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='INET'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.INET.proto='static'
 uci set network.INET.type='bridge'
 uci set network.INET.ipaddr=$INET_ip
@@ -10027,11 +10027,11 @@ uci set network.INET.igmp_snooping='1'
 uci set network.INET.gateway=$INET_GW
 uci set network.INET.ifname='eth0.104'
 uci set network.INET.dns=$INET_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='CONTROL'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.CONTROL.proto='static'
 uci set network.CONTROL.type='bridge'
 uci set network.CONTROL.ipaddr=$CONTROL_ip
@@ -10043,11 +10043,11 @@ uci set network.CONTROL.igmp_snooping='1'
 uci set network.CONTROL.gateway=$INET_GW
 uci set network.CONTROL.ifname='eth0.103'
 uci set network.CONTROL.dns=$CONTROL_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='HCONTROL'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.HCONTROL.proto='static'
 uci set network.HCONTROL.type='bridge'
 uci set network.HCONTROL.ipaddr=$HCONTROL_ip
@@ -10059,9 +10059,9 @@ uci set network.HCONTROL.igmp_snooping='1'
 uci set network.HCONTROL.gateway=$INET_GW
 uci set network.HCONTROL.ifname='eth0.102'
 uci set network.HCONTROL.dns=$HCONTROL_ip
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci set network.wan=interface >/dev/null
+uci set network.wan=interface >> install.log
 uci set network.wan.proto='static'
 uci set network.wan.netmask='255.255.255.0'
 uci set network.wan.ip6assign='60'
@@ -10070,7 +10070,7 @@ uci add_list network.wan.dns="127.0.0.1"
 uci set network.wan.ifname='eth1'
 uci set network.wan.ipaddr=$WAN_ip
 uci set network.wan.peerdns="0"
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci set network.wan6.proto='dhcpv6'
 uci set network.wan6.reqaddress='try'
@@ -10080,119 +10080,119 @@ uci set network.wan6.ifname='eth1'
 #uci add_list network.wan6.dns="2606:4700:4700::1003"
 uci add_list network.wan6.dns="0::1"
 uci set network.wan6.peerdns="0"
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci set network.@switch[0]=switch
 uci set network.@switch[0].name='switch0'
 uci set network.@switch[0].reset='1'
 uci set network.@switch[0].enable_vlan='1'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci set network.@switch_vlan[0]=switch_vlan
 uci set network.@switch_vlan[0].device='switch0'
 uci set network.@switch_vlan[0].vlan='101'
 uci set network.@switch_vlan[0].vid='101'
 uci set network.@switch_vlan[0].ports='0t 1t 2 3t 4t 5t'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='102'
 uci set network.@switch_vlan[-1].vid='102'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3 4t 5t'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vLan='103'
 uci set network.@switch_vlan[-1].vid='103'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='104'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='104'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='105'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='105'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='106'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='106'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network interface
 uci rename network.@interface[-1]='SWITCH_Port'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_Port.ifname='eth0'
 uci set network.SWITCH_Port.proto='none'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P101'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P101.ifname='eth0.101'
 uci set network.SWITCH_P101.proto='none'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P102'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P102.ifname='eth0.102'
 uci set network.SWITCH_P102.proto='none'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P103'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P103.ifname='eth0.103'
 uci set network.SWITCH_P103.proto='none'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P104'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P104.ifname='eth0.104'
 uci set network.SWITCH_P104.proto='none'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P105'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P105.ifname='eth0.105'
 uci set network.SWITCH_P105.proto='none'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P106'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P106.ifname='eth0.106'
 uci set network.SWITCH_P106.proto='none'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='REPEATER'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.REPEATER.proto='none'
-uci commit  && reload_config >/dev/null
+uci commit  && reload_config >> install.log
 
  
 # Save and apply
-uci commit network && reload_config >/dev/null
+uci commit network && reload_config >> install.log
 #/etc/init.d/network restart
 
 dig www.internic.net @1.1.1.1
 
-uci -q delete wireless  >/dev/null
+uci -q delete wireless  >> install.log
 
 uci set wireless.radio0=wifi-device
 uci set wireless.radio0.type='mac80211'
@@ -10318,10 +10318,10 @@ uci set wireless.wifinet10.key=$WIFI_PASS
 uci set wireless.wifinet10.network='GUEST'
 uci set wireless.wifinet10.ssid=$GUEST_ssid
 
-uci delete wireless.radio0.disabled >/dev/null
-uci delete wireless.radio1.disabled >/dev/null
+uci delete wireless.radio0.disabled >> install.log
+uci delete wireless.radio1.disabled >> install.log
 
-uci commit  && reload_config >/dev/null
+uci commit  && reload_config >> install.log
 
 echo
 echo 'Networks Settings defined'
@@ -10382,185 +10382,185 @@ uci set network.@switch[0]=switch
 uci set network.@switch[0].name='switch0'
 uci set network.@switch[0].reset='1'
 uci set network.@switch[0].enable_vlan='1'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci set network.@switch_vlan[0]=switch_vlan
 uci set network.@switch_vlan[0].device='switch0'
 uci set network.@switch_vlan[0].vlan='1'
 uci set network.@switch_vlan[0].vid='1'
-uci set network.@switch_vlan[0].ports='0 1 2 3 4 5t'
+uci set network.@switch_vlan[0].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[0].description='LAN'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='101'
 uci set network.@switch_vlan[-1].vid='101'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-#uci set network.@switch_vlan[-1].ports='0t 1t 2 3t 4t 5t'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].ports='0t 1t 2 3t 4t 5t'
 uci set network.@switch_vlan[-1].description='SERVER'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='102'
 uci set network.@switch_vlan[-1].vid='102'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-#uci set network.@switch_vlan[-1].ports='0t 1 2t 3 4t 5t'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].ports='0t 1 2t 3 4t 5t'
 uci set network.@switch_vlan[-1].description='HCONTROL'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vLan='103'
 uci set network.@switch_vlan[-1].vid='103'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].description='CONTROL'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='104'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4 5t'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4 5t'
 uci set network.@switch_vlan[-1].vid='104'
 uci set network.@switch_vlan[-1].description='INET'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='105'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='105'
 uci set network.@switch_vlan[-1].description='VOICE'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='106'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='106'
 uci set network.@switch_vlan[-1].description='ENTERTAIN'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='107'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='107'
 uci set network.@switch_vlan[-1].description='GUEST'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='108'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='108'
 uci set network.@switch_vlan[-1].description='CMOVIE'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='110'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='110'
 uci set network.@switch_vlan[-1].description='T-ONLINE'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci add network interface
 uci rename network.@interface[-1]='SWITCH_Port'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_Port.ifname='eth0'
 uci set network.SWITCH_Port.proto='none'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P101'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P101.ifname='eth0.101'
 uci set network.SWITCH_P101.proto='none'
 uci set network.SWITCH_P101.description='SERVER'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P102'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P102.ifname='eth0.102'
 uci set network.SWITCH_P102.proto='none'
 uci set network.SWITCH_P102.description='HCONTROL'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P103'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P103.ifname='eth0.103'
 uci set network.SWITCH_P103.proto='none'
 uci set network.SWITCH_P103.description='CONTROL'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P104'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P104.ifname='eth0.104'
 uci set network.SWITCH_P104.proto='none'
 uci set network.SWITCH_P104.description='INET'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P105'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P105.ifname='eth0.105'
 uci set network.SWITCH_P105.proto='none'
 uci set network.SWITCH_P105.description='VOICE'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P106'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P106.ifname='eth0.106'
 uci set network.SWITCH_P106.proto='none'
 uci set network.SWITCH_P106.description='ENTERTAIN'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P107'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P107.ifname='eth0.107'
 uci set network.SWITCH_P107.proto='none'
 uci set network.SWITCH_P107.description='GUEST'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P108'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P108.ifname='eth0.108'
 uci set network.SWITCH_P108.proto='none'
 uci set network.SWITCH_P108.description='CMOVIE'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P110'
-uci commit network >/dev/null
+uci commit network >> install.log
 uci set network.SWITCH_P110.ifname='eth0.110'
 uci set network.SWITCH_P110.proto='none'
 uci set network.SWITCH_P110.description='T-ONLINE'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 # Save and apply
-uci commit network && reload_config >/dev/null
+uci commit network && reload_config >> install.log
 #/etc/init.d/network restart
 
 dig www.internic.net @1.1.1.1
 }
 
 create_wlan() {
-uci -q delete wireless  >/dev/null
+uci -q delete wireless  >> install.log
 
 uci set wireless.radio0=wifi-device
 uci set wireless.radio0.type='mac80211'
@@ -10686,10 +10686,10 @@ uci set wireless.wifinet10.key=$WIFI_PASS
 uci set wireless.wifinet10.network='GUEST'
 uci set wireless.wifinet10.ssid=$GUEST_ssid
 
-uci delete wireless.radio0.disabled >/dev/null
-uci delete wireless.radio1.disabled >/dev/null
+uci delete wireless.radio0.disabled >> install.log
+uci delete wireless.radio1.disabled >> install.log
 
-uci commit  && reload_config >/dev/null
+uci commit  && reload_config >> install.log
 
 echo
 echo 'Networks Settings defined'
@@ -10746,8 +10746,8 @@ echo
 }
 
 set_tor() {
-/etc/init.d/tor stop >/dev/null
-/etc/init.d/log restart >/dev/null
+/etc/init.d/tor stop >> install.log
+/etc/init.d/log restart >> install.log
 
 # Configure Tor client
 cat << EOF > /etc/tor/main
@@ -10887,11 +10887,11 @@ User tor
 EOF
 
 
-uci del_list tor.conf.tail_include="/etc/tor/main" >/dev/null
-uci add_list tor.conf.tail_include="/etc/tor/main" >/dev/null
-uci commit tor && reload_config >/dev/null
+uci del_list tor.conf.tail_include="/etc/tor/main" >> install.log
+uci add_list tor.conf.tail_include="/etc/tor/main" >> install.log
+uci commit tor && reload_config >> install.log
 
-/etc/init.d/tor start  >/dev/null
+/etc/init.d/tor start  >> install.log
 
 echo 
 echo 'Tor-Onion-Services activated'
@@ -10958,25 +10958,25 @@ config resolver
 
 EOF
 
-uci commit stubby && reload_config >/dev/null
+uci commit stubby && reload_config >> install.log
 
-/etc/init.d/stubby restart  >/dev/null
+/etc/init.d/stubby restart  >> install.log
 # Configure unbound client
 
 echo
 echo 'Stubby Pivaticy over cloudflair.com'
 echo
 
-/etc/init.d/unbound stop  >/dev/null
-/etc/init.d/log restart  >/dev/null
+/etc/init.d/unbound stop  >> install.log
+/etc/init.d/log restart  >> install.log
 
 #Configure stubby
 
 }
 
 set_unbound() {
-mkdir /etc/unbound/unbound.conf.d >/dev/null
-curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >/dev/null
+mkdir /etc/unbound/unbound.conf.d >> install.log
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
 cat << EOF > /etc/hosts
@@ -11272,8 +11272,8 @@ uci set unbound.@zone[-1].tls_index='dns.cloudflair'
 uci set unbound.@zone[-1].forward_tls_upstream='yes'
 uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
 
-uci commit unbound && reload_config  >/dev/null
-/etc/init.d/unbound start  >/dev/null
+uci commit unbound && reload_config  >> install.log
+/etc/init.d/unbound start  >> install.log
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -11286,7 +11286,7 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-/etc/init.d/unbound restart  >/dev/null
+/etc/init.d/unbound restart  >> install.log
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
 clear
@@ -11314,13 +11314,13 @@ echo '########################################################'
 view_config
 
 
-mkdir /etc/dnsmasq.d  >/dev/null
-mkdir /etc/dnsmasq.d/Blacklist >/dev/null
-mkdir /etc/dnsmasq.d/Whitelist >/dev/null
-mkdir /etc/dnsmasq.d/BlockAll >/dev/null
-mkdir /etc/dnsmasq.d/AllowAll >/dev/null
+mkdir /etc/dnsmasq.d  >> install.log
+mkdir /etc/dnsmasq.d/Blacklist >> install.log
+mkdir /etc/dnsmasq.d/Whitelist >> install.log
+mkdir /etc/dnsmasq.d/BlockAll >> install.log
+mkdir /etc/dnsmasq.d/AllowAll >> install.log
 
-uci commit dhcp && reload_config >/dev/null
+uci commit dhcp && reload_config >> install.log
 
 #DNS_Relay_port=9053
 
@@ -16399,14 +16399,14 @@ server=/commerzbank.de/127.0.0.1#$(echo $DNS_Relay_port)
 EOF
 
 
-cp /etc/dnsmasq.d/Blacklist/ads /etc/dnsmasq.d/Whitelist/ads >/dev/null
-cp /etc/dnsmasq.d/Blacklist/agency /etc/dnsmasq.d/Whitelist/agency >/dev/null
-cp /etc/dnsmasq.d/Blacklist/banking /etc/dnsmasq.d/Whitelist/banking >/dev/null
-cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys >/dev/null
-cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn >/dev/null
-cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white >/dev/null
+cp /etc/dnsmasq.d/Blacklist/ads /etc/dnsmasq.d/Whitelist/ads >> install.log
+cp /etc/dnsmasq.d/Blacklist/agency /etc/dnsmasq.d/Whitelist/agency >> install.log
+cp /etc/dnsmasq.d/Blacklist/banking /etc/dnsmasq.d/Whitelist/banking >> install.log
+cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys >> install.log
+cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn >> install.log
+cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white >> install.log
 
-/etc/init.d/dnsmasq restart >/dev/null
+/etc/init.d/dnsmasq restart >> install.log
 
 echo
 echo
@@ -16436,8 +16436,8 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-/etc/init.d/unbound stop  >/dev/null
-/etc/init.d/log restart  >/dev/null
+/etc/init.d/unbound stop  >> install.log
+/etc/init.d/log restart  >> install.log
 
 #Configure stubby
 
@@ -26650,33 +26650,33 @@ view_config
 
 set_dhcp() {
 
-#uci -q delete dhcp >/dev/null
-#uci delete dhcp.BlacklistSERVER >/dev/null
-#uci delete dhcp.BlacklistHCONTROL >/dev/null
-#uci delete dhcp.BlacklistCONTROL >/dev/null
-#uci delete dhcp.BlacklistINET >/dev/null
-#uci delete dhcp.WhitelistVOICE >/dev/null
-#uci delete dhcp.WhitelistENTERTAIN >/dev/null
-#uci delete dhcp.WhitelistGUEST >/dev/null
-#uci delete dhcp.WhitelistCMOVIE >/dev/null
-#uci delete dhcp.SERVER >/dev/null
-#uci delete dhcp.HCONTROL >/dev/null
-#uci delete dhcp.CONTROL >/dev/null
-#uci delete dhcp.INET >/dev/null
-#uci delete dhcp.VOICE >/dev/null
-#uci delete dhcp.ENTERTAIN >/dev/null
-#uci delete dhcp.GUEST >/dev/null
-#uci delete dhcp.CMOVIE >/dev/null
-#uci delete dhcp.Blacklist>/dev/null
-#uci delete dhcp.Whitelist >/dev/null
-#uci delete dhcp.lan >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci commit dhcp >/dev/null
+#uci -q delete dhcp >> install.log
+#uci delete dhcp.BlacklistSERVER >> install.log
+#uci delete dhcp.BlacklistHCONTROL >> install.log
+#uci delete dhcp.BlacklistCONTROL >> install.log
+#uci delete dhcp.BlacklistINET >> install.log
+#uci delete dhcp.WhitelistVOICE >> install.log
+#uci delete dhcp.WhitelistENTERTAIN >> install.log
+#uci delete dhcp.WhitelistGUEST >> install.log
+#uci delete dhcp.WhitelistCMOVIE >> install.log
+#uci delete dhcp.SERVER >> install.log
+#uci delete dhcp.HCONTROL >> install.log
+#uci delete dhcp.CONTROL >> install.log
+#uci delete dhcp.INET >> install.log
+#uci delete dhcp.VOICE >> install.log
+#uci delete dhcp.ENTERTAIN >> install.log
+#uci delete dhcp.GUEST >> install.log
+#uci delete dhcp.CMOVIE >> install.log
+#uci delete dhcp.Blacklist>> install.log
+#uci delete dhcp.Whitelist >> install.log
+#uci delete dhcp.lan >> install.log
+#uci delete dhcp.@dnsmasq[-1] >> install.log
+#uci delete dhcp.@dnsmasq[-1] >> install.log
+#uci delete dhcp.@dnsmasq[-1] >> install.log
+#uci delete dhcp.@dnsmasq[-1] >> install.log
+#uci delete dhcp.@dnsmasq[-1] >> install.log
+#uci delete dhcp.@dnsmasq[-1] >> install.log
+#uci commit dhcp >> install.log
 
 uci add_list dhcp.@dnsmasq[0].interface='br-lan'
 uci add_list dhcp.@dnsmasq[0].notinterface='br-VOICE'
@@ -26863,17 +26863,17 @@ uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
 uci commit && reload_config
 
 
-mkdir /etc/dnsmasq.d  >/dev/null
-mkdir /etc/dnsmasq.d/Blacklist >/dev/null
-mkdir /etc/dnsmasq.d/Whitelist >/dev/null
-mkdir /etc/dnsmasq.d/BlockAll >/dev/null
-mkdir /etc/dnsmasq.d/AllowAll >/dev/null
+mkdir /etc/dnsmasq.d  >> install.log
+mkdir /etc/dnsmasq.d/Blacklist >> install.log
+mkdir /etc/dnsmasq.d/Whitelist >> install.log
+mkdir /etc/dnsmasq.d/BlockAll >> install.log
+mkdir /etc/dnsmasq.d/AllowAll >> install.log
 
-uci commit dhcp && reload_config >/dev/null
+uci commit dhcp && reload_config >> install.log
 }
 
 create_firewall_zones() {
-uci add firewall zone >/dev/null
+uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="REPEATER"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -26881,14 +26881,14 @@ uci set firewall.@zone[-1].network="REPEATER"
 uci set firewall.@zone[-1].output="ACCEPT"
 uci set firewall.@zone[-1].forward="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="REPEATER"
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 
-uci add firewall zone >/dev/null
+uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="CONTROL"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -26896,14 +26896,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="CONTROL"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="CONTROL"
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 
-uci add firewall zone >/dev/null
+uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="HCONTROL"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -26911,14 +26911,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="HCONTROL"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="HCONTROL"
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 
-uci add firewall zone >/dev/null
+uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="SERVER"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -26926,14 +26926,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="SERVER"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="SERVER"
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 
-uci add firewall zone >/dev/null
+uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="INET"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -26941,14 +26941,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="INET"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="INET"
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 
-uci add firewall zone >/dev/null
+uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="GUEST"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -26956,14 +26956,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="GUEST"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="GUEST"
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 
-uci add firewall zone >/dev/null
+uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="VOICE"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -26971,14 +26971,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="VOICE"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="VOICE"
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 
-uci add firewall zone >/dev/null
+uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="ENTERTAIN"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -26986,14 +26986,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="ENTERTAIN"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="ENTERTAIN"
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 
-uci add firewall zone >/dev/null
+uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="CMOVIE"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -27001,14 +27001,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="CMOVIE"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="CMOVIE"
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 
-uci add firewall zone >/dev/null
+uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="TONLINE"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -27016,12 +27016,12 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="TONLINE"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="TONLINE"
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 }
 
 set_HS_Firewall() {
@@ -27040,8 +27040,8 @@ uci set firewall.Allow_Only_WebClient4.enabled='1'
 uci set firewall.Allow_Only_WebClient5.enabled='1'
 uci set firewall.otherProt.enabled='1'
 uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
 }
 
 set_HS_Firewall_disable() {
@@ -27060,8 +27060,8 @@ uci set firewall.Allow_Only_WebClient4.enabled='0'
 uci set firewall.Allow_Only_WebClient5.enabled='0'
 uci set firewall.otherProt.enabled='1'
 uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
 }
 
 
@@ -27103,8 +27103,8 @@ uci set firewall.filter6_fwd.proto="all"
 uci set firewall.filter6_fwd.target="ACCEPT"
 
 
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
 if [ "$SECURE_RULES" = "" ]
         then
              FW_HSactive='1'
@@ -27125,22 +27125,22 @@ iptables-save -t nat \
 | sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
 | ip6tables-restore -T nat
 EOF
-uci -q delete firewall.nat6 >/dev/null
-uci set firewall.nat6="include" >/dev/null
-uci set firewall.nat6.path="/etc/firewall.nat6" >/dev/null
-uci set firewall.nat6.reload="1" >/dev/null
+uci -q delete firewall.nat6 >> install.log
+uci set firewall.nat6="include" >> install.log
+uci set firewall.nat6.path="/etc/firewall.nat6" >> install.log
+uci set firewall.nat6.reload="1" >> install.log
  
 # Disable LAN to WAN forwarding
-uci rename firewall.@forwarding[0]="INET_INTERNET" >/dev/null
-uci set firewall.INET_INTERNET.enabled="0" >/dev/null
-uci commit firewall >/dev/null
-/etc/init.d/firewall restart >/dev/null
+uci rename firewall.@forwarding[0]="INET_INTERNET" >> install.log
+uci set firewall.INET_INTERNET.enabled="0" >> install.log
+uci commit firewall >> install.log
+/etc/init.d/firewall restart >> install.log
  
 # Configure ipset-dns
-uci set ipset-dns.@ipset-dns[0].ipset="filter" >/dev/null
-uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >/dev/null
-uci commit ipset-dns >/dev/null
-/etc/init.d/ipset-dns restart >/dev/null
+uci set ipset-dns.@ipset-dns[0].ipset="filter" >> install.log
+uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >> install.log
+uci commit ipset-dns >> install.log
+/etc/init.d/ipset-dns restart >> install.log
  
 # Resolve race conditions for ipset-dns
 cat << "EOF" > /etc/firewall.ipsetdns 
@@ -27149,22 +27149,22 @@ EOF
 cat << "EOF" >> /etc/sysupgrade.conf
 /etc/firewall.ipsetdns
 EOF
-uci -q delete firewall.ipsetdns >/dev/null
-uci set firewall.ipsetdns="include" >/dev/null
-uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >/dev/null
-uci set firewall.ipsetdns.reload="1" >/dev/null
-uci commit firewall >/dev/null
+uci -q delete firewall.ipsetdns >> install.log
+uci set firewall.ipsetdns="include" >> install.log
+uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >> install.log
+uci set firewall.ipsetdns.reload="1" >> install.log
+uci commit firewall >> install.log
 
-/etc/init.d/firewall restart >/dev/null
-/etc/init.d/dnsmasq restart >/dev/null
-/etc/init.d/network restart >/dev/null
+/etc/init.d/firewall restart >> install.log
+/etc/init.d/dnsmasq restart >> install.log
+/etc/init.d/network restart >> install.log
 clear
 
 }
 
 set_firewall_rules() {
 # Intercept SSH, HTTP and HTTPS traffic
-uci -q delete firewall.ssh_int >/dev/null
+uci -q delete firewall.ssh_int >> install.log
 uci set firewall.ssh_int="redirect"
 uci set firewall.ssh_int.name="Intercept_SSH"
 uci set firewall.ssh_int.src="INET"
@@ -27172,7 +27172,7 @@ uci set firewall.ssh_int.src_dport="$SSH_port"
 uci set firewall.ssh_int.proto="tcp"
 uci set firewall.ssh_int.target="DNAT"
 
-uci -q delete firewall.http_int >/dev/null
+uci -q delete firewall.http_int >> install.log
 uci set firewall.http_int="redirect"
 uci set firewall.http_int.name="Intercept_HTTP"
 uci set firewall.http_int.src="INET"
@@ -27188,10 +27188,10 @@ uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
 uci set firewall.https_int.proto="tcp"
 uci set firewall.https_int.target="DNAT"
 
-uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >> install.log
 
 # Intercept DNS and TCP traffic
-uci -q delete firewall.tcp_tor1_int >/dev/null
+uci -q delete firewall.tcp_tor1_int >> install.log
 uci set firewall.tcp_tor1_int="redirect"
 uci set firewall.tcp_tor1_int.name="Intercept_tor"
 uci set firewall.tcp_tor1_int.src="INET"
@@ -27201,7 +27201,7 @@ uci set firewall.tcp_tor1_int.proto="tcp"
 uci set firewall.tcp_tor1_int.extra="--syn"
 uci set firewall.tcp_tor1_int.target="DNAT"
 
-uci -q delete firewall.tcp_tor2_int >/dev/null
+uci -q delete firewall.tcp_tor2_int >> install.log
 uci set firewall.tcp_tor2_int="redirect"
 uci set firewall.tcp_tor2_int.name="Intercept_tor_https"
 uci set firewall.tcp_tor2_int.src="INET"
@@ -27210,7 +27210,7 @@ uci set firewall.tcp_tor2_int.src_dip="!192.168.0.0/16"
 uci set firewall.tcp_tor2_int.proto="tcp"
 uci set firewall.tcp_tor2_int.extra="--syn"
 uci set firewall.tcp_tor2_int.target="DNAT"
-uci commit && reload_config >/dev/null
+uci commit && reload_config >> install.log
 
 #uci set firewall.@zone[0]=zone
 #uci set firewall.@zone[0].name="REPEATER"
@@ -27219,13 +27219,13 @@ uci commit && reload_config >/dev/null
 #uci set firewall.@zone[0].output="ACCEPT"
 #uci set firewall.@zone[0].forward="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-#uci commit firewall >/dev/null
-#uci add firewall forwarding >/dev/null
+#uci commit firewall >> install.log
+#uci add firewall forwarding >> install.log
 #uci set firewall.@forwarding[-1]=forwarding
 #uci set firewall.@forwarding[-1].dest="wan"
 #uci set firewall.@forwarding[-1].src="REPEATER"
-#uci commit firewall && reload_config >/dev/null
-#uci -q delete firewall.http_int >/dev/null
+#uci commit firewall && reload_config >> install.log
+#uci -q delete firewall.http_int >> install.log
 
 #-----------------------------------------------------------------------------
 
@@ -27261,7 +27261,7 @@ uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR"
 uci set firewall.DNS_Cloudflare.enabled="0" 
 uci set firewall.DNS_Cloudflare.proto="tcp udp"
 uci set firewall.DNS_Cloudflare.target="ACCEPT"
-uci commit && reload_config >/dev/null
+uci commit && reload_config >> install.log
 
 
 
@@ -27934,7 +27934,7 @@ uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR"
 uci set firewall.Block_DNS_Cloudflare.enabled="0" 
 uci set firewall.Block_DNS_Cloudflare.proto="tcp udp"
 uci set firewall.Block_DNS_Cloudflare.target="REJECT"
-uci commit && reload_config >/dev/null
+uci commit && reload_config >> install.log
 
 
 
@@ -28612,7 +28612,7 @@ uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare23_SVR"
 uci set firewall.Allow_only_DNS_Cloudflare.enabled="0" 
 uci set firewall.Allow_only_DNS_Cloudflare.proto="tcp udp"
 uci set firewall.Allow_only_DNS_Cloudflare.target="REJECT"
-uci commit && reload_config >/dev/null
+uci commit && reload_config >> install.log
 
 
 
@@ -29287,21 +29287,35 @@ uci set firewall.Allow_Only_WebClient4.name='Allow_only_WebClient_GUEST'
 uci set firewall.Allow_Only_WebClient4.target='REJECT'
 uci set firewall.Allow_Only_WebClient4.dest_port="$all_other_OfficeWebClient_port"
 
-
-#uci set firewall.Allow_Only_WebClient5=rule
-#uci set firewall.Allow_Only_WebClient5.src='LAN'
-#uci set firewall.Allow_Only_WebClient5.dest='wan'
-#uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_GUEST'
-#uci set firewall.Allow_Only_WebClient5.target='REJECT'
-#uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
-
-
 uci set firewall.Allow_Only_WebClient5=rule
 uci set firewall.Allow_Only_WebClient5.src='ENTERTAIN'
 uci set firewall.Allow_Only_WebClient5.dest='wan'
 uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_ENTERTAIN'
 uci set firewall.Allow_Only_WebClient5.target='REJECT'
 uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
+
+uci set firewall.Allow_Only_WebClient6=rule
+uci set firewall.Allow_Only_WebClient6.src='CMOVIE'
+uci set firewall.Allow_Only_WebClient6.dest='wan'
+uci set firewall.Allow_Only_WebClient6.name='Allow_only_WebClient_CMOVIE'
+uci set firewall.Allow_Only_WebClient6.target='REJECT'
+uci set firewall.Allow_Only_WebClient6.dest_port="$all_other_OfficeWebClient_port"
+
+uci set firewall.Allow_Only_WebClient7=rule
+uci set firewall.Allow_Only_WebClient7.src='LAN'
+uci set firewall.Allow_Only_WebClient7.dest='wan'
+uci set firewall.Allow_Only_WebClient7.name='Allow_only_WebClient_LAN'
+uci set firewall.Allow_Only_WebClient7.target='REJECT'
+uci set firewall.Allow_Only_WebClient7.dest_port="$all_other_OfficeWebClient_port"
+
+uci set firewall.Allow_Only_WebClient8=rule
+uci set firewall.Allow_Only_WebClient8.src='TONLINE'
+uci set firewall.Allow_Only_WebClient8.dest='wan'
+uci set firewall.Allow_Only_WebClient8.name='Allow_only_WebClient_TONLINE'
+uci set firewall.Allow_Only_WebClient8.target='REJECT'
+uci set firewall.Allow_Only_WebClient8.dest_port="$all_other_OfficeWebClient_port"
+
+
 
 
 #Hohe Ziel (Ports)
@@ -29385,8 +29399,8 @@ uci set firewall.filter6_fwd.proto="all"
 uci set firewall.filter6_fwd.target="ACCEPT"
 
 
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
 
 cat << EOF > /etc/firewall.nat6 
 iptables-save -t nat \
@@ -29394,22 +29408,22 @@ iptables-save -t nat \
 | ip6tables-restore -T nat
 EOF
 
-uci -q delete firewall.nat6 >/dev/null
-uci set firewall.nat6="include" >/dev/null
-uci set firewall.nat6.path="/etc/firewall.nat6" >/dev/null
-uci set firewall.nat6.reload="1" >/dev/null
+uci -q delete firewall.nat6 >> install.log
+uci set firewall.nat6="include" >> install.log
+uci set firewall.nat6.path="/etc/firewall.nat6" >> install.log
+uci set firewall.nat6.reload="1" >> install.log
  
 # Disable LAN to WAN forwarding
-uci rename firewall.@forwarding[0]="INET_INTERNET" >/dev/null
-uci set firewall.INET_INTERNET.enabled="0" >/dev/null
-uci commit firewall >/dev/null
-/etc/init.d/firewall restart >/dev/null
+uci rename firewall.@forwarding[0]="INET_INTERNET" >> install.log
+uci set firewall.INET_INTERNET.enabled="0" >> install.log
+uci commit firewall >> install.log
+/etc/init.d/firewall restart >> install.log
  
 # Configure ipset-dns
-uci set ipset-dns.@ipset-dns[0].ipset="filter" >/dev/null
-uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >/dev/null
-uci commit ipset-dns >/dev/null
-/etc/init.d/ipset-dns restart >/dev/null
+uci set ipset-dns.@ipset-dns[0].ipset="filter" >> install.log
+uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >> install.log
+uci commit ipset-dns >> install.log
+/etc/init.d/ipset-dns restart >> install.log
  
 # Resolve race conditions for ipset-dns
 cat << EOF > /etc/firewall.ipsetdns 
@@ -29419,15 +29433,15 @@ EOF
 cat << EOF >> /etc/sysupgrade.conf
 /etc/firewall.ipsetdns
 EOF
-uci -q delete firewall.ipsetdns >/dev/null
-uci set firewall.ipsetdns="include" >/dev/null
-uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >/dev/null
-uci set firewall.ipsetdns.reload="1" >/dev/null
-uci commit firewall >/dev/null
+uci -q delete firewall.ipsetdns >> install.log
+uci set firewall.ipsetdns="include" >> install.log
+uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >> install.log
+uci set firewall.ipsetdns.reload="1" >> install.log
+uci commit firewall >> install.log
 
-/etc/init.d/firewall restart >/dev/null
-/etc/init.d/dnsmasq restart >/dev/null
-/etc/init.d/network restart >/dev/null
+/etc/init.d/firewall restart >> install.log
+/etc/init.d/dnsmasq restart >> install.log
+/etc/init.d/network restart >> install.log
 }
 
 set_mountpoints() {
