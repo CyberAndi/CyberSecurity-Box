@@ -1206,8 +1206,8 @@ wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/CMovie-Logo.png -P /www/CaptivePortal/pic/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/CMovie-Play.svg -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/Corona_2.svg -P /www/CaptivePortal/pic/)
+#wait $processes1
+#processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/Corona_2.svg -P /www/CaptivePortal/pic/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/csb.png -P /www/CaptivePortal/pic/)
 wait $processes1
