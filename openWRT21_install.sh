@@ -1185,9 +1185,13 @@ processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-P
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/captiveportal.htm -O /www/CaptivePortal/index.htm)
 wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/mobile.css -P /www/CaptivePortal/)
+wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/theme.css -P /www/CaptivePortal/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/theme_variable.css -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/prophetie.htm -P /www/CaptivePortal/pic/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/CaptivePortal/)
 wait $processes1
