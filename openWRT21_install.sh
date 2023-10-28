@@ -10571,67 +10571,77 @@ uci set wireless.radio0.channel='6'
 uci set wireless.radio0.hwmode='11n'
 
 uci delete wireless.default_radio0
-uci set wireless.default_radio0=wifi-iface
-uci set wireless.default_radio0.device='radio0'
-uci set wireless.default_radio0.mode='ap'
-uci set wireless.default_radio0.key=$WIFI_PASS
-uci set wireless.default_radio0.ssid=$VOICE_ssid
-uci set wireless.default_radio0.encryption='psk2'
-uci set wireless.default_radio0.network='VOICE'
-
 uci delete wireless.wifinet1
 uci set wireless.wifinet1=wifi-iface
-uci set wireless.wifinet1.ssid=$HCONTROL_ssid
-uci set wireless.wifinet1.encryption='psk2'
 uci set wireless.wifinet1.device='radio0'
 uci set wireless.wifinet1.mode='ap'
-uci set wireless.wifinet1.network='HCONTROL'
 uci set wireless.wifinet1.key=$WIFI_PASS
+uci set wireless.wifinet1.ssid=$SERVER_ssid
+uci set wireless.wifinet1.encryption='psk2'
+uci set wireless.wifinet1.network='SERVER'
 
 uci delete wireless.wifinet2
 uci set wireless.wifinet2=wifi-iface
-uci set wireless.wifinet2.ssid=$CONTROL_ssid
+uci set wireless.wifinet2.ssid=$HCONTROL_ssid
+uci set wireless.wifinet2.encryption='psk2'
 uci set wireless.wifinet2.device='radio0'
 uci set wireless.wifinet2.mode='ap'
-uci set wireless.wifinet2.network='CONTROL'
+uci set wireless.wifinet2.network='HCONTROL'
 uci set wireless.wifinet2.key=$WIFI_PASS
-uci set wireless.wifinet2.encryption='psk2'
 
 uci delete wireless.wifinet3
 uci set wireless.wifinet3=wifi-iface
-uci set wireless.wifinet3.ssid=$INET_ssid
-uci set wireless.wifinet3.encryption='psk2'
+uci set wireless.wifinet3.ssid=$CONTROL_ssid
 uci set wireless.wifinet3.device='radio0'
 uci set wireless.wifinet3.mode='ap'
-uci set wireless.wifinet3.network='INET'
+uci set wireless.wifinet3.network='CONTROL'
 uci set wireless.wifinet3.key=$WIFI_PASS
+uci set wireless.wifinet3.encryption='psk2'
 
 uci delete wireless.wifinet4
 uci set wireless.wifinet4=wifi-iface
-uci set wireless.wifinet4.ssid=$ENTERTAIN_ssid
+uci set wireless.wifinet4.ssid=$INET_ssid
 uci set wireless.wifinet4.encryption='psk2'
 uci set wireless.wifinet4.device='radio0'
 uci set wireless.wifinet4.mode='ap'
-uci set wireless.wifinet4.network='ENTERTAIN'
+uci set wireless.wifinet4.network='INET'
 uci set wireless.wifinet4.key=$WIFI_PASS
 
 uci delete wireless.wifinet5
 uci set wireless.wifinet5=wifi-iface
-uci set wireless.wifinet5.ssid=$SERVER_ssid
+uci set wireless.wifinet5.ssid=$VOICE_ssid
 uci set wireless.wifinet5.encryption='psk2'
 uci set wireless.wifinet5.device='radio0'
 uci set wireless.wifinet5.mode='ap'
-uci set wireless.wifinet5.network='REPEATER'
+uci set wireless.wifinet5.network='VOICE'
 uci set wireless.wifinet5.key=$WIFI_PASS
 
 uci delete wireless.wifinet6
 uci set wireless.wifinet6=wifi-iface
-uci set wireless.wifinet6.ssid=$GUEST_ssid
+uci set wireless.wifinet6.ssid=$ENTERTAIN_ssid
 uci set wireless.wifinet6.encryption='psk2'
 uci set wireless.wifinet6.device='radio0'
 uci set wireless.wifinet6.mode='ap'
-uci set wireless.wifinet6.network='GUEST'
-uci set wireless.wifinet6.key=$WIFI_PASS
+uci set wireless.wifinet6.network='ENTERTAIN'
+uci set wireless.wifinet5.key=$WIFI_PASS
+
+uci delete wireless.wifinet7
+uci set wireless.wifinet7=wifi-iface
+uci set wireless.wifinet7.ssid=$GUEST_ssid
+uci set wireless.wifinet7.encryption='psk2'
+uci set wireless.wifinet7.device='radio0'
+uci set wireless.wifinet7.mode='ap'
+uci set wireless.wifinet7.network='GUEST'
+uci set wireless.wifinet7.key=$WIFI_PASS
+
+uci delete wireless.wifinet8
+uci set wireless.wifinet8=wifi-iface
+uci set wireless.wifinet8.ssid=$CMOVIE_ssid
+uci set wireless.wifinet8.encryption='psk2'
+uci set wireless.wifinet8.device='radio0'
+uci set wireless.wifinet8.mode='ap'
+uci set wireless.wifinet8.network='CMOVIE'
+uci set wireless.wifinet8.key=$WIFI_PASS
 
 uci set wireless.radio1=wifi-device
 uci set wireless.radio1.type='mac80211'
@@ -10642,49 +10652,77 @@ uci set wireless.radio1.htmode='VHT80'
 uci set wireless.radio1.country='DE'
 
 uci delete wireless.default_radio1
-uci set wireless.default_radio1=wifi-iface
-uci set wireless.default_radio1.device='radio1'
-uci set wireless.default_radio1.mode='ap'
-uci set wireless.default_radio1.key=$WIFI_PASS
-uci set wireless.default_radio1.ssid=$VOICE_ssid
-uci set wireless.default_radio1.encryption='psk2'
-uci set wireless.default_radio1.network='VOICE'
-
-uci delete wireless.wifinet7
-uci set wireless.wifinet7=wifi-iface
-uci set wireless.wifinet7.ssid=$INET_ssid
-uci set wireless.wifinet7.encryption='psk2'
-uci set wireless.wifinet7.device='radio1'
-uci set wireless.wifinet7.mode='ap'
-uci set wireless.wifinet7.network='INET'
-uci set wireless.wifinet7.key=$WIFI_PASS
-
-uci delete wireless.wifinet8
-uci set wireless.wifinet8=wifi-iface
-uci set wireless.wifinet8.ssid=$ENTERTAIN_ssid
-uci set wireless.wifinet8.encryption='psk2'
-uci set wireless.wifinet8.device='radio1'
-uci set wireless.wifinet8.mode='ap'
-uci set wireless.wifinet8.network='ENTERTAIN'
-uci set wireless.wifinet8.key=$WIFI_PASS
-
 uci delete wireless.wifinet9
 uci set wireless.wifinet9=wifi-iface
 uci set wireless.wifinet9.device='radio1'
 uci set wireless.wifinet9.mode='ap'
+uci set wireless.wifinet9.key=$WIFI_PASS
 uci set wireless.wifinet9.ssid=$SERVER_ssid
 uci set wireless.wifinet9.encryption='psk2'
-uci set wireless.wifinet9.key=$WIFI_PASS
-uci set wireless.wifinet9.network='REPEATER'
+uci set wireless.wifinet9.network='SERVER'
 
 uci delete wireless.wifinet10
 uci set wireless.wifinet10=wifi-iface
+uci set wireless.wifinet10.ssid=$HCONTROL_ssid
 uci set wireless.wifinet10.encryption='psk2'
 uci set wireless.wifinet10.device='radio1'
 uci set wireless.wifinet10.mode='ap'
+uci set wireless.wifinet10.network='HCONTROL'
 uci set wireless.wifinet10.key=$WIFI_PASS
-uci set wireless.wifinet10.network='GUEST'
-uci set wireless.wifinet10.ssid=$GUEST_ssid
+
+uci delete wireless.wifinet11
+uci set wireless.wifinet11=wifi-iface
+uci set wireless.wifinet11.ssid=$CONTROL_ssid
+uci set wireless.wifinet11.encryption='psk2'
+uci set wireless.wifinet11.device='radio1'
+uci set wireless.wifinet11.mode='ap'
+uci set wireless.wifinet11.network='CONTROL'
+uci set wireless.wifinet11.key=$WIFI_PASS
+
+uci delete wireless.wifinet12
+uci set wireless.wifinet12=wifi-iface
+uci set wireless.wifinet12.device='radio1'
+uci set wireless.wifinet12.mode='ap'
+uci set wireless.wifinet12.ssid=$INET_ssid
+uci set wireless.wifinet12.encryption='psk2'
+uci set wireless.wifinet12.key=$WIFI_PASS
+uci set wireless.wifinet12.network='INET'
+
+uci delete wireless.wifinet13
+uci set wireless.wifinet13=wifi-iface
+uci set wireless.wifinet13.encryption='psk2'
+uci set wireless.wifinet13.device='radio1'
+uci set wireless.wifinet13.mode='ap'
+uci set wireless.wifinet13.key=$WIFI_PASS
+uci set wireless.wifinet13.network='VOICE'
+uci set wireless.wifinet13.ssid=$VOICE_ssid
+
+uci delete wireless.wifinet14
+uci set wireless.wifinet14=wifi-iface
+uci set wireless.wifinet14.encryption='psk2'
+uci set wireless.wifinet14.device='radio1'
+uci set wireless.wifinet14.mode='ap'
+uci set wireless.wifinet14.key=$WIFI_PASS
+uci set wireless.wifinet14.network='ENTERTAIN'
+uci set wireless.wifinet14.ssid=$ENTERTAIN_ssid
+
+uci delete wireless.wifinet15
+uci set wireless.wifinet15=wifi-iface
+uci set wireless.wifinet15.encryption='psk2'
+uci set wireless.wifinet15.device='radio1'
+uci set wireless.wifinet15.mode='ap'
+uci set wireless.wifinet15.key=$WIFI_PASS
+uci set wireless.wifinet15.network='GUEST'
+uci set wireless.wifinet15.ssid=$GUEST_ssid
+
+uci delete wireless.wifinet16
+uci set wireless.wifinet16=wifi-iface
+uci set wireless.wifinet16.encryption='psk2'
+uci set wireless.wifinet16.device='radio1'
+uci set wireless.wifinet16.mode='ap'
+uci set wireless.wifinet16.key=$WIFI_PASS
+uci set wireless.wifinet16.network='CMOVIE'
+uci set wireless.wifinet14.ssid=$CMOVIE_ssid
 
 uci delete wireless.radio0.disabled >> install.log
 uci delete wireless.radio1.disabled >> install.log
