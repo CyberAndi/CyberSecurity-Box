@@ -9602,19 +9602,19 @@ uci set network.globals=globals
 uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
 
 uci add network interface >/dev/null
-uci rename network.@interface[-1]='T-ONLINE'
+uci rename network.@interface[-1]='TONLINE'
 uci commit network >/dev/null
-uci set network.T-ONLINE.proto='static'
-uci set network.T-ONLINE.type='bridge'
-uci set network.T-ONLINE.ipaddr=$CMOVIE_ip
-uci set network.T-ONLINE.netmask='255.255.255.0'
-uci set network.T-ONLINE.ip6assign='56'
-uci set network.T-ONLINE.broadcast=$CMOVIE_broadcast
-uci set network.T-ONLINE.igmp_snooping='1'
-#uci set network.T-ONLINE.gateway='127.0.0.1'
-uci set network.T-ONLINE.gateway=$INET_GW
-uci set network.T-ONLINE.ifname='eth0.110'
-uci set network.T-ONLINE.dns=$CMOVIE_ip
+uci set network.TONLINE.proto='static'
+uci set network.TONLINE.type='bridge'
+uci set network.TONLINE.ipaddr=$CMOVIE_ip
+uci set network.TONLINE.netmask='255.255.255.0'
+uci set network.TONLINE.ip6assign='56'
+uci set network.TONLINE.broadcast=$CMOVIE_broadcast
+uci set network.TONLINE.igmp_snooping='1'
+#uci set network.TONLINE.gateway='127.0.0.1'
+uci set network.TONLINE.gateway=$INET_GW
+uci set network.TONLINE.ifname='eth0.110'
+uci set network.TONLINE.dns=$CMOVIE_ip
 uci commit network >/dev/null
 
 uci add network interface >/dev/null
