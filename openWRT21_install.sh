@@ -10724,7 +10724,7 @@ uci set wireless.wifinet16.device='radio1'
 uci set wireless.wifinet16.mode='ap'
 uci set wireless.wifinet16.key=$WIFI_PASS
 uci set wireless.wifinet16.network='CMOVIE'
-uci set wireless.wifinet14.ssid=$CMOVIE_ssid
+uci set wireless.wifinet16.ssid=$CMOVIE_ssid
 
 uci delete wireless.radio0.disabled >> install.log
 uci delete wireless.radio1.disabled >> install.log
