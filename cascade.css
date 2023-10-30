@@ -788,7 +788,7 @@ header {
 	color: #BFBFBF;
 	display: flex;
 	background: linear-gradient(to bottom,rgba(32,32,32,0.9),rgba(16,16,16,0.9));
-	box-shadow: 0 1px 3px hsla(var(--border-color-low-hsl),.25),inset 0 -1px 0 hsla(var(--border-color-low-hsl),.01);
+	box-shadow: 0 0.25em 0.5em hsla(var(--border-color-low-hsl),.25),inset 0 -1px 0 hsla(var(--border-color-low-hsl),.01);
 	margin: -5px -5px 15px;
 	padding: 0 calc((100% - 940px) / 2) 0 calc((100% - 940px) / 2)
 }
@@ -1122,7 +1122,9 @@ footer {
 	font-size: 12px;
 	color: var(--text-color-medium);
 	padding-left: calc((100% - 940px) / 2);
-	padding-right: calc((100% - 940px) / 2)
+	padding-right: calc((100% - 940px) / 2);
+	box-shadow: 0 -0.25em 0.5em hsla(var(--border-color-low-hsl),.25),inset 0 -1px 0 hsla(var(--border-color-low-hsl),.01);
+	margin: 1.5em -0.5em 0;
 }
 
 footer a {
