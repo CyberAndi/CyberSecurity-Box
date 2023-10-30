@@ -18436,6 +18436,7 @@ uci add_list dhcp.Blacklist.notinterface='br-VOICE'
 uci add_list dhcp.Blacklist.notinterface='br-GUEST'
 uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN'
 uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
+uci add_list dhcp.Blacklist.notinterface='br-lan'
 uci set dhcp.Blacklist.interface='br-INET'
 uci add_list dhcp.Blacklist.interface='br-HCONTROL'
 uci add_list dhcp.Blacklist.interface='br-CONTROL'
@@ -18468,6 +18469,7 @@ uci set dhcp.Whitelist.notinterface='br-INET'
 uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
 uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
 uci add_list dhcp.Whitelist.notinterface='br-SERVER'
+uci add_list dhcp.Whitelist.notinterface='br-lan'
 uci set dhcp.Whitelist.domain=$VOICE_domain
 
 uci set dhcp.wan=dhcp
