@@ -14,7 +14,7 @@ view_config()  {
 echo
 echo 'Your Config is:'
 echo
-echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'ClienWiFi SSID:     '$INET_ssid
 echo 'Key:                  '$WIFI_PASS
 echo 'IP:                   '$INET_net
 echo
@@ -1282,19 +1282,19 @@ uci set network.globals=globals
 uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
 
 uci add network interface >> install.log
-uci rename network.@interface[-1]='TONLINE'
+uci rename network.@interface[-1]='TELEKOM'
 uci commit network >> install.log
-uci set network.TONLINE.proto='static'
-uci set network.TONLINE.type='bridge'
-uci set network.TONLINE.ipaddr=$CMOVIE_ip
-uci set network.TONLINE.netmask='255.255.255.0'
-uci set network.TONLINE.ip6assign='56'
-uci set network.TONLINE.broadcast=$CMOVIE_broadcast
-uci set network.TONLINE.igmp_snooping='1'
-#uci set network.TONLINE.gateway='127.0.0.1'
-uci set network.TONLINE.gateway=$INET_GW
-uci set network.TONLINE.ifname='eth0.110'
-uci set network.TONLINE.dns=$CMOVIE_ip
+uci set network.TELEKOM.proto='static'
+uci set network.TELEKOM.type='bridge'
+uci set network.TELEKOM.ipaddr=$CMOVIE_ip
+uci set network.TELEKOM.netmask='255.255.255.0'
+uci set network.TELEKOM.ip6assign='56'
+uci set network.TELEKOM.broadcast=$CMOVIE_broadcast
+uci set network.TELEKOM.igmp_snooping='1'
+#uci set network.TELEKOM.gateway='127.0.0.1'
+uci set network.TELEKOM.gateway=$INET_GW
+uci set network.TELEKOM.ifname='eth0.110'
+uci set network.TELEKOM.dns=$CMOVIE_ip
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -18736,17 +18736,17 @@ uci commit firewall && reload_config >> install.log
 
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="TONLINE"
+uci set firewall.@zone[-1].name="TELEKOM"
 uci set firewall.@zone[-1].input="ACCEPT"
 uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="TONLINE"
+uci set firewall.@zone[-1].network="TELEKOM"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 uci commit firewall >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="TONLINE"
+uci set firewall.@forwarding[-1].src="TELEKOM"
 uci commit firewall && reload_config >> install.log
 }
 
@@ -21035,9 +21035,9 @@ uci set firewall.Allow_Only_WebClient7.target='REJECT'
 uci set firewall.Allow_Only_WebClient7.dest_port="$all_other_OfficeWebClient_port"
 
 uci set firewall.Allow_Only_WebClient8=rule
-uci set firewall.Allow_Only_WebClient8.src='TONLINE'
+uci set firewall.Allow_Only_WebClient8.src='TELEKOM'
 uci set firewall.Allow_Only_WebClient8.dest='wan'
-uci set firewall.Allow_Only_WebClient8.name='Allow_only_WebClient_TONLINE'
+uci set firewall.Allow_Only_WebClient8.name='Allow_only_WebClient_TELEKOM'
 uci set firewall.Allow_Only_WebClient8.target='REJECT'
 uci set firewall.Allow_Only_WebClient8.dest_port="$all_other_OfficeWebClient_port"
 
