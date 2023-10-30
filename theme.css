@@ -365,7 +365,7 @@
 	--hoverView: 10;
 	--hyphens: auto;
 /*-----------------------------------------------------------------------------*/
-/*	
+/*	*/
 	--imageVirus: url('pic/Corona_2.svg');
 	--imageWar: url('pic/War.jpg');
 	--imageWar_o: url('pic/war_5.jpg');
@@ -405,8 +405,9 @@
 	--imageFlickr: url('pic/'); 
 	--imageInvidious: url('pic/'); 
 	--imageCSB: url('pic/csb.png');
+	/*
 */	
-	
+	/*
 	--imageVirus: url('https://64.media.tumblr.com/54128987a47e0d807470cab5f1e0ad7a/tumblr_inline_ri67kpThi21s0zla6_500.png');
 	--imageWar: url('https://64.media.tumblr.com/cf388b905324c00552ca34217d850825/tumblr_inline_riu8t505KR1s0zla6_500.jpg');
 	--imageWar: url('https://64.media.tumblr.com/130005ec07d9d8261fa1c6104fb15c8d/tumblr_inline_rrbuo76DWF1s0zla6_500.jpg');
@@ -451,7 +452,7 @@
 	--imageVimeo: url(''); 
 	--imageFlickr: url(''); 
 	--imageInvidious: url(''); 
-
+*/
 
 /*-----------------------------------------------------------------------------*/
 	--inlineVisible: inline-block;
