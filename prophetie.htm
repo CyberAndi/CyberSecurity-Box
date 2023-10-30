@@ -17,92 +17,118 @@
 	<head>
 		<title>C&grave;Movie das Hoffnungsportal</title>
 	</head>	
-	<body onload="" onresize="">
-		
-		<header class="header" id="headerHidden">
-			
-			<div class="headerText">
-			<h1>
-				<!-- Text insert by css Tag '.header h1' -->
-			</h1>
-			<h3>
-				<!-- Text insert by css Tag '.header h3' -->
-			</h3>
-			<h4>
-				<a href ="https://www.bibleserver.com/LUT/Offenbarung13%2C1" target="_blank">Sei vorbereitet, auf das was kommt</a>.
-			</h4>
-			</div>
 
-			<a href="#explainEnd" id="NaviDown">
-				<div>
-					&#9660;
-				</div>
-			</a>
-			
-		</header>
-
-	
-		<nav id="topMenu" class="menu">
-    			<a class="containerIcon" href="#start">
+	<!--<body onload="fnSetOnLoad()" id="Homepage" >-->
+	<body id="Homepage" >
+		<a class="containerIcon" href="prophetie.htm#topM" aria-label="topmenu navigation" aria-live="off">
 				<div class="iconMenu">
         				<div></div>
         				<div></div>
         				<div></div>  
     				</div>
 				<div class="iconText">
-					Men&uuml;
+				
 				</div>
-			</a>
-			<ul>
-        	        	<li>
+		</a>
+		<nav id="topMenu" class="menu" role="navigation" aria-label="top navigation" aria-live="off">
+    			
+			<ul id="topM" aria-label="main navigation">
+        	        	<li id="topMExplain" aria-label="sub navigation">
 					<a href="index.htm#explainStart">Beweggr&uuml;nde</a>
 				</li>
-				<li>
-					<a href="index.htm#mainDiashow">Filme / Podcast</a>
-				</li>
-				<li>
-					<a href="index.htm#Pos7">Glaube</a>
-					<ul>
-    						<li><a href="index.htm#Pos7">Gottesdienste</a></li>
-						<li><a href="index.htm#Pos5">Vortr&auml;ge</a></li>
-						<li><a href="prophetie.htm">Prophetien</a></li>
-    						<li><a href="index.htm#GScripte">Scripte</a></li>
-    						
-					</ul>
+				<li id="topMFaith" aria-label="sub navigation">
+					<a href="prophetie.htm#topM#subMFaith">Glaube</a>
+					<ul id="subMFaith" aria-label="sub navigation faith">
+    						<li>
+							<a href="index.htm#Pos8">Gottesdienste</a>
+						</li>
+						<li>
+							<a href="index.htm#Pos4">Video&#8209;Vortr&auml;ge</a>
+						</li>
+						<li>
+							<a href="prophetie.htm">Prophetien</a>
+						</li>
+    						<li>
+							<a href="https://load.dwgradio.net/de/search/?a=152"target="_blank">Scripte</a>
+						</li>
+ 					</ul>
 				</li>   
-        			<li>
-					<a href="index.htm#Pos5">IT / Multimedia</a> 
-  					<ul>
-      						<li><a href="https://www.cyberandi.de/DatenschutzMeinungsfreiheit" target="_blank">Datenschutz</a></li>
-      						<li><a href="https://www.cyberandi.de" target="_blank">IT-Security / Multimedia</a></li> 
+        			<li id="topMIT" aria-label="sub navigation it">
+					<a href="prophetie.htm#topM#subMIT">IT/MultiMedia</a> 
+  					<ul id="subMIT">
+						<li>
+							<a href="#Pos5">Video&#8209;Beitr&auml;ge</a> 
+						</li>
+      						<li>
+							<a href="https://cyberandi.tumblr.com/DatenschutzMeinungsfreiheit#" target="_blank">Datenschutz</a>
+						</li>
+      						<li>
+							<a href="https://cyberandi.tumblr.com/#" target="_blank">Tipps&nbsp;und&nbsp;Berichte</a>
+						</li> 
   					</ul>
 	 			</li>
-        			<li>
-					<a href="index.htm#Pos1">Krisenvorsorge</a> 
-					<ul>
-    						<li><a href="index.htm#Pos1">Beitr&auml;ge</a></li>
+        			<li id="topMCrisis" aria-label="sub navigation crisis">
+					<a href="prophetie.htm#topM#subMCrisis">Krisenvorsorge</a> 
+					<ul id="subMCrisis">
+    						<li><a href="index.htm#Pos1">Video&#8209;Beitr&auml;ge</a></li>
     						<li><a href="index.htm#KScripte">Scripte</a></li> 
 					</ul>
 				</li>
-				<li>
-					Nachschlagewerke 
-  					<ul>
-      						<li><a href="https://www.wikipedia.de" target="_blank">Wikipedia</a></li>
-      						<li><a href="https://www.bibleserver.com" target="_blank">Bibel</a></li> 
+				<li id="topMBooks" aria-label="sub navigation books">
+					<a href="prophetie.htm#topM#subMBooks">Nachschlagewerke</a> 
+  					<ul id="subMBooks">
+      						<li><a href="https://www.wikipedia.de#" target="_blank">Wikipedia</a></li>
+      						<li><a href="https://www.bibleserver.com#" target="_blank">Bibel</a></li> 
   					</ul>
 	 			</li>
-				<li>
-					<a href="#impressum">Impressum</a>
+				<li id="topMMediathek" aria-label="sub navigation mediathek">
+					<a href="index.htm#topM#subMPodcast">Podcast/Serien/Videos</a>
+					<ul id="subMPodcast">
+    						<li>	
+							<a href="index.htm#Pos3">CyberAndi</a>
+						</li>
+    						<li>
+							<a href="index.htm#Pos8">ICF&nbsp;Z&uuml;rich</a>
+						</li>
+						<li>	
+							<a href="#Pos5">IT/MultiMedia</a>
+						</li>
+						<li>	
+							<a href="index.htm#Pos7">Mikroskopie</a>
+						</li>
+						<li>
+							<a href="index.htm#Pos1">Krisenvorsorge</a>
+						</li>
+						<li>
+							<a href="index.htm#Pos4">L.&nbsp;Gassmann</a>
+						</li>
+						<li>	
+							<a href="index.htm#Pos6">The&nbsp;Chosen</a>
+						</li>
+						<li>
+							<a href="index.htm#Pos9">C&grave;Movie&nbsp;Programm</a>
+						</li>
+						<li>
+							<a href="index.htm#Pos10">Victory&nbsp;Channel</a>
+						</li>
+
+
+					</ul>
+				</li>
+				
+				<li id="topMImprssum" aria-label="sub navigation impressum">
+					<a href="prophetie.htm#impressum">Impressum</a>
 				</li>
 
     			</ul>
 		</nav>
-		<div id="Main">	
-			<main class="Content" id="start">
+
+		<div id="Main">
+			<main class="Content" id="start" role="main" aria-label="main content" aria-atomic="true">
 				<div class="containerOverlay">
 						<section class="Overlay Book">
 							<div class="leftLast">
-							<article class="left"><p>
+							<article class="left" id="bibleStart"><p id="explainStart">
 								Ich rede schon seit Jahren, was noch alles kommen k&ouml;nnte. Warum, weil ich es schon vor Jahrzehnten das erste mal davon tr&auml;umte. Und ich tr&auml;umte diesen identischen Traum mehrfach und es waren Jahre dazwischen. Zuletzt 2020/21. Ich hatte auch schon immer das Datum ca. 20 Jahre nach der Jahrtausendwende. 
 								Als N&auml;chstes wird sich noch eine Art B&uuml;rgerkrieg weltweit ausbreiten. Und da werden Juden/Christen gegen Moslems, Arm gegen Reich, Umweltsch&uuml;tzer gegen Klimasch&uuml;tzer, LQBT- gegen Biologische Geschlechter-Bef&uuml;rworter, Demokratie- gegen Sozialismus-/Kommunismus-Bef&uuml;rworter usw. aufstehen. Ich wollte es Jahrzehnte nicht wahrhaben. Als ich aber 2020 wieder den selben Traum hatte, viel es mir wie Schuppen von den Augen. Da einige Wochen sp&auml;ter einer dieser Ereignisse des Traumes war wurde. Genauso wurden noch einige weiter Ereignisse des Traumes 2021 wahr. Ich habe mich, seit Jahren, mit  diesen Traum und Eindr&uuml;cke auf verschiedene Weise besch&auml;ftigt.
 								</p> 
@@ -145,13 +171,13 @@
 												<b>17</b> und dass niemand kaufen oder verkaufen kann, wenn er nicht das Zeichen hat, n&auml;mlich den Namen des Tieres oder die Zahl seines Namens. 
 												<b>18</b> Hier ist Weisheit! Wer Verstand hat, der &uuml;berlege die Zahl des Tieres; denn es ist die Zahl eines Menschen, und seine Zahl ist sechshundertsechsundsechzig
 											</cite><br>
-											Quelle: <a href="https://www.bibleserver.com/LUT/Offenbarung13" target="_blank">https://www.bibleserver.com/LUT/Offenbarung13</a>
+											<i>Quelle: <b><a href="https://www.bibleserver.com/LUT/Offenbarung13" target="_blank">https://www.bibleserver.com/LUT/Offenbarung13</a></b></i>
 										</p>
 										<p>	
 											Es wird vermutet, da&szlig; das Tier aus dem Meer die EU oder UN(Vereinte Nationen), welche Beschl&uuml;sse zu Klima, Gendern, Abtreibung, Migration usw. erlassen haben, sind. Da es aus dem Gebiet des R&ouml;mischen Reiches(Mittelmeerraum und EU, Naher Osten und Nord Afrika) kommen wird. Wobei die Nordamerikaner auch als ausgewanderte und vertriebene Europ&auml;er dazu z&auml;hlen.
 										</p>
 										<p id="explainEnd">
-											Als Erkl&auml;rung dient hier Daniel 2:25 ff.<br>
+											Als Erkl&auml;rung dient hier Daniel 2:25 ff.<br><br>
 											<cite>
 												<b>25</b> Arjoch brachte Daniel eilends hinein vor den K&ouml;nig und sprach zu ihm: Ich habe einen Mann gefunden unter den Gefangenen aus Juda, der dem K&ouml;nig die Deutung sagen kann.
 												<b>26</b> Der K&ouml;nig antwortete und sprach zu Daniel, den sie Beltschazar nannten: Bist du es, der mir den Traum, den ich gesehen habe, und seine Deutung kundtun kann?
@@ -177,22 +203,64 @@
 												<b>46</b> Da fiel der K&ouml;nig Nebukadnezar auf sein Angesicht und warf sich nieder vor Daniel und befahl, man sollte ihm Speisopfer und R&auml;ucheropfer darbringen.
 												<b>47</b> Und der K&ouml;nig antwortete Daniel und sprach: Wahrhaftig, euer Gott ist ein Gott &uuml;ber alle G&ouml;tter und ein Herr &uuml;ber alle K&ouml;nige, der Geheimnisse offenbaren kann, wie du dies Geheimnis hast offenbaren k&ouml;nnen
 											</cite>	
-											</p>
-											Quelle: <a href="https://www.bibleserver.com/LUT/Daniel2%2C25" target="_blank">https://www.bibleserver.com/LUT/Daniel2:25</a>
+											<br>
+											<i>Quelle: <b><a href="https://www.bibleserver.com/LUT/Daniel2%2C25" target="_blank">https://www.bibleserver.com/LUT/Daniel2:25</a></b></i>
+										</p>
 									</li>
 								</ol>
 							</article>
 							</div>		
 						</section>
+						
+					<div id="containerNaviBG">
+						<a href="prophetie.htm#explainEnd" id="NaviDown" class="naviBG" aria-label="navigate to bottom" alt="navidown">
+							<div>
+								&#9660;
+							</div>
+						</a>
+
+						<a href="prophetie.htm#explainStart" id="NaviUp" class="naviBG" aria-label="navigate to top" alt="naviUp">
+							<div>
+								&#9650;
+							</div>
+						</a>
+
+					</div>
+
 				</div>
 			</main>
 		</div>
-		<footer>
-			<aside>		
-				<div id="impressum" class="modal">
-					<div class="Info">
-						<a href="#start" class="buttonModal" onclick="">x</a>
+
+	
+
+		
+		<header class="header" id="headerHidden" role="banner">
+			<a class="containerHeader" href="#">
+				<div class="headerText">
+					<h1>
+						<!-- Text insert by css Tag '.header h1' -->
+					</h1>
+					<h3>
+						<!-- Text insert by css Tag '.header h3' -->
+					</h3>
+					<h4>
+						<a href ="https://www.bibleserver.com/LUT/Offenbarung13%2C1" target="_blank">Sei vorbereitet, auf das was kommt</a>.
+					</h4>
+				</div>
+			</a>
+		</header>
+		<footer role="" aria-live="off">
+			<aside aria-label="discription">		
+				<div id="impressum" class="modal" aria-label="impressum">
+					<dialog class="Info">
+						<div class="infoHeader">Impressum</div>
+						<a href="#" class="buttonModal">x</a>
 						<div class="InfoText">
+							<p>
+							Diese Seite nutzt <a href="https://www.torproject.org/">DNS over TOR (onion)<img src="https://64.media.tumblr.com/b1b09831da5b7e272ce7040b0e68bb6d/tumblr_inline_rj1ut0w4OK1s0zla6_500.png"></a>. Deshalb gibt es hier keine Zensur durch URL-Filter, der Povider (Telekom, Vodafone, O2 usw.), Geheimdienste und Regierungen.<br>
+							Sondern nur einen Porno- und Werbungsblocker, der gegen das Tracking durch Google, Apple, Amazon, Facebook, Otto Group, VG Wort und der Sendeanstalten usw. fungiert.<br>
+							Die Technik dahinter ist die Freeware <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank">CyberSecurity-Box</a> <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank"><img src="https://64.media.tumblr.com/633a31ccf93d94b113eed6b22f118373/tumblr_inline_rj1utyj0OR1s0zla6_500.png"></a>.
+							</p>
 							<p>Verantwortlicher im Sinne des Pressegesetzes:
 							</p>
 							<address>Stawinski Andreas<br>
@@ -201,27 +269,30 @@
 							Telefon: 089/74792- 201<br>
 							Telefax: 089/74792- 202<br>
 							E-Mail: cyberandi&#00064;outlook.de <br>
-							Web: <a href="https://www.cyberandi.de" target="_blank">https://cyberandi.tumblr.com</a>
+							Web: <a href="https://cyberandi.tumblr.com" target="_blank">https://cyberandi.tumblr.com</a>
 							</address>
 							<p>
-							Diese Seite nutzt <a href="https://www.torproject.org/">DNS over TOR(onion)<img src="pic/tor.png"></a>. Deshalb gibt es hier keine Zensur durch URL-Filter, der Povider(Telekom, Vodafone, O2 usw.), Geheimdienste und Regierungen.<br>
-							Sondern nur einen Porno- und Werbungsblocker, der gegen das Tracking durch Google, Apple, Amazon, Facebook, Otto Group, VG Wort und der Sendeanstalten usw. fungiert.<br>
-							Die Technik dahinter ist die Freeware <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank">CyberSecurity-Box</a> <a href="https://github.com/CyberAndi/CyberSecurity-Box" target="_blank"><img src="pic/csb.png"></a>.
-							</p>
-							Bitte lesen Sie auch die <a href="#datenschutz" onclick="datenschutz();">Datenschutzbestimmungen</a> sowie den <a href="#haftung" onclick="haftung();">Hauftungsausschluss</a> durch.
+							Spenden und Unterst&uuml;tzung:<br>
+							Andreas Stawinski<br>
+							HypoVereinsbank<br>
+				                        IBAN: DE11700202700042964638<br>
+                            				BIC: HYVEDEMMXXX<br>
+                            				Verwendungszweck: Zuwendung-CMovie</p>
+							Bitte lesen Sie auch die <a href="#datenschutz">Datenschutzbestimmungen</a> sowie den <a href="#haftung">Hauftungsausschluss</a> durch.
 						</div>
-					</div>
+					</dialog>
 				</div>
-				<div id="datenschutz" class="modal">
-					<div class="Info">
-						<a href="#start" class="buttonModal" onclick="">x</a>
+				<div id="datenschutz" class="modal" aria-label="data-security">
+					<dialog class="Info">
+						<div class="infoHeader">Datenschutzerkl&auml;rung</div>
+						<a href="#" class="buttonModal">x</a>
 						<div class="InfoText">
-							<p>Die Nutzung unserer Webseite ist in der Regel ohne Angabe personenbezogener Daten m&ouml;glich. Soweit auf unseren Seiten personenbezogene Daten (beispielsweise name, Anschrift oder eMail-Adre&szlig;en) erhoben werden, erfolgt dies, soweit m&ouml;glich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdr&uuml;ckliche Zustimmung nicht an Dritte weitergegeben.
+							<p>Die Nutzung unserer Webseite ist in der Regel ohne Angabe personenbezogener Daten m&ouml;glich. Soweit auf unseren Seiten personenbezogene Daten (beispielsweise name, Anschrift oder eMail-Adreßen) erhoben werden, erfolgt dies, soweit m&ouml;glich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdr&uuml;ckliche Zustimmung nicht an Dritte weitergegeben.
 							</p>
-							<p>Wir weisen darauf hin, da&szlig; die Daten&uuml;bertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitsl&uuml;cken aufweisen kann. Ein l&uuml;ckenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht m&ouml;glich.
+							<p>Wir weisen darauf hin, daß die Daten&uuml;bertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitsl&uuml;cken aufweisen kann. Ein l&uuml;ckenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht m&ouml;glich.
 							</p
 			
-							<p>Der Nutzung von im Rahmen der Impre&szlig;umspflicht ver&ouml;ffentlichten Kontaktdaten durch Dritte zur &uuml;bersendung von nicht ausdr&uuml;cklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdr&uuml;cklich widersprochen. Die Betreiber der Seiten behalten sich ausdr&uuml;cklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.
+							<p>Der Nutzung von im Rahmen der Impreßumspflicht ver&ouml;ffentlichten Kontaktdaten durch Dritte zur &uuml;bersendung von nicht ausdr&uuml;cklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdr&uuml;cklich widersprochen. Die Betreiber der Seiten behalten sich ausdr&uuml;cklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.
 							</p>
 							<p>
 								Diese Seite nutzt <a href="https://www.torproject.org/">DNS over TOR(onion)<img src="pic/tor.png"></a>. Deshalb gibt es hier keine Zensur durch URL-Filter, der Povider(Telekom, Vodafone, O2 usw.), Geheimdienste und Regierungen.<br>
@@ -231,58 +302,59 @@
 							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Facebook-Plugins (Like-Button)<br>
 	
 								Auf unseren Seiten sind Plugins des sozialen Netzwerks Facebook (“Meta”,“Facebook”,Meta Platforms Inc., 1601 Willow Road, Menlo Park, California, 94025, USA) integriert. Die Facebook-Plugins erkennen Sie an dem Facebook-Logo oder dem “Like-Button” (“Gef&auml;llt mir”) auf unserer Seite. Eine &uuml;bersicht &uuml;ber die Facebook-Plugins finden Sie hier: <a href="https://developers.facebook.com/docs/plugins/" target="_blank">https://developers.facebook.com/docs/plugins/</a>.
-								Wenn Sie unsere Seiten besuchen, wird &uuml;ber das Plugin eine direkte Verbindung zwischen Ihrem Browser und dem Facebook-Server hergestellt. Facebook erh&auml;lt dadurch die Information, da&szlig; Sie mit Ihrer IP-Adre&szlig;e unsere Seite besucht haben. Wenn Sie den Facebook “Like-Button” anklicken w&auml;hrend Sie in Ihrem Facebook-Account eingeloggt sind, k&ouml;nnen Sie die Inhalte unserer Seiten auf Ihrem Facebook-Profil verlinken. Dadurch kann Facebook den Besuch unserer Seiten Ihrem Benutzerkonto zuordnen. Wir weisen darauf hin, da&szlig; wir als Anbieter der Seiten keine Kenntnis vom Inhalt der &uuml;bermittelten Daten sowie deren Nutzung durch Facebook erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerkl&auml;rung von facebook unter <a href="https://de-de.facebook.com/policy.php" target="_blank">https://de-de.facebook.com/policy.php</a><br>
+								Wenn Sie unsere Seiten besuchen, wird &uuml;ber das Plugin eine direkte Verbindung zwischen Ihrem Browser und dem Facebook-Server hergestellt. Facebook erh&auml;lt dadurch die Information, daß Sie mit Ihrer IP-Adreße unsere Seite besucht haben. Wenn Sie den Facebook “Like-Button” anklicken w&auml;hrend Sie in Ihrem Facebook-Account eingeloggt sind, k&ouml;nnen Sie die Inhalte unserer Seiten auf Ihrem Facebook-Profil verlinken. Dadurch kann Facebook den Besuch unserer Seiten Ihrem Benutzerkonto zuordnen. Wir weisen darauf hin, daß wir als Anbieter der Seiten keine Kenntnis vom Inhalt der &uuml;bermittelten Daten sowie deren Nutzung durch Facebook erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerkl&auml;rung von facebook unter <a href="https://de-de.facebook.com/policy.php" target="_blank">https://de-de.facebook.com/policy.php</a><br>
 				
-								Wenn Sie nicht w&uuml;nschen, da&szlig; Facebook den Besuch unserer Seiten Ihrem Facebook-Nutzerkonto zuordnen kann, loggen Sie sich bitte aus Ihrem Facebook-Benutzerkonto aus.
+								Wenn Sie nicht w&uuml;nschen, daß Facebook den Besuch unserer Seiten Ihrem Facebook-Nutzerkonto zuordnen kann, loggen Sie sich bitte aus Ihrem Facebook-Benutzerkonto aus.
 							</p>
 					
 							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Google Analytics<br>
 					
-								Diese Website benutzt Google Analytics, einen Webanalysedienst der Alphabet Inc. (“Google”, “Alphabet”). Google Analytics verwendet sog. “Cookies”, Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie erm&ouml;glichen. Die durch den Cookie erzeugten Informationen &uuml;ber Ihre Benutzung dieser Website werden in der Regel an einen Server von Google in den USA &uuml;bertragen und dort gespeichert. Im Falle der Aktivierung der IP-Anonymisierung auf dieser Webseite wird Ihre IP-Adre&szlig;e von Google jedoch innerhalb von Mitgliedstaaten der Europ&auml;ischen Union oder in anderen Vertrag&szlig;taaten des Abkommens &uuml;ber den Europ&auml;ischen Wirtschaftsraum zuvor gek&uuml;rzt.<br>
+								Diese Website benutzt Google Analytics, einen Webanalysedienst der Alphabet Inc. (“Google”, “Alphabet”). Google Analytics verwendet sog. “Cookies”, Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie erm&ouml;glichen. Die durch den Cookie erzeugten Informationen &uuml;ber Ihre Benutzung dieser Website werden in der Regel an einen Server von Google in den USA &uuml;bertragen und dort gespeichert. Im Falle der Aktivierung der IP-Anonymisierung auf dieser Webseite wird Ihre IP-Adreße von Google jedoch innerhalb von Mitgliedstaaten der Europ&auml;ischen Union oder in anderen Vertragßtaaten des Abkommens &uuml;ber den Europ&auml;ischen Wirtschaftsraum zuvor gek&uuml;rzt.<br>
 					
-								Nur in Ausnahmef&auml;llen wird die volle IP-Adre&szlig;e an einen Server von Google in den USA &uuml;bertragen und dort gek&uuml;rzt. Im Auftrag des Betreibers dieser Website wird Google diese Informationen benutzen, um Ihre Nutzung der Website auszuwerten, um Reports &uuml;ber die Websiteaktivit&auml;ten zusammenzustellen und um weitere mit der Websitenutzung und der Internetnutzung verbundene Dienstleistungen gegen&uuml;ber dem Websitebetreiber zu erbringen. Die im Rahmen von Google Analytics von Ihrem Browser &uuml;bermittelte IP-Adre&szlig;e wird nicht mit anderen Daten von Google zusammengef&uuml;hrt.<br>
+								Nur in Ausnahmef&auml;llen wird die volle IP-Adreße an einen Server von Google in den USA &uuml;bertragen und dort gek&uuml;rzt. Im Auftrag des Betreibers dieser Website wird Google diese Informationen benutzen, um Ihre Nutzung der Website auszuwerten, um Reports &uuml;ber die Websiteaktivit&auml;ten zusammenzustellen und um weitere mit der Websitenutzung und der Internetnutzung verbundene Dienstleistungen gegen&uuml;ber dem Websitebetreiber zu erbringen. Die im Rahmen von Google Analytics von Ihrem Browser &uuml;bermittelte IP-Adreße wird nicht mit anderen Daten von Google zusammengef&uuml;hrt.<br>
 					
-								Sie k&ouml;nnen die Speicherung der Cookies durch eine entsprechende Einstellung Ihrer Browser-Software verhindern; wir weisen Sie jedoch darauf hin, da&szlig; Sie in diesem Fall gegebenenfalls nicht s&auml;mtliche Funktionen dieser Website vollumf&auml;nglich werden nutzen k&ouml;nnen. Sie k&ouml;nnen dar&uuml;ber hinaus die Erfa&szlig;ung der durch das Cookie erzeugten und auf Ihre Nutzung der Website bezogenen Daten (inkl. Ihrer IP-Adre&szlig;e) an Google sowie die Verarbeitung dieser Daten durch Google verhindern, indem sie das unter dem folgenden Link verf&uuml;gbare Browser-Plugin herunterladen und installieren: <a href="https://tools.google.com/dlpage/gaoptout?hl=de">https://tools.google.com/dlpage/gaoptout?hl=de</a>.
+								Sie k&ouml;nnen die Speicherung der Cookies durch eine entsprechende Einstellung Ihrer Browser-Software verhindern; wir weisen Sie jedoch darauf hin, daß Sie in diesem Fall gegebenenfalls nicht s&auml;mtliche Funktionen dieser Website vollumf&auml;nglich werden nutzen k&ouml;nnen. Sie k&ouml;nnen dar&uuml;ber hinaus die Erfaßung der durch das Cookie erzeugten und auf Ihre Nutzung der Website bezogenen Daten (inkl. Ihrer IP-Adreße) an Google sowie die Verarbeitung dieser Daten durch Google verhindern, indem sie das unter dem folgenden Link verf&uuml;gbare Browser-Plugin herunterladen und installieren: <a href="https://tools.google.com/dlpage/gaoptout?hl=de">https://tools.google.com/dlpage/gaoptout?hl=de</a>.
 							</p>
 					
 							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Google Adsense<br>
 					
 								Diese Website benutzt Google AdSense, einen Dienst zum Einbinden von Werbeanzeigen der Alphabet Inc. (“Google”, “Alphabet”). Google AdSense verwendet sog. “Cookies”, Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website erm&ouml;glicht. Google AdSense verwendet auch so genannte Web Beacons (unsichtbare Grafiken). Durch diese Web Beacons k&ouml;nnen Informationen wie der Besucherverkehr auf diesen Seiten ausgewertet werden.
 			
-								Die durch Cookies und Web Beacons erzeugten Informationen &uuml;ber die Benutzung dieser Website (einschlie&szlig;lich Ihrer IP-Adre&szlig;e) und Auslieferung von Werbeformaten werden an einen Server von Google in den USA &uuml;bertragen und dort gespeichert. Diese Informationen k&ouml;nnen von Google an Vertragspartner von Google weiter gegeben werden. Google wird Ihre IP-Adre&szlig;e jedoch nicht mit anderen von Ihnen gespeicherten Daten zusammenf&uuml;hren.
+								Die durch Cookies und Web Beacons erzeugten Informationen &uuml;ber die Benutzung dieser Website (einschließlich Ihrer IP-Adreße) und Auslieferung von Werbeformaten werden an einen Server von Google in den USA &uuml;bertragen und dort gespeichert. Diese Informationen k&ouml;nnen von Google an Vertragspartner von Google weiter gegeben werden. Google wird Ihre IP-Adreße jedoch nicht mit anderen von Ihnen gespeicherten Daten zusammenf&uuml;hren.
 					
-								Sie k&ouml;nnen die Installation der Cookies durch eine entsprechende Einstellung Ihrer Browser Software verhindern; wir weisen Sie jedoch darauf hin, da&szlig; Sie in diesem Fall gegebenenfalls nicht s&auml;mtliche Funktionen dieser Website voll umf&auml;nglich nutzen k&ouml;nnen. Durch die Nutzung dieser Website erkl&auml;ren Sie sich mit der Bearbeitung der &uuml;ber Sie erhobenen Daten durch Google in der zuvor beschriebenen Art und Weise und zu dem zuvor benannten Zweck einverstanden.
+								Sie k&ouml;nnen die Installation der Cookies durch eine entsprechende Einstellung Ihrer Browser Software verhindern; wir weisen Sie jedoch darauf hin, daß Sie in diesem Fall gegebenenfalls nicht s&auml;mtliche Funktionen dieser Website voll umf&auml;nglich nutzen k&ouml;nnen. Durch die Nutzung dieser Website erkl&auml;ren Sie sich mit der Bearbeitung der &uuml;ber Sie erhobenen Daten durch Google in der zuvor beschriebenen Art und Weise und zu dem zuvor benannten Zweck einverstanden.
 							</p>
 					
 							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Google +1<br>
 					
-								Erfa&szlig;ung und Weitergabe von Informationen:
-								Mithilfe der Google +1-Schaltfl&auml;che k&ouml;nnen Sie Informationen weltweit ver&ouml;ffentlichen. &uuml;ber die Google +1-Schaltfl&auml;che erhalten Sie und andere Nutzer personalisierte Inhalte von Google und unseren Partnern. Google speichert sowohl die Information, da&szlig; Sie f&uuml;r einen Inhalt +1 gegeben haben, als auch Informationen &uuml;ber die Seite, die Sie beim Klicken auf +1 angesehen haben. Ihre +1 k&ouml;nnen als Hinweise zusammen mit Ihrem Profilnamen und Ihrem Foto in Google-Diensten, wie etwa in Suchergebni&szlig;en oder in Ihrem Google-Profil, oder an anderen Stellen auf Websites und Anzeigen im Internet eingeblendet werden.
-								Google zeichnet Informationen &uuml;ber Ihre +1-Aktivit&auml;ten auf, um die Google-Dienste f&uuml;r Sie und andere zu verbe&szlig;ern. Um die Google +1-Schaltfl&auml;che verwenden zu k&ouml;nnen, ben&ouml;tigen Sie ein weltweit sichtbares, &ouml;ffentliches Google-Profil, das zumindest den f&uuml;r das Profil gew&auml;hlten namen enthalten mu&szlig;. Dieser name wird in allen Google-Diensten verwendet. In manchen F&auml;llen kann dieser name auch einen anderen namen ersetzen, den Sie beim Teilen von Inhalten &uuml;ber Ihr Google-Konto verwendet haben. Die Identit&auml;t Ihres Google-Profils kann Nutzern angezeigt werden, die Ihre E-Mail-Adre&szlig;e kennen oder &uuml;ber andere identifizierende Informationen von Ihnen verf&uuml;gen.<br>
+								Erfaßung und Weitergabe von Informationen:
+								Mithilfe der Google +1-Schaltfl&auml;che k&ouml;nnen Sie Informationen weltweit ver&ouml;ffentlichen. &uuml;ber die Google +1-Schaltfl&auml;che erhalten Sie und andere Nutzer personalisierte Inhalte von Google und unseren Partnern. Google speichert sowohl die Information, daß Sie f&uuml;r einen Inhalt +1 gegeben haben, als auch Informationen &uuml;ber die Seite, die Sie beim Klicken auf +1 angesehen haben. Ihre +1 k&ouml;nnen als Hinweise zusammen mit Ihrem Profilnamen und Ihrem Foto in Google-Diensten, wie etwa in Suchergebnißen oder in Ihrem Google-Profil, oder an anderen Stellen auf Websites und Anzeigen im Internet eingeblendet werden.
+								Google zeichnet Informationen &uuml;ber Ihre +1-Aktivit&auml;ten auf, um die Google-Dienste f&uuml;r Sie und andere zu verbeßern. Um die Google +1-Schaltfl&auml;che verwenden zu k&ouml;nnen, ben&ouml;tigen Sie ein weltweit sichtbares, &ouml;ffentliches Google-Profil, das zumindest den f&uuml;r das Profil gew&auml;hlten namen enthalten muß. Dieser name wird in allen Google-Diensten verwendet. In manchen F&auml;llen kann dieser name auch einen anderen namen ersetzen, den Sie beim Teilen von Inhalten &uuml;ber Ihr Google-Konto verwendet haben. Die Identit&auml;t Ihres Google-Profils kann Nutzern angezeigt werden, die Ihre E-Mail-Adreße kennen oder &uuml;ber andere identifizierende Informationen von Ihnen verf&uuml;gen.<br>
 				
-								Verwendung der erfa&szlig;ten Informationen:
-								Neben den oben erl&auml;uterten Verwendungszwecken werden die von Ihnen bereitgestellten Informationen gem&auml;&szlig; den geltenden Google-Datenschutzbestimmungen genutzt. Alphabet ver&ouml;ffentlicht m&ouml;glicherweise zusammengefa&szlig;te Statistiken &uuml;ber die +1-Aktivit&auml;ten der Nutzer bzw. gibt diese an Nutzer und Partner weiter, wie etwa Publisher, Inserenten oder verbundene Websites.
+								Verwendung der erfaßten Informationen:
+								Neben den oben erl&auml;uterten Verwendungszwecken werden die von Ihnen bereitgestellten Informationen gem&auml;ß den geltenden Google-Datenschutzbestimmungen genutzt. Alphabet ver&ouml;ffentlicht m&ouml;glicherweise zusammengefaßte Statistiken &uuml;ber die +1-Aktivit&auml;ten der Nutzer bzw. gibt diese an Nutzer und Partner weiter, wie etwa Publisher, Inserenten oder verbundene Websites.
 							</p>
 					
 							<p>Datenschutzerkl&auml;rung f&uuml;r die Nutzung von Twitter<br>
 							
 								Auf unseren Seiten sind Funktionen des Dienstes Twitter eingebunden. Diese Funktionen werden angeboten durch die Twitter Inc., Twitter, Inc. 1355 Market St, Suite 900, San Francisco, CA 94103, USA. Durch das Benutzen von Twitter und der Funktion “Re-Tweet” werden die von Ihnen besuchten Webseiten mit Ihrem Twitter-Account verkn&uuml;pft und anderen Nutzern bekannt gegeben. Dabei werden auch Daten an Twitter &uuml;bertragen.<br>
 					
-								Wir weisen darauf hin, da&szlig; wir als Anbieter der Seiten keine Kenntnis vom Inhalt der &uuml;bermittelten Daten sowie deren Nutzung durch Twitter erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerkl&auml;rung von Twitter unter <a href="http://twitter.com/privacy" target="_blank">http://twitter.com/privacy</a>.<br>
+								Wir weisen darauf hin, daß wir als Anbieter der Seiten keine Kenntnis vom Inhalt der &uuml;bermittelten Daten sowie deren Nutzung durch Twitter erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerkl&auml;rung von Twitter unter <a href="http://twitter.com/privacy" target="_blank">http://twitter.com/privacy</a>.<br>
 					
 								Ihre Datenschutzeinstellungen bei Twitter k&ouml;nnen Sie in den Konto-Einstellungen unter <a href="http://twitter.com/account/settings" target="_blank">https://twitter.com/account/settings</a> &auml;ndern.
 								<br>
 								Quellverweis: Datenschutzerkl&auml;rung von <a href="https://www.erecht24.de" terget="_blank">eRecht24</a>, dem Portal zum Internetrecht von Rechtsanwalt S&ouml;ren Siebert, Facebook Datenschutzerkl&auml;rung, Google Analytics Bedingungen, Google Adsense Datenschutzerkl&auml;rung, Google +1 Bedingungen, Datenschutzerkl&auml;rung f&uuml;r Twitter
 							</p>				
 						</div>
-					</div>
+					</dialog>
 				</div>
-				<div id="haftung" class="modal">
-					<div class="Info">
-						<a href="#start" class="buttonModal" onclick="">x</a>
+				<div id="haftung" class="modal" aria-label="disclaimer">
+					<dialog class="Info">
+						<div class="infoHeader">Hauftungsausschluss</div>
+						<a href="#" class="buttonModal">x</a>
 						<div class="InfoText">
 							<p>Haftung f&uuml;r Inhalte<br>
-								Als Diensteanbieter sind wir gem&auml;&szlig; § 7 Abs.1 TMG f&uuml;r eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, &uuml;bermittelte oder gespeicherte fremde Informationen zu &uuml;berwachen oder nach Umst&auml;nden zu forschen, die auf eine rechtswidrige T&auml;tigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unber&uuml;hrt. Eine diesbez&uuml;gliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung m&ouml;glich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
+								Als Diensteanbieter sind wir gem&auml;ß § 7 Abs.1 TMG f&uuml;r eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, &uuml;bermittelte oder gespeicherte fremde Informationen zu &uuml;berwachen oder nach Umst&auml;nden zu forschen, die auf eine rechtswidrige T&auml;tigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unber&uuml;hrt. Eine diesbez&uuml;gliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung m&ouml;glich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
 							</p>
 							<p>
 								Haftung f&uuml;r Links<br>
@@ -297,31 +369,21 @@
 								Quellenangaben: eRecht24 Disclaimer, Disclaimer von <a href="https://www.erecht24.de" terget="_blank">eRecht24</a>, dem Portal zum Internetrecht von Rechtsanwalt S&ouml;ren Siebert
 							</p>
 						</div>
-					</div>
+					</dialog>
 				</div>	
-				<div id="Screen" class="modal">
-					<div class="Info">
-						<a href="#start" class="buttonModal" onclick="">x</a>
+				<div id="Screen" class="modal" aria-label="information">
+					<dialog class="Info">
+						<div class="infoHeader">Information</div>
+						<a href="#" class="buttonModal">x</a>
 						<div class="InfoText">
 						</div>
-					</div>		
+					</dialog>		
 				</div>
 			</aside>
-			<div class="footerText">
-				&#00169; 2023 &#00064;CyberAndi <a href="#impressum" onclick="">Impressum</a>
+
+			<div class="footerText" aria-label="impressum">
+				&#00169; 2021-23 &#00064;CyberAndi <a href="#impressum">Impressum</a> - <a href="https://cyberandi.tumblr.com/#" target="_blank" alt="tumblr">tumblr.com</a> - <a href="https://www.youtube.com/c/AndreasStawinski" target="_blank" alt="youtube"></a>
 			</div>
 		</footer>
 	</body>
 </html>
-
-EOF
-
-echo
-echo prophetie
-echo
-
-
-cp /www/index.html /www/generate_204.html
-cp /www/index.html /www/hotspot-detect.html
-
-}
