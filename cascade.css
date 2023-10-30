@@ -786,7 +786,7 @@ header {
 	overflow: visible;
 	color: #BFBFBF;
 	display: flex;
-	background: linear-gradient(to bottom,rgba(9,32,0,0.9),rgba(0,16,0,0.9));
+	background: linear-gradient(to bottom,rgba(32,32,32,0.9),rgba(16,16,16,0.9));
 	box-shadow: 0 1px 3px hsla(var(--border-color-low-hsl),.25),inset 0 -1px 0 hsla(var(--border-color-low-hsl),.01);
 	margin: -5px -5px 15px;
 	padding: 0 calc((100% - 940px) / 2) 0 calc((100% - 940px) / 2)
