@@ -10472,7 +10472,7 @@ uci set network.@switch_vlan[-1].vlan='110'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='110'
-uci set network.@switch_vlan[-1].description='T-ONLINE'
+uci set network.@switch_vlan[-1].description='TELEKOM'
 uci commit network >> install.log
 
 uci add network interface
@@ -10551,7 +10551,7 @@ uci rename network.@interface[-1]='SWITCH_P110'
 uci commit network >> install.log
 uci set network.SWITCH_P110.ifname='eth0.110'
 uci set network.SWITCH_P110.proto='none'
-uci set network.SWITCH_P110.description='T-ONLINE'
+uci set network.SWITCH_P110.description='TELEKOM'
 uci commit network >> install.log
 
 # Save and apply
@@ -10573,7 +10573,15 @@ uci set wireless.radio0.channel='6'
 uci set wireless.radio0.hwmode='11n'
 
 uci delete wireless.default_radio0
+uci set wireless.default_radio0=wifi-iface
+uci set wireless.default_radio0.device='radio0'
+uci set wireless.default_radio0.mode='ap'
+uci set wireless.default_radio0.key=$WIFI_PASS
+uci set wireless.default_radio0.ssid=$Adversisment_ssid
+uci set wireless.default_radio0.encryption='psk2'
+uci set wireless.default_radio0.network='TELEKOM'
 uci delete wireless.wifinet1
+
 uci set wireless.wifinet1=wifi-iface
 uci set wireless.wifinet1.device='radio0'
 uci set wireless.wifinet1.mode='ap'
