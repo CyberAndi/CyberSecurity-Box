@@ -881,6 +881,9 @@ header p {
 .nav .dropdown-menu {
 	background-color: rgba(48,48,48,0.8);
 	backdrop-filter: blur(2.5px);
+	border: solid 0.5px rgba(164, 164, 164,0.3)!important;
+	border-top: unset !important;
+	box-shadow: 0.25em 0.25em 0.5em rgba(0,0,0,0.8);
 }
 
 .nav .dropdown-menu li a {
