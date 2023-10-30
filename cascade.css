@@ -1108,10 +1108,7 @@ footer {
 	position: sticky;
 	bottom: 0px;
 	padding-top: 17px;
-	margin-top: 0.5em;
- 	margin-bottom: -5px !important;
-	margin-left: 0px;
-	margin-right: 0px;
+	margin: 1.5em -0.5em -5px !important;
 	background-color: rgba(32,32,32,0.5);
 	backdrop-filter: blur(3.5px);
  	border-top: 1px solid var(--border-color-low);
@@ -1124,7 +1121,7 @@ footer {
 	padding-left: calc((100% - 940px) / 2);
 	padding-right: calc((100% - 940px) / 2);
 	box-shadow: 0 -0.25em 0.5em hsla(var(--border-color-low-hsl),.25),inset 0 -1px 0 hsla(var(--border-color-low-hsl),.01);
-	margin: 1.5em -0.5em 0;
+	
 }
 
 footer a {
