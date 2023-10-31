@@ -668,10 +668,11 @@ input[type="checkbox"].cbi-input-invalid,input[type="radio"].cbi-input-invalid {
 .item:hover::after,.btn:hover,.btn:focus,.cbi-button:hover,.cbi-button:focus,.cbi-select.focus,.cbi-dropdown:focus,.cbi-dropdown[open],.cbi-dynlist > .item:focus,input[type="checkbox"]:focus::before,input[type="radio"]:focus::before,input:focus,button:hover,textarea:focus,select:focus {
 	--focus-color-rgb: 82,168,0;
 	outline: 0;
-	box-shadow: inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
+	box-shadow: rgba(0,0,0,0.8) 1.3px 1.3px 3.25px,inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
 	text-decoration: none;
 	border-color: rgba(var(--focus-color-rgb),0.8)!important;
 }
+
 
 .cbi-input-invalid:focus,.cbi-select.cbi-input-invalid,input[type="checkbox"].cbi-input-invalid:focus::before,input[type="radio"].cbi-input-invalid:focus::before {
 	--focus-color-rgb: var(--error-color-high-rgb)
