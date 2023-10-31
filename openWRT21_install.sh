@@ -14,7 +14,7 @@ view_config()  {
 echo
 echo 'Your Config is:'
 echo
-echo 'ClienWiFi SSID:     '$INET_ssid
+echo 'ClienWiFi SSID:       '$INET_ssid
 echo 'Key:                  '$WIFI_PASS
 echo 'IP:                   '$INET_net
 echo
@@ -18418,7 +18418,7 @@ view_config
 
 set_dhcp() {
 
-#uci -q delete dhcp >> install.log
+uci -q delete dhcp >> install.log
 #uci delete dhcp.BlacklistSERVER >> install.log
 #uci delete dhcp.BlacklistHCONTROL >> install.log
 #uci delete dhcp.BlacklistCONTROL >> install.log
@@ -18427,34 +18427,54 @@ set_dhcp() {
 #uci delete dhcp.WhitelistENTERTAIN >> install.log
 #uci delete dhcp.WhitelistGUEST >> install.log
 #uci delete dhcp.WhitelistCMOVIE >> install.log
-#uci delete dhcp.SERVER >> install.log
-#uci delete dhcp.HCONTROL >> install.log
-#uci delete dhcp.CONTROL >> install.log
-#uci delete dhcp.INET >> install.log
-#uci delete dhcp.VOICE >> install.log
-#uci delete dhcp.ENTERTAIN >> install.log
-#uci delete dhcp.GUEST >> install.log
-#uci delete dhcp.CMOVIE >> install.log
-#uci delete dhcp.Blacklist>> install.log
-#uci delete dhcp.Whitelist >> install.log
-#uci delete dhcp.lan >> install.log
+uci delete dhcp.SERVER >> install.log
+uci delete dhcp.HCONTROL >> install.log
+uci delete dhcp.CONTROL >> install.log
+uci delete dhcp.INET >> install.log
+uci delete dhcp.VOICE >> install.log
+uci delete dhcp.ENTERTAIN >> install.log
+uci delete dhcp.GUEST >> install.log
+uci delete dhcp.CMOVIE >> install.log
+uci delete dhcp.TELEKOM >> install.log
+uci delete dhcp.Blacklist>> install.log
+uci delete dhcp.Whitelist >> install.log
+uci delete dhcp.lan >> install.log
+uci delete dhcp.@dnsmasq[0] >> install.log
 #uci delete dhcp.@dnsmasq[-1] >> install.log
 #uci delete dhcp.@dnsmasq[-1] >> install.log
 #uci delete dhcp.@dnsmasq[-1] >> install.log
 #uci delete dhcp.@dnsmasq[-1] >> install.log
 #uci delete dhcp.@dnsmasq[-1] >> install.log
-#uci delete dhcp.@dnsmasq[-1] >> install.log
-#uci commit dhcp >> install.log
+uci commit dhcp >> install.log
 
-uci add_list dhcp.@dnsmasq[0].interface='br-lan'
-uci add_list dhcp.@dnsmasq[0].notinterface='br-VOICE'
-uci add_list dhcp.@dnsmasq[0].notinterface='br-GUEST'
-uci add_list dhcp.@dnsmasq[0].notinterface='br-ENTERTAIN'
-uci add_list dhcp.@dnsmasq[0].notinterface='br-CMOVIE'
-uci add_list dhcp.@dnsmasq[0].notinterface='br-INET'
-uci add_list dhcp.@dnsmasq[0].notinterface='br-HCONTROL'
-uci add_list dhcp.@dnsmasq[0].notinterface='br-CONTROL'
-uci add_list dhcp.@dnsmasq[0].notinterface='br-SERVER'
+uci set dhcp.lan=dnsmasq
+uci set dhcp.lan.domainneeded='1'
+uci set dhcp.lan.localise_queries='1'
+uci set dhcp.lan.rebind_protection='1'
+uci set dhcp.lan.rebind_localhost='1'
+uci set dhcp.lan.filterwin2k='1'
+uci set dhcp.lan.local='/lan/'
+uci set dhcp.lan.expandhosts='1'
+uci set dhcp.lan.authoritative='1'
+uci set dhcp.lan.readethers='1'
+uci set dhcp.lan.leasefile='/tmp/dhcp.lan.leases'
+uci set dhcp.lan.resolvfile='/tmp/resolv.lan.conf.auto'
+uci set dhcp.lan.localservice='1'
+uci set dhcp.lan.cachesize='1'
+uci set dhcp.lan.confdir='/etc/dnsmasq.d/lan/'
+uci set dhcp.lan.boguspriv='1'
+uci set dhcp.lan.logqueries='0'
+uci set dhcp.lan.logfacility='/var/log/dnsmasq.lan.log'
+uci add_list dhcp.lan.interface='br-lan'
+uci add_list dhcp.lan.notinterface='br-VOICE'
+uci add_list dhcp.lan.notinterface='br-GUEST'
+uci add_list dhcp.lan.notinterface='br-ENTERTAIN'
+uci add_list dhcp.lan.notinterface='br-CMOVIE'
+uci add_list dhcp.lan.notinterface='br-INET'
+uci add_list dhcp.lan.notinterface='br-HCONTROL'
+uci add_list dhcp.lan.notinterface='br-CONTROL'
+uci add_list dhcp.lan.notinterface='br-SERVER'
+uci set dhcp.lan.domain='lan'
 
 uci set dhcp.Blacklist=dnsmasq
 uci set dhcp.Blacklist.domainneeded='1'
@@ -18617,6 +18637,21 @@ uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
 uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
 uci commit && reload_config
 
+#uci set dhcp.CMOVIE=dhcp
+#uci set dhcp.CMOVIE.start='100'
+#uci set dhcp.CMOVIE.limit='150'
+#uci set dhcp.CMOVIE.interface='CMOVIE'
+#uci set dhcp.CMOVIE.leasetime='24h'
+#uci set dhcp.CMOVIE.dhcpv6='server'
+#uci set dhcp.CMOVIE.domain=$CMOVIE_domain
+#uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
+#uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
+#uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
+#uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
+#uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
+#uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
+#uci commit && reload_config
+
 uci set dhcp.CMOVIE=dhcp
 uci set dhcp.CMOVIE.start='100'
 uci set dhcp.CMOVIE.limit='150'
@@ -18628,8 +18663,8 @@ uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
 uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
 uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
 uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
-uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
+uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_dmain
+uci set dhcp.CMOVIE.server=$GUEST_ip'#'$DNS_UNBOUND_port
 uci commit && reload_config
 
 uci set dhcp.TELEKOM=dhcp
