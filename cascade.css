@@ -859,9 +859,10 @@ header p {
 	--focus-color-rgb: 82,168,0;
 	border: solid 1px rgba(var(--focus-color-rgb),0.8)!important;
 	outline: 0;
-	box-shadow: inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
+	box-shadow: 0.25em 0.25em 0.5em rgba(0,0,0,0.8),inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
 	text-decoration: none;
 	border-radius: 0.35em;
+	background-color: rgba(48,48,48,0.8);
 	color: var(--primary-color-medium);
 }
 
@@ -875,7 +876,7 @@ header p {
 	backdrop-filter: blur(2.5px);
 	border: solid 1px rgba(var(--focus-color-rgb),0.8)!important;
 	outline: 0;
-	box-shadow: inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
+	box-shadow: 0.25em 0.25em 0.5em rgba(0,0,0,0.8) ,inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
 	text-decoration: none;
 	border-radius: 0.35em;
 	color: var(--primary-color-medium);
@@ -1492,7 +1493,8 @@ body.modal-overlay-active #modal_overlay {
 	min-width: 170px;
 	height: 8px;
 	background: var(--background-color-medium);
-	margin: 1.4em 0 4px
+	margin: 1.4em 0 4px;
+	box-shadow: rgba(0,0,0,0.8) 1.3px 1.3px 3.25px;
 }
 
 .cbi-progressbar > div {
