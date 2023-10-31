@@ -879,6 +879,12 @@ header p {
 	color: var(--primary-color-medium);
 }
 
+.nav a.menu:hover:after {
+	--focus-color-rgb: 82,168,0;
+	border-top: 4px solid rgba(var(--focus-color-rgb),1);
+	text-shadow: 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
+}
+
 .nav .dropdown-menu {
 	background-color: rgba(48,48,48,0.8);
 	backdrop-filter: blur(2.5px);
