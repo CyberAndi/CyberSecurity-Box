@@ -18180,7 +18180,7 @@ uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
 uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
 uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
 uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_dmain
+uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
 uci set dhcp.CMOVIE.server=$GUEST_ip'#'$DNS_UNBOUND_port
 uci commit && reload_config
 
