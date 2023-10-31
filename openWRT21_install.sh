@@ -304,6 +304,7 @@ VOICE_domain='voice.local'
 ENTERTAIN_domain='entertain.local'
 GUEST_domain='guest.local'
 CMOVIE_domain='cmovie.local'
+TELEKOM_domain='telekom.local'
 
 
 SERVER_ssid='DMZ-'$WIFI_SSID
@@ -315,6 +316,7 @@ ENTERTAIN_ssid='Entertain-'$WIFI_SSID
 GUEST_ssid='Guest-'$WIFI_SSID
 CMOVIE_ssid='Free_CMovie_Portal'
 Adversisment_ssid='Telekom'
+TELEKOM_ssid='Telekom'
 
 clear
 view_config
@@ -2275,7 +2277,7 @@ uci set wireless.default_radio0=wifi-iface
 uci set wireless.default_radio0.device='radio0'
 uci set wireless.default_radio0.mode='ap'
 uci set wireless.default_radio0.key=$WIFI_PASS
-uci set wireless.default_radio0.ssid=$Adversisment_ssid
+uci set wireless.default_radio0.ssid=$TELEKOM_ssid
 uci set wireless.default_radio0.encryption='psk2'
 uci set wireless.default_radio0.network='TELEKOM'
 
@@ -18630,6 +18632,21 @@ uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
 uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
 uci commit && reload_config
 
+uci set dhcp.TELEKOM=dhcp
+uci set dhcp.TELEKOM.start='100'
+uci set dhcp.TELEKOM.limit='150'
+uci set dhcp.TELEKOM.interface='TELEKOM'
+uci set dhcp.TELEKOM.leasetime='24h'
+uci set dhcp.TELEKOM.dhcpv6='server'
+uci set dhcp.TELEKOM.domain=$TELEKOM_domain
+uci set dhcp.TELEKOM.local='/'$TELEKOM_domain'/'
+uci add_list dhcp.TELEKOM.dhcp_option='6,'$CMOVIE_ip 
+uci add_list dhcp.TELEKOM.dhcp_option='3,'$CMOVIE_ip
+uci add_list dhcp.TELEKOM.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.TELEKOM.dhcp_option='15,'$TELEKOM_domain
+uci set dhcp.TELEKOM.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
+uci commit && reload_config
+
 
 mkdir /etc/dnsmasq.d  >> install.log
 mkdir /etc/dnsmasq.d/Blacklist >> install.log
@@ -18642,6 +18659,7 @@ uci commit dhcp && reload_config >> install.log
 echo
 echo 'On Error enter logread'
 echo
+
 }
 
 create_firewall_zones() {
