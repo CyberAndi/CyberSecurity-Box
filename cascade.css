@@ -800,7 +800,7 @@ header a {
 
 header .brand:hover,header ul .active > a {
 	--focus-color-rgb: 82,168,0;
-	background: rgba(32,32,32,0.75);
+	background: rgba(48,48,48,0.8);
 	border: solid 1px rgba(var(--focus-color-rgb),0.8)!important;
 	outline: 0;
 	box-shadow: inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
@@ -870,7 +870,7 @@ header p {
 
 .nav a.menu:hover {
 	--focus-color-rgb: 82,168,0;
-	background: rgba(32,32,32,0.75);
+	background: rgba(48,48,48,0.8);
 	border: solid 1px rgba(var(--focus-color-rgb),0.8)!important;
 	outline: 0;
 	box-shadow: inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
