@@ -326,6 +326,8 @@ echo 'Install Software'
 echo
 echo 'Please wait ....'
 echo
+echo 'On Error enter logread'
+echo
 /etc/init.d/dnsmasq stop >> install.log
 /etc/init.d/dnsmasq disable >> install.log
 opkg update >> install.log
@@ -1175,7 +1177,9 @@ processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-P
 wait $processes1
 wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/custom.css -P /www/luci-static/resources/view/dashboard/css/
 
-
+echo
+echo 'On Error enter logread'
+echo
 }
 
 create_hotspot() {
@@ -1251,6 +1255,10 @@ wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMAskeSky.png -P /www/CaptivePortal/pic/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMAskeSky_.png -P /www/CaptivePortal/pic/)
+
+echo
+echo 'On Error enter logread'
+echo
 }
 
 
@@ -1446,6 +1454,10 @@ uci add_list network.wan6.dns="0::1"
 uci set network.wan6.peerdns="0"
 uci commit network >> install.log
 
+echo
+echo 'On Error enter logread'
+echo
+
 }
 
 create_MWAN() {
@@ -1600,6 +1612,10 @@ uci set mwan3.wan_mobile6.family='ipv6'
 uci set mwan3.wan_mobile6.track_ip='2606:4700:4700::1113'
 uci set mwan3.wan_mobile6.reliability='2'
 uci commit mwan3 && reload_config >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
 }
 
 create_network_org() {
@@ -2236,6 +2252,10 @@ uci commit network >> install.log
 uci commit network && reload_config >> install.log
 #/etc/init.d/network restart
 
+echo
+echo 'On Error enter logread'
+echo
+
 dig www.internic.net @1.1.1.1
 }
 
@@ -2419,6 +2439,9 @@ uci commit  && reload_config >> install.log
 
 echo
 echo 'Networks Settings defined'
+echo
+echo
+echo 'On Error enter logread'
 echo
 
 clear
@@ -2623,6 +2646,9 @@ echo
 echo 'Tor-Onion-Services activated'
 echo
 
+echo
+echo 'On Error enter logread'
+echo
 }
 
 set_stubby() {
@@ -2691,6 +2717,10 @@ uci commit stubby && reload_config >> install.log
 
 echo
 echo 'Stubby Pivaticy over cloudflair.com'
+echo
+
+echo
+echo 'On Error enter logread'
 echo
 
 /etc/init.d/unbound stop  >> install.log
@@ -3000,6 +3030,11 @@ uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75eu
 
 uci commit unbound && reload_config  >> install.log
 /etc/init.d/unbound start  >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
+
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -18361,6 +18396,11 @@ local-zone: "cdn.permutive.com" always_null
 local-zone: "twin-iq.kickfire.com" always_null
 
 EOF
+
+echo
+echo 'On Error enter logread'
+echo
+
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -18598,6 +18638,10 @@ mkdir /etc/dnsmasq.d/BlockAll >> install.log
 mkdir /etc/dnsmasq.d/AllowAll >> install.log
 
 uci commit dhcp && reload_config >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
 }
 
 create_firewall_zones() {
@@ -18750,6 +18794,10 @@ uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="TELEKOM"
 uci commit firewall && reload_config >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
 }
 
 set_HS_Firewall() {
@@ -21170,6 +21218,10 @@ uci commit firewall >> install.log
 /etc/init.d/firewall restart >> install.log
 /etc/init.d/dnsmasq restart >> install.log
 /etc/init.d/network restart >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
 }
 
 set_mountpoints() {
@@ -21225,6 +21277,8 @@ set_dhcp >> install.log
 set_firewall_ipset >> install.log
 set_firewall_rules >> install.log
 #set_mountpoints >> install.log
+echo >> install.log
+logread >> install.log
 
 clear
 echo '########################################################'
@@ -21265,8 +21319,6 @@ echo 'Guests SSID is:       '$GUEST_ssid
 echo 'Key:                  '$WIFI_PASS
 echo 'IP:                   '$GUEST_net
 echo
-echo
-echo
 echo 'IP-Address:           '$ACCESS_SERVER
 echo 'Gateway:              '$INET_GW
 echo 'Domain:               '$LOCAL_DOMAIN
@@ -21274,6 +21326,8 @@ echo
 echo 'GUI-Access:           https://'$INET_ip':8443'
 echo 'User:                 '$USERNAME
 echo 'Password:             password'
+echo
+echo 'On Error enter logread'
 echo
 echo 'Please wait until Reboot ....'
 echo
