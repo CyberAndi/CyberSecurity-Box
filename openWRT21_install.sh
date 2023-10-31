@@ -1313,8 +1313,8 @@ uci commit network >> install.log
 uci set network.CMOVIE.proto='static'
 uci set network.CMOVIE.type='bridge'
 uci set network.CMOVIE.ipaddr=$CMOVIE_ip
-uci set network.CMOVIEN.netmask='255.255.255.0'
-uci set network.CMOVIEN.ip6assign='56'
+uci set network.CMOVIE.netmask='255.255.255.0'
+uci set network.CMOVIE.ip6assign='56'
 uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
 uci set network.CMOVIE.igmp_snooping='1'
 #uci set network.CMOVIE.gateway='127.0.0.1'
@@ -18419,14 +18419,6 @@ view_config
 set_dhcp() {
 
 uci -q delete dhcp >> install.log
-#uci delete dhcp.BlacklistSERVER >> install.log
-#uci delete dhcp.BlacklistHCONTROL >> install.log
-#uci delete dhcp.BlacklistCONTROL >> install.log
-#uci delete dhcp.BlacklistINET >> install.log
-#uci delete dhcp.WhitelistVOICE >> install.log
-#uci delete dhcp.WhitelistENTERTAIN >> install.log
-#uci delete dhcp.WhitelistGUEST >> install.log
-#uci delete dhcp.WhitelistCMOVIE >> install.log
 uci delete dhcp.SERVER >> install.log
 uci delete dhcp.HCONTROL >> install.log
 uci delete dhcp.CONTROL >> install.log
@@ -18440,11 +18432,6 @@ uci delete dhcp.Blacklist>> install.log
 uci delete dhcp.Whitelist >> install.log
 uci delete dhcp.lan >> install.log
 uci delete dhcp.@dnsmasq[0] >> install.log
-#uci delete dhcp.@dnsmasq[-1] >> install.log
-#uci delete dhcp.@dnsmasq[-1] >> install.log
-#uci delete dhcp.@dnsmasq[-1] >> install.log
-#uci delete dhcp.@dnsmasq[-1] >> install.log
-#uci delete dhcp.@dnsmasq[-1] >> install.log
 uci commit dhcp >> install.log
 
 uci set dhcp.lan=dnsmasq
@@ -18636,21 +18623,6 @@ uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW
 uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
 uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
 uci commit && reload_config
-
-#uci set dhcp.CMOVIE=dhcp
-#uci set dhcp.CMOVIE.start='100'
-#uci set dhcp.CMOVIE.limit='150'
-#uci set dhcp.CMOVIE.interface='CMOVIE'
-#uci set dhcp.CMOVIE.leasetime='24h'
-#uci set dhcp.CMOVIE.dhcpv6='server'
-#uci set dhcp.CMOVIE.domain=$CMOVIE_domain
-#uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
-#uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
-#uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
-#uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
-#uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
-#uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
-#uci commit && reload_config
 
 uci set dhcp.CMOVIE=dhcp
 uci set dhcp.CMOVIE.start='100'
