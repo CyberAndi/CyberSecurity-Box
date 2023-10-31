@@ -21255,6 +21255,9 @@ define_variables > install.log
 ask_parameter $1 $2 $3 $4 $5 $6
 install_update >> install.log
 #install_adguard >> install.log
+
+service log restart
+
 set_tor >> install.log
 set_stubby >> install.log
 set_unbound >> install.log
