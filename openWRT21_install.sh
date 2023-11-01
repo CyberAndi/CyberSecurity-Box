@@ -18214,7 +18214,2289 @@ echo
 
 }
 
-create_firewall_zones() {
+set_firewall_rules() {
+# Intercept SSH, HTTP and HTTPS traffic
+#uci -q delete firewall.ssh_int >/dev/null
+#uci set firewall.ssh_int="redirect"
+#uci set firewall.ssh_int.name="Intercept_SSH"
+#uci set firewall.ssh_int.src="INET"
+#uci set firewall.ssh_int.src_dport="$SSH_port"
+#uci set firewall.ssh_int.proto="tcp"
+#uci set firewall.ssh_int.target="DNAT"
+
+#uci -q delete firewall.http_int >/dev/null
+#uci set firewall.http_int="redirect"
+#uci set firewall.http_int.name="Intercept_HTTP"
+#uci set firewall.http_int.src="INET"
+#uci set firewall.http_int.src_dport="$ACCESS_HTTP_port"
+#uci set firewall.http_int.proto="tcp"
+#uci set firewall.http_int.target="DNAT"
+
+#uci -q delete firewall.https_int
+#uci set firewall.https_int="redirect"
+#uci set firewall.https_int.name="Intercept_HTTPS"
+#uci set firewall.https_int.src="INET"
+#uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
+#uci set firewall.https_int.proto="tcp"
+#uci set firewall.https_int.target="DNAT"
+
+#uci commit firewall && reload_config >/dev/null
+
+# Intercept DNS and TCP traffic
+
+#uci -q delete firewall.tcp_onion_int > /dev/null uci set firewall.tcp_onion_int="redirect"
+#uci set firewall.tcp_onion_int.name="Intercept_Onion_Domain"
+#uci set firewall.tcp_onion_int.src_dport=$TOR_TRANS_port
+#uci set firewall.tcp_onion_int.dest_port=$TOR_TRANS_port
+#uci set firewall.tcp_onion_int.proto="tcp"
+#uci set firewall.tcp_onion_int.target="DNAT"
+#uci set firewall.tcp_onion_int.src="INET"
+#uci set firewall.tcp_onion_int.src_dip="10.192.0.0./10"
+#uci set firewall.tcp_onion_int.extra="--syn"
+
+#uci -q delete firewall.tcp_onionSocks_int > /dev/null 
+#uci set firewall.tcp_onionSocks_int="redirect"
+#uci set firewall.tcp_onionSocks_int.name='Intercept_Onion_Domain'
+#uci set firewall.tcp_onionSocks_int.src='INET'
+#uci set firewall.tcp_onionSocks_int.src_dport=$TOR_SOCKS2_port
+#uci set firewall.tcp_onionSocks_int.dest_port=$TOR_SOCKS2_port
+#uci set firewall.tcp_onionSocks_int.src_dip='10.192.0.0/10'
+#uci set firewall.tcp_onionSocks_int.proto='tcp'
+#uci set firewall.tcp_onionSocks_int.target='DNAT'
+#uci set firewall.tcp_onionSocks_int.extra='--syn'
+
+#uci -q delete firewall.tcp_onionSocks1_int > /dev/null 
+#uci set firewall.tcp_onionSocks1_int=redirect
+#uci set firewall.tcp_onionSocks1_int.name='Intercept_Onion1_Domain'
+#uci set firewall.tcp_onionSocks1_int.src='INET'
+#uci set firewall.tcp_onionSocks1_int.dest_port=$TOR_SOCKS_port
+#uci set firewall.tcp_onionSocks1_int.src_dport=$TOR_SOCKS_port
+#uci set firewall.tcp_onionSocks1_int.proto='tcp'
+#uci set firewall.tcp_onionSocks1_int.target='DNAT'
+#uci set firewall.tcp_onionSocks1_int.extra='--syn'
+
+#uci -q delete firewall.tcp_tor2_int > /dev/null 
+#uci set firewall.tcp_tor2_int=redirect
+#uci set firewall.tcp_tor2_int.src_dip='!192.168.0.0/16'
+#uci set firewall.tcp_tor2_int.proto='tcp'
+#uci set firewall.tcp_tor2_int.target='DNAT'
+#uci set firewall.tcp_tor2_int.dest_port=$TOR_TRANS_port
+#uci set firewall.tcp_tor2_int.src='INET'
+#uci set firewall.tcp_tor2_int.src_dport=$HTTPS_port
+#uci set firewall.tcp_tor2_int.extra='--syn'
+#uci set firewall.tcp_tor2_int.name='Intercept https tor'
+
+#uci -q delete firewall.tcp_tor3_int > /dev/null 
+#uci set firewall.tcp_tor3_int=redirect
+#uci set firewall.tcp_tor3_int.src_dip='!192.168.0.0/16'
+#uci set firewall.tcp_tor3_int.proto='tcp'
+#uci set firewall.tcp_tor3_int.target='DNAT'
+#uci set firewall.tcp_tor3_int.dest_port=$TOR_TRANS_port
+#uci set firewall.tcp_tor3_int.src='INET'
+#uci set firewall.tcp_tor3_int.name='Intercept http tor'
+#uci set firewall.tcp_tor3_int.src_dport=$HTTP_port
+#uci set firewall.tcp_tor3_int.extra='--syn'
+
+#uci -q delete firewall.omada > /dev/null
+#uci set firewall.omada=redirect
+#uci set firewall.omada.dest_port=$CONTROLER_port
+#uci set firewall.omada.name='Network_omada'
+#uci set firewall.omada.src_dport=$CONTROLER_port
+#uci set firewall.omada.target='DNAT'
+#uci set firewall.omada.dest_ip='192.168.71.175'
+#uci set firewall.omada.dest='HCONTROL'
+#uci set firewall.omada.src='INET'
+#uci set firewall.omada.extra='--syn'
+
+#uci -q delete firewall.homematic > /dev/null
+#uci set firewall.homematic=redirect
+#uci set firewall.homematic.dest_port='80'
+#uci set firewall.homematic.target='DNAT'
+#uci set firewall.homematic.src='INET'
+#uci set firewall.homematic.dest_ip='192.168.70.52'
+#uci set firewall.homematic.dest='CONTROL'
+#uci set firewall.homematic.proto='tcp'
+#uci set firewall.homematic.name='Homematic ccu'
+#uci set firewall.homematic.src_dip='192.168.70.52/32'
+#uci set firewall.homematic.src_dport='8080'
+#uci set firewall.homematic.extra='--syn'
+
+#uci -q delete firewall.homematic1 > /dev/null
+#uci set firewall.homematic1=redirect
+#uci set firewall.homematic1.dest_port='443'
+#uci set firewall.homematic1.target='DNAT'
+#uci set firewall.homematic1.src='INET'
+#uci set firewall.homematic1.dest_ip='192.168.70.52'
+#uci set firewall.homematic1.dest='CONTROL'
+#uci set firewall.homematic1.proto='tcp'
+#uci set firewall.homematic1.name='Homematic ccu'
+#uci set firewall.homematic1.src_dip='192.168.70.52/32'
+#uci set firewall.homematic1.src_dport='4443'
+#uci set firewall.homematic1.extra='--syn'
+
+#-----------------------------------------------------------------------------
+
+
+uci set firewall.DNS_Cloudflare=rule
+uci set firewall.DNS_Cloudflare.dest_port="$all_DNS_port"
+uci set firewall.DNS_Cloudflare.src="*"
+uci set firewall.DNS_Cloudflare.name="Allow_Cloudflare_local_DNS"
+uci set firewall.DNS_Cloudflare.dest="*"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare1_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare2_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare3_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare4_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare5_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare6_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare7_SVR" 
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare8_SVR" 
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare9_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare10_SVR" 
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare11_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare12_SVR"  
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare13_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare14_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare15_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare16_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare17_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare18_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare19_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare20_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare21_SVR" 
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare22_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR" 
+uci set firewall.DNS_Cloudflare.enabled="0" 
+uci set firewall.DNS_Cloudflare.proto="tcp udp"
+uci set firewall.DNS_Cloudflare.target="ACCEPT"
+uci commit && reload_config >/dev/null
+
+
+#WebClient (Port)
+#21, 22, 25, 53, 80, 110, 123, 443, 853, 5353, 9030, 9040, 9049, 9050, 9053, 9060, 50275, 54715, 54789, 51465, 56343, 56534, 57687, 60870
+uci set firewall.WebClient=rule
+uci set firewall.WebClient.dest_port="$WebClient_port"
+uci set firewall.WebClient.src="*"
+uci set firewall.WebClient.name="Allow_WebClient"
+uci set firewall.WebClient.enabled="0"
+uci set firewall.WebClient.dest="wan"
+uci set firewall.WebClient.target="ACCEPT"
+
+
+#Office_Client (Port)
+# 21 22 23 25 53 67 80 110 123 139 138 137 443 445 515 548 631 853 2049 5353 9030 9040 9049 9050 9053 9060 9100 50275 54715 54789 51465 56343 56534 57687 60870
+uci set firewall.OfficeClient=rule
+uci set firewall.OfficeClient.src='INET'
+uci set firewall.OfficeClient.name='Allow_OfficeClient'
+uci set firewall.OfficeClient.dest='SERVER'
+uci set firewall.OfficeClient.proto='udp tcp'
+uci set firewall.OfficeClient.target='ACCEPT'
+uci set firewall.OfficeClient.dest_port="$OfficeClient_port"
+uci set firewall.OfficeClient.enabled='0'
+#1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
+
+uci set firewall.OfficeWebClient=rule
+uci set firewall.OfficeWebClient.src='INET'
+uci set firewall.OfficeWebClient.name='Allow_OfficeClient_WEB'
+uci set firewall.OfficeWebClient.dest='wan'
+uci set firewall.OfficeWebClient.proto='udp tcp'
+uci set firewall.OfficeWebClient.target='ACCEPT'
+uci set firewall.OfficeWebClient.dest_port="$OfficeWebClient_port"
+uci set firewall.OfficeWebClient.enabled='0'
+
+#Alexa (Port)
+#"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
+#udp 4070 5353 40317 49317 33434 50000:60000 3478:3481
+uci set firewall.Amazon_Alexa=rule
+uci set firewall.Amazon_Alexa.name='Allow_AmazonAlexa'
+uci set firewall.Amazon_Alexa.proto='tcp'
+uci set firewall.Amazon_Alexa.dest='wan'
+uci set firewall.Amazon_Alexa.target='ACCEPT'
+uci set firewall.Amazon_Alexa.src='VOICE'
+uci set firewall.Amazon_Alexa.dest_port="$Amazon_Alexa_port"
+uci set firewall.Amazon_Alexa_.enabled='0'
+uci set firewall.Amazon_Alexa_UDP=rule
+uci set firewall.Amazon_Alexa_UDP.name='Allow_AmazonAlexa_UDP'
+uci set firewall.Amazon_Alexa_UDP.proto='udp'
+uci set firewall.Amazon_Alexa_UDP.dest='wan'
+uci set firewall.Amazon_Alexa_UDP.target='ACCEPT'
+uci set firewall.Amazon_Alexa_UDP.src='VOICE'
+uci set firewall.Amazon_Alexa_UDP.dest_port="$Amazon_Alexa_UDP_port"
+uci set firewall.Amazon_Alexa_UDP.enabled='0'
+
+#Google Assistent (Port)
+#uci set firewall.Google_assistent=rule
+
+#Telnet (Port)
+#23
+uci set firewall.TELNET=rule
+uci set firewall.TELNET.dest_port="$TELNET_port"
+uci set firewall.TELNET.src="*"
+uci set firewall.TELNET.name="Allow_Telnet"
+uci set firewall.TELNET.enabled="0"
+uci set firewall.TELNET.dest="wan"
+uci set firewall.TELNET.target="ACCEPT"
+
+
+#SSH (Port)
+#22
+uci set firewall.SSH=rule
+uci set firewall.SSH.dest_port="$SSH_port"
+uci set firewall.SSH.src="*"
+uci set firewall.SSH.name="Allow_SSH"
+uci set firewall.SSH.dest="wan"
+uci set firewall.SSH.enabled="0"
+uci set firewall.SSH.dest="wan"
+uci set firewall.SSH.target="ACCEPT"
+
+
+#NTP
+#123
+uci set firewall.NTP=rule
+uci set firewall.NTP.dest_port="$NTP_port"
+uci set firewall.NTP.src="*"
+uci set firewall.NTP.name="Allow_NTP"
+uci set firewall.NTP.enabled="0"
+uci set firewall.NTP.dest="wan"
+uci set firewall.NTP.target="ACCEPT"
+
+#smtp
+#"25 465 587"
+uci set firewall.SMTP=rule
+uci set firewall.SMTP.dest_port="$SMTP_port"
+uci set firewall.SMTP.src="*"
+uci set firewall.SMTP.name="Allow_SMTP"
+uci set firewall.SMTP.enabled="0"
+uci set firewall.SMTP.dest="wan"
+uci set firewall.SMTP.target="ACCEPT"
+
+
+#POP3 Port
+#POP3_PORT="110 995"
+uci set firewall.POP3=rule
+uci set firewall.POP3.dest_port="$POP3_port"
+uci set firewall.POP3.src="*"
+uci set firewall.POP3.name="Allow_POP3"
+uci set firewall.POP3.enabled="0"
+uci set firewall.POP3.dest="wan"
+uci set firewall.POP3.target="ACCEPT"
+
+
+#IMAP4 Port
+#IMAP_PORT="143 993 626"
+uci set firewall.IMAP4=rule
+uci set firewall.IMAP4.dest_port="$IMAP_port"
+uci set firewall.IMAP4.src="*"
+uci set firewall.IMAP4.name="Allow_IMAP4"
+uci set firewall.IMAP4.enabled="0"
+uci set firewall.IMAP4.dest="wan"
+uci set firewall.IMAP4.target="ACCEPT"
+
+
+#KERBEROS
+#"88 749"
+uci set firewall.KERBEROS=rule
+uci set firewall.KERBEROS.dest_port="$KERBEROS_port"
+uci set firewall.KERBEROS.src="*"
+uci set firewall.KERBEROS.name="Allow_KERBEROS"
+uci set firewall.KERBEROS.enabled="0"
+uci set firewall.KERBEROS.dest="wan"
+uci set firewall.KERBEROS.proto="tcp"
+uci set firewall.KERBEROS.target="ACCEPT"
+
+
+#Password_Server
+#"106"
+uci set firewall.PASSWDSRV=rule
+uci set firewall.PASSWDSRV.dest_port="$PASSWDSRV_port"
+uci set firewall.PASSWDSRV.src="*"
+uci set firewall.PASSWDSRV.name="Allow_PASWD_SRV"
+uci set firewall.PASSWDSRV.enabled="0"
+uci set firewall.PASSWDSRV.dest="wan"
+uci set firewall.PASSWDSRV.proto="tcp"
+uci set firewall.PASSWDSRV.target="ACCEPT"
+
+#LDAP
+#"389 636"
+uci set firewall.LDAP=rule
+uci set firewall.LDAP.dest_port="$LDAP_port"
+uci set firewall.LDAP.src="*"
+uci set firewall.LDAP.name="Allow_LDAP"
+uci set firewall.LDAP.enabled="0"
+uci set firewall.LDAP.dest="wan"
+uci set firewall.LDAP.proto="tcp"
+uci set firewall.LDAP.target="ACCEPT"
+
+
+#RPC
+#"111"
+uci set firewall.RPC=rule
+uci set firewall.RPC.dest_port="$RPC_port"
+uci set firewall.RPC.src="*"
+uci set firewall.RPC.name="Allow_RPC"
+uci set firewall.RPC.enabled="0"
+uci set firewall.RPC.dest="wan"
+uci set firewall.RPC.proto="tcp"
+uci set firewall.RPC.target="ACCEPT"
+
+#NNTP
+#"119"
+uci set firewall.NNTP=rule
+uci set firewall.NNTP.dest_port="$NNTP_port"
+uci set firewall.NNTP.src="*"
+uci set firewall.NNTP.name="Allow_NNTP"
+uci set firewall.NNTP.enabled="0"
+uci set firewall.NNTP.dest="wan"
+uci set firewall.NNTP.proto="tcp"
+uci set firewall.NNTP.target="ACCEPT"
+
+#Real Time Streaming Protocol (RTSP)
+#"554"
+uci set firewall.RTSP=rule
+uci set firewall.RTSP.dest_port="$RTSP_port"
+uci set firewall.RTSP.src="*"
+uci set firewall.RTSP.name="Allow_RTSP"
+uci set firewall.RTSP.enabled="0"
+uci set firewall.RTSP.dest="wan"
+uci set firewall.RTSP.target="ACCEPT"
+
+
+#PiHole Port
+#PIHOLE_PORT="81"
+#PIHOLE_FTL_PORT="4711"
+uci set firewall.PIHOLE=rule
+uci set firewall.PIHOLE.dest_port="$all_PIHOLE_port"
+uci set firewall.PIHOLE.src="*"
+uci set firewall.PIHOLE.name="Allow_PiHole"
+uci set firewall.PIHOLE.enabled="0"
+uci set firewall.PIHOLE.dest="wan"
+uci set firewall.PIHOLE.target="ACCEPT"
+
+#Privoxy Port
+#PRIVOXY_PORT="8188"
+uci set firewall.PRIVOXY=rule
+uci set firewall.PRIVOXY.dest_port="$PRIVOXY_port"
+uci set firewall.PRIVOXY.src="*"
+uci set firewall.PRIVOXY.name="Allow_PRIVOXY"
+uci set firewall.PRIVOXY.enabled="0"
+uci set firewall.PRIVOXY.dest="wan"
+uci set firewall.PRIVOXY.target="ACCEPT"
+
+
+#NTOPNG Port
+#NTOPNG_PORT="3000"
+uci set firewall.NTOPNG=rule
+uci set firewall.NTOPNG.dest_port="$NTOPNG_port"
+uci set firewall.NTOPNG.src="*"
+uci set firewall.NTOPNG.name="Allow_NTOPNG"
+uci set firewall.NTOPNG.enabled="0"
+uci set firewall.NTOPNG.dest="wan"
+uci set firewall.NTOPNG.target="ACCEPT"
+
+
+#SDNS ports
+#DNS_PORT="853"
+uci set firewall.SDNS=rule
+uci set firewall.SDNS.dest_port="$SDNS_port"
+uci set firewall.SDNS.src="*"
+uci set firewall.SDNS.name="Allow_SDNS"
+uci set firewall.SDNS.enabled="0"
+uci set firewall.SDNS.dest="wan"
+uci set firewall.SDNS.target="ACCEPT"
+
+
+#UBOUND_DNS
+uci set firewall.UNBOUND=rule
+uci set firewall.UNBOUND.dest_port="$DNS_UNBOUND_port"
+uci set firewall.UNBOUND.src="*"
+uci set firewall.UNBOUND.name="Allow_UNBOUND"
+uci set firewall.UNBOUND.enabled="0"
+uci set firewall.UNBOUND.dest="wan"
+uci set firewall.UNBOUND.target="ACCEPT"
+
+
+#STUBBY_DNS
+uci set firewall.STUBBY=rule
+uci set firewall.STUBBY.dest_port="$DNS_STUBBY_port"
+uci set firewall.STUBBY.src="*"
+uci set firewall.STUBBY.name="Allow_STUBBY"
+uci set firewall.STUBBY.enabled="0"
+uci set firewall.STUBBY.dest="wan"
+uci set firewall.STUBBY.target="ACCEPT"
+
+
+#DNS_CRYPT
+uci set firewall.DNS_CRYPT=rule
+uci set firewall.DNS_CRYPT.dest_port="$DNS_CRYPT_port"
+uci set firewall.DNS_CRYPT.src="*"
+uci set firewall.DNS_CRYPT.name="Allow_DNS_CRYPT"
+uci set firewall.DNS_CRYPT.enabled="0"
+uci set firewall.DNS_CRYPT.dest="wan"
+uci set firewall.DNS_CRYPT.target="ACCEPT"
+
+
+#TOR_DNS
+uci set firewall.TOR_DNS=rule
+uci set firewall.TOR_DNS.dest_port="$DNS_TOR_port"
+uci set firewall.TOR_DNS.src="*"
+uci set firewall.TOR_DNS.name="Allow_TOR_DNS"
+uci set firewall.TOR_DNS.enabled="0"
+uci set firewall.TOR_DNS.dest="wan"
+uci set firewall.TOR_DNS.target="ACCEPT"
+
+
+#Bittorrent (Ports)
+#6881-6999
+uci set firewall.BITTORENT=rule
+uci set firewall.BITTORENT.dest_port="$Bittorrent_port"
+uci set firewall.BITTORENT.src="*"
+uci set firewall.BITTORENT.name="Allow_BITTORENT"
+uci set firewall.BITTORENT.enabled="0"
+uci set firewall.BITTORENT.dest="wan"
+uci set firewall.BITTORENT.target="ACCEPT"
+
+
+#eMule (Ports)
+#4662, 4672
+uci set firewall.eMule=rule
+uci set firewall.eMule.dest_port="$eMule_port"
+uci set firewall.eMule.src="*"
+uci set firewall.eMule.name="Allow_eMule"
+uci set firewall.eMule.enabled="0"
+uci set firewall.eMule.dest="wan"
+uci set firewall.eMule.target="ACCEPT"
+
+#RemoteAccess (Ports)
+#40443-40446
+uci set firewall.RemoteAccess=rule
+uci set firewall.RemoteAccess.dest_port="$Acces_http_port"
+uci set firewall.RemoteAccess.src="*"
+uci set firewall.RemoteAccess.name="Allow_RemoteAccess"
+uci set firewall.RemoteAccess.enabled="0"
+uci set firewall.RemoteAccess.dest="wan"
+uci set firewall.RemoteAccess.target="ACCEPT"
+
+#FTP-Server  (Ports)
+#20-21
+uci set firewall.FTP_Server=rule
+uci set firewall.FTP_Server.dest_port="$FTP_port"
+uci set firewall.FTP_Server.src="*"
+uci set firewall.FTP_Server.name="Allow_FTP"
+uci set firewall.FTP_Server.enabled="0"
+uci set firewall.FTP_Server.dest="wan"
+uci set firewall.FTP_Server.target="ACCEPT"
+
+
+#Hohe Ziel (Ports)
+#TCP 
+#10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
+uci set firewall.EXT_HEIGHT_PORT=rule
+uci set firewall.EXT_HEIGHT_PORT.dest_port="$EXT_HEIGHT_PORT_port"
+uci set firewall.EXT_HEIGHT_PORT.src="*"
+uci set firewall.EXT_HEIGHT_PORT.name="Allow_EXT_HEIGHT_PORT"
+uci set firewall.EXT_HEIGHT_PORT.proto="tcp"
+uci set firewall.EXT_HEIGHT_PORT.dest="wan"
+uci set firewall.EXT_HEIGHT_PORT.target="ACCEPT"
+uci set firewall.EXT_HEIGHT_PORT.enabled="0"
+
+
+#UDP
+#9000-33433, 33435-40316, 40318-49316, 49318-65535
+uci set firewall.EXT_HEIGHT_PORT_UDP=rule
+uci set firewall.EXT_HEIGHT_PORT_UDP.dest_port="$EXT_HEIGHT_PORT_UDP_port"
+uci set firewall.EXT_HEIGHT_PORT_UDP.src="*"
+uci set firewall.EXT_HEIGHT_PORT_UDP.name="Allow_EXT_HEIGHT_PORT_UDP"
+uci set firewall.EXT_HEIGHT_PORT_UDP.proto="udp"
+uci set firewall.EXT_HEIGHT_PORT_UDP.dest="wan"
+uci set firewall.EXT_HEIGHT_PORT_UDP.target="ACCEPT"
+uci set firewall.EXT_HEIGHT_PORT_UDP.enabled="0"
+
+
+#HTTP_s (Ports)
+#80, 443, 8080
+uci set firewall.HTTP_s=rule
+uci set firewall.HTTP_s.dest_port="$HTTP_s_port"
+uci set firewall.HTTP_s.src="*"
+uci set firewall.HTTP_s.name="Allow_HTTP_s"
+uci set firewall.HTTP_s.enabled="0"
+uci set firewall.HTTP_s.dest="wan"
+uci set firewall.HTTP_s.target="ACCEPT"
+
+
+#MSRDP _ Alexa Call (Ports)
+#3389
+uci set firewall.MSRDP_AlexaCall=rule
+uci set firewall.MSRDP_AlexaCall.dest_port="$MSRDP_AlexaCall_port"
+uci set firewall.MSRDP_AlexaCall.src="*"
+uci set firewall.MSRDP_AlexaCall.name="Allow_MSRDP_AlexaCall"
+uci set firewall.MSRDP_AlexaCall.enabled="0"
+uci set firewall.MSRDP_AlexaCall.dest="wan"
+uci set firewall.MSRDP_AlexaCall.target="ACCEPT"
+
+
+#Skype
+#tcp "38562 1000:10000 50000:65000 16000:26000"
+#udp "38562 3478:3481 50000:60000"
+uci set firewall.SKYPE=rule
+uci set firewall.SKYPE.dest_port="$Skype_port"
+uci set firewall.SKYPE.src="*"
+uci set firewall.SKYPE.name="Allow_Skype"
+uci set firewall.SKYPE.proto="tcp"
+uci set firewall.SKYPE.enabled="0"
+uci set firewall.SKYPE.dest="wan"
+uci set firewall.SKYPE.target="ACCEPT"
+
+uci set firewall.SKYPE_UDP=rule
+uci set firewall.SKYPE_UDP.dest_port="$Skype_udp_port"
+uci set firewall.SKYPE_UDP.src="*"
+uci set firewall.SKYPE_UDP.name="Allow_Skype_UDP"
+uci set firewall.SKYPE_UDP.proto="udp"
+uci set firewall.SKYPE_UDP.enabled="0"
+uci set firewall.SKYPE_UDP.dest="wan"
+uci set firewall.SKYPE_UDP.target="ACCEPT"
+
+
+#Torrc (Ports)
+#9030, 9040, 9049, 9050, 9053, 9060
+uci set firewall.TORRC=rule
+uci set firewall.TORRC.dest_port="$TORRC_port"
+uci set firewall.TORRC.src="*"
+uci set firewall.TORRC.name="Allow_Torrc"
+uci set firewall.TORRC.enabled="0"
+uci set firewall.TORRC.dest="wan"
+uci set firewall.TORRC.target="ACCEPT"
+
+
+
+#AVM Mesh
+#TCP
+#50842
+uci set firewall.AVM_Mesh=rule
+uci set firewall.AVM_Mesh.dest_port="$AVM_Mesh_port"
+uci set firewall.AVM_Mesh.proto="tcp udp"
+uci set firewall.AVM_Mesh.src="*"
+uci set firewall.AVM_Mesh.enabled="0"
+uci set firewall.AVM_Mesh.name="Allow_AVM_Mesh"
+uci set firewall.AVM_Mesh.dest="wan"
+uci set firewall.AVM_Mesh.target="ACCEPT"
+
+
+#FRITZ!Box 
+#8183
+uci set firewall.AVM=rule
+uci set firewall.AVM.dest_port="$AVM_port"
+uci set firewall.AVM.src="*"
+uci set firewall.AVM.name="Allow_AVM"
+uci set firewall.AVM.enabled="0"
+uci set firewall.AVM.dest="wan"
+uci set firewall.AVM.target="ACCEPT"
+
+#Telefonie (SOP, RTP, RTCP)
+#7077-7097
+uci set firewall.Telephonie=rule
+uci set firewall.Telephonie.dest_port="$SIP_RTP_RTCP_port"
+uci set firewall.Telephonie.src="*"
+uci set firewall.Telephonie.name="Allow_Telephonie_SIP_RTP_RTCP"
+uci set firewall.Telephonie.enabled="0"
+uci set firewall.Telephonie.dest="wan"
+uci set firewall.Telephonie.target="ACCEPT"
+
+
+#Telefonie (SIP)
+#5060
+uci set firewall.SIP=rule
+uci set firewall.SIP.dest_port="$SIP_port"
+uci set firewall.SIP.src="*"
+uci set firewall.SIP.name="Allow_SIP_Telephonie"
+uci set firewall.SIP.enabled="0"
+uci set firewall.SIP.dest="wan"
+uci set firewall.SIP.target="ACCEPT"
+
+#Link Local Multicast Name Resolution (LLMNR)
+#5357
+uci set firewall.LLMNR=rule
+uci set firewall.LLMNR.dest_port="$LLMNR_port"
+uci set firewall.LLMNR.src="*"
+uci set firewall.LLMNR.name="Allow_LLMNR"
+uci set firewall.LLMNR.enabled="0"
+uci set firewall.LLMNR.dest="wan"
+uci set firewall.LLMNR.target="ACCEPT"
+
+#Multicast Domain Name Service (mDNS)
+#5353
+uci set firewall.mDNS=rule
+uci set firewall.mDNS.dest_port="$mDNS_port"
+uci set firewall.mDNS.src="*"
+uci set firewall.mDNS.name="Allow_mDNS"
+uci set firewall.mDNS.enabled="0"
+uci set firewall.mDNS.dest="wan"
+uci set firewall.mDNS.target="ACCEPT"
+
+#Port Control Protocol (PCP)
+#5351
+uci set firewall.PCP=rule
+uci set firewall.PCP.dest_port="$PCP_port"
+uci set firewall.PCP.src="*"
+uci set firewall.PCP.name="Allow_PCP"
+uci set firewall.PCP.enabled="0"
+uci set firewall.PCP.dest="wan"
+uci set firewall.PCP.target="ACCEPT"
+
+#Web Services Dynamic Discovery (WS-Discovery)
+#UDP
+#3702
+uci set firewall.WS_Discovery=rule
+uci set firewall.WS_Discovery.dest_port="$WS_Discovery_port"
+uci set firewall.WS_Discovery.proto="udp tcp"
+uci set firewall.WS_Discovery.src="*"
+uci set firewall.WS_Discovery.enabled="0"
+uci set firewall.WS_Discovery.name="Allow_WS_Discovery"
+uci set firewall.WS_Discovery.dest="wan"
+uci set firewall.WS_Discovery.target="ACCEPT"
+
+#Simple Service Discovery Protocol (SSDP)
+#UDP
+#1900
+uci set firewall.SSDP=rule
+uci set firewall.SSDP.dest_port="$SSDP_port"
+uci set firewall.SSDP.proto="udp"
+uci set firewall.SSDP.src="*"
+uci set firewall.SSDP.enabled="0"
+uci set firewall.SSDP.name="Allow_SSDP"
+uci set firewall.SSDP.dest="wan"
+uci set firewall.SSDP.target="ACCEPT"
+
+#WINS
+#UDP
+#137
+uci set firewall.WINS=rule
+uci set firewall.WINS.dest_port="$WINS_port"
+uci set firewall.WINS.proto="udp"
+uci set firewall.WINS.src="*"
+uci set firewall.WINS.enabled="0"
+uci set firewall.WINS.name="Allow_WINS"
+uci set firewall.WINS.dest="wan"
+uci set firewall.WINS.target="ACCEPT"
+
+
+#NetBIOS
+#UDP
+#138
+uci set firewall.NetBIOS=rule
+uci set firewall.NetBIOS.dest_port="$NetBIOS_port"
+uci set firewall.NetBIOS.proto="udp"
+uci set firewall.NetBIOS.src="*"
+uci set firewall.NetBIOS.enabled="0"
+uci set firewall.NetBIOS.name="Allow_NetBIOS"
+uci set firewall.NetBIOS.dest="wan"
+uci set firewall.NetBIOS.target="ACCEPT"
+
+
+#Syslog
+#UDP
+#514
+uci set firewall.Syslog=rule
+uci set firewall.Syslog.dest_port="$Syslog_port"
+uci set firewall.Syslog.proto="udp"
+uci set firewall.Syslog.src="*"
+uci set firewall.Syslog.enabled="0"
+uci set firewall.Syslog.name="Allow_Syslog"
+uci set firewall.Syslog.dest="wan"
+uci set firewall.Syslog.target="ACCEPT"
+
+
+#Open Directory Proxy (ODProxy)
+#TCP
+#625
+uci set firewall.ODProxy=rule
+uci set firewall.ODProxy.dest_port="$ODProxy_port"
+uci set firewall.ODProxy.proto="tcp"
+uci set firewall.ODProxy.src="*"
+uci set firewall.ODProxy.enabled="0"
+uci set firewall.ODProxy.name="Allow_SSDP"
+uci set firewall.ODProxy.dest="wan"
+uci set firewall.ODProxy.target="ACCEPT"
+
+
+#Unbekannt
+#1012
+ 
+#VPN (IPSec IKE)
+#UDP
+#4500
+uci set firewall.VPN=rule
+uci set firewall.VPN.dest_port="$VPN_port"
+uci set firewall.VPN.src="*"
+uci set firewall.VPN.name="Allow_VPN"
+uci set firewall.VPN.enabled="0"
+uci set firewall.VPN.dest="wan"
+uci set firewall.VPN.target="ACCEPT"
+
+#SMB_CISC-Freigabe
+#445, 139, 138, 137
+uci set firewall.SMB=rule
+uci set firewall.SMB.dest_port="$SMB_port"
+uci set firewall.SMB.src="*"
+uci set firewall.SMB.name="Allow_SMB_Share"
+uci set firewall.SMB.enabled="0"
+uci set firewall.SMB.dest="wan"
+uci set firewall.SMB.target="ACCEPT"
+
+#AFP-Freigabe
+#548
+uci set firewall.AFP=rule
+uci set firewall.AFP.dest_port="$AFP_port"
+uci set firewall.AFP.src="*"
+uci set firewall.AFP.proto="tcp"
+uci set firewall.AFP.name="Allow_AFP_Share"
+uci set firewall.AFP.enabled="0"
+uci set firewall.AFP.dest="wan"
+uci set firewall.AFP.target="ACCEPT"
+
+#NFS
+#"2049"
+uci set firewall.NFS=rule
+uci set firewall.NFS.dest_port="$NFS_port"
+uci set firewall.NFS.src="*"
+uci set firewall.NFS.name="Allow_NFS_SHARE"
+uci set firewall.NFS.enabled="0"
+uci set firewall.NFS.dest="wan"
+uci set firewall.NFS.proto="tcp"
+uci set firewall.NFS.target="ACCEPT"
+
+#NTP
+#UDP
+#123
+uci set firewall.NTP=rule
+uci set firewall.NTP.dest_port="$NTP_port"
+uci set firewall.NTP.proto="udp"
+uci set firewall.NTP.src="*"
+uci set firewall.NTP.enabled="0"
+uci set firewall.NTP.name="Allow_NTP"
+uci set firewall.NTP.dest="wan"
+uci set firewall.NTP.target="ACCEPT"
+
+#Printer_LPR_IPP
+#"9100 515 631"
+uci set firewall.PRINTER=rule
+uci set firewall.PRINTER.dest_port="$Printer_port"
+uci set firewall.PRINTER.src="*"
+uci set firewall.PRINTER.name="Allow_Printer_LPR"
+uci set firewall.PRINTER.enabled="0"
+uci set firewall.PRINTER.dest="wan"
+uci set firewall.PRINTER.proto="tcp"
+uci set firewall.PRINTER.target="ACCEPT"
+
+
+#DHCP
+#UDP
+#67
+uci set firewall.DHCP=rule
+uci set firewall.DHCP.dest_port="$DHCP_port"
+uci set firewall.DHCP.proto="udp"
+uci set firewall.DHCP.name="Allow_DHCP"
+uci set firewall.DHCP.src="*"
+uci set firewall.DHCP.dest="wan"
+uci set firewall.DHCP.target="ACCEPT"
+uci set firewall.DHCP.enabled="0"
+
+
+#UPNP
+#49000
+uci set firewall.UPNP=rule
+uci set firewall.UPNP.dest_port="$UPMP_port"
+uci set firewall.UPNP.src="*"
+uci set firewall.UPNP.name="Allow_UPNP"
+uci set firewall.UPNP.dest="wan"
+uci set firewall.UPNP.target="ACCEPT"
+uci set firewall.UPNP.enabled="0"
+
+
+#-----------------------------------------------------------------------------
+
+uci set firewall.Block_DNS_Cloudflare=rule
+uci set firewall.Block_DNS_Cloudflare.dest_port="$all_DNS_port"
+uci set firewall.Block_DNS_Cloudflare.src="*"
+uci set firewall.Block_DNS_Cloudflare.name="Block_Cloudflare_local_DNS"
+uci set firewall.Block_DNS_Cloudflare.dest="*"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare1_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare2_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare3_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare4_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare5_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare6_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare7_SVR" 
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare8_SVR" 
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare9_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare10_SVR" 
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare11_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare12_SVR"  
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare13_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare14_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare15_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare16_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare17_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare18_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare19_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare20_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare21_SVR" 
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare22_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR" 
+uci set firewall.Block_DNS_Cloudflare.enabled="0" 
+uci set firewall.Block_DNS_Cloudflare.proto="tcp udp"
+uci set firewall.Block_DNS_Cloudflare.target="REJECT"
+uci commit && reload_config >/dev/null
+
+
+
+#WebClient (Port)
+#21, 22, 25, 53, 80, 110, 123, 443, 853, 5353, 9030, 9040, 9049, 9050, 9053, 9060, 50275, 54715, 54789, 51465, 56343, 56534, 57687, 60870
+uci set firewall.Block_WebClient=rule
+uci set firewall.Block_WebClient.dest_port="$WebClient_port"
+uci set firewall.Block_WebClient.src="*"
+uci set firewall.Block_WebClient.name="Block_WebClient"
+uci set firewall.Block_WebClient.enabled="0"
+uci set firewall.Block_WebClient.dest="wan"
+uci set firewall.Block_WebClient.target="REJECT"
+
+
+#Office_Client (Port)
+# 21 22 23 25 53 67 80 110 123 139 138 137 443 445 515 548 631 853 2049 5353 9030 9040 9049 9050 9053 9060 9100 50275 54715 54789 51465 56343 56534 57687 60870
+uci set firewall.Block_OfficeClient=rule
+uci set firewall.Block_OfficeClient.src='INET'
+uci set firewall.Block_OfficeClient.name='Block_OfficeClient'
+uci set firewall.Block_OfficeClient.dest='SERVER'
+uci set firewall.Block_OfficeClient.proto='udp tcp'
+uci set firewall.Block_OfficeClient.target='REJECT'
+uci set firewall.Block_OfficeClient.dest_port="$OfficeClient_port"
+#1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
+uci set firewall.Block_OfficeClient.enabled='0'
+
+uci set firewall.Block_OfficeWebClient=rule
+uci set firewall.Block_OfficeWebClient.src='INET'
+uci set firewall.Block_OfficeWebClient.name='Block_OfficeClient_WEB'
+uci set firewall.Block_OfficeWebClient.dest='wan'
+uci set firewall.Block_OfficeWebClient.proto='udp tcp'
+uci set firewall.Block_OfficeWebClient.target='REJECT'
+uci set firewall.Block_OfficeWebClient.dest_port="$OfficeWebClient_port"
+uci set firewall.Block_OfficeWebClient.enabled='0'
+
+#Alexa (Port)
+#"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
+#udp 4070 5353 40317 49317 33434 50000:60000 3478:3481
+uci set firewall.Block_Amazon_Alexa=rule
+uci set firewall.Block_Amazon_Alexa.name='Block_AmazonAlexa'
+uci set firewall.Block_Amazon_Alexa.proto='tcp'
+uci set firewall.Block_Amazon_Alexa.dest='wan'
+uci set firewall.Block_Amazon_Alexa.target='REJECT'
+uci set firewall.Block_Amazon_Alexa.src='VOICE'
+uci set firewall.Block_Amazon_Alexa.dest_port="$Amazon_Alexa_port"
+uci set firewall.Block_Amazon_Alexa.enabled='0'
+uci set firewall.Block_Amazon_Alexa_UDP=rule
+uci set firewall.Block_Amazon_Alexa_UDP.name='Block_AmazonAlexa_UDP'
+uci set firewall.Block_Amazon_Alexa_UDP.proto='udp'
+uci set firewall.Block_Amazon_Alexa_UDP.dest='wan'
+uci set firewall.Block_Amazon_Alexa_UDP.target='REJECT'
+uci set firewall.Block_Amazon_Alexa_UDP.src='VOICE'
+uci set firewall.Block_Amazon_Alexa_UDP.dest_port="$Amazon_Alexa_UDP_port"
+uci set firewall.Block_Amazon_Alexa_UDP.enabled='0'
+
+#Google Assistent (Port)
+#uci set firewall.Block_Google_assistent=rule
+
+#Telnet (Port)
+#23
+uci set firewall.Block_TELNET=rule
+uci set firewall.Block_TELNET.dest_port="$TELNET_port"
+uci set firewall.Block_TELNET.src="*"
+uci set firewall.Block_TELNET.name="Block_Telnet"
+uci set firewall.Block_TELNET.enabled="0"
+uci set firewall.Block_TELNET.dest="wan"
+uci set firewall.Block_TELNET.target="REJECT"
+
+
+#SSH (Port)
+#22
+uci set firewall.Block_SSH=rule
+uci set firewall.Block_SSH.dest_port="$SSH_port"
+uci set firewall.Block_SSH.src="*"
+uci set firewall.Block_SSH.name="Block_SSH"
+uci set firewall.Block_SSH.dest="wan"
+uci set firewall.Block_SSH.enabled="0"
+uci set firewall.Block_SSH.dest="wan"
+uci set firewall.Block_SSH.target="REJECT"
+
+
+#NTP
+#123
+uci set firewall.Block_NTP=rule
+uci set firewall.Block_NTP.dest_port="$NTP_port"
+uci set firewall.Block_NTP.src="*"
+uci set firewall.Block_NTP.name="Block_NTP"
+uci set firewall.Block_NTP.enabled="0"
+uci set firewall.Block_NTP.dest="wan"
+uci set firewall.Block_NTP.target="REJECT"
+
+#smtp
+#"25 465 587"
+uci set firewall.Block_SMTP=rule
+uci set firewall.Block_SMTP.dest_port="$SMTP_port"
+uci set firewall.Block_SMTP.src="*"
+uci set firewall.Block_SMTP.name="Block_SMTP"
+uci set firewall.Block_SMTP.enabled="0"
+uci set firewall.Block_SMTP.dest="wan"
+uci set firewall.Block_SMTP.target="REJECT"
+
+
+#POP3 Port
+#POP3_PORT="110 995"
+uci set firewall.Block_POP3=rule
+uci set firewall.Block_POP3.dest_port="$POP3_port"
+uci set firewall.Block_POP3.src="*"
+uci set firewall.Block_POP3.name="Block_POP3"
+uci set firewall.Block_POP3.enabled="0"
+uci set firewall.Block_POP3.dest="wan"
+uci set firewall.Block_POP3.target="REJECT"
+
+
+#IMAP4 Port
+#IMAP_PORT="143 993 626"
+uci set firewall.Block_IMAP4=rule
+uci set firewall.Block_IMAP4.dest_port="$IMAP_port"
+uci set firewall.Block_IMAP4.src="*"
+uci set firewall.Block_IMAP4.name="Block_IMAP4"
+uci set firewall.Block_IMAP4.enabled="0"
+uci set firewall.Block_IMAP4.dest="wan"
+uci set firewall.Block_IMAP4.target="REJECT"
+
+
+#KERBEROS
+#"88 749"
+uci set firewall.Block_KERBEROS=rule
+uci set firewall.Block_KERBEROS.dest_port="$KERBEROS_port"
+uci set firewall.Block_KERBEROS.src="*"
+uci set firewall.Block_KERBEROS.name="Block_KERBEROS"
+uci set firewall.Block_KERBEROS.enabled="0"
+uci set firewall.Block_KERBEROS.dest="wan"
+uci set firewall.Block_KERBEROS.proto="tcp"
+uci set firewall.Block_KERBEROS.target="REJECT"
+
+
+#Password_Server
+#"106"
+uci set firewall.Block_PASSWDSRV=rule
+uci set firewall.Block_PASSWDSRV.dest_port="$PASSWDSRV_port"
+uci set firewall.Block_PASSWDSRV.src="*"
+uci set firewall.Block_PASSWDSRV.name="Block_PASWD_SRV"
+uci set firewall.Block_PASSWDSRV.enabled="0"
+uci set firewall.Block_PASSWDSRV.dest="wan"
+uci set firewall.Block_PASSWDSRV.proto="tcp"
+uci set firewall.Block_PASSWDSRV.target="REJECT"
+
+#LDAP
+#"389 636"
+uci set firewall.Block_LDAP=rule
+uci set firewall.Block_LDAP.dest_port="$LDAP_port"
+uci set firewall.Block_LDAP.src="*"
+uci set firewall.Block_LDAP.name="Block_LDAP"
+uci set firewall.Block_LDAP.enabled="0"
+uci set firewall.Block_LDAP.dest="wan"
+uci set firewall.Block_LDAP.proto="tcp"
+uci set firewall.Block_LDAP.target="REJECT"
+
+
+#RPC
+#"111"
+uci set firewall.Block_RPC=rule
+uci set firewall.Block_RPC.dest_port="$RPC_port"
+uci set firewall.Block_RPC.src="*"
+uci set firewall.Block_RPC.name="Block_RPC"
+uci set firewall.Block_RPC.enabled="0"
+uci set firewall.Block_RPC.dest="wan"
+uci set firewall.Block_RPC.proto="tcp"
+uci set firewall.Block_RPC.target="REJECT"
+
+#NNTP
+#"119"
+uci set firewall.Block_NNTP=rule
+uci set firewall.Block_NNTP.dest_port="$NNTP_port"
+uci set firewall.Block_NNTP.src="*"
+uci set firewall.Block_NNTP.name="Block_NNTP"
+uci set firewall.Block_NNTP.enabled="0"
+uci set firewall.Block_NNTP.dest="wan"
+uci set firewall.Block_NNTP.proto="tcp"
+uci set firewall.Block_NNTP.target="REJECT"
+
+#Real Time Streaming Protocol (RTSP)
+#"554"
+uci set firewall.Block_RTSP=rule
+uci set firewall.Block_RTSP.dest_port="$RTSP_port"
+uci set firewall.Block_RTSP.src="*"
+uci set firewall.Block_RTSP.name="Block_RTSP"
+uci set firewall.Block_RTSP.enabled="0"
+uci set firewall.Block_RTSP.dest="wan"
+uci set firewall.Block_RTSP.target="REJECT"
+
+
+#PiHole Port
+#PIHOLE_PORT="81"
+#PIHOLE_FTL_PORT="4711"
+uci set firewall.Block_PIHOLE=rule
+uci set firewall.Block_PIHOLE.dest_port="$all_PIHOLE_port"
+uci set firewall.Block_PIHOLE.src="*"
+uci set firewall.Block_PIHOLE.name="Block_PiHole"
+uci set firewall.Block_PIHOLE.enabled="0"
+uci set firewall.Block_PIHOLE.dest="wan"
+uci set firewall.Block_PIHOLE.target="REJECT"
+
+#Privoxy Port
+#PRIVOXY_PORT="8188"
+uci set firewall.Block_PRIVOXY=rule
+uci set firewall.Block_PRIVOXY.dest_port="$PRIVOXY_port"
+uci set firewall.Block_PRIVOXY.src="*"
+uci set firewall.Block_PRIVOXY.name="Block_PRIVOXY"
+uci set firewall.Block_PRIVOXY.enabled="0"
+uci set firewall.Block_PRIVOXY.dest="wan"
+uci set firewall.Block_PRIVOXY.target="REJECT"
+
+
+#NTOPNG Port
+#NTOPNG_PORT="3000"
+uci set firewall.Block_NTOPNG=rule
+uci set firewall.Block_NTOPNG.dest_port="$NTOPNG_port"
+uci set firewall.Block_NTOPNG.src="*"
+uci set firewall.Block_NTOPNG.name="Block_NTOPNG"
+uci set firewall.Block_NTOPNG.enabled="0"
+uci set firewall.Block_NTOPNG.dest="wan"
+uci set firewall.Block_NTOPNG.target="REJECT"
+
+
+#SDNS ports
+#DNS_PORT="853"
+uci set firewall.Block_SDNS=rule
+uci set firewall.Block_SDNS.dest_port="$SDNS_port"
+uci set firewall.Block_SDNS.src="*"
+uci set firewall.Block_SDNS.name="Block_SDNS"
+uci set firewall.Block_SDNS.enabled="0"
+uci set firewall.Block_SDNS.dest="wan"
+uci set firewall.Block_SDNS.target="REJECT"
+
+
+#UBOUND_DNS
+uci set firewall.Block_UNBOUND=rule
+uci set firewall.Block_UNBOUND.dest_port="$DNS_UNBOUND_port"
+uci set firewall.Block_UNBOUND.src="*"
+uci set firewall.Block_UNBOUND.name="Block_UNBOUND"
+uci set firewall.Block_UNBOUND.enabled="0"
+uci set firewall.Block_UNBOUND.dest="wan"
+uci set firewall.Block_UNBOUND.target="REJECT"
+
+
+#STUBBY_DNS
+uci set firewall.Block_STUBBY=rule
+uci set firewall.Block_STUBBY.dest_port="$DNS_STUBBY_port"
+uci set firewall.Block_STUBBY.src="*"
+uci set firewall.Block_STUBBY.name="Block_STUBBY"
+uci set firewall.Block_STUBBY.enabled="0"
+uci set firewall.Block_STUBBY.dest="wan"
+uci set firewall.Block_STUBBY.target="REJECT"
+
+
+#DNS_CRYPT
+uci set firewall.Block_DNS_CRYPT=rule
+uci set firewall.Block_DNS_CRYPT.dest_port="$DNS_CRYPT_port"
+uci set firewall.Block_DNS_CRYPT.src="*"
+uci set firewall.Block_DNS_CRYPT.name="Block_DNS_CRYPT"
+uci set firewall.Block_DNS_CRYPT.enabled="0"
+uci set firewall.Block_DNS_CRYPT.dest="wan"
+uci set firewall.Block_DNS_CRYPT.target="REJECT"
+
+
+#TOR_DNS
+uci set firewall.Block_TOR_DNS=rule
+uci set firewall.Block_TOR_DNS.dest_port="$DNS_TOR_port"
+uci set firewall.Block_TOR_DNS.src="*"
+uci set firewall.Block_TOR_DNS.name="Block_TOR_DNS"
+uci set firewall.Block_TOR_DNS.enabled="0"
+uci set firewall.Block_TOR_DNS.dest="wan"
+uci set firewall.Block_TOR_DNS.target="REJECT"
+
+
+#Bittorrent (Ports)
+#6881-6999
+uci set firewall.Block_BITTORENT=rule
+uci set firewall.Block_BITTORENT.dest_port="$Bittorrent_port"
+uci set firewall.Block_BITTORENT.src="*"
+uci set firewall.Block_BITTORENT.name="Block_BITTORENT"
+uci set firewall.Block_BITTORENT.enabled="0"
+uci set firewall.Block_BITTORENT.dest="wan"
+uci set firewall.Block_BITTORENT.target="REJECT"
+
+
+#eMule (Ports)
+#4662, 4672
+uci set firewall.Block_eMule=rule
+uci set firewall.Block_eMule.dest_port="$eMule_port"
+uci set firewall.Block_eMule.src="*"
+uci set firewall.Block_eMule.name="Block_eMule"
+uci set firewall.Block_eMule.enabled="0"
+uci set firewall.Block_eMule.dest="wan"
+uci set firewall.Block_eMule.target="REJECT"
+
+#RemoteAccess (Ports)
+#40443-40446
+uci set firewall.Block_RemoteAccess=rule
+uci set firewall.Block_RemoteAccess.dest_port="$Acces_http_port"
+uci set firewall.Block_RemoteAccess.src="*"
+uci set firewall.Block_RemoteAccess.name="Block_RemoteAccess"
+uci set firewall.Block_RemoteAccess.enabled="0"
+uci set firewall.Block_RemoteAccess.dest="wan"
+uci set firewall.Block_RemoteAccess.target="REJECT"
+
+#FTP-Server  (Ports)
+#20-21
+uci set firewall.Block_FTP_Server=rule
+uci set firewall.Block_FTP_Server.dest_port="$FTP_port"
+uci set firewall.Block_FTP_Server.src="*"
+uci set firewall.Block_FTP_Server.name="Block_FTP"
+uci set firewall.Block_FTP_Server.enabled="0"
+uci set firewall.Block_FTP_Server.dest="wan"
+uci set firewall.Block_FTP_Server.target="REJECT"
+
+
+#Hohe Ziel (Ports)
+#TCP 
+#10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
+uci set firewall.Block_EXT_HEIGHT_PORT=rule
+uci set firewall.Block_EXT_HEIGHT_PORT.dest_port="$EXT_HEIGHT_PORT_port"
+uci set firewall.Block_EXT_HEIGHT_PORT.src="*"
+uci set firewall.Block_EXT_HEIGHT_PORT.name="Block_EXT_HEIGHT_PORT"
+uci set firewall.Block_EXT_HEIGHT_PORT.proto="tcp"
+uci set firewall.Block_EXT_HEIGHT_PORT.dest="wan"
+uci set firewall.Block_EXT_HEIGHT_PORT.target="REJECT"
+uci set firewall.Block_EXT_HEIGHT_PORT.enabled="0"
+
+
+#UDP
+#9000-33433, 33435-40316, 40318-49316, 49318-65535
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP=rule
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.dest_port="$EXT_HEIGHT_PORT_UDP_port"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.src="*"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.name="Block_EXT_HEIGHT_PORT_UDP"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.proto="udp"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.dest="wan"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.target="REJECT"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.enabled="0"
+
+
+#HTTP_s (Ports)
+#80, 443, 8080
+uci set firewall.Block_HTTP_s=rule
+uci set firewall.Block_HTTP_s.dest_port="$HTTP_s_port"
+uci set firewall.Block_HTTP_s.src="*"
+uci set firewall.Block_HTTP_s.name="Block_HTTP_s"
+uci set firewall.Block_HTTP_s.enabled="0"
+uci set firewall.Block_HTTP_s.dest="wan"
+uci set firewall.Block_HTTP_s.target="REJECT"
+
+
+#MSRDP _ Alexa Call (Ports)
+#3389
+uci set firewall.Block_MSRDP_AlexaCall=rule
+uci set firewall.Block_MSRDP_AlexaCall.dest_port="$MSRDP_AlexaCall_port"
+uci set firewall.Block_MSRDP_AlexaCall.src="*"
+uci set firewall.Block_MSRDP_AlexaCall.name="Block_MSRDP_AlexaCall"
+uci set firewall.Block_MSRDP_AlexaCall.enabled="0"
+uci set firewall.Block_MSRDP_AlexaCall.dest="wan"
+uci set firewall.Block_MSRDP_AlexaCall.target="REJECT"
+
+
+#Skype
+#tcp "38562 1000:10000 50000:65000 16000:26000"
+#udp "38562 3478:3481 50000:60000"
+uci set firewall.Block_SKYPE=rule
+uci set firewall.Block_SKYPE.dest_port="$Skype_port"
+uci set firewall.Block_SKYPE.src="*"
+uci set firewall.Block_SKYPE.name="Block_Skype"
+uci set firewall.Block_SKYPE.proto="tcp"
+uci set firewall.Block_SKYPE.enabled="0"
+uci set firewall.Block_SKYPE.dest="wan"
+uci set firewall.Block_SKYPE.target="REJECT"
+
+uci set firewall.Block_SKYPE_UDP=rule
+uci set firewall.Block_SKYPE_UDP.dest_port="$Skype_udp_port"
+uci set firewall.Block_SKYPE_UDP.src="*"
+uci set firewall.Block_SKYPE_UDP.name="Block_Skype_UDP"
+uci set firewall.Block_SKYPE_UDP.proto="udp"
+uci set firewall.Block_SKYPE_UDP.enabled="0"
+uci set firewall.Block_SKYPE_UDP.dest="wan"
+uci set firewall.Block_SKYPE_UDP.target="REJECT"
+
+
+#Torrc (Ports)
+#9030, 9040, 9049, 9050, 9053, 9060
+uci set firewall.Block_TORRC=rule
+uci set firewall.Block_TORRC.dest_port="$TORRC_port"
+uci set firewall.Block_TORRC.src="*"
+uci set firewall.Block_TORRC.name="Block_Torrc"
+uci set firewall.Block_TORRC.enabled="0"
+uci set firewall.Block_TORRC.dest="wan"
+uci set firewall.Block_TORRC.target="REJECT"
+
+
+
+#AVM Mesh
+#TCP
+#50842
+uci set firewall.Block_AVM_Mesh=rule
+uci set firewall.Block_AVM_Mesh.dest_port="$AVM_Mesh_port"
+uci set firewall.Block_AVM_Mesh.proto="tcp udp"
+uci set firewall.Block_AVM_Mesh.src="*"
+uci set firewall.Block_AVM_Mesh.enabled="0"
+uci set firewall.Block_AVM_Mesh.name="Block_AVM_Mesh"
+uci set firewall.Block_AVM_Mesh.dest="wan"
+uci set firewall.Block_AVM_Mesh.target="REJECT"
+
+
+#FRITZ!Box 
+#8183
+uci set firewall.Block_AVM=rule
+uci set firewall.Block_AVM.dest_port="$AVM_port"
+uci set firewall.Block_AVM.src="*"
+uci set firewall.Block_AVM.name="Block_AVM"
+uci set firewall.Block_AVM.enabled="0"
+uci set firewall.Block_AVM.dest="wan"
+uci set firewall.Block_AVM.target="REJECT"
+
+#Telefonie (SOP, RTP, RTCP)
+#7077-7097
+uci set firewall.Block_Telephonie=rule
+uci set firewall.Block_Telephonie.dest_port="$SIP_RTP_RTCP_port"
+uci set firewall.Block_Telephonie.src="*"
+uci set firewall.Block_Telephonie.name="Block_Telephonie_SIP_RTP_RTCP"
+uci set firewall.Block_Telephonie.enabled="0"
+uci set firewall.Block_Telephonie.dest="wan"
+uci set firewall.Block_Telephonie.target="REJECT"
+
+
+#Telefonie (SIP)
+#5060
+uci set firewall.Block_SIP=rule
+uci set firewall.Block_SIP.dest_port="$SIP_port"
+uci set firewall.Block_SIP.src="*"
+uci set firewall.Block_SIP.name="Block_SIP_Telephonie"
+uci set firewall.Block_SIP.enabled="0"
+uci set firewall.Block_SIP.dest="wan"
+uci set firewall.Block_SIP.target="REJECT"
+
+#Link Local Multicast Name Resolution (LLMNR)
+#5357
+uci set firewall.Block_LLMNR=rule
+uci set firewall.Block_LLMNR.dest_port="$LLMNR_port"
+uci set firewall.Block_LLMNR.src="*"
+uci set firewall.Block_LLMNR.name="Block_LLMNR"
+uci set firewall.Block_LLMNR.enabled="0"
+uci set firewall.Block_LLMNR.dest="wan"
+uci set firewall.Block_LLMNR.target="REJECT"
+
+#Multicast Domain Name Service (mDNS)
+#5353
+uci set firewall.Block_mDNS=rule
+uci set firewall.Block_mDNS.dest_port="$mDNS_port"
+uci set firewall.Block_mDNS.src="*"
+uci set firewall.Block_mDNS.name="Block_mDNS"
+uci set firewall.Block_mDNS.enabled="0"
+uci set firewall.Block_mDNS.dest="wan"
+uci set firewall.Block_mDNS.target="REJECT"
+
+#Port Control Protocol (PCP)
+#5351
+uci set firewall.Block_PCP=rule
+uci set firewall.Block_PCP.dest_port="$PCP_port"
+uci set firewall.Block_PCP.src="*"
+uci set firewall.Block_PCP.name="Block_PCP"
+uci set firewall.Block_PCP.enabled="0"
+uci set firewall.Block_PCP.dest="wan"
+uci set firewall.Block_PCP.target="REJECT"
+
+#Web Services Dynamic Discovery (WS-Discovery)
+#UDP
+#3702
+uci set firewall.Block_WS_Discovery=rule
+uci set firewall.Block_WS_Discovery.dest_port="$WS_Discovery_port"
+uci set firewall.Block_WS_Discovery.proto="udp tcp"
+uci set firewall.Block_WS_Discovery.src="*"
+uci set firewall.Block_WS_Discovery.enabled="0"
+uci set firewall.Block_WS_Discovery.name="Block_WS_Discovery"
+uci set firewall.Block_WS_Discovery.dest="wan"
+uci set firewall.Block_WS_Discovery.target="REJECT"
+
+#Simple Service Discovery Protocol (SSDP)
+#UDP
+#1900
+uci set firewall.Block_SSDP=rule
+uci set firewall.Block_SSDP.dest_port="$SSDP_port"
+uci set firewall.Block_SSDP.proto="udp"
+uci set firewall.Block_SSDP.src="*"
+uci set firewall.Block_SSDP.enabled="0"
+uci set firewall.Block_SSDP.name="Block_SSDP"
+uci set firewall.Block_SSDP.dest="wan"
+uci set firewall.Block_SSDP.target="REJECT"
+
+#WINS
+#UDP
+#137
+uci set firewall.Block_WINS=rule
+uci set firewall.Block_WINS.dest_port="$WINS_port"
+uci set firewall.Block_WINS.proto="udp"
+uci set firewall.Block_WINS.src="*"
+uci set firewall.Block_WINS.enabled="0"
+uci set firewall.Block_WINS.name="Block_WINS"
+uci set firewall.Block_WINS.dest="wan"
+uci set firewall.Block_WINS.target="REJECT"
+
+
+#NetBIOS
+#UDP
+#138
+uci set firewall.Block_NetBIOS=rule
+uci set firewall.Block_NetBIOS.dest_port="$NetBIOS_port"
+uci set firewall.Block_NetBIOS.proto="udp"
+uci set firewall.Block_NetBIOS.src="*"
+uci set firewall.Block_NetBIOS.enabled="0"
+uci set firewall.Block_NetBIOS.name="Block_NetBIOS"
+uci set firewall.Block_NetBIOS.dest="wan"
+uci set firewall.Block_NetBIOS.target="REJECT"
+
+
+#Syslog
+#UDP
+#514
+uci set firewall.Block_Syslog=rule
+uci set firewall.Block_Syslog.dest_port="$Syslog_port"
+uci set firewall.Block_Syslog.proto="udp"
+uci set firewall.Block_Syslog.src="*"
+uci set firewall.Block_Syslog.enabled="0"
+uci set firewall.Block_Syslog.name="Block_Syslog"
+uci set firewall.Block_Syslog.dest="wan"
+uci set firewall.Block_Syslog.target="REJECT"
+
+
+#Open Directory Proxy (ODProxy)
+#TCP
+#625
+uci set firewall.Block_ODProxy=rule
+uci set firewall.Block_ODProxy.dest_port="$ODProxy_port"
+uci set firewall.Block_ODProxy.proto="tcp"
+uci set firewall.Block_ODProxy.src="*"
+uci set firewall.Block_ODProxy.enabled="0"
+uci set firewall.Block_ODProxy.name="Block_SSDP"
+uci set firewall.Block_ODProxy.dest="wan"
+uci set firewall.Block_ODProxy.target="REJECT"
+
+
+#Unbekannt
+#1012
+ 
+#VPN (IPSec IKE)
+#UDP
+#4500
+uci set firewall.Block_VPN=rule
+uci set firewall.Block_VPN.dest_port="$VPN_port"
+uci set firewall.Block_VPN.src="*"
+uci set firewall.Block_VPN.name="Block_VPN"
+uci set firewall.Block_VPN.enabled="0"
+uci set firewall.Block_VPN.dest="wan"
+uci set firewall.Block_VPN.target="REJECT"
+
+#SMB_CISC-Freigabe
+#445, 139, 138, 137
+uci set firewall.Block_SMB=rule
+uci set firewall.Block_SMB.dest_port="$SMB_port"
+uci set firewall.Block_SMB.src="*"
+uci set firewall.Block_SMB.name="Block_SMB_Share"
+uci set firewall.Block_SMB.enabled="0"
+uci set firewall.Block_SMB.dest="wan"
+uci set firewall.Block_SMB.target="REJECT"
+
+#AFP-Freigabe
+#548
+uci set firewall.Block_AFP=rule
+uci set firewall.Block_AFP.dest_port="$AFP_port"
+uci set firewall.Block_AFP.src="*"
+uci set firewall.Block_AFP.proto="tcp"
+uci set firewall.Block_AFP.name="Block_AFP_Share"
+uci set firewall.Block_AFP.enabled="0"
+uci set firewall.Block_AFP.dest="wan"
+uci set firewall.Block_AFP.target="REJECT"
+
+#NFS
+#"2049"
+uci set firewall.Block_NFS=rule
+uci set firewall.Block_NFS.dest_port="$NFS_port"
+uci set firewall.Block_NFS.src="*"
+uci set firewall.Block_NFS.name="Block_NFS_SHARE"
+uci set firewall.Block_NFS.enabled="0"
+uci set firewall.Block_NFS.dest="wan"
+uci set firewall.Block_NFS.proto="tcp"
+uci set firewall.Block_NFS.target="REJECT"
+
+#NTP
+#UDP
+#123
+uci set firewall.Block_NTP=rule
+uci set firewall.Block_NTP.dest_port="$NTP_port"
+uci set firewall.Block_NTP.proto="udp"
+uci set firewall.Block_NTP.src="*"
+uci set firewall.Block_NTP.enabled="0"
+uci set firewall.Block_NTP.name="Block_NTP"
+uci set firewall.Block_NTP.dest="wan"
+uci set firewall.Block_NTP.target="REJECT"
+
+#Printer_LPR_IPP
+#"9100 515 631"
+uci set firewall.Block_PRINTER=rule
+uci set firewall.Block_PRINTER.dest_port="$Printer_port"
+uci set firewall.Block_PRINTER.src="*"
+uci set firewall.Block_PRINTER.name="Block_Printer_LPR"
+uci set firewall.Block_PRINTER.enabled="0"
+uci set firewall.Block_PRINTER.dest="wan"
+uci set firewall.Block_PRINTER.proto="tcp"
+uci set firewall.Block_PRINTER.target="REJECT"
+
+
+#DHCP
+#UDP
+#67
+uci set firewall.Block_DHCP=rule
+uci set firewall.Block_DHCP.dest_port="$DHCP_port"
+uci set firewall.Block_DHCP.proto="udp"
+uci set firewall.Block_DHCP.name="Block_DHCP"
+uci set firewall.Block_DHCP.src="*"
+uci set firewall.Block_DHCP.dest="wan"
+uci set firewall.Block_DHCP.target="REJECT"
+uci set firewall.Block_DHCP.enabled="0"
+
+
+#UPNP
+#49000
+uci set firewall.Block_UPNP=rule
+uci set firewall.Block_UPNP.dest_port="$UPMP_port"
+uci set firewall.Block_UPNP.src="*"
+uci set firewall.Block_UPNP.name="Block_UPNP"
+uci set firewall.Block_UPNP.dest="wan"
+uci set firewall.Block_UPNP.target="REJECT"
+uci set firewall.Block_UPNP.enabled="0"
+
+
+#-----------------------------------------------------------------------------
+
+
+uci set firewall.Allow_only_DNS_Cloudflare=rule
+uci set firewall.Allow_only_DNS_Cloudflare.dest_port="$all_DNS_port"
+uci set firewall.Allow_only_DNS_Cloudflare.src="*"
+uci set firewall.Allow_only_DNS_Cloudflare.name="Allow_only_Cloudflare_local_DNS"
+uci set firewall.Allow_only_DNS_Cloudflare.dest="*"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare1_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare2_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare3_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare4_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare5_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare6_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare7_SVR" 
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare8_SVR" 
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare9_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare10_SVR" 
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare11_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare12_SVR"  
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare13_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare14_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare15_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare16_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare17_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare18_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare19_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare20_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare21_SVR" 
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare22_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare23_SVR" 
+uci set firewall.Allow_only_DNS_Cloudflare.enabled="0" 
+uci set firewall.Allow_only_DNS_Cloudflare.proto="tcp udp"
+uci set firewall.Allow_only_DNS_Cloudflare.target="REJECT"
+uci commit && reload_config >/dev/null
+
+
+
+#WebClient (Port)
+#21, 22, 25, 53, 80, 110, 123, 443, 853, 5353, 9030, 9040, 9049, 9050, 9053, 9060, 50275, 54715, 54789, 51465, 56343, 56534, 57687, 60870
+uci set firewall.Allow_only_WebClient=rule
+uci set firewall.Allow_only_WebClient.dest_port="$all_other_WebClient_port"
+uci set firewall.Allow_only_WebClient.src="*"
+uci set firewall.Allow_only_WebClient.name="Allow_only_WebClient"
+uci set firewall.Allow_only_WebClient.enabled="0"
+uci set firewall.Allow_only_WebClient.dest="wan"
+uci set firewall.Allow_only_WebClient.target="REJECT"
+
+
+#Office_Client (Port)
+# 21 22 23 25 53 67 80 110 123 139 138 137 443 445 515 548 631 853 2049 5353 9030 9040 9049 9050 9053 9060 9100 50275 54715 54789 51465 56343 56534 57687 60870
+uci set firewall.Allow_only_OfficeClient=rule
+uci set firewall.Allow_only_OfficeClient.src='INET'
+uci set firewall.Allow_only_OfficeClient.name='Allow_only_OfficeClient'
+uci set firewall.Allow_only_OfficeClient.dest='SERVER'
+uci set firewall.Allow_only_OfficeClient.proto='udp tcp'
+uci set firewall.Allow_only_OfficeClient.target='REJECT'
+uci set firewall.Allow_only_OfficeClient.dest_port="$all_other_OfficeClient_port"
+#1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
+uci set firewall.Allow_only_OfficeClient.enabled='0'
+
+uci set firewall.Allow_only_OfficeWebClient=rule
+uci set firewall.Allow_only_OfficeWebClient.src='INET'
+uci set firewall.Allow_only_OfficeWebClient.name='Allow_only_OfficeClient_WEB'
+uci set firewall.Allow_only_OfficeWebClient.dest='wan'
+uci set firewall.Allow_only_OfficeWebClient.proto='udp tcp'
+uci set firewall.Allow_only_OfficeWebClient.target='REJECT'
+uci set firewall.Allow_only_OfficeWebClient.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_only_OfficeWebClient.enabled='0'
+
+#Alexa (Port)
+#"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
+#udp 4070 5353 40317 49317 33434 50000:60000 3478:3481
+uci set firewall.Allow_only_Amazon_Alexa=rule
+uci set firewall.Allow_only_Amazon_Alexa.name='Allow_only_AmazonAlexa'
+uci set firewall.Allow_only_Amazon_Alexa.proto='tcp'
+uci set firewall.Allow_only_Amazon_Alexa.dest='wan'
+uci set firewall.Allow_only_Amazon_Alexa.target='REJECT'
+uci set firewall.Allow_only_Amazon_Alexa.src='VOICE'
+uci set firewall.Allow_only_Amazon_Alexa.dest_port="$all_other_Amazon_Alexa_port"
+uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
+
+uci set firewall.Allow_only_Amazon_Alexa_UDP=rule
+uci set firewall.Allow_only_Amazon_Alexa_UDP.name='Allow_only_AmazonAlexa_UDP'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.proto='udp'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.dest='wan'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.target='REJECT'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.src='VOICE'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.dest_port="$all_other_Amazon_Alexa_UDP_port"
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
+
+#Google Assistent (Port)
+#uci set firewall.Allow_only_Google_assistent=rule
+
+#Telnet (Port)
+#23
+uci set firewall.Allow_only_TELNET=rule
+uci set firewall.Allow_only_TELNET.dest_port="$all_other_TELNET_port"
+uci set firewall.Allow_only_TELNET.src="*"
+uci set firewall.Allow_only_TELNET.name="Allow_only_Telnet"
+uci set firewall.Allow_only_TELNET.enabled="0"
+uci set firewall.Allow_only_TELNET.dest="wan"
+uci set firewall.Allow_only_TELNET.target="REJECT"
+
+
+#SSH (Port)
+#22
+uci set firewall.Allow_only_SSH=rule
+uci set firewall.Allow_only_SSH.dest_port="$all_other_SSH_port"
+uci set firewall.Allow_only_SSH.src="*"
+uci set firewall.Allow_only_SSH.name="Allow_only_SSH"
+uci set firewall.Allow_only_SSH.dest="wan"
+uci set firewall.Allow_only_SSH.enabled="0"
+uci set firewall.Allow_only_SSH.dest="wan"
+uci set firewall.Allow_only_SSH.target="REJECT"
+
+
+#NTP
+#123
+uci set firewall.Allow_only_NTP=rule
+uci set firewall.Allow_only_NTP.dest_port="$all_other_NTP_port"
+uci set firewall.Allow_only_NTP.src="*"
+uci set firewall.Allow_only_NTP.name="Allow_only_NTP"
+uci set firewall.Allow_only_NTP.enabled="0"
+uci set firewall.Allow_only_NTP.dest="wan"
+uci set firewall.Allow_only_NTP.target="REJECT"
+
+#smtp
+#"25 465 587"
+uci set firewall.Allow_only_SMTP=rule
+uci set firewall.Allow_only_SMTP.dest_port="$all_other_SMTP_port"
+uci set firewall.Allow_only_SMTP.src="*"
+uci set firewall.Allow_only_SMTP.name="Allow_only_SMTP"
+uci set firewall.Allow_only_SMTP.enabled="0"
+uci set firewall.Allow_only_SMTP.dest="wan"
+uci set firewall.Allow_only_SMTP.target="REJECT"
+
+
+#POP3 Port
+#POP3_PORT="110 995"
+uci set firewall.Allow_only_POP3=rule
+uci set firewall.Allow_only_POP3.dest_port="$all_other_POP3_port"
+uci set firewall.Allow_only_POP3.src="*"
+uci set firewall.Allow_only_POP3.name="Allow_only_POP3"
+uci set firewall.Allow_only_POP3.enabled="0"
+uci set firewall.Allow_only_POP3.dest="wan"
+uci set firewall.Allow_only_POP3.target="REJECT"
+
+
+#IMAP4 Port
+#IMAP_PORT="143 993 626"
+uci set firewall.Allow_only_IMAP4=rule
+uci set firewall.Allow_only_IMAP4.dest_port="$all_other_IMAP_port"
+uci set firewall.Allow_only_IMAP4.src="*"
+uci set firewall.Allow_only_IMAP4.name="Allow_only_IMAP4"
+uci set firewall.Allow_only_IMAP4.enabled="0"
+uci set firewall.Allow_only_IMAP4.dest="wan"
+uci set firewall.Allow_only_IMAP4.target="REJECT"
+
+
+#KERBEROS
+#"88 749"
+uci set firewall.Allow_only_KERBEROS=rule
+uci set firewall.Allow_only_KERBEROS.dest_port="$all_other_KERBEROS_port"
+uci set firewall.Allow_only_KERBEROS.src="*"
+uci set firewall.Allow_only_KERBEROS.name="Allow_only_KERBEROS"
+uci set firewall.Allow_only_KERBEROS.enabled="0"
+uci set firewall.Allow_only_KERBEROS.dest="wan"
+uci set firewall.Allow_only_KERBEROS.proto="tcp"
+uci set firewall.Allow_only_KERBEROS.target="REJECT"
+
+
+#Password_Server
+#"106"
+uci set firewall.Allow_only_PASSWDSRV=rule
+uci set firewall.Allow_only_PASSWDSRV.dest_port="$all_other_PASSWDSRV_port"
+uci set firewall.Allow_only_PASSWDSRV.src="*"
+uci set firewall.Allow_only_PASSWDSRV.name="Allow_only_PASWD_SRV"
+uci set firewall.Allow_only_PASSWDSRV.enabled="0"
+uci set firewall.Allow_only_PASSWDSRV.dest="wan"
+uci set firewall.Allow_only_PASSWDSRV.proto="tcp"
+uci set firewall.Allow_only_PASSWDSRV.target="REJECT"
+
+#LDAP
+#"389 636"
+uci set firewall.Allow_only_LDAP=rule
+uci set firewall.Allow_only_LDAP.dest_port="$all_other_LDAP_port"
+uci set firewall.Allow_only_LDAP.src="*"
+uci set firewall.Allow_only_LDAP.name="Allow_only_LDAP"
+uci set firewall.Allow_only_LDAP.enabled="0"
+uci set firewall.Allow_only_LDAP.dest="wan"
+uci set firewall.Allow_only_LDAP.proto="tcp"
+uci set firewall.Allow_only_LDAP.target="REJECT"
+
+
+#RPC
+#"111"
+uci set firewall.Allow_only_RPC=rule
+uci set firewall.Allow_only_RPC.dest_port="$all_other_RPC_port"
+uci set firewall.Allow_only_RPC.src="*"
+uci set firewall.Allow_only_RPC.name="Allow_only_RPC"
+uci set firewall.Allow_only_RPC.enabled="0"
+uci set firewall.Allow_only_RPC.dest="wan"
+uci set firewall.Allow_only_RPC.proto="tcp"
+uci set firewall.Allow_only_RPC.target="REJECT"
+
+#NNTP
+#"119"
+uci set firewall.Allow_only_NNTP=rule
+uci set firewall.Allow_only_NNTP.dest_port="$all_other_NNTP_port"
+uci set firewall.Allow_only_NNTP.src="*"
+uci set firewall.Allow_only_NNTP.name="Allow_only_NNTP"
+uci set firewall.Allow_only_NNTP.enabled="0"
+uci set firewall.Allow_only_NNTP.dest="wan"
+uci set firewall.Allow_only_NNTP.proto="tcp"
+uci set firewall.Allow_only_NNTP.target="REJECT"
+
+#Real Time Streaming Protocol (RTSP)
+#"554"
+uci set firewall.Allow_only_RTSP=rule
+uci set firewall.Allow_only_RTSP.dest_port="$all_other_RTSP_port"
+uci set firewall.Allow_only_RTSP.src="*"
+uci set firewall.Allow_only_RTSP.name="Allow_only_RTSP"
+uci set firewall.Allow_only_RTSP.enabled="0"
+uci set firewall.Allow_only_RTSP.dest="wan"
+uci set firewall.Allow_only_RTSP.target="REJECT"
+
+
+#PiHole Port
+#PIHOLE_PORT="81"
+#PIHOLE_FTL_PORT="4711"
+uci set firewall.Allow_only_PIHOLE=rule
+uci set firewall.Allow_only_PIHOLE.dest_port="$all_other_all_PIHOLE_port"
+uci set firewall.Allow_only_PIHOLE.src="*"
+uci set firewall.Allow_only_PIHOLE.name="Allow_only_PiHole"
+uci set firewall.Allow_only_PIHOLE.enabled="0"
+uci set firewall.Allow_only_PIHOLE.dest="wan"
+uci set firewall.Allow_only_PIHOLE.target="REJECT"
+
+#Privoxy Port
+#PRIVOXY_PORT="8188"
+uci set firewall.Allow_only_PRIVOXY=rule
+uci set firewall.Allow_only_PRIVOXY.dest_port="$all_other_PRIVOXY_port"
+uci set firewall.Allow_only_PRIVOXY.src="*"
+uci set firewall.Allow_only_PRIVOXY.name="Allow_only_PRIVOXY"
+uci set firewall.Allow_only_PRIVOXY.enabled="0"
+uci set firewall.Allow_only_PRIVOXY.dest="wan"
+uci set firewall.Allow_only_PRIVOXY.target="REJECT"
+
+
+#NTOPNG Port
+#NTOPNG_PORT="3000"
+uci set firewall.Allow_only_NTOPNG=rule
+uci set firewall.Allow_only_NTOPNG.dest_port="$all_other_NTOPNG_port"
+uci set firewall.Allow_only_NTOPNG.src="*"
+uci set firewall.Allow_only_NTOPNG.name="Allow_only_NTOPNG"
+uci set firewall.Allow_only_NTOPNG.enabled="0"
+uci set firewall.Allow_only_NTOPNG.dest="wan"
+uci set firewall.Allow_only_NTOPNG.target="REJECT"
+
+
+#SDNS ports
+#DNS_PORT="853"
+uci set firewall.Allow_only_SDNS=rule
+uci set firewall.Allow_only_SDNS.dest_port="$all_other_SDNS_port"
+uci set firewall.Allow_only_SDNS.src="*"
+uci set firewall.Allow_only_SDNS.name="Allow_only_SDNS"
+uci set firewall.Allow_only_SDNS.enabled="0"
+uci set firewall.Allow_only_SDNS.dest="wan"
+uci set firewall.Allow_only_SDNS.target="REJECT"
+
+
+#UBOUND_DNS
+uci set firewall.Allow_only_UNBOUND=rule
+uci set firewall.Allow_only_UNBOUND.dest_port="$all_other_DNS_UNBOUND_port"
+uci set firewall.Allow_only_UNBOUND.src="*"
+uci set firewall.Allow_only_UNBOUND.name="Allow_only_UNBOUND"
+uci set firewall.Allow_only_UNBOUND.enabled="0"
+uci set firewall.Allow_only_UNBOUND.dest="wan"
+uci set firewall.Allow_only_UNBOUND.target="REJECT"
+
+
+#STUBBY_DNS
+uci set firewall.Allow_only_STUBBY=rule
+uci set firewall.Allow_only_STUBBY.dest_port="$all_other_DNS_STUBBY_port"
+uci set firewall.Allow_only_STUBBY.src="*"
+uci set firewall.Allow_only_STUBBY.name="Allow_only_STUBBY"
+uci set firewall.Allow_only_STUBBY.enabled="0"
+uci set firewall.Allow_only_STUBBY.dest="wan"
+uci set firewall.Allow_only_STUBBY.target="REJECT"
+
+
+#DNS_CRYPT
+uci set firewall.Allow_only_DNS_CRYPT=rule
+uci set firewall.Allow_only_DNS_CRYPT.dest_port="$all_other_DNS_CRYPT_port"
+uci set firewall.Allow_only_DNS_CRYPT.src="*"
+uci set firewall.Allow_only_DNS_CRYPT.name="Allow_only_DNS_CRYPT"
+uci set firewall.Allow_only_DNS_CRYPT.enabled="0"
+uci set firewall.Allow_only_DNS_CRYPT.dest="wan"
+uci set firewall.Allow_only_DNS_CRYPT.target="REJECT"
+
+
+#TOR_DNS
+uci set firewall.Allow_only_TOR_DNS=rule
+uci set firewall.Allow_only_TOR_DNS.dest_port="$all_other_DNS_TOR_port"
+uci set firewall.Allow_only_TOR_DNS.src="*"
+uci set firewall.Allow_only_TOR_DNS.name="Allow_only_TOR_DNS"
+uci set firewall.Allow_only_TOR_DNS.enabled="0"
+uci set firewall.Allow_only_TOR_DNS.dest="wan"
+uci set firewall.Allow_only_TOR_DNS.target="REJECT"
+
+
+#Bittorrent (Ports)
+#6881-6999
+uci set firewall.Allow_only_BITTORENT=rule
+uci set firewall.Allow_only_BITTORENT.dest_port="$all_other_Bittorrent_port"
+uci set firewall.Allow_only_BITTORENT.src="*"
+uci set firewall.Allow_only_BITTORENT.name="Allow_only_BITTORENT"
+uci set firewall.Allow_only_BITTORENT.enabled="0"
+uci set firewall.Allow_only_BITTORENT.dest="wan"
+uci set firewall.Allow_only_BITTORENT.target="REJECT"
+
+
+#eMule (Ports)
+#4662, 4672
+uci set firewall.Allow_only_eMule=rule
+uci set firewall.Allow_only_eMule.dest_port="$all_other_eMule_port"
+uci set firewall.Allow_only_eMule.src="*"
+uci set firewall.Allow_only_eMule.name="Allow_only_eMule"
+uci set firewall.Allow_only_eMule.enabled="0"
+uci set firewall.Allow_only_eMule.dest="wan"
+uci set firewall.Allow_only_eMule.target="REJECT"
+
+#RemoteAccess (Ports)
+#40443-40446
+uci set firewall.Allow_only_RemoteAccess=rule
+uci set firewall.Allow_only_RemoteAccess.dest_port="$all_other_Acces_http_port"
+uci set firewall.Allow_only_RemoteAccess.src="*"
+uci set firewall.Allow_only_RemoteAccess.name="Allow_only_RemoteAccess"
+uci set firewall.Allow_only_RemoteAccess.enabled="0"
+uci set firewall.Allow_only_RemoteAccess.dest="wan"
+uci set firewall.Allow_only_RemoteAccess.target="REJECT"
+
+#FTP-Server  (Ports)
+#20-21
+uci set firewall.Allow_only_FTP_Server=rule
+uci set firewall.Allow_only_FTP_Server.dest_port="$all_other_FTP_port"
+uci set firewall.Allow_only_FTP_Server.src="*"
+uci set firewall.Allow_only_FTP_Server.name="Allow_only_FTP"
+uci set firewall.Allow_only_FTP_Server.enabled="0"
+uci set firewall.Allow_only_FTP_Server.dest="wan"
+uci set firewall.Allow_only_FTP_Server.target="REJECT"
+
+
+#Hohe Ziel (Ports)
+#TCP 
+#10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
+uci set firewall.Allow_only_EXT_HEIGHT_PORT=rule
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.dest_port="$all_other_EXT_HEIGHT_PORT_port"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.src="*"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.name="Allow_only_EXT_HEIGHT_PORT"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.proto="tcp"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.dest="wan"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.target="REJECT"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.enabled="0"
+
+
+#UDP
+#9000-33433, 33435-40316, 40318-49316, 49318-65535
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP=rule
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.dest_port="$all_other_EXT_HEIGHT_PORT_UDP_port"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.src="*"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.name="Allow_only_EXT_HEIGHT_PORT_UDP"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.proto="udp"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.dest="wan"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.target="REJECT"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.enabled="0"
+
+
+#HTTP_s (Ports)
+#80, 443, 8080
+uci set firewall.Allow_only_HTTP_s=rule
+uci set firewall.Allow_only_HTTP_s.dest_port="$all_other_HTTP_s_port"
+uci set firewall.Allow_only_HTTP_s.src="*"
+uci set firewall.Allow_only_HTTP_s.name="Allow_only_HTTP_s"
+uci set firewall.Allow_only_HTTP_s.enabled="0"
+uci set firewall.Allow_only_HTTP_s.dest="wan"
+uci set firewall.Allow_only_HTTP_s.target="REJECT"
+
+
+#MSRDP _ Alexa Call (Ports)
+#3389
+uci set firewall.Allow_only_MSRDP_AlexaCall=rule
+uci set firewall.Allow_only_MSRDP_AlexaCall.dest_port="$all_other_MSRDP_AlexaCall_port"
+uci set firewall.Allow_only_MSRDP_AlexaCall.src="*"
+uci set firewall.Allow_only_MSRDP_AlexaCall.name="Allow_only_MSRDP_AlexaCall"
+uci set firewall.Allow_only_MSRDP_AlexaCall.enabled="0"
+uci set firewall.Allow_only_MSRDP_AlexaCall.dest="wan"
+uci set firewall.Allow_only_MSRDP_AlexaCall.target="REJECT"
+
+
+#Skype
+#tcp "38562 1000:10000 50000:65000 16000:26000"
+#udp "38562 3478:3481 50000:60000"
+uci set firewall.Allow_only_SKYPE=rule
+uci set firewall.Allow_only_SKYPE.dest_port="$all_other_Skype_port"
+uci set firewall.Allow_only_SKYPE.src="*"
+uci set firewall.Allow_only_SKYPE.name="Allow_only_Skype"
+uci set firewall.Allow_only_SKYPE.proto="tcp"
+uci set firewall.Allow_only_SKYPE.enabled="0"
+uci set firewall.Allow_only_SKYPE.dest="wan"
+uci set firewall.Allow_only_SKYPE.target="REJECT"
+
+uci set firewall.Allow_only_SKYPE_UDP=rule
+uci set firewall.Allow_only_SKYPE_UDP.dest_port="$all_other_Skype_udp_port"
+uci set firewall.Allow_only_SKYPE_UDP.src="*"
+uci set firewall.Allow_only_SKYPE_UDP.name="Allow_only_Skype_UDP"
+uci set firewall.Allow_only_SKYPE_UDP.proto="udp"
+uci set firewall.Allow_only_SKYPE_UDP.enabled="0"
+uci set firewall.Allow_only_SKYPE_UDP.dest="wan"
+uci set firewall.Allow_only_SKYPE_UDP.target="REJECT"
+
+
+#Torrc (Ports)
+#9030, 9040, 9049, 9050, 9053, 9060
+uci set firewall.Allow_only_TORRC=rule
+uci set firewall.Allow_only_TORRC.dest_port="$all_other_TORRC_port"
+uci set firewall.Allow_only_TORRC.src="*"
+uci set firewall.Allow_only_TORRC.name="Allow_only_Torrc"
+uci set firewall.Allow_only_TORRC.enabled="0"
+uci set firewall.Allow_only_TORRC.dest="wan"
+uci set firewall.Allow_only_TORRC.target="REJECT"
+
+
+
+#AVM Mesh
+#TCP
+#50842
+uci set firewall.Allow_only_AVM_Mesh=rule
+uci set firewall.Allow_only_AVM_Mesh.dest_port="$all_other_AVM_Mesh_port"
+uci set firewall.Allow_only_AVM_Mesh.proto="tcp udp"
+uci set firewall.Allow_only_AVM_Mesh.src="*"
+uci set firewall.Allow_only_AVM_Mesh.enabled="0"
+uci set firewall.Allow_only_AVM_Mesh.name="Allow_only_AVM_Mesh"
+uci set firewall.Allow_only_AVM_Mesh.dest="wan"
+uci set firewall.Allow_only_AVM_Mesh.target="REJECT"
+
+
+#FRITZ!Box 
+#8183
+uci set firewall.Allow_only_AVM=rule
+uci set firewall.Allow_only_AVM.dest_port="$all_other_AVM_port"
+uci set firewall.Allow_only_AVM.src="*"
+uci set firewall.Allow_only_AVM.name="Allow_only_AVM"
+uci set firewall.Allow_only_AVM.enabled="0"
+uci set firewall.Allow_only_AVM.dest="wan"
+uci set firewall.Allow_only_AVM.target="REJECT"
+
+#Telefonie (SOP, RTP, RTCP)
+#7077-7097
+uci set firewall.Allow_only_Telephonie=rule
+uci set firewall.Allow_only_Telephonie.dest_port="$all_other_SIP_RTP_RTCP_port"
+uci set firewall.Allow_only_Telephonie.src="*"
+uci set firewall.Allow_only_Telephonie.name="Allow_only_Telephonie_SIP_RTP_RTCP"
+uci set firewall.Allow_only_Telephonie.enabled="0"
+uci set firewall.Allow_only_Telephonie.dest="wan"
+uci set firewall.Allow_only_Telephonie.target="REJECT"
+
+
+#Telefonie (SIP)
+#5060
+uci set firewall.Allow_only_SIP=rule
+uci set firewall.Allow_only_SIP.dest_port="$all_other_SIP_port"
+uci set firewall.Allow_only_SIP.src="*"
+uci set firewall.Allow_only_SIP.name="Allow_only_SIP_Telephonie"
+uci set firewall.Allow_only_SIP.enabled="0"
+uci set firewall.Allow_only_SIP.dest="wan"
+uci set firewall.Allow_only_SIP.target="REJECT"
+
+#Link Local Multicast Name Resolution (LLMNR)
+#5357
+uci set firewall.Allow_only_LLMNR=rule
+uci set firewall.Allow_only_LLMNR.dest_port="$all_other_LLMNR_port"
+uci set firewall.Allow_only_LLMNR.src="*"
+uci set firewall.Allow_only_LLMNR.name="Allow_only_LLMNR"
+uci set firewall.Allow_only_LLMNR.enabled="0"
+uci set firewall.Allow_only_LLMNR.dest="wan"
+uci set firewall.Allow_only_LLMNR.target="REJECT"
+
+#Multicast Domain Name Service (mDNS)
+#5353
+uci set firewall.Allow_only_mDNS=rule
+uci set firewall.Allow_only_mDNS.dest_port="$all_other_mDNS_port"
+uci set firewall.Allow_only_mDNS.src="*"
+uci set firewall.Allow_only_mDNS.name="Allow_only_mDNS"
+uci set firewall.Allow_only_mDNS.enabled="0"
+uci set firewall.Allow_only_mDNS.dest="wan"
+uci set firewall.Allow_only_mDNS.target="REJECT"
+
+#Port Control Protocol (PCP)
+#5351
+uci set firewall.Allow_only_PCP=rule
+uci set firewall.Allow_only_PCP.dest_port="$all_other_PCP_port"
+uci set firewall.Allow_only_PCP.src="*"
+uci set firewall.Allow_only_PCP.name="Allow_only_PCP"
+uci set firewall.Allow_only_PCP.enabled="0"
+uci set firewall.Allow_only_PCP.dest="wan"
+uci set firewall.Allow_only_PCP.target="REJECT"
+
+#Web Services Dynamic Discovery (WS-Discovery)
+#UDP
+#3702
+uci set firewall.Allow_only_WS_Discovery=rule
+uci set firewall.Allow_only_WS_Discovery.dest_port="$all_other_WS_Discovery_port"
+uci set firewall.Allow_only_WS_Discovery.proto="udp tcp"
+uci set firewall.Allow_only_WS_Discovery.src="*"
+uci set firewall.Allow_only_WS_Discovery.enabled="0"
+uci set firewall.Allow_only_WS_Discovery.name="Allow_only_WS_Discovery"
+uci set firewall.Allow_only_WS_Discovery.dest="wan"
+uci set firewall.Allow_only_WS_Discovery.target="REJECT"
+
+#Simple Service Discovery Protocol (SSDP)
+#UDP
+#1900
+uci set firewall.Allow_only_SSDP=rule
+uci set firewall.Allow_only_SSDP.dest_port="$all_other_SSDP_port"
+uci set firewall.Allow_only_SSDP.proto="udp"
+uci set firewall.Allow_only_SSDP.src="*"
+uci set firewall.Allow_only_SSDP.enabled="0"
+uci set firewall.Allow_only_SSDP.name="Allow_only_SSDP"
+uci set firewall.Allow_only_SSDP.dest="wan"
+uci set firewall.Allow_only_SSDP.target="REJECT"
+
+#WINS
+#UDP
+#137
+uci set firewall.Allow_only_WINS=rule
+uci set firewall.Allow_only_WINS.dest_port="$all_other_WINS_port"
+uci set firewall.Allow_only_WINS.proto="udp"
+uci set firewall.Allow_only_WINS.src="*"
+uci set firewall.Allow_only_WINS.enabled="0"
+uci set firewall.Allow_only_WINS.name="Allow_only_WINS"
+uci set firewall.Allow_only_WINS.dest="wan"
+uci set firewall.Allow_only_WINS.target="REJECT"
+
+
+#NetBIOS
+#UDP
+#138
+uci set firewall.Allow_only_NetBIOS=rule
+uci set firewall.Allow_only_NetBIOS.dest_port="$all_other_NetBIOS_port"
+uci set firewall.Allow_only_NetBIOS.proto="udp"
+uci set firewall.Allow_only_NetBIOS.src="*"
+uci set firewall.Allow_only_NetBIOS.enabled="0"
+uci set firewall.Allow_only_NetBIOS.name="Allow_only_NetBIOS"
+uci set firewall.Allow_only_NetBIOS.dest="wan"
+uci set firewall.Allow_only_NetBIOS.target="REJECT"
+
+
+#Syslog
+#UDP
+#514
+uci set firewall.Allow_only_Syslog=rule
+uci set firewall.Allow_only_Syslog.dest_port="$all_other_Syslog_port"
+uci set firewall.Allow_only_Syslog.proto="udp"
+uci set firewall.Allow_only_Syslog.src="*"
+uci set firewall.Allow_only_Syslog.enabled="0"
+uci set firewall.Allow_only_Syslog.name="Allow_only_Syslog"
+uci set firewall.Allow_only_Syslog.dest="wan"
+uci set firewall.Allow_only_Syslog.target="REJECT"
+
+
+#Open Directory Proxy (ODProxy)
+#TCP
+#625
+uci set firewall.Allow_only_ODProxy=rule
+uci set firewall.Allow_only_ODProxy.dest_port="$all_other_ODProxy_port"
+uci set firewall.Allow_only_ODProxy.proto="tcp"
+uci set firewall.Allow_only_ODProxy.src="*"
+uci set firewall.Allow_only_ODProxy.enabled="0"
+uci set firewall.Allow_only_ODProxy.name="Allow_only_SSDP"
+uci set firewall.Allow_only_ODProxy.dest="wan"
+uci set firewall.Allow_only_ODProxy.target="REJECT"
+
+
+#Unbekannt
+#1012
+ 
+#VPN (IPSec IKE)
+#UDP
+#4500
+uci set firewall.Allow_only_VPN=rule
+uci set firewall.Allow_only_VPN.dest_port="$all_other_VPN_port"
+uci set firewall.Allow_only_VPN.src="*"
+uci set firewall.Allow_only_VPN.name="Allow_only_VPN"
+uci set firewall.Allow_only_VPN.enabled="0"
+uci set firewall.Allow_only_VPN.dest="wan"
+uci set firewall.Allow_only_VPN.target="REJECT"
+
+#SMB_CISC-Freigabe
+#445, 139, 138, 137
+uci set firewall.Allow_only_SMB=rule
+uci set firewall.Allow_only_SMB.dest_port="$all_other_SMB_port"
+uci set firewall.Allow_only_SMB.src="*"
+uci set firewall.Allow_only_SMB.name="Allow_only_SMB_Share"
+uci set firewall.Allow_only_SMB.enabled="0"
+uci set firewall.Allow_only_SMB.dest="wan"
+uci set firewall.Allow_only_SMB.target="REJECT"
+
+#AFP-Freigabe
+#548
+uci set firewall.Allow_only_AFP=rule
+uci set firewall.Allow_only_AFP.dest_port="$all_other_AFP_port"
+uci set firewall.Allow_only_AFP.src="*"
+uci set firewall.Allow_only_AFP.proto="tcp"
+uci set firewall.Allow_only_AFP.name="Allow_only_AFP_Share"
+uci set firewall.Allow_only_AFP.enabled="0"
+uci set firewall.Allow_only_AFP.dest="wan"
+uci set firewall.Allow_only_AFP.target="REJECT"
+
+#NFS
+#"2049"
+uci set firewall.Allow_only_NFS=rule
+uci set firewall.Allow_only_NFS.dest_port="$all_other_NFS_port"
+uci set firewall.Allow_only_NFS.src="*"
+uci set firewall.Allow_only_NFS.name="Allow_only_NFS_SHARE"
+uci set firewall.Allow_only_NFS.enabled="0"
+uci set firewall.Allow_only_NFS.dest="wan"
+uci set firewall.Allow_only_NFS.proto="tcp"
+uci set firewall.Allow_only_NFS.target="REJECT"
+
+#NTP
+#UDP
+#123
+uci set firewall.Allow_only_NTP=rule
+uci set firewall.Allow_only_NTP.dest_port="$all_other_NTP_port"
+uci set firewall.Allow_only_NTP.proto="udp"
+uci set firewall.Allow_only_NTP.src="*"
+uci set firewall.Allow_only_NTP.enabled="0"
+uci set firewall.Allow_only_NTP.name="Allow_only_NTP"
+uci set firewall.Allow_only_NTP.dest="wan"
+uci set firewall.Allow_only_NTP.target="REJECT"
+
+#Printer_LPR_IPP
+#"9100 515 631"
+uci set firewall.Allow_only_PRINTER=rule
+uci set firewall.Allow_only_PRINTER.dest_port="$all_other_Printer_port"
+uci set firewall.Allow_only_PRINTER.src="*"
+uci set firewall.Allow_only_PRINTER.name="Allow_only_Printer_LPR"
+uci set firewall.Allow_only_PRINTER.enabled="0"
+uci set firewall.Allow_only_PRINTER.dest="wan"
+uci set firewall.Allow_only_PRINTER.proto="tcp"
+uci set firewall.Allow_only_PRINTER.target="REJECT"
+
+
+#DHCP
+#UDP
+#67
+uci set firewall.Allow_only_DHCP=rule
+uci set firewall.Allow_only_DHCP.dest_port="$all_other_DHCP_port"
+uci set firewall.Allow_only_DHCP.proto="udp"
+uci set firewall.Allow_only_DHCP.name="Allow_only_DHCP"
+uci set firewall.Allow_only_DHCP.src="*"
+uci set firewall.Allow_only_DHCP.dest="wan"
+uci set firewall.Allow_only_DHCP.target="REJECT"
+uci set firewall.Allow_only_DHCP.enabled="0"
+
+
+#UPNP
+#49000
+uci set firewall.Allow_only_UPNP=rule
+uci set firewall.Allow_only_UPNP.dest_port="$all_other_UPMP_port"
+uci set firewall.Allow_only_UPNP.src="*"
+uci set firewall.Allow_only_UPNP.name="Allow_only_UPNP"
+uci set firewall.Allow_only_UPNP.dest="wan"
+uci set firewall.Allow_only_UPNP.target="REJECT"
+uci set firewall.Allow_only_UPNP.enabled="0"
+
+
+uci set firewall.Allow_Only_WebClient1=rule
+uci set firewall.Allow_Only_WebClient1.src='CONTROL'
+uci set firewall.Allow_Only_WebClient1.dest='wan'
+uci set firewall.Allow_Only_WebClient1.name='Allow_only_WebClient_CONTROL'
+uci set firewall.Allow_Only_WebClient1.target='REJECT'
+uci set firewall.Allow_Only_WebClient1.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient1.enabled='0'
+
+
+uci set firewall.Allow_Only_WebClient2=rule
+uci set firewall.Allow_Only_WebClient2.src='HCONTROL'
+uci set firewall.Allow_Only_WebClient2.dest='wan'
+uci set firewall.Allow_Only_WebClient2.name='Allow_only_WebClient_HCONTROL'
+uci set firewall.Allow_Only_WebClient2.target='REJECT'
+uci set firewall.Allow_Only_WebClient2.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient2.enabled='0'
+
+uci set firewall.Allow_Only_WebClient3=rule
+uci set firewall.Allow_Only_WebClient3.src='SERVER'
+uci set firewall.Allow_Only_WebClient3.dest='wan'
+uci set firewall.Allow_Only_WebClient3.name='Allow_only_WebClient_SERVER'
+uci set firewall.Allow_Only_WebClient3.target='REJECT'
+uci set firewall.Allow_Only_WebClient3.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient3.enabled='0'
+
+uci set firewall.Allow_Only_WebClient4=rule
+uci set firewall.Allow_Only_WebClient4.src='GUEST'
+uci set firewall.Allow_Only_WebClient4.dest='wan'
+uci set firewall.Allow_Only_WebClient4.name='Allow_only_WebClient_GUEST'
+uci set firewall.Allow_Only_WebClient4.target='REJECT'
+uci set firewall.Allow_Only_WebClient4.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient4.enabled='0'
+
+uci set firewall.Allow_Only_WebClient5=rule
+uci set firewall.Allow_Only_WebClient5.src='ENTERTAIN'
+uci set firewall.Allow_Only_WebClient5.dest='wan'
+uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_ENTERTAIN'
+uci set firewall.Allow_Only_WebClient5.target='REJECT'
+uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient5.enabled='0'
+
+#Hohe Ziel (Ports)
+#TCP 
+#10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT=rule
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.dest_port="$all_other_EXT_HEIGHT_PORT_port"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.src="*"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.name="Block_all_other_EXT_HEIGHT_PORT"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.proto="tcp"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.dest="wan"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.target="REJECT"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.enabled="0"
+
+
+#UDP
+#9000-33433, 33435-40316, 40318-49316, 49318-65535
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP=rule
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.dest_port="$all_other_EXT_HEIGHT_PORT_UDP_port"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.src="*"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.name="Block_all_other_EXT_HEIGHT_PORT_UDP"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.proto="udp"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.dest="wan"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.target="REJECT"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.enabled="0"
+
+
+
+#Sonstige Protokolle
+#ESP, GRE, ICMP, igmp
+uci set firewall.otherProt=rule
+uci set firewall.otherProt.proto="$all_other_porto"
+uci set firewall.otherProt.src="*"
+uci set firewall.otherProt.name="Block_all_Other_Protocolls"
+uci set firewall.otherProt.dest="wan"
+uci set firewall.otherProt.target="REJECT"
+uci set firewall.otherProt.enabled="1"
+
+uci set firewall.blockIncoming=rule
+uci set firewall.blockIncoming.proto="$all_proto"
+uci set firewall.blockIncoming.src="wan"
+uci set firewall.blockIncoming.name="Block_Incoming"
+uci set firewall.blockIncoming.dest="*"
+uci set firewall.blockIncoming.target="REJECT"
+uci set firewall.blockIncoming.enabled="1"
+
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
+set_HS_Firewall() {
+uci set firewall.OfficeClient.enabled='1'
+uci set firewall.OfficeWebClient.enabled='1'
+uci set firewall.Amazon_Alexa.enabled='1'
+uci set firewall.Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_only_OfficeClient.enabled='1'
+uci set firewall.Allow_only_OfficeWebClient.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_Only_WebClient1.enabled='1'
+uci set firewall.Allow_Only_WebClient2.enabled='1'
+uci set firewall.Allow_Only_WebClient3.enabled='1'
+uci set firewall.Allow_Only_WebClient4.enabled='1'
+uci set firewall.Allow_Only_WebClient5.enabled='1'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
+set_HS_Firewall_disable() {
+uci set firewall.OfficeClient.enabled='0'
+uci set firewall.OfficeWebClient.enabled='0'
+uci set firewall.Amazon_Alexa.enabled='0'
+uci set firewall.Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_only_OfficeClient.enabled='0'
+uci set firewall.Allow_only_OfficeWebClient.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_Only_WebClient1.enabled='0'
+uci set firewall.Allow_Only_WebClient2.enabled='0'
+uci set firewall.Allow_Only_WebClient3.enabled='0'
+uci set firewall.Allow_Only_WebClient4.enabled='0'
+uci set firewall.Allow_Only_WebClient5.enabled='0'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
+}
+
+create_firewall_zones_old() {
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="REPEATER"
