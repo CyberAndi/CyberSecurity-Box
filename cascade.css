@@ -1174,16 +1174,17 @@ footer ul.breadcrumb {
 }
 
 .modal {
+	--focus-color-rgb: 82,168,0;
 	width: 90%;
 	min-height: 32px;
 	max-width: 600px;
 	border-radius: 3px;
 	background: var(--background-color-high);
-	border: 1px solid var(--border-color-low);
-	box-shadow: 0 0 3px var(--background-color-low);
+	border: 1px solid var(--focus-color-rgb);
+	box-shadow: inset 0 0px 0px hsla(var(--border-color-low-hsl),.01),0 0px 8px rgba(var(--focus-color-rgb),0.75);
 	min-width: 270px;
 	margin: 5em auto;
-	padding: 1em 1em .5em
+	padding: 1em 1em .5em;
 }
 
 .modal > * {
