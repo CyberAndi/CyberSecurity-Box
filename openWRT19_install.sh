@@ -1814,7 +1814,7 @@ uci set wireless.radio0.type='mac80211'
 uci set wireless.radio0.path='platform/soc/a000000.wifi'
 uci set wireless.radio0.htmode='HT20'
 uci set wireless.radio0.country='DE'
-uci set wireless.radio0.channel='6'
+uci set wireless.radio0.channel='auto'
 uci set wireless.radio0.hwmode='11n'
 
 uci delete wireless.default_radio0
@@ -1900,7 +1900,7 @@ uci set wireless.wifinet8.network='CMOVIE'
 
 uci set wireless.radio1=wifi-device
 uci set wireless.radio1.type='mac80211'
-uci set wireless.radio1.channel='36'
+uci set wireless.radio1.channel='auto'
 uci set wireless.radio1.hwmode='11a'
 uci set wireless.radio1.path='platform/soc/a800000.wifi'
 uci set wireless.radio1.htmode='VHT80'
