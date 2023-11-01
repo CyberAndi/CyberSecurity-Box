@@ -254,6 +254,13 @@ body {
 	zoom: 1;
 	}
 
+#maincontent:is(:hover,:active,:focus) {
+	--focus-color-rgb: 82,168,0;
+	box-shadow: inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0px 8px rgba(var(--focus-color-rgb),0.75);
+	border: solid 1px rgba(var(--focus-color-rgb),0.8)!important;
+	background-color: rgba(32,32,32,0.6);
+}
+
 a {
 	color: var(--primary-color-high);
 	text-decoration: none;
