@@ -2294,6 +2294,17 @@ li.menu,.dropdown,.cbi-dropdown[open] {
 	text-shadow: none !important;
 }
 
+#mwan_status_text > div {
+	display: inline-block;
+	margin: 1rem;
+	padding: 1rem;
+	width: 15rem;
+	float: left;
+	line-height: 125%;
+	box-shadow: 0.1em 0.1em 0.25em rgba(0,0,0,0.8);
+}
+
+
 [data-tab-active="true"],.cbi-filebrowser.open {
 	height: auto;
 	opacity: 1;
