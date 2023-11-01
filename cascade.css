@@ -5,6 +5,7 @@
 	src: url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.woff") format("woff"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.svg#OCR A Std") format("svg");
 }
 :root {
+	--focus-color-rgb: 82,168,0;
 	--background-image: url(CyberSecurity-Box.png);
 	--background-color-delta-l-sign: -1;
 	--background-color-h: 0;
