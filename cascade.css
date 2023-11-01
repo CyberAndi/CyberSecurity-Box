@@ -1,4 +1,9 @@
-
+@font-face {
+	font-family: 'OCR A Std';
+	src: local('OCR A Std'), url('OCRAStd.woff') format('woff');
+	src: url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.eot");
+	src: url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.woff") format("woff"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.svg#OCR A Std") format("svg");
+}
 :root {
 	--background-image: url(CyberSecurity-Box.png);
 	--background-color-delta-l-sign: -1;
