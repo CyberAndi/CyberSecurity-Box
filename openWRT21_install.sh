@@ -1173,8 +1173,6 @@ processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-P
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/luci-static/bootstrap/)
 wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/luci-static/bootstrap/)
-wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCRAStd.woff -P /www/luci-static/bootstrap/)
 wait $processes1
 wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/custom.css -P /www/luci-static/resources/view/dashboard/css/
@@ -18214,6 +18212,300 @@ echo
 
 }
 
+create_firewall_zones() {
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="REPEATER"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].network="REPEATER"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="REPEATER"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="CONTROL"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="CONTROL"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="CONTROL"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="HCONTROL"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="HCONTROL"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="HCONTROL"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="SERVER"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="SERVER"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="SERVER"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="INET"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="INET"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="INET"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="GUEST"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="GUEST"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="GUEST"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="VOICE"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="VOICE"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="VOICE"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="ENTERTAIN"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="ENTERTAIN"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="ENTERTAIN"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="CMOVIE"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="CMOVIE"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="CMOVIE"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="TELEKOM"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="TELEKOM"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="TELEKOM"
+uci commit firewall && reload_config >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
+}
+
+set_HS_Firewall() {
+uci set firewall.OfficeClient.enabled='1'
+uci set firewall.OfficeWebClient.enabled='1'
+uci set firewall.Amazon_Alexa.enabled='1'
+uci set firewall.Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_only_OfficeClient.enabled='1'
+uci set firewall.Allow_only_OfficeWebClient.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_Only_WebClient1.enabled='1'
+uci set firewall.Allow_Only_WebClient2.enabled='1'
+uci set firewall.Allow_Only_WebClient3.enabled='1'
+uci set firewall.Allow_Only_WebClient4.enabled='1'
+uci set firewall.Allow_Only_WebClient5.enabled='1'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
+}
+
+set_HS_Firewall_disable() {
+uci set firewall.OfficeClient.enabled='0'
+uci set firewall.OfficeWebClient.enabled='0'
+uci set firewall.Amazon_Alexa.enabled='0'
+uci set firewall.Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_only_OfficeClient.enabled='0'
+uci set firewall.Allow_only_OfficeWebClient.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_Only_WebClient1.enabled='0'
+uci set firewall.Allow_Only_WebClient2.enabled='0'
+uci set firewall.Allow_Only_WebClient3.enabled='0'
+uci set firewall.Allow_Only_WebClient4.enabled='0'
+uci set firewall.Allow_Only_WebClient5.enabled='0'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
+}
+
+
+set_firewall_ipset() {
+# Configure IP sets
+uci -q delete firewall.filter
+uci set firewall.filter="ipset"
+uci set firewall.filter.name="filter"
+uci set firewall.filter.family="ipv4"
+uci set firewall.filter.storage="hash"
+uci set firewall.filter.match="ip"
+
+uci -q delete firewall.filter6
+uci set firewall.filter6="ipset"
+uci set firewall.filter6.name="filter6"
+uci set firewall.filter6.family="ipv6"
+uci set firewall.filter6.storage="hash"
+uci set firewall.filter6.match="ip"
+ 
+# Filter LAN client traffic with IP sets
+uci -q delete firewall.filter_fwd
+uci set firewall.filter_fwd="rule"
+uci set firewall.filter_fwd.name="Filter_IPset_DNS_Forward"
+uci set firewall.filter_fwd.src="INET"
+uci set firewall.filter_fwd.dest="wan"
+uci set firewall.filter_fwd.ipset="filter dest"
+uci set firewall.filter_fwd.family="ipv4"
+uci set firewall.filter_fwd.proto="all"
+uci set firewall.filter_fwd.target="ACCEPT"
+
+uci -q delete firewall.filter6_fwd
+uci set firewall.filter6_fwd="rule"
+uci set firewall.filter6_fwd.name="Filter_IPset_DNS_Forward"
+uci set firewall.filter6_fwd.src="INET"
+uci set firewall.filter6_fwd.dest="wan"
+uci set firewall.filter6_fwd.ipset="filter6 dest"
+uci set firewall.filter6_fwd.family="ipv6"
+uci set firewall.filter6_fwd.proto="all"
+uci set firewall.filter6_fwd.target="ACCEPT"
+
+
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
+if [ "$SECURE_RULES" = "" ]
+        then
+             FW_HSactive='1'
+             set_HS_Firewall
+        elif [ "$SECURE_RULES" = "y" ]
+                then
+		FW_HSactive='1'
+                set_HS_Firewall
+        else
+              FW_HSactive='0'
+              set_HS_Firewall_disable
+fi
+
+view_config
+
+cat << "EOF" > /etc/firewall.nat6 
+iptables-save -t nat \
+| sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
+| ip6tables-restore -T nat
+EOF
+uci -q delete firewall.nat6 >> install.log
+uci set firewall.nat6="include" >> install.log
+uci set firewall.nat6.path="/etc/firewall.nat6" >> install.log
+uci set firewall.nat6.reload="1" >> install.log
+ 
+# Disable LAN to WAN forwarding
+uci rename firewall.@forwarding[0]="INET_INTERNET" >> install.log
+uci set firewall.INET_INTERNET.enabled="0" >> install.log
+uci commit firewall >> install.log
+/etc/init.d/firewall restart >> install.log
+ 
+# Configure ipset-dns
+uci set ipset-dns.@ipset-dns[0].ipset="filter" >> install.log
+uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >> install.log
+uci commit ipset-dns >> install.log
+/etc/init.d/ipset-dns restart >> install.log
+ 
+# Resolve race conditions for ipset-dns
+cat << "EOF" > /etc/firewall.ipsetdns 
+/etc/init.d/ipset-dns restart 
+EOF 
+cat << "EOF" >> /etc/sysupgrade.conf
+/etc/firewall.ipsetdns
+EOF
+uci -q delete firewall.ipsetdns >> install.log
+uci set firewall.ipsetdns="include" >> install.log
+uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >> install.log
+uci set firewall.ipsetdns.reload="1" >> install.log
+uci commit firewall >> install.log
+
+/etc/init.d/firewall restart >> install.log
+/etc/init.d/dnsmasq restart >> install.log
+/etc/init.d/network restart >> install.log
+clear
+
+}
+
 set_firewall_rules() {
 # Intercept SSH, HTTP and HTTPS traffic
 #uci -q delete firewall.ssh_int >/dev/null
@@ -20408,6 +20700,30 @@ uci set firewall.Allow_Only_WebClient5.target='REJECT'
 uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
 uci set firewall.Allow_Only_WebClient5.enabled='0'
 
+uci set firewall.Allow_Only_WebClient6=rule
+uci set firewall.Allow_Only_WebClient6.src='CMOVIE'
+uci set firewall.Allow_Only_WebClient6.dest='wan'
+uci set firewall.Allow_Only_WebClient6.name='Allow_only_WebClient_CMOVIE'
+uci set firewall.Allow_Only_WebClient6.target='REJECT'
+uci set firewall.Allow_Only_WebClient6.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient6.enabled='0'
+
+uci set firewall.Allow_Only_WebClient7=rule
+uci set firewall.Allow_Only_WebClient7.src='TELEKOM'
+uci set firewall.Allow_Only_WebClient7.dest='wan'
+uci set firewall.Allow_Only_WebClient7.name='Allow_only_WebClient_TELEKOM'
+uci set firewall.Allow_Only_WebClient7.target='REJECT'
+uci set firewall.Allow_Only_WebClient7.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient7.enabled='0'
+
+uci set firewall.Allow_Only_WebClient8=rule
+uci set firewall.Allow_Only_WebClient8.src='LAN'
+uci set firewall.Allow_Only_WebClient8.dest='wan'
+uci set firewall.Allow_Only_WebClient8.name='Allow_only_WebClient_LAN'
+uci set firewall.Allow_Only_WebClient8.target='REJECT'
+uci set firewall.Allow_Only_WebClient8.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient8.enabled='0'
+
 #Hohe Ziel (Ports)
 #TCP 
 #10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
@@ -20456,341 +20772,7 @@ uci commit firewall && reload_config >/dev/null
 /etc/init.d/firewall restart >/dev/null
 }
 
-set_HS_Firewall() {
-uci set firewall.OfficeClient.enabled='1'
-uci set firewall.OfficeWebClient.enabled='1'
-uci set firewall.Amazon_Alexa.enabled='1'
-uci set firewall.Amazon_Alexa_UDP.enabled='1'
-uci set firewall.Allow_only_OfficeClient.enabled='1'
-uci set firewall.Allow_only_OfficeWebClient.enabled='1'
-uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
-uci set firewall.Allow_Only_WebClient1.enabled='1'
-uci set firewall.Allow_Only_WebClient2.enabled='1'
-uci set firewall.Allow_Only_WebClient3.enabled='1'
-uci set firewall.Allow_Only_WebClient4.enabled='1'
-uci set firewall.Allow_Only_WebClient5.enabled='1'
-uci set firewall.otherProt.enabled='1'
-uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
-}
-
-set_HS_Firewall_disable() {
-uci set firewall.OfficeClient.enabled='0'
-uci set firewall.OfficeWebClient.enabled='0'
-uci set firewall.Amazon_Alexa.enabled='0'
-uci set firewall.Amazon_Alexa_UDP.enabled='0'
-uci set firewall.Allow_only_OfficeClient.enabled='0'
-uci set firewall.Allow_only_OfficeWebClient.enabled='0'
-uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
-uci set firewall.Allow_Only_WebClient1.enabled='0'
-uci set firewall.Allow_Only_WebClient2.enabled='0'
-uci set firewall.Allow_Only_WebClient3.enabled='0'
-uci set firewall.Allow_Only_WebClient4.enabled='0'
-uci set firewall.Allow_Only_WebClient5.enabled='0'
-uci set firewall.otherProt.enabled='1'
-uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
-}
-
-create_firewall_zones_old() {
-uci add firewall zone >> install.log
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="REPEATER"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].network="REPEATER"
-uci set firewall.@zone[-1].output="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
-uci add firewall forwarding >> install.log
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="REPEATER"
-uci commit firewall && reload_config >> install.log
-
-uci add firewall zone >> install.log
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="CONTROL"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="CONTROL"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
-uci add firewall forwarding >> install.log
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="CONTROL"
-uci commit firewall && reload_config >> install.log
-
-uci add firewall zone >> install.log
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="HCONTROL"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="HCONTROL"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
-uci add firewall forwarding >> install.log
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="HCONTROL"
-uci commit firewall && reload_config >> install.log
-
-uci add firewall zone >> install.log
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="SERVER"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="SERVER"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
-uci add firewall forwarding >> install.log
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="SERVER"
-uci commit firewall && reload_config >> install.log
-
-uci add firewall zone >> install.log
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="INET"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="INET"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
-uci add firewall forwarding >> install.log
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="INET"
-uci commit firewall && reload_config >> install.log
-
-uci add firewall zone >> install.log
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="GUEST"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="GUEST"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
-uci add firewall forwarding >> install.log
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="GUEST"
-uci commit firewall && reload_config >> install.log
-
-uci add firewall zone >> install.log
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="VOICE"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="VOICE"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
-uci add firewall forwarding >> install.log
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="VOICE"
-uci commit firewall && reload_config >> install.log
-
-uci add firewall zone >> install.log
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="ENTERTAIN"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="ENTERTAIN"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
-uci add firewall forwarding >> install.log
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="ENTERTAIN"
-uci commit firewall && reload_config >> install.log
-
-uci add firewall zone >> install.log
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="CMOVIE"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="CMOVIE"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
-uci add firewall forwarding >> install.log
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="CMOVIE"
-uci commit firewall && reload_config >> install.log
-
-uci add firewall zone >> install.log
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="TELEKOM"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="TELEKOM"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
-uci add firewall forwarding >> install.log
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="TELEKOM"
-uci commit firewall && reload_config >> install.log
-
-echo
-echo 'On Error enter logread'
-echo
-}
-
-set_HS_Firewall() {
-uci set firewall.OfficeClient.enabled='1'
-uci set firewall.OfficeWebClient.enabled='1'
-uci set firewall.Amazon_Alexa.enabled='1'
-uci set firewall.Amazon_Alexa_UDP.enabled='1'
-uci set firewall.Allow_only_OfficeClient.enabled='1'
-uci set firewall.Allow_only_OfficeWebClient.enabled='1'
-uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
-uci set firewall.Allow_Only_WebClient1.enabled='1'
-uci set firewall.Allow_Only_WebClient2.enabled='1'
-uci set firewall.Allow_Only_WebClient3.enabled='1'
-uci set firewall.Allow_Only_WebClient4.enabled='1'
-uci set firewall.Allow_Only_WebClient5.enabled='1'
-uci set firewall.otherProt.enabled='1'
-uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >> install.log
-/etc/init.d/firewall restart >> install.log
-}
-
-set_HS_Firewall_disable() {
-uci set firewall.OfficeClient.enabled='0'
-uci set firewall.OfficeWebClient.enabled='0'
-uci set firewall.Amazon_Alexa.enabled='0'
-uci set firewall.Amazon_Alexa_UDP.enabled='0'
-uci set firewall.Allow_only_OfficeClient.enabled='0'
-uci set firewall.Allow_only_OfficeWebClient.enabled='0'
-uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
-uci set firewall.Allow_Only_WebClient1.enabled='0'
-uci set firewall.Allow_Only_WebClient2.enabled='0'
-uci set firewall.Allow_Only_WebClient3.enabled='0'
-uci set firewall.Allow_Only_WebClient4.enabled='0'
-uci set firewall.Allow_Only_WebClient5.enabled='0'
-uci set firewall.otherProt.enabled='1'
-uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >> install.log
-/etc/init.d/firewall restart >> install.log
-}
-
-
-set_firewall_ipset() {
-# Configure IP sets
-uci -q delete firewall.filter
-uci set firewall.filter="ipset"
-uci set firewall.filter.name="filter"
-uci set firewall.filter.family="ipv4"
-uci set firewall.filter.storage="hash"
-uci set firewall.filter.match="ip"
-
-uci -q delete firewall.filter6
-uci set firewall.filter6="ipset"
-uci set firewall.filter6.name="filter6"
-uci set firewall.filter6.family="ipv6"
-uci set firewall.filter6.storage="hash"
-uci set firewall.filter6.match="ip"
- 
-# Filter LAN client traffic with IP sets
-uci -q delete firewall.filter_fwd
-uci set firewall.filter_fwd="rule"
-uci set firewall.filter_fwd.name="Filter_IPset_DNS_Forward"
-uci set firewall.filter_fwd.src="INET"
-uci set firewall.filter_fwd.dest="wan"
-uci set firewall.filter_fwd.ipset="filter dest"
-uci set firewall.filter_fwd.family="ipv4"
-uci set firewall.filter_fwd.proto="all"
-uci set firewall.filter_fwd.target="ACCEPT"
-
-uci -q delete firewall.filter6_fwd
-uci set firewall.filter6_fwd="rule"
-uci set firewall.filter6_fwd.name="Filter_IPset_DNS_Forward"
-uci set firewall.filter6_fwd.src="INET"
-uci set firewall.filter6_fwd.dest="wan"
-uci set firewall.filter6_fwd.ipset="filter6 dest"
-uci set firewall.filter6_fwd.family="ipv6"
-uci set firewall.filter6_fwd.proto="all"
-uci set firewall.filter6_fwd.target="ACCEPT"
-
-
-uci commit firewall && reload_config >> install.log
-/etc/init.d/firewall restart >> install.log
-if [ "$SECURE_RULES" = "" ]
-        then
-             FW_HSactive='1'
-             set_HS_Firewall
-        elif [ "$SECURE_RULES" = "y" ]
-                then
-		FW_HSactive='1'
-                set_HS_Firewall
-        else
-              FW_HSactive='0'
-              set_HS_Firewall_disable
-fi
-
-view_config
-
-cat << "EOF" > /etc/firewall.nat6 
-iptables-save -t nat \
-| sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
-| ip6tables-restore -T nat
-EOF
-uci -q delete firewall.nat6 >> install.log
-uci set firewall.nat6="include" >> install.log
-uci set firewall.nat6.path="/etc/firewall.nat6" >> install.log
-uci set firewall.nat6.reload="1" >> install.log
- 
-# Disable LAN to WAN forwarding
-uci rename firewall.@forwarding[0]="INET_INTERNET" >> install.log
-uci set firewall.INET_INTERNET.enabled="0" >> install.log
-uci commit firewall >> install.log
-/etc/init.d/firewall restart >> install.log
- 
-# Configure ipset-dns
-uci set ipset-dns.@ipset-dns[0].ipset="filter" >> install.log
-uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >> install.log
-uci commit ipset-dns >> install.log
-/etc/init.d/ipset-dns restart >> install.log
- 
-# Resolve race conditions for ipset-dns
-cat << "EOF" > /etc/firewall.ipsetdns 
-/etc/init.d/ipset-dns restart 
-EOF 
-cat << "EOF" >> /etc/sysupgrade.conf
-/etc/firewall.ipsetdns
-EOF
-uci -q delete firewall.ipsetdns >> install.log
-uci set firewall.ipsetdns="include" >> install.log
-uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >> install.log
-uci set firewall.ipsetdns.reload="1" >> install.log
-uci commit firewall >> install.log
-
-/etc/init.d/firewall restart >> install.log
-/etc/init.d/dnsmasq restart >> install.log
-/etc/init.d/network restart >> install.log
-clear
-
-}
-
-set_firewall_rules() {
+set_firewall_rules_old() {
 # Intercept SSH, HTTP and HTTPS traffic
 uci -q delete firewall.ssh_int >> install.log
 uci set firewall.ssh_int="redirect"
