@@ -428,7 +428,6 @@ pre {
 	line-height: 18px;
 	font-size: 12px;
 	border: 1px solid var(--border-color);
-	border-radius: 3px;
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	margin: 0 0 18px;
