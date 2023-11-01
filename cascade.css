@@ -406,13 +406,19 @@ code {
 }
 
 pre {
-	--border-color-h: var(--background-color-h);
-	--border-color-s: var(--background-color-s);
+	--border-color-h: var(
+	--background-color-h);
+	--border-color-s: var(
+	--background-color-s);
 	--border-color-delta-l: 100%;
-	--border-color-l: calc(var(--background-color-l) + var(--background-color-delta-l-sign) * var(--border-color-delta-l));
+	--border-color-l: calc(var(
+	--background-color-l) + var(--background-color-delta-l-sign) * var(--border-color-delta-l));
 	--border-color-a: 0.15;
-	--border-color: hsla(var(--border-color-hsl),var(--border-color-a));
-	background-color: var(--background-color-low);
+	--border-color: hsla(var(
+	--border-color-hsl),var(--border-color-a));
+	background-color: #000;
+	color: var(--success-color-high);
+	border-radius: 0.35em !important;
 	display: block;
 	line-height: 18px;
 	font-size: 12px;
@@ -421,7 +427,7 @@ pre {
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	margin: 0 0 18px;
-	padding: 8.5px
+	padding: 8.5px;
 }
 
 fieldset {
