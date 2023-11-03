@@ -1487,19 +1487,70 @@ uci set network.loopback.dns='127.0.0.1'
 uci set network.globals=globals
 uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
 
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-SERVER'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.101'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-HCONTROL'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.102'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-CONTROL'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports'eth0.103'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-INET'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.104'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-VOICE'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.105'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-ENTERTAIN'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.106'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-GUEST'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ifname='eth0.107'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-CMOVIE'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ifname='eth0.108'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-TELEKOM'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ifname='eth0.110'
+
 uci add network interface >> install.log
 uci rename network.@interface[-1]='TELEKOM'
 uci commit network >> install.log
 uci set network.TELEKOM.proto='static'
-#uci set network.TELEKOM.type='bridge'
 uci set network.TELEKOM.ipaddr=$CMOVIE_ip
 uci set network.TELEKOM.netmask='255.255.255.0'
 uci set network.TELEKOM.ip6assign='56'
 uci set network.TELEKOM.broadcast=$CMOVIE_broadcast
-uci set network.TELEKOM.igmp_snooping='1'
-#uci set network.TELEKOM.gateway='127.0.0.1'
 uci set network.TELEKOM.gateway=$INET_GW
-uci set network.TELEKOM.ifname='eth0.110'
 uci set network.TELEKOM.dns=$CMOVIE_ip
 uci set network.TELEKOM.device='br-TELEKOM'
 uci commit network >> install.log
@@ -1508,15 +1559,11 @@ uci add network interface >> install.log
 uci rename network.@interface[-1]='CMOVIE'
 uci commit network >> install.log
 uci set network.CMOVIE.proto='static'
-#uci set network.CMOVIE.type='bridge'
 uci set network.CMOVIE.ipaddr=$CMOVIE_ip
 uci set network.CMOVIE.netmask='255.255.255.0'
 uci set network.CMOVIE.ip6assign='56'
 uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
-uci set network.CMOVIE.igmp_snooping='1'
-#uci set network.CMOVIE.gateway='127.0.0.1'
 uci set network.CMOVIE.gateway=$INET_GW
-uci set network.CMOVIE.ifname='eth0.108'
 uci set network.CMOVIE.dns=$CMOVIE_ip
 uci set network.CMOVIE.device='br-CMOVIE'
 uci commit network >> install.log
@@ -1525,15 +1572,11 @@ uci add network interface >> install.log
 uci rename network.@interface[-1]='GUEST'
 uci commit network >> install.log
 uci set network.GUEST.proto='static'
-#uci set network.GUEST.type='bridge'
 uci set network.GUEST.ipaddr=$GUEST_ip
 uci set network.GUEST.netmask='255.255.255.0'
 uci set network.GUEST.ip6assign='56'
 uci set network.GUEST.broadcast=$GUEST_broadcast
-uci set network.GUEST.igmp_snooping='1'
-#uci set network.GUEST.gateway='127.0.0.1'
 uci set network.GUEST.gateway=$INET_GW
-#uci set network.GUEST.ifname='eth0.107'
 uci set network.GUEST.dns=$GUEST_ip
 uci set network.GUEST.device='br-GUEST'
 uci commit network >> install.log
@@ -1542,15 +1585,11 @@ uci add network interface >> install.log
 uci rename network.@interface[-1]='ENTERTAIN'
 uci commit network >> install.log
 uci set network.ENTERTAIN.proto='static'
-#uci set network.ENTERTAIN.type='bridge'
 uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
 uci set network.ENTERTAIN.netmask='255.255.255.0'
 uci set network.ENTERTAIN.ip6assign='56'
 uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
-uci set network.ENTERTAIN.igmp_snooping='1'
-#uci set network.ENTERTAIN.gateway='127.0.0.1'
 uci set network.ENTERTAIN.gateway=$INET_GW
-uci set network.ENTERTAIN.ifname='eth0.106'
 uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
 uci set network.ENTERTAIN.device='br-ENTERTAIN'
 uci commit network >> install.log
@@ -1559,15 +1598,11 @@ uci add network interface >> install.log
 uci rename network.@interface[-1]='VOICE'
 uci commit network >> install.log
 uci set network.VOICE.proto='static'
-#uci set network.VOICE.type='bridge'
 uci set network.VOICE.ipaddr=$VOICE_ip
 uci set network.VOICE.netmask='255.255.255.0'
 uci set network.VOICE.ip6assign='56'
 uci set network.VOICE.broadcast=$VOICE_broadcast
-uci set network.VOICE.igmp_snooping='1'
-#uci set network.VOICE.gateway='127.0.0.1'
 uci set network.VOICE.gateway=$INET_GW
-uci set network.VOICE.ifname='eth0.105'
 uci set network.VOICE.dns=$VOICE_ip
 uci set network.VOICE.device='br-VOICE'
 uci commit network >> install.log
@@ -1576,15 +1611,11 @@ uci add network interface >> install.log
 uci rename network.@interface[-1]='INET'
 uci commit network >> install.log
 uci set network.INET.proto='static'
-#uci set network.INET.type='bridge'
 uci set network.INET.ipaddr=$INET_ip
 uci set network.INET.netmask='255.255.255.0'
 uci set network.INET.ip6assign='56'
 uci set network.INET.broadcast=$INET_broadcast
-uci set network.INET.igmp_snooping='1'
-#uci set network.INET.gateway='127.0.0.1'
 uci set network.INET.gateway=$INET_GW
-uci set network.INET.ifname='eth0.104'
 uci set network.INET.dns=$INET_ip
 uci set network.INET.device='br-INET'
 uci commit network >> install.log
@@ -1593,15 +1624,11 @@ uci add network interface >> install.log
 uci rename network.@interface[-1]='CONTROL'
 uci commit network >> install.log
 uci set network.CONTROL.proto='static'
-#uci set network.CONTROL.type='bridge'
 uci set network.CONTROL.ipaddr=$CONTROL_ip
 uci set network.CONTROL.netmask='255.255.255.0'
 uci set network.CONTROL.ip6assign='56'
 uci set network.CONTROL.broadcast=$CONTROL_broadcast
-uci set network.CONTROL.igmp_snooping='1'
-#uci set network.CONTROL.gateway='127.0.0.1'
 uci set network.CONTROL.gateway=$INET_GW
-uci set network.CONTROL.ifname='eth0.103'
 uci set network.CONTROL.dns=$CONTROL_ip
 uci set network.CONTROL.device='br-CONTROL'
 uci commit network >> install.log
@@ -1610,15 +1637,11 @@ uci add network interface >> install.log
 uci rename network.@interface[-1]='HCONTROL'
 uci commit network >> install.log
 uci set network.HCONTROL.proto='static'
-#uci set network.HCONTROL.type='bridge'
 uci set network.HCONTROL.ipaddr=$HCONTROL_ip
 uci set network.HCONTROL.netmask='255.255.255.0'
 uci set network.HCONTROL.ip6assign='56'
 uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
-uci set network.HCONTROL.igmp_snooping='1'
-#uci set network.HCONTROL.gateway='127.0.0.1'
 uci set network.HCONTROL.gateway=$INET_GW
-uci set network.HCONTROL.ifname='eth0.102'
 uci set network.HCONTROL.dns=$HCONTROL_ip
 uci set network.HCONTROL.device='br-HCONTROL'
 uci commit network >> install.log
@@ -1627,15 +1650,11 @@ uci add network interface >> install.log
 uci rename network.@interface[-1]='SERVER'
 uci commit network >> install.log
 uci set network.SERVER.proto='static'
-#uci set network.SERVER.type='bridge'
 uci set network.SERVER.ipaddr=$SERVER_ip
 uci set network.SERVER.netmask='255.255.255.0'
 uci set network.SERVER.ip6assign='56'
 uci set network.SERVER.broadcast=$SERVER_broadcast
-uci set network.SERVER.igmp_snooping='1'
-#uci set network.SERVER.gateway='127.0.0.1'
 uci set network.SERVER.gateway=$INET_GW
-uci set network.SERVER.ifname='eth0.101'
 uci set network.SERVER.dns=$SERVER_ip
 uci set network.SERVER.device='br-SERVER'
 uci commit network >> install.log
