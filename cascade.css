@@ -2300,6 +2300,30 @@ li.menu,.dropdown,.cbi-dropdown[open] {
 	text-overflow: ellipsis
 }
 
+tr.tr.cbi-section-table-titles.anonymous th {
+	text-align: center;
+}
+
+tr.tr.cbi-section-table-descr.anonymous > .th.cbi-section-table-cell[data-widget="CBI.ListValue"] small {
+	border-radius: 3.5px !important;
+	height: 7.5em !important;
+	width: 7.5em !important;
+	font-size: 0.9em;
+	border: 0.5px solid rgba(128,128,128,0.35) !important;
+	background-color: rgba(48,48,48,0.5)!important;
+	margin: 0.2em;
+	display: block;
+	padding: 0.6em 0;
+	box-shadow: rgba(0,0,0,0.8) 1.3px 1.3px 3.25px !important;
+}
+
+.cbi-section-table .tr.cbi-section-table-descr .th {
+	font-weight: 400;
+	text-align: center;
+	padding-top: 1em;
+	height: 8.5em !important;
+}
+
 #mwan3-service-status {
 	text-shadow: none !important;
 }
