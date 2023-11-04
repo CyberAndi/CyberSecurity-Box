@@ -1528,19 +1528,19 @@ uci add network device >> install.log
 uci set network.@device[-1].name='br-GUEST'
 uci set network.@device[-1].type='bridge'
 uci set network.@device[-1].igmp_snooping='1'
-uci set network.@device[-1].ifname='eth0.107'
+uci set network.@device[-1].ports='eth0.107'
 
 uci add network device >> install.log
 uci set network.@device[-1].name='br-CMOVIE'
 uci set network.@device[-1].type='bridge'
 uci set network.@device[-1].igmp_snooping='1'
-uci set network.@device[-1].ifname='eth0.108'
+uci set network.@device[-1].ports='eth0.108'
 
 uci add network device >> install.log
 uci set network.@device[-1].name='br-TELEKOM'
 uci set network.@device[-1].type='bridge'
 uci set network.@device[-1].igmp_snooping='1'
-uci set network.@device[-1].ifname='eth0.110'
+uci set network.@device[-1].ports='eth0.110'
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='TELEKOM'
@@ -1944,14 +1944,14 @@ uci commit network >> install.log
 uci add network interface
 uci rename network.@interface[-1]='SWITCH_Port'
 uci commit network >> install.log
-uci set network.SWITCH_Port.ifname='eth0'
+uci set network.SWITCH_Port.device='eth0'
 uci set network.SWITCH_Port.proto='none'
 uci commit network >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P101'
 uci commit network >> install.log
-uci set network.SWITCH_P101.ifname='eth0.101'
+uci set network.SWITCH_P101.device='eth0.101'
 uci set network.SWITCH_P101.proto='none'
 uci set network.SWITCH_P101.description='SERVER'
 uci commit network >> install.log
@@ -1959,7 +1959,7 @@ uci commit network >> install.log
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P102'
 uci commit network >> install.log
-uci set network.SWITCH_P102.ifname='eth0.102'
+uci set network.SWITCH_P102.device='eth0.102'
 uci set network.SWITCH_P102.proto='none'
 uci set network.SWITCH_P102.description='HCONTROL'
 uci commit network >> install.log
@@ -1967,7 +1967,7 @@ uci commit network >> install.log
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P103'
 uci commit network >> install.log
-uci set network.SWITCH_P103.ifname='eth0.103'
+uci set network.SWITCH_P103.device='eth0.103'
 uci set network.SWITCH_P103.proto='none'
 uci set network.SWITCH_P103.description='CONTROL'
 uci commit network >> install.log
@@ -1975,7 +1975,7 @@ uci commit network >> install.log
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P104'
 uci commit network >> install.log
-uci set network.SWITCH_P104.ifname='eth0.104'
+uci set network.SWITCH_P104.device='eth0.104'
 uci set network.SWITCH_P104.proto='none'
 uci set network.SWITCH_P104.description='INET'
 uci commit network >> install.log
@@ -1983,7 +1983,7 @@ uci commit network >> install.log
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P105'
 uci commit network >> install.log
-uci set network.SWITCH_P105.ifname='eth0.105'
+uci set network.SWITCH_P105.device='eth0.105'
 uci set network.SWITCH_P105.proto='none'
 uci set network.SWITCH_P105.description='VOICE'
 uci commit network >> install.log
@@ -1991,7 +1991,7 @@ uci commit network >> install.log
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P106'
 uci commit network >> install.log
-uci set network.SWITCH_P106.ifname='eth0.106'
+uci set network.SWITCH_P106.device='eth0.106'
 uci set network.SWITCH_P106.proto='none'
 uci set network.SWITCH_P106.description='ENTERTAIN'
 uci commit network >> install.log
@@ -1999,7 +1999,7 @@ uci commit network >> install.log
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P107'
 uci commit network >> install.log
-uci set network.SWITCH_P107.ifname='eth0.107'
+uci set network.SWITCH_P107.device='eth0.107'
 uci set network.SWITCH_P107.proto='none'
 uci set network.SWITCH_P107.description='GUEST'
 uci commit network >> install.log
@@ -2007,7 +2007,7 @@ uci commit network >> install.log
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P108'
 uci commit network >> install.log
-uci set network.SWITCH_P108.ifname='eth0.108'
+uci set network.SWITCH_P108.device='eth0.108'
 uci set network.SWITCH_P108.proto='none'
 uci set network.SWITCH_P108.description='CMOVIE'
 uci commit network >> install.log
@@ -2015,7 +2015,7 @@ uci commit network >> install.log
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P110'
 uci commit network >> install.log
-uci set network.SWITCH_P110.ifname='eth0.110'
+uci set network.SWITCH_P110.device='eth0.110'
 uci set network.SWITCH_P110.proto='none'
 uci set network.SWITCH_P110.description='TELEKOM'
 uci commit network >> install.log
