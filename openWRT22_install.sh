@@ -14,7 +14,7 @@ view_config()  {
 echo
 echo 'Your Config is:'
 echo
-echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'ClienWiFi SSID:       '$INET_ssid
 echo 'Key:                  '$WIFI_PASS
 echo 'IP:                   '$INET_net
 echo
@@ -304,6 +304,7 @@ VOICE_domain='voice.local'
 ENTERTAIN_domain='entertain.local'
 GUEST_domain='guest.local'
 CMOVIE_domain='cmovie.local'
+TELEKOM_domain='telekom.local'
 
 
 SERVER_ssid='DMZ-'$WIFI_SSID
@@ -315,6 +316,7 @@ ENTERTAIN_ssid='Entertain-'$WIFI_SSID
 GUEST_ssid='Guest-'$WIFI_SSID
 CMOVIE_ssid='Free_CMovie_Portal'
 Adversisment_ssid='Telekom'
+TELEKOM_ssid='Telekom'
 
 clear
 view_config
@@ -326,15 +328,17 @@ echo 'Install Software'
 echo
 echo 'Please wait ....'
 echo
-/etc/init.d/dnsmasq stop >/dev/null
-/etc/init.d/dnsmasq disable >/dev/null
-opkg update >/dev/null
-opkg remove dnsmasq >/dev/null
-opkg update >/dev/null
-opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >/dev/null
-opkg update >/dev/null
-opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >/dev/null
-/etc/init.d/dnsmasq start >/dev/null
+echo 'On Error enter logread'
+echo
+/etc/init.d/dnsmasq stop >> install.log
+/etc/init.d/dnsmasq disable >> install.log
+opkg update >> install.log
+opkg remove dnsmasq >> install.log
+opkg update >> install.log
+opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
+opkg update >> install.log
+opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 dnsmasq-full unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 --force-overwrite >> install.log
+/etc/init.d/dnsmasq start >> install.log
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -357,6 +361,8 @@ rm AdGuardHome_linux_armv5.tar.gz
 
 /opt/AdGuardHome/AdGuardHome -s install
 }
+
+
 
 define_variables() {
 #----------------------------------------------------------------------------
@@ -1049,7 +1055,6 @@ echo "variables defineds"
 echo
 }
 
-#----------------------------------------------------------------------------
 customize_firmware() {
 uci set system.@system[0]=system
 uci set system.@system[0].ttylogin='0'
@@ -1080,8 +1085,8 @@ uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
 uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
 uci set uhttpd.main.redirect_https='1'
-uci commit  && reload_config  >/dev/null
-/etc/init.d/uhttpd restart  >/dev/null
+uci commit  && reload_config  >> install.log
+/etc/init.d/uhttpd restart  >> install.log
 
 echo
 echo 'Default Country-Settings'
@@ -1132,7 +1137,7 @@ DEVICE_REVISION='v0.75'
 
 EOF
 
-cp openWRT22_install.sh /etc/openWRT_install.sh
+cp openWRT21_install.sh /etc/openWRT_install.sh
 chmod 0755 /etc/openWRT_install.sh
 
 cat << EOF > /etc/sysupgrade.conf
@@ -1166,11 +1171,19 @@ processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-P
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/cascade.css -P /www/luci-static/bootstrap/)
 wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/luci-static/bootstrap/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCRAStd.woff -P /www/luci-static/bootstrap/)
+wait $processes1
 wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/custom.css -P /www/luci-static/resources/view/dashboard/css/
 
+echo
+echo 'On Error enter logread'
+echo
 }
 
-create_websites() {
+create_hotspot() {
+
 mkdir /www/router
 mkdir /www/redirect
 mkdir /www/CaptivePortal
@@ -1178,1303 +1191,74 @@ mkdir /www/generate_204
 mkdir /www/CaptivePortal/pic
 
 
-cat << EOF > /www/index.html
-
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="refresh" content="0; URL=CaptivePortal/index.htm" />
-</head>
-<body style="background-color: black">
-<a style="color: #008800; font-family: arial, helvetica, sans-serif;" href="cgi-bin/luci/">LuCI - Lua Configuration Interface</a>
-</body>
-</html>
-
-EOF
-
-cat << EOF > /www/CaptivePortal/theme_variable.css
-
-:root {
-	--acceptBgColor: linear-gradient(to left bottom, rgba(0,128,0,0.8), rgba(0,128,0,0.1));
-	--activeView: -10;
-	--adjust: 100%;
-	--alertBgColor: var(--lightRed);
-	--alertColor: var(--lightRed);
-	--alertRed: #cc0000;
-	--alertTop: 3em;
-	--AnswerBoxBg: var(--lightRed);
-	--animiImage: url("pic/Corona_2.svg");
-	--animiStartPosX: 0;
-	--animiStartPosY: 0;
-	--animiStartPosZ: 0;
-	--animiStartPerspective: 150px;
-	--animiStopPosX: 0;
-	--animiStopPosY: 0;
-	--animiStopPosZ: 0;
-	--animiStopPerspective: 7000px;
-	--animiTransformStyle: preserve-3d;
-	--appearance: none;
-	--aspectRatio: 16/9;
-	--aspectRatioLT: 16/6.7467;
-	--autoHeight: auto;
-	--autoTop: auto;
-	--bgBlur: blur(2.5px);
-	--bgLight: rgba(238,238,238,0.75);
-	--bgGradientDark: linear-gradient(to bottom, rgba(16,96,0,0.8), rgba(16,96,0,0.7), rgba(16,96,0,0));
-	--bgGradientDiagDark: linear-gradient(to top right, rgba(16,96,0,0.8), rgba(16,96,0,0.7), rgba(16,96,0,0));
-	--bgGradientDiagLight: linear-gradient(to bottom left, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
-	--bgGradientDiagLightActive: linear-gradient(to top right, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
-	--bgGradientLight: linear-gradient(to right, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
-	--bgGradientLightActive: linear-gradient(to top, rgba(32,128,0,0.8), rgba(32,128,0,0.1));
-	--bgModal: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.3), rgba(0,0,0,1) );
-	--bgPosFixed: fixed;
-	--bgTransparent: transparent;
-	--bgRepeate: no-repeat;
-	--bibleTextTransition: 0.75s;
-	--bibleTextDisplay: block;
-	--bibleTextHidden: none;
-	--bibleTextImageDisplay: inline-block;
-	--bibleImageShadow: 0.1em 0.1em 0.125em rgb(0 0 0 / 50%), 0 0 0.05em rgba(0, 0, 0, 0.25);
-	--blackColor: #000000;
-	--bookTextColor: #201000;
-	--bookBGColor: #ffeed8;
-	--blackGradient: radial-gradient(rgba(0,0,0,.3), rgba(0,0,0,1));
-	--blackTrans: rgba(0,0,0,0.5);
-	--blockBgColor: linear-gradient(to bottom left, rgba(224,224,0,0.8), rgba(224,224,0,0.1));
-	--blueGradient: radial-gradient(rgba(47, 121,160,.3), rgba(47, 121,160,1));
-	--blueGradient3: radial-gradient(rgba(47, 121,160,1), rgba(47, 121,160,0.15));
-	--blueGradientRight: linear-gradient(to right, rgba(17,17,17,.9), var(--colorBlueMid));
-	--blueGradientLeft: linear-gradient(to left, var(--colorBlueTrans), var(--colorBlue));
-	--blueScrollPic: rgba(94,149,183,.4);
-	--bookBGImage: linear-gradient(to right,rgba(135,100,0,1),  rgba(135,100,0,0.1), rgba(135,100,0,0.1), rgba(135,100,0,0.1), rgba(135,100,0,0.1), rgba(135,100,0,1));
-	--bookFont: var(--fontBook);
-	--borderDark: 1px solid #000000;
-	--borderColorDark: rgba(81,81,81,0.6);
-	--borderColorDark: var(--buttonBorderColorDark);
-	--borderColorLight: var(--borderLight);
-	--borderColorMiddle: rgba(128,128,128,0.6);
-	--borderColorMiddle: var(--buttonBorderColorMiddle);
-	--borderDark: 0.75px solid rgba(81,81,81,0.6);
-	--borderLoader: 2px solid rgb(32,128,0);
-	--borderLoader2: 7px solid #aaaaaa;
-	--borderLoaderRadius: 50%;
-	--borderLoaderTop: 7px solid rgb(32,128,0);
-	--borderMiddle: 0.75px solid rgba(128,128,128,0.6);
-	--borderNone: 1px solid #44cc00;
-	--borderRadius: 5px;
-	--borderRadiusNone: 0;
-	--borderRadiusNormal: 7px;
-	--borderRadiusSmall: 3px;
-	--borderRadiusTouch: 15px;
-	--borderSelect: 1px solid #cccccc;
-	--borderTerminal: 2px solid rgba(68,204,0,0.5);
-	--boxBg: rgba(128,128,128,0.6);
-	--boxBgDrk: rgba(48,48,48,0.85);
-	--boxBgDrkGreen: rgba(0,48,0,0.85);
-	--boxBgImage: linear-gradient(to bottom left, rgba(128,128,128,0.8), rgba(128,128,128,0.1));
-	--boxBgLgtDrk: rgba(81,81,81,0.6);
-	--boxBgLight: rgba(204,204,204,0.85);
-	--boxBgLightGreen: rgba(0,204,0,0.6);
-	--boxBgMidGreen: rgba(68,136,68,0.85);
-	--boxBGView: 49;
-	--boxHighLightBorder: rgba(0,224,0,0.9)!important; 
-	--boxHighLightBorder: rgba(82,236,168,0.9)!important; 
-	--boxHighLightShadow: inset 0 1px 3px rgb(0 0 0 / 10%), 0 0 8px rgb(0 224 0 / 60%);
-	--boxPadding: 1em 1.5em;
-	--boxShadow: 0.25em 0.25em 0.5em var(--blackTrans);
-	--boxShadow: 0.2em 0.2em 0.5em rgba(0,0,0,0.7), 0 0 0.05em #000000;
-	--boxShadow2: -0.5em 0.95em 0.5em rgba(0, 0, 0, 0.6);
-	--boxSizeingNorm: content-box;
-	--boxSizeingBorder: border-box;
-	--boxView: 50;
-	--bsLogoHeight: 51;
-	--buttonBorderColorDark: rgba(81,81,81,0.6);
-	--buttonBorderColorMiddle: rgba(128,128,128,0.6);
-	--buttonBorderDark: 0.75px solid rgba(81,81,81,0.6);
-	--buttonBorderMiddle: 0.75px solid rgba(128,128,128,0.6);
-	--buttonBorderMiddle: 0.75px solid rgba(128,128,128,0.6);
-	--buttonBoxHeight: 2.1vw;
-	--buttonColorNorm: rgba(0,0,0,0.35);
-	--buttonColorSelect: rgba(224,0,0,0.75);
-	--buttonColorDark: var(--fontDark);
-	--buttonColorLight: var(--fontLight);
-	--buttonColorStd: rgba(000,113,000,0.75);
-	--buttonHeight: 16px;
-	--buttonFloat: right;
-	--buttonHeightTouch: 60px;
-	--buttonTop: -.05em;
-	--buttonRight: 0em;
-	--buttonPadding: 0 0em 0.25em 0.5em;
-	--buttonCursor: pointer;
-	--canLeft: 60%;
-	--canSize: 30em;
-	--centerMargin: auto;
-	--centerPos: 50%;
-	--colorBlueTrans: rgba(47, 121,160,.3);
-	--colorBlue: rgba(47, 121,160,1);
-	--colorBlueMid: rgba(94,149,183,0.8);
-	--colorBlueDrk: rgba(7, 81,120,1);
-	--colorBlueLgth: rgba(107, 181,220,1);
-	--colorDrkGrey: rgba(17,17,17,0.75);
-	--colorDrkGreyTrans: rgba(17,17,17,0.25);
-	--colorLgtGrey: #eeeeee;
-	--configHeight: var(--menuHeight);
-	--configLableMax: var(--popupMaxWidth);
-	--configLableMin: var(--popupMinWidth);
-	--configMax: 40em;
-	--configMin: 6em;
-	--cursorHand: pointer;
-	--cursorWait: wait;
-	--containerBibleTextWidth: 80vw;
-	--default: 0em;
-	--defaultValue: unset;
-	--devColor: #ff0000;
-	--devColorTrans: rgba(255,0,0,0.25);
-	--devColor1: #880000;
-	--devColor1Trans: rgba(128,0,0,0.25);
-	--devColor2: #008800;
-	--devColor2Trans: rgba(0,128,0,0.25);
-	--devColor3: #00ff00;
-	--devColor3Trans: rgba(0,255,0,0.25);
-	--devColor4: #000088;
-	--devColor4Trans: rgba(0,0,128,0.25);
-	--devColor5: #0000ff;
-	--devColor5Trans: rgba(0,0,255,0.25);
-	--devColor6: #888800;
-	--devColor6Trans: rgba(128,128,0,0.25);
-	--devColor7: #ffff00;
-	--devColor7Trans: rgba(255,255,0,0.25);
-	--devColorBG: #AA00AA;
-	--devColorBGTrans: rgba(172,0,172,0.25);
-	--devColorOverL: #AAAAAA;
-	--devColorOverLTrans: rgba(172,172,172,0.25);
-	--displayNone: none;
-	--displayBlock: block;
-	--displayInlineBlock: inline-block;
-	--drk-bg: #000000;
-	--drkGreen: #004400;
-	--blueGradient: radial-gradient(rgba(47, 121,160,.3), rgba(47, 121,160,1));
-	--blueGradient2: radial-gradient(rgba(94,149,183,.3), rgba(94,149,183,1));
-	--blueTransparent: rgba(47, 121,160, 0.75);
-	--dropBgColor: linear-gradient(to bottom left, rgba(224,0,0,0.8), rgba(224,0,0,0.1));
-	--dropShadow: var(--boxShadow);
-	--factorHDVideo: 56.25;
-	--factorHDVideoVW: var(--factorHDVideo) + 'vw';
-	--factorLetterBoxSmallVideo: 37.5;
-	--factorLetterBoxSmallVideoVW: var(--factorLetterBoxSmallVideo) + 'vw';
-	--factorLetterBoxVideo: 48.92;
-	--factorLetterBoxVideoVW: var(--factorLetterBoxVideo) + 'vw';
-	--fillHeadHeight: var(--lineBoxHeadHeight);
-	--flowLeft: left;
-	--flowRight: right;
-	--focusShadow: 0 0 0.15em var(--colorBlueMid);
-	--footerHeight: calc(var(--fontSizeEm) * 2);
-	--fontActiveShadow: var(--fontShadow);
-	--fontBigShadow: -0.25em 0.425em 0.25em rgba(0, 0, 0, 0.6);
-	--fontBold: bold;
-	--fontDark: #222222;
-	--fontLight: #cccccc;
-	--fontNormal: normal;
-	--fontSelectShadow: -0.125em 0.2125em 0.125em rgba(224, 224, 224, 0.6);
-	--fontShadow: 0.2em 0.2em 0.5em rgb(0 0 0 / 75%), 0 0 0.2em #000000;
-	--fontSize: 1.2831vw;
-	--fontSizeEm: 16px;
-	--fontSizeButton: var(--fontSizeSmall);
-	--fontSizeHead: var(--fontSizeNorm);
-	--fontSizeHead1: 2.370816vw;
-	--fontSizeHead2: 1.97568vw;
-	--fontSizeHead3: 1.6464vw;
-	--fontSizeHelp: var(--fontSizeXXSmall);
-	--fontSizeIfBox: var(--fontSizeXSmall);
-	--fontSizeIfBoxHead: var(--fontSizeSmall);
-	--fontSizeLabel: 1.15248vw; 
-	--fontSizeLabel: var(--fontSizeXSmall);
-	--fontSizeMenu: var(--fontSizeSmall);
-	--fontSizeMobile: 1.6vw;
-	--fontSizeNorm: 1.4vw;
-	--fontSizeSmall: 1.1662vw;
-	--fontSizeTable: var(--fontSizeXSmall);
-	--fontSizeXSmall: 1.029vw;
-	--fontSizeXXSmall: 0.8232vw;
-	--fontWeight: 650;
-	--fontTerminal: var(--mainColor);
-	--fontXDrk: var(--drk-bg);
-	--fontXLight: var(--lightColor);
-	--fontBook: "Times New Roman", Times, serif;
-	--footerHeight: 1.5em;
-	--footerBGColor: linear-gradient(to left,rgba(17,17,17,.9), var(--colorBlueMid));
-	--forwardBgColor: linear-gradient(to left bottom, rgba(0,255,0,0.8), rgba(0,255,0,0.1));
-	--fwStateDynWidth: 260px;
-	--gray: #444444;
-	--halfTransparent: 0.8;
-	--headerBgColor: rgba(0,0,0,0.8);
-	--headerBGImage:  url("pic/CMovie.svg"), var(--blueGradientRight);
-	--headerBGImageSmall: var(--blueGradientRight);
-	--headerBGSize: 10%, auto;
-	--headerBGSizeSmall: auto;
-	--headerBGPosX: 7%, 0px;
-	--headerBGPosXBig: 10%, 0px;
-	--headerBGPosY: 55%, 0px;
-	--headerBGPosXSmall: 0px;
-	--headerBGPosYSmall: 0px;
-	--headerBoxHeight: var(--lineBoxHeadHeight);
-	--headerBoxItem: var(--lineBoxHeadHeight);
-	--headerH1: "Willkommen bei C`Movie dem Hoffnungsportal";
-	--headerH1Small: "C`Movie das Hoffnungsportal";
-	--headerH3: "Der Gegenpol zu Chaos und Panik seitens der Medien und Politik";
-	--headerH3Small: "Der Gegenpol zu Chaos und Panik";
-	--headerHeight: var(--lineHeadHeight);
-	--headerHeight: calc(var(--fontSizeEm) * 9.5);
-	--headerHeightLarge: calc(var(--fontSizeEm) * 9.5);
-	--headerHeightSmall: calc(var(--fontSizeEm) * 4.5);
-	--headerItem: var(--lineHeadHeight);
-	--headerAlign: center;
-	--headerTop: -1em;
-	--headerTopH3: -0.4em;
-	--headerLineHeight: 1.2;
-	--headFont: var(--mainFont);
-	--heightTerm: 31em;
-	--hidden: none;
-	--hoverView: 10;
-	--hyphens: auto;
-	--inlineVisible: inline-block;
-	--inpBoxWidth: 210px;
-	--inpFill-bg: var(--lightGray);
-	--inpFocus-bg: #ffffcc;
-	--inpHeight: var(--mainTextHeight);
-	--inpMarginTop: 0.75em;
-	--inpPadding: 0.25em 0.5em;
-	--inpTxt: #0000aa;
-	--inputShadow: inset 1px 1px 3px rgba(0,0,0,0.4);
-	--infoBG: var(--bgLight);
-	--infoPosLeft: calc(50% - 225px);
-	--infoPosTop: 5em;
-	--infoMargin: auto;
-	--infoWidth: 90vw;
-	--infoMaxWidth: 450px;
-	--infoMaxHeight: 80vh;
-	--infoTextShadow: var(--textNoShadow);
-	--infoPadding: 0.25em 0.5em;
-	--infoFont: Arial, sans-serif;
-	--infoTextWidth: auto;
-	--infoImageHeight: 1em;
-	--infoFontButtonHeight: 1em;
-	--inpWidth: 92%;
-	--lastScrollY: 0;
-	--lastScrollX: 0;
-	--layer2View: 20;
-	--layer3View: 30;
-	--leftTerm: 16em;
-	--light-bg: #cccccc;
-	--lightColor: #ffffff;
-	--lightGray: #aaaaaa;
-	--lightgreen: rgb(32,128,0);
-	--lightRed: rgba(196,0,0,0.6);
-	--lightRed: rgba(224,0,0,0.75);
-	--lineBoxHeadHeight: 3.92vw;
-	--lineBoxHeight: 2.1vw;
-	--lineBoxInputHeight: var(--buttonBoxHeight);
-	--lineHeadHeight: 2.8em;
-	--lineHeight: 1.5em;
-	--lineInputHeight: var(--buttonHeight);
-	--loaderAnimation: spin 2s linear infinite;
-	--loaderPadding: 30px;
-	--loaderSize: 1.5em;
-	--loaderStartAnimation: rotate(0deg);
-	--loaderStopAnimation: rotate(360deg);
-	--logoWidth: 16.3vw;
-	--logoHeight: 8.645833vw;
-	--logoPosTop: calc(100vh - var(--logoHeight) - 16px) !important;
-	--logoPosPortraiTop: calc(var(--factorHDVideoVW) - var(--logoHeight) - 16px) !important;
-	--logoPosLeft: 0em;
-	--logoBackShadow: unset;
-	--logoShadow: var(--boxShadow);
-	--logoPic: url("pic/Title.png");
-	--logoSize: cover;
-	--logoRepeate: no-repeat;
-	--main-bg-color: var(--xDrkGreen);
-	--mainBoxTextHeight: 1.68vw;
-	--mainColor: #44cc00;
-	--mainFont: "OCR A","OCR A Std", "OCR-A","OCR-A Std",Monaco,Andale Mono,Courier New,Courier,monospace;
-	--mainHeight: 1em;
-	--mainMargin: 0;
-	--mainOverflow: hidden;
-	--mainPadding: 0;
-	--mainPadding: 1em;
-	--mainTextHeight: 1.2em;
-	--mainVisible: inline;
-	--mainZoom: 100%;
-	--maxHeight:100%;
-	--maxWidth: var(--widthMax);
-	--maxTerm: 70%;
-	--menuActiveBg: var(--bgGradientLightActive);
-	--menuActiveBorder: 1px solid rgba(0, 0, 0,0.8);
-	--menuBg: var(--bgGradientLight);
-	--menuBorder: 1px solid rgba(0,0,0,0.8);
-	--menuBottom: -1.4em;
-	--menuBoxHeight: var(--buttonBoxHeight);
-	--menuBoxMaxWidth: 13.3vw;
-	--menuBoxMinWidth: 11.2vw;
-	--menuBtn: 43;
-	--menuHeight: var(--mainTextHeight);
-	--menuHoverBg: var(--bgGradientLight);
-	--menuHoverBorder: 1px solid rgba(196,196,196,0.8);
-	--menuMargin: 0 0.5em;
-	--menuMaxWidth: 9.5em;
-	--menuMinWidth: 8em;
-	--menuPadding: 0 0.5em;
-	--menuPadding2: 0.5em 1em;
-	--menuShadow: 0 0 0.15em rgb(224 224 224 / 50%), 0.25em 0.25em 0.35em rgb(0 0 0 / 50%);
-	--menuTop: 3.5em;
-	--menuTopTop: 0.25em;
-	--menuTopLow: 6.1em;
-	--menuTopWidth: max-content;
-	--menuView: 40;
-	--midGray: #888888;
-	--minTerm: 20%;
-	--modalView: 100;
-	--msgBoxMax: 80%;
-	--msgBoxMin: 15%;
-	--msgPadding: 1em;
-	--noBorder: none;
-	--noneBorder: none;
-	--noShadow: none;
-	--noTransparent: 1;
-	--noMarginPadding: 0;
-	--opacity: 0.8;
-	--overflowAuto: auto;
-	--overflowHidden: hidden;
-	--overflowNone: none;
-	--overflowCut: clip;
-	--overflowOverlay: overlay;
-	--overflowScroll: scroll;
-	--overflowScrollTouch: touch;
-	--overflowVisible: visible;
-	--overlayDiverence: 0;
-	--overlayHeight: 0;
-	--overlayCalcHeight: 0;
-	--overlayCalcLayerHeight: 0;
-	--overlayTop: 0;
-	--overlayLayerTop: 0;
-	--overlayHeadTop: 0;
-	--overlayScreenTop: 0;
-	--overlayScreenBottom: 0;
-	--overlayBottom: 0;
-	--overlayHeadBottom: 0;
-	--overlayPos: 0;
-	--overlayPosTop: 0;
-	--overlayPosHalfTop: 0;
-	--overlayPosOverlayTop: 0;
-	--overlayPosScreenTop: 0;
-	--overlayPosBottom: 0;
-	--overlayPosHeadBottom: 0;
-	--overlayPosScreenBottom: 0;
-	--overlayPosHeadScreenBottom: 0;
-	--overlayPosOverlayBottom: 0;
-	--overlayPosHeadOverlayBottom: 0;
-	--overlayPosHeadTop: 0;
-	--overlayPosHeadHalfTop: 0;
-	--overlayPosHeadOverlayTop: 0;
-	--overlayPosHeadScreenTop: 0;
-	--overlayPositionScreenTop: 0;
-	--overlayPositionTop: 0;
-	--overlayPositionBottom: 0;
-	--overlayPositionScreenBottom: 0;
-	--overlayTransition: var(--transitionLong);
-	--overlayHeightPC: 684;
-	--overlay1HeightPC: calc(100vh - 1em);
-	--overlay2HeightPC: calc(100vh - 1em);
-	--overlay3HeightPC: calc(100vh - 1em);
-	--overlay4HeightPC: calc(100vh - 1em);
-	--overlay1TopPC: 40px;
-	--overlay2TopPC: 804px;
-	--overlay3TopPC: 1568px;
-	--overlay4TopPC: 2440px;
-	--overlayHeightPad: 684;
-	--overlay1HeightPad: 554;
-	--overlay2HeightPad: 697;
-	--overlay3HeightPad: 576;
-	--overlay4HeightPad: 697;
-	--overlayHeightWPad: 684;
-	--overlay1HeightWPad: 684;
-	--overlay2HeightWPad: 684;
-	--overlay3HeightWPad: 684;
-	--overlay4HeightWPad: 684;
-	--overlayHeightPhone: 684;
-	--overlay1HeightPhone: 280;
-	--overlay2HeightPhone: 1477;
-	--overlay3HeightPhone: 211;
-	--overlay4HeightPhone: 697px;
-	--overlayHeightWPhone: 684px;
-	--overlay1HeightWPhone: 684;
-	--overlay2HeightWPhone: 684;
-	--overlay3HeightWPhone: 684;
-	--overlay4HeightWPhone: 684;
-	--parentValue: inherit;
-	--popupActiveBg: var(--bgGradientLightActive);
-	--popupActiveBorder: var(--menuActiveBorder);
-	--popupActiveColorBg: var(--drk-bg);
-	--popupBg: var(--bgGradientDiagLight);
-	--popupBorder: var(--menuBorder);
-	--popupBorder2: 1px solid var(--xDrkGreen);
-	--popupBtn: 48;
-	--popupChildMargin: var(--mainMargin);
-	--popupChildMarginBottom: -1em;
-	--popupChildPadding: 0.5em 1em 0.5em 2em;
-	--popupHeight: 33.15em;
-	--popupHoverBg: var(--bgGradientLight);
-	--popupHoverBorder: var(--menuHoverBorder);
-	--popupHoverColorBg: var(--light-bg);
-	--popupItemBg: transparent;
-	--popupItemMargin: var(--mainMargin);
-	--popupItemPadding: var(--menuPadding);
-	--popupMarginRight: 2em;
-	--popupMarginTop: -0.5em;
-	--popupMaxWidth: 12em;
-	--popupMinWidth: 6em;
-	--popupPosleft: 1em;
-	--popupPosTop: 3em;
-	--popupView: 45;
-	--posBg: center 4.2em;
-	--posAbsolute: absolute;
-	--posRelative: relative;
-	--posFixed: fixed;
-	--posStatic: static;
-	--posSticky: sticky;
-	--posTitle: var(--mainTextHeight);
-	--progressbarBoxHeight: 2.1vw;
-	--progressbarHeight: 1.5em;
-	--repeateBg: no-repeat;
-	--ratioHDVideo: 16/9;
-	--ratioLetterBox: 16/7;
-	--screenHeight: 100vh;
-	--screenWide: 100vw;
-	--scrollTouch: touch;
-	--scrollPos: 0;
-	--scrollOpacity: var(--transparent);
-	--scrollFixOpacity: var(--noTransparent);
-	--scrollPicTransition: var(--transitionXLong);
-	--scrollPosFixTop: 0;
-	--scrollPosFixBottom: 100vh;
-	--scrollPic: 4;
-	--scrollPicImage1: url("pic/Unwetter2.jpg");
-	--scrollPicImage2: var(--animiImage);
-	--scrollPicImage3: '',var(--blueGradient);
-	--scrollPicImage4: url("pic/War.jpg");
-	--scrollPic1activeTop: var(--scrollPic1TopPC);
-	--scrollPic2activeTop: var(--scrollPic2TopPC);
-	--scrollPic3activeTop: var(--scrollPic3TopPC);
-	--scrollPic4activeTop: var(--scrollPic4TopPC);
-	--scrollPic1TopPC: 0px;
-	--scrollPic2TopPC: 764;
-	--scrollPic3TopPC: 1528;
-	--scrollPic4TopPC: 2292;
-	--scrollPicHeightPC: 764;
-	--scrollPic1HeightPC: 764;
-	--scrollPic2HeightPC: 764;
-	--scrollPic3HeightPC: 764;
-	--scrollPic4HeightPC: 764;
-	--scrollPic1TopPad: 0;
-	--scrollPic2TopPad: 634;
-	--scrollPic3TopPad: 1411;
-	--scrollPic4TopPad: 2067;
-	--scrollPicHeightPad: 777;
-	--scrollPic1HeightPad: 634;
-	--scrollPic2HeightPad: 777;
-	--scrollPic3HeightPad: 656;
-	--scrollPic4HeightPad: 777;
-	--scrollPic1TopWPad: 0;
-	--scrollPic2TopWPad: 764;
-	--scrollPic3TopWPad: 1528;
-	--scrollPic4TopWPad: 2292;
-	--scrollPicHeightWPad: 764;
-	--scrollPic1HeightWPad: 764;
-	--scrollPic2HeightWPad: 764;
-	--scrollPic3HeightWPad: 764;
-	--scrollPic4HeightWPad: 764;
-	--scrollPic1TopPhone: 0;
-	--scrollPic2TopPhone: 320;
-	--scrollPic3TopPhone: 1877;
-	--scrollPic4TopPhone: 2088;
-	--scrollPicHeightPhone: 320;
-	--scrollPic1HeightPhone: 320;
-	--scrollPic2HeightPhone: 1557;
-	--scrollPic3HeightPhone: 211;
-	--scrollPic4HeightPhone: 777;
-	--scrollPic1TopWPhone: 0;
-	--scrollPic2TopWPhone: 764;
-	--scrollPic3TopWPhone: 1528;
-	--scrollPic4TopWPhone: 2292;
-	--scrollPicHeightWPhone: 764;
-	--scrollPicSize: cover;
-	--scrollPosScreenTop: var(--scrollPos);
-	--scrollPosHeader: calc(var(--scrollPos) + var(--headerHeight));
-	--scrollPosScreenBottom: calc(var(--scrollPos) + 100vh);
-	--scrollPosFooter: calc(var(--scrollPos) + (100vh - var(--footerHeight)));
-	--scrollPosHeaderBottom: calc(var(--scrollPosScreenTop) + var(--headerHeight));
-	--scrollPosFooterTop: calc(var(--scrollPosScreenTop) + var(--screenHeight) - var(--footerHeight));
-	--scrollPic1TopVisible: calc(var(--scrollPic1activeTop) - var(--scrollPosHeader));
-	--scrollPic2TopVisible: calc(var(--scrollPic2activeTop) - var(--scrollPosHeader));
-	--scrollPic3TopVisible: calc(var(--scrollPic3activeTop) - var(--scrollPosHeader));
-	--scrollPic4TopVisible: calc(var(--scrollPic4activeTop) - var(--scrollPosHeader));
-	--scrollSnapStop: always;
-	--scrollSnapXMan: x mandatory;
-	--scrollSnapYMan: y mandatory;
-	--scrollBehaviorSmooth: smooth;
-	--scrollSnapAlign: start;
-	--selectColor: rgba(0,0,0,0.4);
-	--show: visible;
-	--sizeBg: contain;
-	--startPos: 0px;
-	--stdTerm: 25%;
-	--tableColor: var(--lightgreen);
-	--tableEven: #000000;
-	--tableFont: Courier;
-	--tableMargin: 1em;
-	--tableMarginH4: 0.75em;
-	--tableOdd: #222222;
-	--tablePadding: 0.5em;
-	--tablePaddingH4: 1.5em;
-	--tableSelect: #44cc00;
-	--tableThTop: 4.1em;
-	--terminalFont: "OCR A","OCR A Std", "OCR-A","OCR-A Std",Monaco,Andale Mono,Courier New,Courier,monospace;
-	--terminalH4Top: -0.5em;
-	--terminalMarginLeft: 0.75em;
-	--terminalMax: 65%;
-	--terminalMin: 25%;
-	--terminalPaddingH4: 1.5em;
-	--terminalSelect: text;
-	--terminalThpadding: 0.5em;
-	--terminalTop: 4.1em;
-	--terminalTopCorrect: -0.5em;
-	--textCenter: center;
-	--textDecoration: underline;
-	--textDecoNo: none;
-	--textLeft: left;
-	--textRight: right;
-	--textShadow: var(--fontShadow);
-	--textNoShadow: none;
-	--textTop: top;
-	--thikBorder: 2px;
-	--titleHeight: 7.5vw;
-	--titleTop: calc(-7.5vw + 1em);
-	--titleFontSize: 2vw;
-	--titleWidth: 82vw;
-	--titleLeft: 4.25em;
-	--titleLineHeight: 1;
-	--titleVAlign: middle;
-	--titleAlign: left;
-	--titlePadding: 1em 0.5em;
-	--topFix: sticky;
-	--topFixMoz: -moz-sticky;
-	--topFixWebkit: -webkit-sticky;
-	--topTerm: 10em;
-	--topLeft: 0;
-	--touchAction: none;
-	--transBgColor: linear-gradient(to left bottom, rgba(0,224,224,0.8), rgba(0,224,224,0.1));
-	--transDiagram: translate(-19%, -50%);
-	--transFX: display visibility width height 0.5s;
-	--translateCenter: translate(-50%, -50%);
-	--transState: translateY(-30%);
-	--transparent: 0.0;
-	--transitionXLong: 3s;
-	--transitionLong: 1.5s;
-	--transition: 1s;
-	--transitionFaster: 0.75s;
-	--transitionNone: 0.0s;
-	--transitionFast: 0.5s;
-	--transitionXFast: 0.25s;
-	--unshow: hidden;
-	--user-select: none;
-	--userSelect: none;
-	--userSelectYes: text;
-	--visible: block;
-	--whiteColor: #ffffff;
-	--whiteTrans: rgba(255,255,255,0.5);
-	--widthMax: 100%;
-	--xDrkGreen: #001000;
-	--xLightGreen: #00c100;
-	--YesNoActiveBg: linear-gradient(to top, rgba(128,128,128,1), rgba(128,128,128,0.1));
-	--YesNoActiveBorder: 1px solid rgba(128,128,128,1);
-	--YesNoBg: linear-gradient(to bottom, rgba(128,128,128,1), rgba(128,128,128,0.1));
-	--YesNoBorder: 1px solid #888888;
-	--YesNoHoverBg: linear-gradient(to top, rgba(128,128,128,1), rgba(128,128,128,0.1));
-	--YesNoHoverBorder: 1px solid rgba(255,255,255,1);
-	--YesNoPadding: 0.25em 1em 0.25em 1em;
-	--YesNoShadow: -0.25em 0.425em 0.25em rgba(0, 0, 0, 0.6);
-	--zIndexFooter: 50;
-	--zIndexHeader: 50;
-	--zIndexInfo: 55;
-	--zIndexMain: 0;
-	--zIndexMenu: 50;
-	--ticking: false;
-	--videoPlay: 0;
-	--runFade: 0;
-	--activeScroll: 0;
-	--indexPosition: 0;
-	--timer_on: 0;
-	--picDirection: 'up';
-	--swipeIn: true;
-	--swipePrev: 0;
-	--windowOrientation: "";
-	--videoHeigth: '1080px';
-	--videoWidth: '1920px';
-	--swipeIn: true;
-	--swipePrev: 0;
-}
-
-
-EOF
-
-#cat test_2.txt >>  test.txt
-
-#cp test.txt /www/luci-static/bootstrap/cascade.css
-
-#rm test.txt
-#rm test_2.txt
-
-
-}
-
-
-create_switch() {
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#                Network Definitions                   #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-
-
-uci commit network >/dev/null
-uci set network.@switch[0]=switch
-uci set network.@switch[0].name='switch0'
-uci set network.@switch[0].reset='1'
-uci set network.@switch[0].enable_vlan='1'
-uci commit network >/dev/null
-
-uci set network.cfg081ec7.ports='0 1 2 3 4 5t'
-uci set network.cfg081ec7.vid='1'
-uci set network.cfg081ec7.description='default'
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1]=switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='101'
-uci set network.@switch_vlan[-1].vid='101'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].description='server'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='102'
-uci set network.@switch_vlan[-1].vid='102'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].description='hcontrol'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vLan='103'
-uci set network.@switch_vlan[-1].vid='103'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].description='comtrol'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='104'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='104'
-uci set network.@switch_vlan[-1].description='inet'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='105'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='105'
-uci set network.@switch_vlan[-1].description='voice'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='106'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='106'
-uci set network.@switch_vlan[-1].description='entertain'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='107'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='107'
-uci set network.@switch_vlan[-1].description='guest'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='108'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='108'
-uci set network.@switch_vlan[-1].description='cmovie'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='110'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='110'
-uci set network.@switch_vlan[-1].description='t-online'
-uci commit network >/dev/null
-
-}
-
-create_custom_switch() {
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#                Network Definitions                   #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-
-
-uci commit network >/dev/null
-uci set network.@switch[0]=switch
-uci set network.@switch[0].name='switch0'
-uci set network.@switch[0].reset='1'
-uci set network.@switch[0].enable_vlan='1'
-uci commit network >/dev/null
-
-uci set network.cfg081ec7.ports='0t 1t 2t 3t 4t 5t'
-uci set network.cfg081ec7.vid='1'
-uci set network.cfg081ec7.description='default'
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1]=switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='101'
-uci set network.@switch_vlan[-1].vid='101'
-uci set network.@switch_vlan[-1].ports='0t 1t 2 3t 4t 5t'
-uci set network.@switch_vlan[-1].description='server'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='102'
-uci set network.@switch_vlan[-1].vid='102'
-uci set network.@switch_vlan[-1].ports='0t 1 2t 3 4t 5t'
-uci set network.@switch_vlan[-1].description='hcontrol'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vLan='103'
-uci set network.@switch_vlan[-1].vid='103'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].description='comtrol'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='104'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4 5t'
-uci set network.@switch_vlan[-1].vid='104'
-uci set network.@switch_vlan[-1].description='inet'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='105'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='105'
-uci set network.@switch_vlan[-1].description='voice'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='106'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='106'
-uci set network.@switch_vlan[-1].description='entertain'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='107'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='107'
-uci set network.@switch_vlan[-1].description='guest'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='108'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='108'
-uci set network.@switch_vlan[-1].description='cmovie'
-uci commit network >/dev/null
-
-uci add network switch_vlan
-uci set network.@switch_vlan[-1].device='switch0'
-uci set network.@switch_vlan[-1].vlan='110'
-uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci set network.@switch_vlan[-1].vid='110'
-uci set network.@switch_vlan[-1].description='t-online'
-uci commit network >/dev/null
-
-}
-
-
-create_wlan() {
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#            Wireless Network Definitions              #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-# Save and apply
-uci commit network && reload_config >/dev/null
-#/etc/init.d/network restart
-
-uci -q delete wireless  >/dev/null
-
-uci set wireless.radio0=wifi-device
-uci set wireless.radio0.type='mac80211'
-uci set wireless.radio0.path='platform/soc/a000000.wifi'
-uci set wireless.radio0.htmode='HT20'
-uci set wireless.radio0.country='DE'
-uci set wireless.radio0.channel='6'
-uci set wireless.radio0.hwmode='11n'
-
-uci delete wireless.default_radio0
-uci set wireless.default_radio0=wifi-iface
-uci set wireless.default_radio0.device='radio0'
-uci set wireless.default_radio0.mode='ap'
-uci set wireless.default_radio0.key=$WIFI_PASS
-uci set wireless.default_radio0.ssid=$CONTROL_ssid
-uci set wireless.default_radio0.encryption='psk2'
-uci set wireless.default_radio0.network='CONTROL'
-
-uci delete wireless.wifinet1
-uci set wireless.wifinet1=wifi-iface
-uci set wireless.wifinet1.ssid=$HCONTROL_ssid
-uci set wireless.wifinet1.encryption='psk2'
-uci set wireless.wifinet1.device='radio0'
-uci set wireless.wifinet1.mode='ap'
-uci set wireless.wifinet1.network='HCONTROL'
-uci set wireless.wifinet1.key=$WIFI_PASS
-
-uci delete wireless.wifinet2
-uci set wireless.wifinet2=wifi-iface
-uci set wireless.wifinet2.ssid=$VOICE_ssid
-uci set wireless.wifinet2.device='radio0'
-uci set wireless.wifinet2.mode='ap'
-uci set wireless.wifinet2.network='VOICE'
-uci set wireless.wifinet2.key=$WIFI_PASS
-uci set wireless.wifinet2.encryption='psk2'
-
-uci delete wireless.wifinet3
-uci set wireless.wifinet3=wifi-iface
-uci set wireless.wifinet3.ssid=$INET_ssid
-uci set wireless.wifinet3.encryption='psk2'
-uci set wireless.wifinet3.device='radio0'
-uci set wireless.wifinet3.mode='ap'
-uci set wireless.wifinet3.network='INET'
-uci set wireless.wifinet3.key=$WIFI_PASS
-
-uci delete wireless.wifinet4
-uci set wireless.wifinet4=wifi-iface
-uci set wireless.wifinet4.ssid=$ENTERTAIN_ssid
-uci set wireless.wifinet4.encryption='psk2'
-uci set wireless.wifinet4.device='radio0'
-uci set wireless.wifinet4.mode='ap'
-uci set wireless.wifinet4.network='ENTERTAIN'
-uci set wireless.wifinet4.key=$WIFI_PASS
-
-uci delete wireless.wifinet5
-uci set wireless.wifinet5=wifi-iface
-uci set wireless.wifinet5.ssid=$SERVER_ssid
-uci set wireless.wifinet5.encryption='psk2'
-uci set wireless.wifinet5.device='radio0'
-uci set wireless.wifinet5.mode='ap'
-uci set wireless.wifinet5.network='REPEATER'
-uci set wireless.wifinet5.key=$WIFI_PASS
-
-uci delete wireless.wifinet6
-uci set wireless.wifinet6=wifi-iface
-uci set wireless.wifinet6.ssid=$GUEST_ssid
-uci set wireless.wifinet6.encryption='psk2'
-uci set wireless.wifinet6.device='radio0'
-uci set wireless.wifinet6.mode='ap'
-uci set wireless.wifinet6.network='GUEST'
-uci set wireless.wifinet6.key=$WIFI_PASS
-
-uci set wireless.radio1=wifi-device
-uci set wireless.radio1.type='mac80211'
-uci set wireless.radio1.channel='36'
-uci set wireless.radio1.hwmode='11a'
-uci set wireless.radio1.path='platform/soc/a800000.wifi'
-uci set wireless.radio1.htmode='VHT80'
-uci set wireless.radio1.country='DE'
-
-uci delete wireless.default_radio1
-uci set wireless.default_radio1=wifi-iface
-uci set wireless.default_radio1.device='radio1'
-uci set wireless.default_radio1.mode='ap'
-uci set wireless.default_radio1.key=$WIFI_PASS
-uci set wireless.default_radio1.ssid=$VOICE_ssid
-uci set wireless.default_radio1.encryption='psk2'
-uci set wireless.default_radio1.network='VOICE'
-
-uci delete wireless.wifinet7
-uci set wireless.wifinet7=wifi-iface
-uci set wireless.wifinet7.ssid=$INET_ssid
-uci set wireless.wifinet7.encryption='psk2'
-uci set wireless.wifinet7.device='radio1'
-uci set wireless.wifinet7.mode='ap'
-uci set wireless.wifinet7.network='INET'
-uci set wireless.wifinet7.key=$WIFI_PASS
-
-uci delete wireless.wifinet8
-uci set wireless.wifinet8=wifi-iface
-uci set wireless.wifinet8.ssid=$ENTERTAIN_ssid
-uci set wireless.wifinet8.encryption='psk2'
-uci set wireless.wifinet8.device='radio1'
-uci set wireless.wifinet8.mode='ap'
-uci set wireless.wifinet8.network='ENTERTAIN'
-uci set wireless.wifinet8.key=$WIFI_PASS
-
-uci delete wireless.wifinet9
-uci set wireless.wifinet9=wifi-iface
-uci set wireless.wifinet9.device='radio1'
-uci set wireless.wifinet9.mode='ap'
-uci set wireless.wifinet9.ssid=$SERVER_ssid
-uci set wireless.wifinet9.encryption='psk2'
-uci set wireless.wifinet9.key=$WIFI_PASS
-uci set wireless.wifinet9.network='REPEATER'
-
-uci delete wireless.wifinet10
-uci set wireless.wifinet10=wifi-iface
-uci set wireless.wifinet10.encryption='psk2'
-uci set wireless.wifinet10.device='radio1'
-uci set wireless.wifinet10.mode='ap'
-uci set wireless.wifinet10.key=$WIFI_PASS
-uci set wireless.wifinet10.network='GUEST'
-uci set wireless.wifinet10.ssid=$GUEST_ssid
-
-uci delete wireless.wifinet11
-uci set wireless.wifinet11=wifi-iface
-uci set wireless.wifinet11.encryption=''
-uci set wireless.wifinet11.device='radio1'
-uci set wireless.wifinet11.mode='ap'
-uci set wireless.wifinet11.network='CMOVIE'
-uci set wireless.wifinet11.ssid=$CMOVIE_ssid
-
-uci delete wireless.wifinet12
-uci set wireless.wifinet12=wifi-iface
-uci set wireless.wifinet12.encryption=''
-uci set wireless.wifinet12.device='radio0'
-uci set wireless.wifinet12.mode='ap'
-uci set wireless.wifinet12.network='CMOVIE'
-uci set wireless.wifinet12.ssid=$CMOVIE_ssid
-
-uci delete wireless.radio0.disabled >/dev/null
-uci delete wireless.radio1.disabled >/dev/null
-
-uci commit  && reload_config >/dev/null
-}
-
-create_bridge() {
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-SERVER'
-uci add_list network.@device[-1].ports='eth0.101'
-uci set network.@device[-1].mtu='1500'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-HCONTROL'
-uci add_list network.@device[-1].ports='eth0.102'
-uci set network.@device[-1].mtu='1500'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-CONTROL'
-uci add_list network.@device[-1].ports='eth0.103'
-uci set network.@device[-1].mtu='1500'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-INET'
-uci add_list network.@device[-1].ports='eth0.104'
-uci set network.@device[-1].mtu='1500'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-VOICE'
-uci add_list network.@device[-1].ports='eth0.105'
-uci set network.@device[-1].mtu='1500'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-ENTERTAIN'
-uci add_list network.@device[-1].ports='eth0.106'
-uci set network.@device[-1].mtu='1500'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-GUEST'
-uci add_list network.@device[-1].ports='eth0.107'
-uci set network.@device[-1].mtu='1500'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-CMOVIE'
-uci add_list network.@device[-1].ports='eth0.108'
-uci set network.@device[-1].mtu='1500'
-}
-
-create_vlan_bridge() {
-
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#                  Network Bridges                     #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-SERVER'
-uci set network.@bridge-vlan[-1].vlan='101'
-uci add_list network.@bridge-vlan[-1].ports='eth0.101'
-uci set network.@bridge-vlan[-1].mtu='1500'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-HCONTROL'
-uci set network.@bridge-vlan[-1].vlan='102'
-uci add_list network.@bridge-vlan[-1].ports='eth0.102'
-uci set network.@bridge-vlan[-1].mtu='1500'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-CONTROL'
-uci set network.@bridge-vlan[-1].vlan='103'
-uci add_list network.@bridge-vlan[-1].ports='eth0.103'
-uci set network.@bridge-vlan[-1].mtu='1500'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-INET'
-uci set network.@bridge-vlan[-1].vlan='104'
-uci add_list network.@bridge-vlan[-1].ports='eth0.104'
-uci set network.@bridge-vlan[-1].mtu='1500'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-VOICE'
-uci set network.@bridge-vlan[-1].vlan='105'
-uci add_list network.@bridge-vlan[-1].ports='eth0.105'
-uci set network.@bridge-vlan[-1].mtu='1500'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-ENTERTAIN'
-uci set network.@bridge-vlan[-1].vlan='106'
-uci add_list network.@bridge-vlan[-1].ports='eth0.106'
-uci set network.@bridge-vlan[-1].mtu='1500'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-GUEST'
-uci set network.@bridge-vlan[-1].vlan='107'
-uci add_list network.@bridge-vlan[-1].ports='eth0.107'
-uci set network.@bridge-vlan[-1].mtu='1500'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-CMOVIE'
-uci set network.@bridge-vlan[-1].vlan='108'
-uci add_list network.@bridge-vlan[-1].ports='eth0.108'
-uci set network.@bridge-vlan[-1].mtu='1500'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-tonline'
-uci set network.@bridge-vlan[-1].vlan='110'
-uci add_list network.@bridge-vlan[-1].ports='eth0.110'
-uci set network.@bridge-vlan[-1].mtu='1500'
-
-}
-
-
-create_firewall_zones() {
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#             irwall Zones Definitions                 #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-# Save and apply
-uci commit network && reload_config >/dev/null
-#/etc/init.d/network restart
-
-dig www.internic.net @1.1.1.1
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="REPEATER"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].network="REPEATER"
-uci set firewall.@zone[-1].output="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="REPEATER"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="CONTROL"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="CONTROL"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="CONTROL"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="HCONTROL"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="HCONTROL"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="HCONTROL"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="SERVER"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="SERVER"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="SERVER"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="INET"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="INET"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="INET"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="GUEST"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="GUEST"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="GUEST"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="CMOVIE"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="CMOVIE"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="CMOVIE"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="VOICE"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="VOICE"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="VOICE"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="ENTERTAIN"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="ENTERTAIN"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="ENTERTAIN"
-uci commit firewall && reload_config >/dev/null
-
+wait $processes
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/index.htm -P /www/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/captiveportal.htm -O /www/CaptivePortal/index.htm)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/mobile.css -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/theme.css -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/theme_variable.css -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/prophetie.htm -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCRAStd.woff -P /www/CaptivePortal/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/Unwetter2.jpg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/Bibelserver.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/CMovie.svg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/virus.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/CMovie-Logo.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/CMovie-Play.svg -P /www/CaptivePortal/pic/)
+#wait $processes1
+#processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/Corona_2.svg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/csb.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/Münzen.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/search.svg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/search-128.svg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War.jpg -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_Foreground_Maske.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_Foreground_Maske_o.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_Maske.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeDust.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeDust2.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeFlammen.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeFlammen_o.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeHimmel.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/War_MaskeSchutt.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMaske.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMAskeSky.png -P /www/CaptivePortal/pic/)
+wait $processes1
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMAskeSky_.png -P /www/CaptivePortal/pic/)
+
+echo
+echo 'On Error enter logread'
+echo
 }
 
 
@@ -2489,964 +1273,575 @@ echo '#                                                      #'
 echo '#                Network Definitions                   #'
 echo '#                                                      #'
 echo '########################################################'
-view_config
+echo 
 
-#uci -q delete network.lan
-
-cat << EOF > /etc/hosts
-127.0.0.1 localhost
-127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
-
-::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
-::1     localhost ip6-localhost ip6-loopback
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-EOF
-
-curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
-curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound_ad_servers
-
-#uci delete network.@device[0] >/dev/null
-
-uci set network.lan=interface >/dev/null
-uci set network.lan.device='br-lan'
-uci set network.lan.proto='static'
-uci set network.lan.ipaddr='192.168.1.1'
-uci set network.lan.netmask='255.255.255.0'
-uci set network.lan.ip6assign='56'
-uci set network.lan.igmp_snooping='1'
-uci add_list network.lan.dns=$WAN_GW
+#!/bin/sh
+#uci -q delete network
+#uci delete network.lan
 
 uci set network.loopback=interface
-uci set network.loopback.device='lo'
 uci set network.loopback.ifname='lo'
 uci set network.loopback.proto='static'
 uci set network.loopback.ipaddr='127.0.0.1'
 uci set network.loopback.netmask='255.0.0.0'
-uci set network.loopback.dns=$WAN_GW
+uci set network.loopback.dns='127.0.0.1'
 
 uci set network.globals=globals
 uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
 
-uci set network.wan=interface >/dev/null
-uci set network.wan.device='eth1'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-SERVER'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.101'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-HCONTROL'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.102'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-CONTROL'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports'eth0.103'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-INET'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.104'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-VOICE'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.105'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-ENTERTAIN'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.106'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-GUEST'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.107'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-CMOVIE'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.108'
+
+uci add network device >> install.log
+uci set network.@device[-1].name='br-TELEKOM'
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].igmp_snooping='1'
+uci set network.@device[-1].ports='eth0.110'
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='TELEKOM'
+uci commit network >> install.log
+uci set network.TELEKOM.proto='static'
+uci set network.TELEKOM.ipaddr=$CMOVIE_ip
+uci set network.TELEKOM.netmask='255.255.255.0'
+uci set network.TELEKOM.ip6assign='56'
+uci set network.TELEKOM.broadcast=$CMOVIE_broadcast
+uci set network.TELEKOM.gateway=$INET_GW
+uci set network.TELEKOM.dns=$CMOVIE_ip
+uci set network.TELEKOM.device='br-TELEKOM'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='CMOVIE'
+uci commit network >> install.log
+uci set network.CMOVIE.proto='static'
+uci set network.CMOVIE.ipaddr=$CMOVIE_ip
+uci set network.CMOVIE.netmask='255.255.255.0'
+uci set network.CMOVIE.ip6assign='56'
+uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
+uci set network.CMOVIE.gateway=$INET_GW
+uci set network.CMOVIE.dns=$CMOVIE_ip
+uci set network.CMOVIE.device='br-CMOVIE'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='GUEST'
+uci commit network >> install.log
+uci set network.GUEST.proto='static'
+uci set network.GUEST.ipaddr=$GUEST_ip
+uci set network.GUEST.netmask='255.255.255.0'
+uci set network.GUEST.ip6assign='56'
+uci set network.GUEST.broadcast=$GUEST_broadcast
+uci set network.GUEST.gateway=$INET_GW
+uci set network.GUEST.dns=$GUEST_ip
+uci set network.GUEST.device='br-GUEST'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='ENTERTAIN'
+uci commit network >> install.log
+uci set network.ENTERTAIN.proto='static'
+uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
+uci set network.ENTERTAIN.netmask='255.255.255.0'
+uci set network.ENTERTAIN.ip6assign='56'
+uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
+uci set network.ENTERTAIN.gateway=$INET_GW
+uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
+uci set network.ENTERTAIN.device='br-ENTERTAIN'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='VOICE'
+uci commit network >> install.log
+uci set network.VOICE.proto='static'
+uci set network.VOICE.ipaddr=$VOICE_ip
+uci set network.VOICE.netmask='255.255.255.0'
+uci set network.VOICE.ip6assign='56'
+uci set network.VOICE.broadcast=$VOICE_broadcast
+uci set network.VOICE.gateway=$INET_GW
+uci set network.VOICE.dns=$VOICE_ip
+uci set network.VOICE.device='br-VOICE'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='INET'
+uci commit network >> install.log
+uci set network.INET.proto='static'
+uci set network.INET.ipaddr=$INET_ip
+uci set network.INET.netmask='255.255.255.0'
+uci set network.INET.ip6assign='56'
+uci set network.INET.broadcast=$INET_broadcast
+uci set network.INET.gateway=$INET_GW
+uci set network.INET.dns=$INET_ip
+uci set network.INET.device='br-INET'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='CONTROL'
+uci commit network >> install.log
+uci set network.CONTROL.proto='static'
+uci set network.CONTROL.ipaddr=$CONTROL_ip
+uci set network.CONTROL.netmask='255.255.255.0'
+uci set network.CONTROL.ip6assign='56'
+uci set network.CONTROL.broadcast=$CONTROL_broadcast
+uci set network.CONTROL.gateway=$INET_GW
+uci set network.CONTROL.dns=$CONTROL_ip
+uci set network.CONTROL.device='br-CONTROL'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='HCONTROL'
+uci commit network >> install.log
+uci set network.HCONTROL.proto='static'
+uci set network.HCONTROL.ipaddr=$HCONTROL_ip
+uci set network.HCONTROL.netmask='255.255.255.0'
+uci set network.HCONTROL.ip6assign='56'
+uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
+uci set network.HCONTROL.gateway=$INET_GW
+uci set network.HCONTROL.dns=$HCONTROL_ip
+uci set network.HCONTROL.device='br-HCONTROL'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='SERVER'
+uci commit network >> install.log
+uci set network.SERVER.proto='static'
+uci set network.SERVER.ipaddr=$SERVER_ip
+uci set network.SERVER.netmask='255.255.255.0'
+uci set network.SERVER.ip6assign='56'
+uci set network.SERVER.broadcast=$SERVER_broadcast
+uci set network.SERVER.gateway=$INET_GW
+uci set network.SERVER.dns=$SERVER_ip
+uci set network.SERVER.device='br-SERVER'
+uci commit network >> install.log
+
+uci set network.wan=interface >> install.log
 uci set network.wan.proto='static'
 uci set network.wan.netmask='255.255.255.0'
 uci set network.wan.ip6assign='60'
 uci set network.wan.gateway=$INET_GW
-uci add_list network.wan.dns=$WAN_GW
+uci add_list network.wan.dns="127.0.0.1"
 uci set network.wan.ifname='eth1'
 uci set network.wan.ipaddr=$WAN_ip
-uci set network.wan.metric='10'
-uci set network.wan.peerdns='0'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='wan_mobile'
-uci commit network >/dev/null
-uci set network.wan_mobile.proto='static'
-uci set network.wan_mobile.netmask='255.255.255.0'
-uci set network.wan_mobile.ip6assign='60'
-uci set network.wan_mobile.gateway=$WAN_MOBILE_GW
-uci add_list network.wan_mobile.dns=$WAN_MOBILE_GW
-uci set network.wan_mobile.ifname='eth0.110'
-uci set network.wan_mobile.device='eth0.110'
-uci set network.wan_mobile.ipaddr=$WAN_MOBILE_ip
-uci set network.wan_mobile.metric='20'
-uci set network.wan_mobile.peerdns='0'
-uci commit network >/dev/null
+uci set network.wan.peerdns="0"
+uci commit network >> install.log
 
 uci set network.wan6.proto='dhcpv6'
 uci set network.wan6.reqaddress='try'
 uci set network.wan6.reqprefix='auto'
 uci set network.wan6.ifname='eth1'
-uci set network.wan6.device='eth1'
-uci add_list network.wan6.dns='0::1'
-uci set network.wan6.metric='10'
-uci set network.wan6.peerdns='0'
-uci commit network >/dev/null
+#uci add_list network.wan6.dns="2606:4700:4700::1113"
+#uci add_list network.wan6.dns="2606:4700:4700::1003"
+uci add_list network.wan6.dns="0::1"
+uci set network.wan6.peerdns="0"
+uci commit network >> install.log
 
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='wan_mobile6'
-uci commit network >/dev/null
-uci set network.wan_mobile6.proto='dhcpv6'
-uci set network.wan_mobile6.reqaddress='try'
-uci set network.wan_mobile6.reqprefix='auto'
-uci set network.wan_mobile6.ifname='eth0.110'
-uci set network.wan_mobile6.device='eth0.110'
-uci add_list network.wan_mobile6.dns='0::1'
-uci set network.wan_mobile6.metric='20'
-uci set network.wan_mobile6.peerdns='0'
-uci commit network >/dev/null
+echo
+echo 'On Error enter logread'
+echo
 
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='VOICE'
-uci commit network >/dev/null
-uci set network.VOICE.proto='static'
-uci set network.VOICE.type='bridge'
-uci set network.VOICE.ipaddr=$VOICE_ip
-uci set network.VOICE.netmask='255.255.255.0'
-uci set network.VOICE.ip6assign='56'
-uci set network.VOICE.broadcast=$VOICE_broadcast
-uci set network.VOICE.igmp_snooping='1'
-#uci set network.VOICE.gateway='127.0.0.1'
-uci set network.VOICE.gateway=$WAN_GW
-uci set network.VOICE.ifname='eth0.105'
-uci set network.VOICE.device='eth0.105'
-uci set network.VOICE.dns=$VOICE_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network >/dev/null
-uci set network.ENTERTAIN.proto='static'
-uci set network.ENTERTAIN.type='bridge'
-uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
-uci set network.ENTERTAIN.netmask='255.255.255.0'
-uci set network.ENTERTAIN.ip6assign='56'
-uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
-uci set network.ENTERTAIN.igmp_snooping='1'
-#uci set network.ENTERTAIN.gateway='127.0.0.1'
-uci set network.ENTERTAIN.gateway=$WAN_GW
-uci set network.ENTERTAIN.ifname='eth0.106'
-uci set network.ENTERTAIN.device='eth0.106'
-uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='GUEST'
-uci commit network >/dev/null
-uci set network.GUEST.proto='static'
-uci set network.GUEST.type='bridge'
-uci set network.GUEST.ipaddr=$GUEST_ip
-uci set network.GUEST.netmask='255.255.255.0'
-uci set network.GUEST.ip6assign='56'
-uci set network.GUEST.broadcast=$GUEST_broadcast
-uci set network.GUEST.igmp_snooping='1'
-#uci set network.GUEST.gateway='127.0.0.1'
-uci set network.GUEST.gateway=$WAN_GW
-uci set network.GUEST.ifname='eth0.107'
-uci set network.GUEST.device='eth0.107'
-uci set network.GUEST.dns=$GUEST_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='CMOVIE'
-uci commit network >/dev/null
-uci set network.CMOVIE.proto='static'
-uci set network.CMOVIE.type='bridge'
-uci set network.CMOVIE.ipaddr=$CMOVIE_ip
-uci set network.CMOVIE.netmask='255.255.255.0'
-uci set network.CMOVIE.ip6assign='56'
-uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
-uci set network.CMOVIE.igmp_snooping='1'
-#uci set network.CMOVIE.gateway='127.0.0.1'
-uci set network.CMOVIE.gateway=$WAN_GW
-uci set network.CMOVIE.ifname='eth0.108'
-uci set network.CMOVIE.device='eth0.108'
-uci set network.CMOVIE.dns=$CMOVIE_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='SERVER'
-uci commit network >/dev/null
-uci set network.SERVER.proto='static'
-uci set network.SERVER.type='bridge'
-uci set network.SERVER.ipaddr=$SERVER_ip
-uci set network.SERVER.netmask='255.255.255.0'
-uci set network.SERVER.ip6assign='56'
-uci set network.SERVER.broadcast=$SERVER_broadcast
-uci set network.SERVER.igmp_snooping='1'
-#uci set network.SERVER.gateway='127.0.0.1'
-uci set network.SERVER.gateway=$WAN_GW
-uci set network.SERVER.ifname='eth0.101'
-uci set network.SERVER.device='eth0.101'
-uci set network.SERVER.dns=$SERVER_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='INET'
-uci commit network >/dev/null
-uci set network.INET.proto='static'
-uci set network.INET.type='bridge'
-uci set network.INET.ipaddr=$INET_ip
-uci set network.INET.netmask='255.255.255.0'
-uci set network.INET.ip6assign='56'
-uci set network.INET.broadcast=$INET_broadcast
-uci set network.INET.igmp_snooping='1'
-#uci set network.INET.gateway='127.0.0.1'
-uci set network.INET.gateway=$WAN_GW
-uci set network.INET.ifname='eth0.104'
-uci set network.INET.device='eth0.104'
-uci set network.INET.dns=$INET_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='CONTROL'
-uci commit network >/dev/null
-uci set network.CONTROL.proto='static'
-uci set network.CONTROL.type='bridge'
-uci set network.CONTROL.ipaddr=$CONTROL_ip
-uci set network.CONTROL.netmask='255.255.255.0'
-uci set network.CONTROL.ip6assign='56'
-uci set network.CONTROL.broadcast=$CONTROL_broadcast
-uci set network.CONTROL.igmp_snooping='1'
-#uci set network.CONTROL.gateway='127.0.0.1'
-uci set network.CONTROL.gateway=$WAN_GW
-uci set network.CONTROL.ifname='eth0.103'
-uci set network.CONTROL.device='eth0.103'
-uci set network.CONTROL.dns=$CONTROL_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='HCONTROL'
-uci commit network >/dev/null
-uci set network.HCONTROL.proto='static'
-uci set network.HCONTROL.type='bridge'
-uci set network.HCONTROL.ipaddr=$HCONTROL_ip
-uci set network.HCONTROL.netmask='255.255.255.0'
-uci set network.HCONTROL.ip6assign='56'
-uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
-uci set network.HCONTROL.igmp_snooping='1'
-#uci set network.HCONTROL.gateway='127.0.0.1'
-uci set network.HCONTROL.gateway=$WAN_GW
-uci set network.HCONTROL.ifname='eth0.102'
-uci set network.HCONTROL.device='eth0.102'
-uci set network.HCONTROL.dns=$HCONTROL_ip
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='REPEATER'
-uci commit network >/dev/null
-uci set network.REPEATER.proto='none'
-uci commit  && reload_config >/dev/null
-
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#            Wireless Network Definitions              #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-# Save and apply
-uci commit network && reload_config >/dev/null
-#/etc/init.d/network restart
 }
 
 
-create_network_old() {
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#                Network Definitions                   #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
+create_MWAN() {
+uci delete mwan3.wanb6
+uci delete mwan3.wanb
+uci delete mwan3.wanb_m1_w2
+uci delete mwan3.wanb_m2_w2
+uci delete mwan3.wanb6_m1_w2
+uci delete mwan3.wanb6_m2_w2
 
-uci -q delete network.lan
+uci set mwan3.http=rule
+uci set mwan3.http.dest_port='80'
+uci set mwan3.http.proto='tcp'
+uci set mwan3.http.sticky='0'
+uci set mwan3.http.ipset='filter6'
+uci set mwan3.http.use_policy='balanced'
+uci set mwan3.https=rule
+uci set mwan3.https.sticky='1'
+uci set mwan3.https.dest_port='443'
+uci set mwan3.https.proto='tcp'
+uci set mwan3.https.use_policy='balanced'
+uci set mwan3.default_rule_v4=rule
+uci set mwan3.default_rule_v4.dest_ip='0.0.0.0/0'
+uci set mwan3.default_rule_v4.use_policy='balanced'
+uci set mwan3.default_rule_v4.family='ipv4'
+uci set mwan3.default_rule_v6=rule
+uci set mwan3.default_rule_v6.dest_ip='::/0'
+uci set mwan3.default_rule_v6.use_policy='balanced'
+uci set mwan3.default_rule_v6.family='ipv6'
+uci set mwan3.globals=globals
+uci set mwan3.globals.mmx_mask='0x3F00'
+uci set mwan3.globals.rtmon_interval='5'
+uci set mwan3.wan=interface
+uci set mwan3.wan.enabled='1'
+uci set mwan3.wan.family='ipv4'
+uci set mwan3.wan.reliability='2'
+uci set mwan3.wan.count='1'
+uci set mwan3.wan.timeout='2'
+uci set mwan3.wan.interval='5'
+uci set mwan3.wan.down='3'
+uci set mwan3.wan.up='8'
+uci set mwan3.wan.initial_state='online'
+uci set mwan3.wan.track_method='ping'
+uci set mwan3.wan.size='56'
+uci set mwan3.wan.max_ttl='60'
+uci set mwan3.wan.check_quality='0'
+uci set mwan3.wan.failure_interval='5'
+uci set mwan3.wan.recovery_interval='5'
+uci set mwan3.wan.track_ip='1.1.1.3'
+uci set mwan3.wan6=interface
+uci set mwan3.wan6.family='ipv6'
+uci set mwan3.wan6.reliability='2'
+uci set mwan3.wan6.count='1'
+uci set mwan3.wan6.timeout='2'
+uci set mwan3.wan6.interval='5'
+uci set mwan3.wan6.down='3'
+uci set mwan3.wan6.up='8'
+uci set mwan3.wan6.initial_state='online'
+uci set mwan3.wan6.track_ip='2606:4700:4700::1113'
+uci set mwan3.wan6.track_method='ping'
+uci set mwan3.wan6.size='56'
+uci set mwan3.wan6.max_ttl='60'
+uci set mwan3.wan6.check_quality='0'
+uci set mwan3.wan6.failure_interval='5'
+uci set mwan3.wan6.recovery_interval='5'
+uci set mwan3.wan6.enabled='1'
+uci set mwan3.wan_m1_w3=member
+uci set mwan3.wan_m1_w3.interface='wan'
+uci set mwan3.wan_m1_w3.metric='1'
+uci set mwan3.wan_m1_w3.weight='3'
+uci set mwan3.wan_m2_w3=member
+uci set mwan3.wan_m2_w3.interface='wan'
+uci set mwan3.wan_m2_w3.metric='2'
+uci set mwan3.wan_m2_w3.weight='3'
+uci set mwan3.wan_mobile_m1_w2=member
+uci set mwan3.wan_mobile_m1_w2.metric='1'
+uci set mwan3.wan_mobile_m1_w2.weight='2'
+uci set mwan3.wan_mobile_m1_w2.interface='wan_mobile'
+uci set mwan3.wan_mobile_m2_w2=member
+uci set mwan3.wan_mobile_m2_w2.metric='2'
+uci set mwan3.wan_mobile_m2_w2.weight='2'
+uci set mwan3.wan_mobile_m2_w2.interface='wan_mobile'
+uci set mwan3.wan6_m1_w3=member
+uci set mwan3.wan6_m1_w3.interface='wan6'
+uci set mwan3.wan6_m1_w3.metric='1'
+uci set mwan3.wan6_m1_w3.weight='3'
+uci set mwan3.wan6_m2_w3=member
+uci set mwan3.wan6_m2_w3.interface='wan6'
+uci set mwan3.wan6_m2_w3.metric='2'
+uci set mwan3.wan6_m2_w3.weight='3'
+uci set mwan3.wan_mobile6_m1_w2=member
+uci set mwan3.wan_mobile6_m1_w2.metric='1'
+uci set mwan3.wan_mobile6_m1_w2.weight='2'
+uci set mwan3.wan_mobile6_m1_w2.interface='wan_mobile6'
+uci set mwan3.wan_mobile6_m2_w2=member
+uci set mwan3.wan_mobile6_m2_w2.metric='2'
+uci set mwan3.wan_mobile6_m2_w2.weight='2'
+uci set mwan3.wan_mobile6_m2_w2.interface='wan_mobile6'
+uci set mwan3.wan_only=policy
+uci add_list mwan3.wan_only.use_member='wan_m1_w3' 
+uci add_list mwan3.wan_only.use_member='wan6_m1_w3'
+uci set mwan3.wan_mobile_only=policy
+uci add_list mwan3.wan_mobile_only.use_member='wan_mobile_m1_w2'
+uci add_list mwan3.wan_mobile_only.use_member='wan_mobile6_m1_w2'
+uci set mwan3.balanced=policy
+uci add_list mwan3.balanced.use_member='wan_m1_w3' 
+uci add_list mwan3.balanced.use_member='wan_mobile_m1_w2'
+uci add_list mwan3.balanced.use_member='wan6_m1_w3'
+uci add_list mwan3.balanced.use_member='wan_mobile6_m1_w2'
+uci set mwan3.wan_wan_mobile=policy
+uci add_list mwan3.wan_wan_mobile.use_member='wan_m1_w3'
+uci add_list mwan3.wan_wan_mobile.use_member='wan_mobile_m2_w2'
+uci add_list mwan3.wan_wan_mobile.use_member='wan6_m1_w3'
+uci add_list mwan3.wan_wan_mobile.use_member='wan_mobile6_m2_w2'
+uci set mwan3.wan_mobile_wan=policy
+uci add_list mwan3.wan_mobile_wan.use_member='wan_m2_w3'
+uci add_list mwan3.wan_mobile_wan.use_member='wan_mobile_m1_w2'
+uci add_list mwan3.wan_mobile_wan.use_member='wan6_m2_w3'
+uci add_list mwan3.wan_mobile_wan.use_member='wan_mobile6_m1_w2'
+uci set mwan3.wan_mobile=interface
+uci set mwan3.wan_mobile.initial_state='online'
+uci set mwan3.wan_mobile.family='ipv4'
+uci set mwan3.wan_mobile.track_method='ping'
+uci set mwan3.wan_mobile.count='1'
+uci set mwan3.wan_mobile.size='56'
+uci set mwan3.wan_mobile.max_ttl='60'
+uci set mwan3.wan_mobile.check_quality='0'
+uci set mwan3.wan_mobile.timeout='2'
+uci set mwan3.wan_mobile.interval='5'
+uci set mwan3.wan_mobile.failure_interval='5'
+uci set mwan3.wan_mobile.recovery_interval='5'
+uci set mwan3.wan_mobile.down='3'
+uci set mwan3.wan_mobile.up='3'
+uci set mwan3.wan_mobile.enabled='1'
+uci set mwan3.wan_mobile.track_ip='1.1.1.3'
+uci set mwan3.wan_mobile.reliability='2'
+uci set mwan3.wan_mobile6=interface
+uci set mwan3.wan_mobile6.initial_state='online'
+uci set mwan3.wan_mobile6.track_method='ping'
+uci set mwan3.wan_mobile6.count='1'
+uci set mwan3.wan_mobile6.size='56'
+uci set mwan3.wan_mobile6.max_ttl='60'
+uci set mwan3.wan_mobile6.check_quality='0'
+uci set mwan3.wan_mobile6.timeout='2'
+uci set mwan3.wan_mobile6.interval='5'
+uci set mwan3.wan_mobile6.failure_interval='5'
+uci set mwan3.wan_mobile6.recovery_interval='5'
+uci set mwan3.wan_mobile6.down='3'
+uci set mwan3.wan_mobile6.up='3'
+uci set mwan3.wan_mobile6.enabled='1'
+uci set mwan3.wan_mobile6.family='ipv6'
+uci set mwan3.wan_mobile6.track_ip='2606:4700:4700::1113'
+uci set mwan3.wan_mobile6.reliability='2'
+uci commit mwan3 && reload_config >> install.log
 
-cat << EOF > /etc/hosts
-127.0.0.1 localhost
-127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
-
-::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
-::1     localhost ip6-localhost ip6-loopback
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-EOF
-
-curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
-curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound_ad_servers
-
-uci delete network.@device[0] >/dev/null
-
-uci set network.loopback=interface
-uci set network.loopback.device='lo'
-uci set network.loopback.ifname='lo'
-uci set network.loopback.proto='static'
-uci set network.loopback.ipaddr='127.0.0.1'
-uci set network.loopback.netmask='255.0.0.0'
-uci set network.loopback.dns=$WAN_GW
-
-uci set network.globals=globals
-uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
-
-uci set network.wan=interface >/dev/null
-uci set network.wan.device='eth1'
-uci set network.wan.proto='static'
-uci set network.wan.netmask='255.255.255.0'
-uci set network.wan.ip6assign='60'
-uci set network.wan.gateway=$INET_GW
-uci add_list network.wan.dns=$WAN_GW
-uci set network.wan.ifname='eth1'
-uci set network.wan.ipaddr=$WAN_ip
-uci set network.wan.metric='10'
-uci set network.wan.peerdns='0'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='wan_mobile'
-uci commit network >/dev/null
-uci set network.wan_mobile.proto='static'
-uci set network.wan_mobile.netmask='255.255.255.0'
-uci set network.wan_mobile.ip6assign='60'
-uci set network.wan_mobile.gateway=$WAN_MOBILE_GW
-uci add_list network.wan_mobile.dns=$WAN_MOBILE_GW
-uci set network.wan_mobile.ifname='eth0.110'
-uci set network.wan_mobile.device='eth0.110'
-uci set network.wan_mobile.ipaddr=$WAN_MOBILE_ip
-uci set network.wan_mobile.metric='20'
-uci set network.wan_mobile.peerdns='0'
-uci commit network >/dev/null
-
-uci set network.wan6.proto='dhcpv6'
-uci set network.wan6.reqaddress='try'
-uci set network.wan6.reqprefix='auto'
-uci set network.wan6.ifname='eth1'
-uci set network.wan6.device='eth1'
-uci add_list network.wan6.dns='0::1'
-uci set network.wan6.metric='10'
-uci set network.wan6.peerdns='0'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='wan_mobile6'
-uci commit network >/dev/null
-uci set network.wan_mobile6.proto='dhcpv6'
-uci set network.wan_mobile6.reqaddress='try'
-uci set network.wan_mobile6.reqprefix='auto'
-uci set network.wan_mobile6.ifname='eth0.110'
-uci set network.wan_mobile6.device='eth0.110'
-uci add_list network.wan_mobile6.dns='0::1'
-uci set network.wan_mobile6.metric='20'
-uci set network.wan_mobile6.peerdns='0'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='VOICE'
-uci commit network >/dev/null
-uci set network.VOICE.proto='static'
-uci set network.VOICE.type='bridge'
-uci set network.VOICE.ipaddr=$VOICE_ip
-uci set network.VOICE.netmask='255.255.255.0'
-uci set network.VOICE.ip6assign='56'
-uci set network.VOICE.broadcast=$VOICE_broadcast
-uci set network.VOICE.igmp_snooping='1'
-#uci set network.VOICE.gateway='127.0.0.1'
-uci set network.VOICE.gateway=$WAN_GW
-uci set network.VOICE.ifname='eth0.105'
-uci set network.VOICE.device='eth0.105'
-uci set network.VOICE.dns=$VOICE_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network >/dev/null
-uci set network.ENTERTAIN.proto='static'
-uci set network.ENTERTAIN.type='bridge'
-uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
-uci set network.ENTERTAIN.netmask='255.255.255.0'
-uci set network.ENTERTAIN.ip6assign='56'
-uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
-uci set network.ENTERTAIN.igmp_snooping='1'
-#uci set network.ENTERTAIN.gateway='127.0.0.1'
-uci set network.ENTERTAIN.gateway=$WAN_GW
-uci set network.ENTERTAIN.ifname='eth0.106'
-uci set network.ENTERTAIN.device='eth0.106'
-uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='GUEST'
-uci commit network >/dev/null
-uci set network.GUEST.proto='static'
-uci set network.GUEST.type='bridge'
-uci set network.GUEST.ipaddr=$GUEST_ip
-uci set network.GUEST.netmask='255.255.255.0'
-uci set network.GUEST.ip6assign='56'
-uci set network.GUEST.broadcast=$GUEST_broadcast
-uci set network.GUEST.igmp_snooping='1'
-#uci set network.GUEST.gateway='127.0.0.1'
-uci set network.GUEST.gateway=$WAN_GW
-uci set network.GUEST.ifname='eth0.107'
-uci set network.GUEST.device='eth0.107'
-uci set network.GUEST.dns=$GUEST_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='CMOVIE'
-uci commit network >/dev/null
-uci set network.CMOVIE.proto='static'
-uci set network.CMOVIE.type='bridge'
-uci set network.CMOVIE.ipaddr=$CMOVIE_ip
-uci set network.CMOVIE.netmask='255.255.255.0'
-uci set network.CMOVIE.ip6assign='56'
-uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
-uci set network.CMOVIE.igmp_snooping='1'
-#uci set network.CMOVIE.gateway='127.0.0.1'
-uci set network.CMOVIE.gateway=$WAN_GW
-uci set network.CMOVIE.ifname='eth0.108'
-uci set network.CMOVIE.device='eth0.108'
-uci set network.CMOVIE.dns=$CMOVIE_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='SERVER'
-uci commit network >/dev/null
-uci set network.SERVER.proto='static'
-uci set network.SERVER.type='bridge'
-uci set network.SERVER.ipaddr=$SERVER_ip
-uci set network.SERVER.netmask='255.255.255.0'
-uci set network.SERVER.ip6assign='56'
-uci set network.SERVER.broadcast=$SERVER_broadcast
-uci set network.SERVER.igmp_snooping='1'
-#uci set network.SERVER.gateway='127.0.0.1'
-uci set network.SERVER.gateway=$WAN_GW
-uci set network.SERVER.ifname='eth0.101'
-uci set network.SERVER.device='eth0.101'
-uci set network.SERVER.dns=$SERVER_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='INET'
-uci commit network >/dev/null
-uci set network.INET.proto='static'
-uci set network.INET.type='bridge'
-uci set network.INET.ipaddr=$INET_ip
-uci set network.INET.netmask='255.255.255.0'
-uci set network.INET.ip6assign='56'
-uci set network.INET.broadcast=$INET_broadcast
-uci set network.INET.igmp_snooping='1'
-#uci set network.INET.gateway='127.0.0.1'
-uci set network.INET.gateway=$WAN_GW
-uci set network.INET.ifname='eth0.104'
-uci set network.INET.device='eth0.104'
-uci set network.INET.dns=$INET_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='CONTROL'
-uci commit network >/dev/null
-uci set network.CONTROL.proto='static'
-uci set network.CONTROL.type='bridge'
-uci set network.CONTROL.ipaddr=$CONTROL_ip
-uci set network.CONTROL.netmask='255.255.255.0'
-uci set network.CONTROL.ip6assign='56'
-uci set network.CONTROL.broadcast=$CONTROL_broadcast
-uci set network.CONTROL.igmp_snooping='1'
-#uci set network.CONTROL.gateway='127.0.0.1'
-uci set network.CONTROL.gateway=$WAN_GW
-uci set network.CONTROL.ifname='eth0.103'
-uci set network.CONTROL.device='eth0.103'
-uci set network.CONTROL.dns=$CONTROL_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='HCONTROL'
-uci commit network >/dev/null
-uci set network.HCONTROL.proto='static'
-uci set network.HCONTROL.type='bridge'
-uci set network.HCONTROL.ipaddr=$HCONTROL_ip
-uci set network.HCONTROL.netmask='255.255.255.0'
-uci set network.HCONTROL.ip6assign='56'
-uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
-uci set network.HCONTROL.igmp_snooping='1'
-#uci set network.HCONTROL.gateway='127.0.0.1'
-uci set network.HCONTROL.gateway=$WAN_GW
-uci set network.HCONTROL.ifname='eth0.102'
-uci set network.HCONTROL.device='eth0.102'
-uci set network.HCONTROL.dns=$HCONTROL_ip
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='REPEATER'
-uci commit network >/dev/null
-uci set network.REPEATER.proto='none'
-uci commit  && reload_config >/dev/null
-
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#            Wireless Network Definitions              #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-# Save and apply
-uci commit network && reload_config >/dev/null
-#/etc/init.d/network restart
+echo
+echo 'On Error enter logread'
+echo
 }
 
-
-create_network_org() {
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#                Network Definitions                   #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-
-uci -q delete network.lan
-
-cat << EOF > /etc/hosts
-127.0.0.1 localhost
-127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
-
-::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
-::1     localhost ip6-localhost ip6-loopback
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-EOF
-
-curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
-curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound_ad_servers
-
-uci delete network.@device[0] >/dev/null
-
-uci set network.loopback=interface
-uci set network.loopback.device='lo'
-uci set network.loopback.ifname='lo'
-uci set network.loopback.proto='static'
-uci set network.loopback.ipaddr='127.0.0.1'
-uci set network.loopback.netmask='255.0.0.0'
-uci set network.loopback.dns=$WAN_GW
-
-uci set network.globals=globals
-uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
-
-uci set network.wan=interface >/dev/null
-uci set network.wan.device='eth1'
-uci set network.wan.proto='static'
-uci set network.wan.netmask='255.255.255.0'
-uci set network.wan.ip6assign='60'
-uci set network.wan.gateway=$INET_GW
-uci add_list network.wan.dns=$WAN_GW
-uci set network.wan.ifname='eth1'
-uci set network.wan.ipaddr=$WAN_ip
-uci set network.wan.metric='10'
-uci set network.wan.peerdns='0'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='wan_mobile'
-uci commit network >/dev/null
-uci set network.wan_mobile.proto='static'
-uci set network.wan_mobile.netmask='255.255.255.0'
-uci set network.wan_mobile.ip6assign='60'
-uci set network.wan_mobile.gateway=$WAN_MOBILE_GW
-uci add_list network.wan_mobile.dns=$WAN_MOBILE_GW
-uci set network.wan_mobile.ifname='eth0.110'
-uci set network.wan_mobile.device='eth0.110'
-uci set network.wan_mobile.ipaddr=$WAN_MOBILE_ip
-uci set network.wan_mobile.metric='20'
-uci set network.wan_mobile.peerdns='0'
-uci commit network >/dev/null
-
-uci set network.wan6.proto='dhcpv6'
-uci set network.wan6.reqaddress='try'
-uci set network.wan6.reqprefix='auto'
-uci set network.wan6.ifname='eth1'
-uci set network.wan6.device='eth1'
-uci add_list network.wan6.dns='0::1'
-uci set network.wan6.metric='10'
-uci set network.wan6.peerdns='0'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='wan_mobile6'
-uci commit network >/dev/null
-uci set network.wan_mobile6.proto='dhcpv6'
-uci set network.wan_mobile6.reqaddress='try'
-uci set network.wan_mobile6.reqprefix='auto'
-uci set network.wan_mobile6.ifname='eth0.110'
-uci set network.wan_mobile6.device='eth0.110'
-uci add_list network.wan_mobile6.dns='0::1'
-uci set network.wan_mobile6.metric='20'
-uci set network.wan_mobile6.peerdns='0'
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='VOICE'
-uci commit network >/dev/null
-uci set network.VOICE.proto='static'
-uci set network.VOICE.type='bridge'
-uci set network.VOICE.ipaddr=$VOICE_ip
-uci set network.VOICE.netmask='255.255.255.0'
-uci set network.VOICE.ip6assign='56'
-uci set network.VOICE.broadcast=$VOICE_broadcast
-uci set network.VOICE.igmp_snooping='1'
-#uci set network.VOICE.gateway='127.0.0.1'
-uci set network.VOICE.gateway=$WAN_GW
-uci set network.VOICE.ifname='eth0.105'
-uci set network.VOICE.device='eth0.105'
-uci set network.VOICE.dns=$VOICE_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network >/dev/null
-uci set network.ENTERTAIN.proto='static'
-uci set network.ENTERTAIN.type='bridge'
-uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
-uci set network.ENTERTAIN.netmask='255.255.255.0'
-uci set network.ENTERTAIN.ip6assign='56'
-uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
-uci set network.ENTERTAIN.igmp_snooping='1'
-#uci set network.ENTERTAIN.gateway='127.0.0.1'
-uci set network.ENTERTAIN.gateway=$WAN_GW
-uci set network.ENTERTAIN.ifname='eth0.106'
-uci set network.ENTERTAIN.device='eth0.106'
-uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='GUEST'
-uci commit network >/dev/null
-uci set network.GUEST.proto='static'
-uci set network.GUEST.type='bridge'
-uci set network.GUEST.ipaddr=$GUEST_ip
-uci set network.GUEST.netmask='255.255.255.0'
-uci set network.GUEST.ip6assign='56'
-uci set network.GUEST.broadcast=$GUEST_broadcast
-uci set network.GUEST.igmp_snooping='1'
-#uci set network.GUEST.gateway='127.0.0.1'
-uci set network.GUEST.gateway=$WAN_GW
-uci set network.GUEST.ifname='eth0.107'
-uci set network.GUEST.device='eth0.107'
-uci set network.GUEST.dns=$GUEST_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='CMOVIE'
-uci commit network >/dev/null
-uci set network.CMOVIE.proto='static'
-uci set network.CMOVIE.type='bridge'
-uci set network.CMOVIE.ipaddr=$CMOVIE_ip
-uci set network.CMOVIE.netmask='255.255.255.0'
-uci set network.CMOVIE.ip6assign='56'
-uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
-uci set network.CMOVIE.igmp_snooping='1'
-#uci set network.CMOVIE.gateway='127.0.0.1'
-uci set network.CMOVIE.gateway=$WAN_GW
-uci set network.CMOVIE.ifname='eth0.108'
-uci set network.CMOVIE.device='eth0.108'
-uci set network.CMOVIE.dns=$CMOVIE_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='SERVER'
-uci commit network >/dev/null
-uci set network.SERVER.proto='static'
-uci set network.SERVER.type='bridge'
-uci set network.SERVER.ipaddr=$SERVER_ip
-uci set network.SERVER.netmask='255.255.255.0'
-uci set network.SERVER.ip6assign='56'
-uci set network.SERVER.broadcast=$SERVER_broadcast
-uci set network.SERVER.igmp_snooping='1'
-#uci set network.SERVER.gateway='127.0.0.1'
-uci set network.SERVER.gateway=$WAN_GW
-uci set network.SERVER.ifname='eth0.101'
-uci set network.SERVER.device='eth0.101'
-uci set network.SERVER.dns=$SERVER_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='INET'
-uci commit network >/dev/null
-uci set network.INET.proto='static'
-uci set network.INET.type='bridge'
-uci set network.INET.ipaddr=$INET_ip
-uci set network.INET.netmask='255.255.255.0'
-uci set network.INET.ip6assign='56'
-uci set network.INET.broadcast=$INET_broadcast
-uci set network.INET.igmp_snooping='1'
-#uci set network.INET.gateway='127.0.0.1'
-uci set network.INET.gateway=$WAN_GW
-uci set network.INET.ifname='eth0.104'
-uci set network.INET.device='eth0.104'
-uci set network.INET.dns=$INET_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='CONTROL'
-uci commit network >/dev/null
-uci set network.CONTROL.proto='static'
-uci set network.CONTROL.type='bridge'
-uci set network.CONTROL.ipaddr=$CONTROL_ip
-uci set network.CONTROL.netmask='255.255.255.0'
-uci set network.CONTROL.ip6assign='56'
-uci set network.CONTROL.broadcast=$CONTROL_broadcast
-uci set network.CONTROL.igmp_snooping='1'
-#uci set network.CONTROL.gateway='127.0.0.1'
-uci set network.CONTROL.gateway=$WAN_GW
-uci set network.CONTROL.ifname='eth0.103'
-uci set network.CONTROL.device='eth0.103'
-uci set network.CONTROL.dns=$CONTROL_ip
-uci commit network >/dev/null
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='HCONTROL'
-uci commit network >/dev/null
-uci set network.HCONTROL.proto='static'
-uci set network.HCONTROL.type='bridge'
-uci set network.HCONTROL.ipaddr=$HCONTROL_ip
-uci set network.HCONTROL.netmask='255.255.255.0'
-uci set network.HCONTROL.ip6assign='56'
-uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
-uci set network.HCONTROL.igmp_snooping='1'
-#uci set network.HCONTROL.gateway='127.0.0.1'
-uci set network.HCONTROL.gateway=$WAN_GW
-uci set network.HCONTROL.ifname='eth0.102'
-uci set network.HCONTROL.device='eth0.102'
-uci set network.HCONTROL.dns=$HCONTROL_ip
-
-uci add network interface >/dev/null
-uci rename network.@interface[-1]='REPEATER'
-uci commit network >/dev/null
-uci set network.REPEATER.proto='none'
-uci commit  && reload_config >/dev/null
-
-uci commit network >/dev/null
+create_switch() {
 uci set network.@switch[0]=switch
 uci set network.@switch[0].name='switch0'
 uci set network.@switch[0].reset='1'
 uci set network.@switch[0].enable_vlan='1'
-uci commit network >/dev/null
+uci commit network >> install.log
 
 uci set network.@switch_vlan[0]=switch_vlan
 uci set network.@switch_vlan[0].device='switch0'
-uci set network.@switch_vlan[0].vlan='101'
-uci set network.@switch_vlan[0].vid='101'
-uci set network.@switch_vlan[0].ports='0t 1t 2 3t 4t 5t'
-uci commit network >/dev/null
+uci set network.@switch_vlan[0].vlan='1'
+uci set network.@switch_vlan[0].vid='1'
+uci set network.@switch_vlan[0].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[0].description='LAN'
+uci commit network >> install.log
+
+uci add network switch_vlan
+uci set network.@switch_vlan[-1].device='switch0'
+uci set network.@switch_vlan[-1].vlan='101'
+uci set network.@switch_vlan[-1].vid='101'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
+uci set network.@switch_vlan[-1].ports='0t 1t 2 3t 4t 5t'
+uci set network.@switch_vlan[-1].description='SERVER'
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='102'
 uci set network.@switch_vlan[-1].vid='102'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1 2t 3 4t 5t'
-uci commit network >/dev/null
+uci set network.@switch_vlan[-1].description='HCONTROL'
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vLan='103'
 uci set network.@switch_vlan[-1].vid='103'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
-uci commit network >/dev/null
+uci set network.@switch_vlan[-1].description='CONTROL'
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='104'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4 5t'
 uci set network.@switch_vlan[-1].vid='104'
-uci commit network >/dev/null
+uci set network.@switch_vlan[-1].description='INET'
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='105'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='105'
-uci commit network >/dev/null
+uci set network.@switch_vlan[-1].description='VOICE'
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='106'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='106'
-uci commit network >/dev/null
+uci set network.@switch_vlan[-1].description='ENTERTAIN'
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='107'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='107'
+uci set network.@switch_vlan[-1].description='GUEST'
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='108'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='108'
+uci set network.@switch_vlan[-1].description='CMOVIE'
+uci commit network >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
 uci set network.@switch_vlan[-1].vlan='110'
+#uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='110'
-uci commit network >/dev/null
+uci set network.@switch_vlan[-1].description='TELEKOM'
+uci commit network >> install.log
 
 uci add network interface
 uci rename network.@interface[-1]='SWITCH_Port'
-uci commit network >/dev/null
-uci set network.SWITCH_Port.ifname='eth0'
+uci commit network >> install.log
+uci set network.SWITCH_Port.device='eth0'
 uci set network.SWITCH_Port.proto='none'
-uci commit network >/dev/null
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P101'
-uci commit network >/dev/null
-uci set network.SWITCH_P101.ifname='eth0.101'
+uci commit network >> install.log
+uci set network.SWITCH_P101.device='eth0.101'
 uci set network.SWITCH_P101.proto='none'
-uci commit network >/dev/null
+uci set network.SWITCH_P101.description='SERVER'
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P102'
-uci commit network >/dev/null
-uci set network.SWITCH_P102.ifname='eth0.102'
+uci commit network >> install.log
+uci set network.SWITCH_P102.device='eth0.102'
 uci set network.SWITCH_P102.proto='none'
-uci commit network >/dev/null
+uci set network.SWITCH_P102.description='HCONTROL'
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P103'
-uci commit network >/dev/null
-uci set network.SWITCH_P103.ifname='eth0.103'
+uci commit network >> install.log
+uci set network.SWITCH_P103.device='eth0.103'
 uci set network.SWITCH_P103.proto='none'
-uci commit network >/dev/null
+uci set network.SWITCH_P103.description='CONTROL'
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P104'
-uci commit network >/dev/null
-uci set network.SWITCH_P104.ifname='eth0.104'
+uci commit network >> install.log
+uci set network.SWITCH_P104.device='eth0.104'
 uci set network.SWITCH_P104.proto='none'
-uci commit network >/dev/null
+uci set network.SWITCH_P104.description='INET'
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P105'
-uci commit network >/dev/null
-uci set network.SWITCH_P105.ifname='eth0.105'
+uci commit network >> install.log
+uci set network.SWITCH_P105.device='eth0.105'
 uci set network.SWITCH_P105.proto='none'
-uci commit network >/dev/null
+uci set network.SWITCH_P105.description='VOICE'
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P106'
-uci commit network >/dev/null
-uci set network.SWITCH_P106.ifname='eth0.106'
+uci commit network >> install.log
+uci set network.SWITCH_P106.device='eth0.106'
 uci set network.SWITCH_P106.proto='none'
-uci commit network >/dev/null
+uci set network.SWITCH_P106.description='ENTERTAIN'
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P107'
-uci commit network >/dev/null
-uci set network.SWITCH_P107.ifname='eth0.107'
+uci commit network >> install.log
+uci set network.SWITCH_P107.device='eth0.107'
 uci set network.SWITCH_P107.proto='none'
-uci commit network >/dev/null
+uci set network.SWITCH_P107.description='GUEST'
+uci commit network >> install.log
 
-uci add network interface >/dev/null
+uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P108'
-uci commit network >/dev/null
-uci set network.SWITCH_P108.ifname='eth0.108'
+uci commit network >> install.log
+uci set network.SWITCH_P108.device='eth0.108'
 uci set network.SWITCH_P108.proto='none'
-uci commit network >/dev/null
+uci set network.SWITCH_P108.description='CMOVIE'
+uci commit network >> install.log
 
-uci add network device >/dev/null
-#uci rename network.@device[-1]='br_VOICE'
-#uci commit network >/dev/null
-uci set network.@device[-1].name='br-VOICE'
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].ports='eth0.105'
-uci set network.@device[-1].igmp_snooping='1'
-uci commit network >/dev/null
+uci add network interface >> install.log
+uci rename network.@interface[-1]='SWITCH_P110'
+uci commit network >> install.log
+uci set network.SWITCH_P110.device='eth0.110'
+uci set network.SWITCH_P110.proto='none'
+uci set network.SWITCH_P110.description='TELEKOM'
+uci commit network >> install.log
 
-uci add network device >/dev/null
-#uci rename network.@device[-1]='br_ENTERTAIN'
-#uci commit network >/dev/null
-uci set network.@device[-1].name='br-ENTERTAIN'
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].ports='eth0.106'
-uci set network.@device[-1].igmp_snooping='1'
-uci commit network >/dev/null
-
-uci add network device >/dev/null
-#uci rename network.@device[-1]='br_GUEST'
-#uci commit network >/dev/null
-uci set network.@device[-1].name='br-GUEST'
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].ports='eth0.107'
-uci set network.@device[-1].igmp_snooping='1'
-uci commit network >/dev/null
-
-uci add network device >/dev/null
-#uci rename network.@device[-1]='br_CMOVIE'
-#uci commit network >/dev/null
-uci set network.@device[-1].name='br-CMOVIE'
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].ports='eth0.108'
-uci set network.@device[-1].igmp_snooping='1'
-uci commit network >/dev/null
-
-uci add network device >/dev/null
-#uci rename network.@device[-1]='br_SERVER'
-#uci commit network >/dev/null
-uci set network.@device[-1].name='br-SERVER'
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].ports='eth0.101'
-uci set network.@device[-1].igmp_snooping='1'
-uci commit network >/dev/null
-
-uci add network device >/dev/null
-#uci rename network.@device[-1]='br_INET'
-#uci commit network >/dev/null
-uci set network.@device[-1].name='br-INET'
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].ports='eth0.104'
-uci set network.@device[-1].igmp_snooping='1'
-uci commit network >/dev/null
-
-uci add network device >/dev/null
-#uci rename network.@device[-1]='br_CONTROL'
-#uci commit network >/dev/null
-uci set network.@device[-1].name='br-CONTROL'
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].ports='eth0.103'
-uci set network.@device[-1].igmp_snooping='1'
-uci commit network >/dev/null
-
-uci add network device >/dev/null
-#uci rename network.@device[-1]='br_HCONTROL'
-#uci commit network >/dev/null
-uci set network.@device[-1].name='br-HCONTROL'
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].ports='eth0.102'
-uci set network.@device[-1].igmp_snooping='1'
-uci commit network >/dev/null
-
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#            Wireless Network Definitions              #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
 # Save and apply
-uci commit network && reload_config >/dev/null
+uci commit network && reload_config >> install.log
 #/etc/init.d/network restart
 
-
+echo
+echo 'On Error enter logread'
+echo
 
 dig www.internic.net @1.1.1.1
+}
 
-uci -q delete wireless  >/dev/null
+create_wlan() {
+uci -q delete wireless  >> install.log
 
 uci set wireless.radio0=wifi-device
 uci set wireless.radio0.type='mac80211'
 uci set wireless.radio0.path='platform/soc/a000000.wifi'
 uci set wireless.radio0.htmode='HT20'
 uci set wireless.radio0.country='DE'
-uci set wireless.radio0.channel='6'
+uci set wireless.radio0.channel='auto'
 uci set wireless.radio0.hwmode='11n'
 
 uci delete wireless.default_radio0
@@ -3454,836 +1849,792 @@ uci set wireless.default_radio0=wifi-iface
 uci set wireless.default_radio0.device='radio0'
 uci set wireless.default_radio0.mode='ap'
 uci set wireless.default_radio0.key=$WIFI_PASS
-uci set wireless.default_radio0.ssid=$CONTROL_ssid
+uci set wireless.default_radio0.ssid=$TELEKOM_ssid
 uci set wireless.default_radio0.encryption='psk2'
-uci set wireless.default_radio0.network='CONTROL'
+uci set wireless.default_radio0.network='TELEKOM'
 
 uci delete wireless.wifinet1
 uci set wireless.wifinet1=wifi-iface
-uci set wireless.wifinet1.ssid=$HCONTROL_ssid
-uci set wireless.wifinet1.encryption='psk2'
 uci set wireless.wifinet1.device='radio0'
 uci set wireless.wifinet1.mode='ap'
-uci set wireless.wifinet1.network='HCONTROL'
 uci set wireless.wifinet1.key=$WIFI_PASS
+uci set wireless.wifinet1.ssid=$SERVER_ssid
+uci set wireless.wifinet1.encryption='psk2'
+uci set wireless.wifinet1.network='SERVER'
 
 uci delete wireless.wifinet2
 uci set wireless.wifinet2=wifi-iface
-uci set wireless.wifinet2.ssid=$VOICE_ssid
 uci set wireless.wifinet2.device='radio0'
 uci set wireless.wifinet2.mode='ap'
-uci set wireless.wifinet2.network='VOICE'
 uci set wireless.wifinet2.key=$WIFI_PASS
+uci set wireless.wifinet2.ssid=$HCONTROL_ssid
 uci set wireless.wifinet2.encryption='psk2'
+uci set wireless.wifinet2.network='HCONTROL'
 
 uci delete wireless.wifinet3
 uci set wireless.wifinet3=wifi-iface
-uci set wireless.wifinet3.ssid=$INET_ssid
-uci set wireless.wifinet3.encryption='psk2'
 uci set wireless.wifinet3.device='radio0'
 uci set wireless.wifinet3.mode='ap'
-uci set wireless.wifinet3.network='INET'
 uci set wireless.wifinet3.key=$WIFI_PASS
+uci set wireless.wifinet3.ssid=$CONTROL_ssid
+uci set wireless.wifinet3.encryption='psk2'
+uci set wireless.wifinet3.network='CONTROL'
 
 uci delete wireless.wifinet4
 uci set wireless.wifinet4=wifi-iface
-uci set wireless.wifinet4.ssid=$ENTERTAIN_ssid
-uci set wireless.wifinet4.encryption='psk2'
 uci set wireless.wifinet4.device='radio0'
 uci set wireless.wifinet4.mode='ap'
-uci set wireless.wifinet4.network='ENTERTAIN'
 uci set wireless.wifinet4.key=$WIFI_PASS
+uci set wireless.wifinet4.ssid=$INET_ssid
+uci set wireless.wifinet4.encryption='psk2'
+uci set wireless.wifinet4.network='INET'
 
 uci delete wireless.wifinet5
 uci set wireless.wifinet5=wifi-iface
-uci set wireless.wifinet5.ssid=$SERVER_ssid
-uci set wireless.wifinet5.encryption='psk2'
 uci set wireless.wifinet5.device='radio0'
 uci set wireless.wifinet5.mode='ap'
-uci set wireless.wifinet5.network='REPEATER'
 uci set wireless.wifinet5.key=$WIFI_PASS
+uci set wireless.wifinet5.ssid=$VOICE_ssid
+uci set wireless.wifinet5.encryption='psk2'
+uci set wireless.wifinet5.network='VOICE'
 
 uci delete wireless.wifinet6
 uci set wireless.wifinet6=wifi-iface
-uci set wireless.wifinet6.ssid=$GUEST_ssid
-uci set wireless.wifinet6.encryption='psk2'
 uci set wireless.wifinet6.device='radio0'
 uci set wireless.wifinet6.mode='ap'
-uci set wireless.wifinet6.network='GUEST'
 uci set wireless.wifinet6.key=$WIFI_PASS
+uci set wireless.wifinet6.ssid=$ENTERTAIN_ssid
+uci set wireless.wifinet6.encryption='psk2'
+uci set wireless.wifinet6.network='ENTERTAIN'
+
+uci delete wireless.wifinet7
+uci set wireless.wifinet7=wifi-iface
+uci set wireless.wifinet7.device='radio0'
+uci set wireless.wifinet7.mode='ap'
+uci set wireless.wifinet7.key=$WIFI_PASS
+uci set wireless.wifinet7.ssid=$GUEST_ssid
+uci set wireless.wifinet7.encryption='psk2'
+uci set wireless.wifinet7.network='GUEST'
+
+uci delete wireless.wifinet8
+uci set wireless.wifinet8=wifi-iface
+uci set wireless.wifinet8.device='radio0'
+uci set wireless.wifinet8.mode='ap'
+uci set wireless.wifinet8.key=$WIFI_PASS
+uci set wireless.wifinet8.ssid=$CMOVIE_ssid
+uci set wireless.wifinet8.encryption='psk2'
+uci set wireless.wifinet8.network='CMOVIE'
 
 uci set wireless.radio1=wifi-device
 uci set wireless.radio1.type='mac80211'
-uci set wireless.radio1.channel='36'
+uci set wireless.radio1.channel='auto'
 uci set wireless.radio1.hwmode='11a'
 uci set wireless.radio1.path='platform/soc/a800000.wifi'
 uci set wireless.radio1.htmode='VHT80'
 uci set wireless.radio1.country='DE'
 
 uci delete wireless.default_radio1
-uci set wireless.default_radio1=wifi-iface
-uci set wireless.default_radio1.device='radio1'
-uci set wireless.default_radio1.mode='ap'
-uci set wireless.default_radio1.key=$WIFI_PASS
-uci set wireless.default_radio1.ssid=$VOICE_ssid
-uci set wireless.default_radio1.encryption='psk2'
-uci set wireless.default_radio1.network='VOICE'
-
-uci delete wireless.wifinet7
-uci set wireless.wifinet7=wifi-iface
-uci set wireless.wifinet7.ssid=$INET_ssid
-uci set wireless.wifinet7.encryption='psk2'
-uci set wireless.wifinet7.device='radio1'
-uci set wireless.wifinet7.mode='ap'
-uci set wireless.wifinet7.network='INET'
-uci set wireless.wifinet7.key=$WIFI_PASS
-
-uci delete wireless.wifinet8
-uci set wireless.wifinet8=wifi-iface
-uci set wireless.wifinet8.ssid=$ENTERTAIN_ssid
-uci set wireless.wifinet8.encryption='psk2'
-uci set wireless.wifinet8.device='radio1'
-uci set wireless.wifinet8.mode='ap'
-uci set wireless.wifinet8.network='ENTERTAIN'
-uci set wireless.wifinet8.key=$WIFI_PASS
-
 uci delete wireless.wifinet9
 uci set wireless.wifinet9=wifi-iface
 uci set wireless.wifinet9.device='radio1'
 uci set wireless.wifinet9.mode='ap'
+uci set wireless.wifinet9.key=$WIFI_PASS
 uci set wireless.wifinet9.ssid=$SERVER_ssid
 uci set wireless.wifinet9.encryption='psk2'
-uci set wireless.wifinet9.key=$WIFI_PASS
-uci set wireless.wifinet9.network='REPEATER'
+uci set wireless.wifinet9.network='SERVER'
 
 uci delete wireless.wifinet10
 uci set wireless.wifinet10=wifi-iface
+uci set wireless.wifinet10.ssid=$HCONTROL_ssid
 uci set wireless.wifinet10.encryption='psk2'
 uci set wireless.wifinet10.device='radio1'
 uci set wireless.wifinet10.mode='ap'
+uci set wireless.wifinet10.network='HCONTROL'
 uci set wireless.wifinet10.key=$WIFI_PASS
-uci set wireless.wifinet10.network='GUEST'
-uci set wireless.wifinet10.ssid=$GUEST_ssid
 
 uci delete wireless.wifinet11
 uci set wireless.wifinet11=wifi-iface
-uci set wireless.wifinet11.encryption=''
+uci set wireless.wifinet11.ssid=$CONTROL_ssid
+uci set wireless.wifinet11.encryption='psk2'
 uci set wireless.wifinet11.device='radio1'
 uci set wireless.wifinet11.mode='ap'
-uci set wireless.wifinet11.network='CMOVIE'
-uci set wireless.wifinet11.ssid=$CMOVIE_ssid
+uci set wireless.wifinet11.network='CONTROL'
+uci set wireless.wifinet11.key=$WIFI_PASS
 
 uci delete wireless.wifinet12
 uci set wireless.wifinet12=wifi-iface
-uci set wireless.wifinet12.encryption=''
-uci set wireless.wifinet12.device='radio0'
+uci set wireless.wifinet12.device='radio1'
 uci set wireless.wifinet12.mode='ap'
-uci set wireless.wifinet12.network='CMOVIE'
-uci set wireless.wifinet12.ssid=$CMOVIE_ssid
+uci set wireless.wifinet12.ssid=$INET_ssid
+uci set wireless.wifinet12.encryption='psk2'
+uci set wireless.wifinet12.key=$WIFI_PASS
+uci set wireless.wifinet12.network='INET'
 
-uci delete wireless.radio0.disabled >/dev/null
-uci delete wireless.radio1.disabled >/dev/null
+uci delete wireless.wifinet13
+uci set wireless.wifinet13=wifi-iface
+uci set wireless.wifinet13.encryption='psk2'
+uci set wireless.wifinet13.device='radio1'
+uci set wireless.wifinet13.mode='ap'
+uci set wireless.wifinet13.key=$WIFI_PASS
+uci set wireless.wifinet13.network='VOICE'
+uci set wireless.wifinet13.ssid=$VOICE_ssid
 
-uci commit  && reload_config >/dev/null
+uci delete wireless.wifinet14
+uci set wireless.wifinet14=wifi-iface
+uci set wireless.wifinet14.encryption='psk2'
+uci set wireless.wifinet14.device='radio1'
+uci set wireless.wifinet14.mode='ap'
+uci set wireless.wifinet14.key=$WIFI_PASS
+uci set wireless.wifinet14.network='ENTERTAIN'
+uci set wireless.wifinet14.ssid=$ENTERTAIN_ssid
 
-uci set firewall.@zone[0]=zone
-uci set firewall.@zone[0].name="REPEATER"
-uci set firewall.@zone[0].input="ACCEPT"
-uci set firewall.@zone[0].network="REPEATER"
-uci set firewall.@zone[0].output="ACCEPT"
-uci set firewall.@zone[0].forward="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="REPEATER"
-uci commit firewall && reload_config >/dev/null
+uci delete wireless.wifinet15
+uci set wireless.wifinet15=wifi-iface
+uci set wireless.wifinet15.encryption='psk2'
+uci set wireless.wifinet15.device='radio1'
+uci set wireless.wifinet15.mode='ap'
+uci set wireless.wifinet15.key=$WIFI_PASS
+uci set wireless.wifinet15.network='GUEST'
+uci set wireless.wifinet15.ssid=$GUEST_ssid
 
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="CONTROL"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="CONTROL"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="CONTROL"
-uci commit firewall && reload_config >/dev/null
+uci delete wireless.wifinet16
+uci set wireless.wifinet16=wifi-iface
+uci set wireless.wifinet16.encryption='psk2'
+uci set wireless.wifinet16.device='radio1'
+uci set wireless.wifinet16.mode='ap'
+uci set wireless.wifinet16.key=$WIFI_PASS
+uci set wireless.wifinet16.network='CMOVIE'
+uci set wireless.wifinet16.ssid=$CMOVIE_ssid
 
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="HCONTROL"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="HCONTROL"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="HCONTROL"
-uci commit firewall && reload_config >/dev/null
+uci delete wireless.radio0.disabled >> install.log
+uci delete wireless.radio1.disabled >> install.log
 
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="SERVER"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="SERVER"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="SERVER"
-uci commit firewall && reload_config >/dev/null
+uci commit  && reload_config >> install.log
 
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="INET"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="INET"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="INET"
-uci commit firewall && reload_config >/dev/null
+echo
+echo 'Networks Settings defined'
+echo
+echo
+echo 'On Error enter logread'
+echo
 
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="GUEST"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="GUEST"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="GUEST"
-uci commit firewall && reload_config >/dev/null
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo 'Your Config is:'
+echo
+echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$INET_net
+echo
+echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$HCONTROL_net
+echo
+echo 'Voice-Assistent SSID: '$VOICE_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$VOICE_net
+echo
+echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$ENTERTAIN_net
+echo
+echo 'Server-WiFi SSID:     '$SERVER_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$SERVER_net
+echo
+echo 'IR/BT-Control SSID:   '$CONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$CONTROL_net
+echo
+echo 'Guests SSID is:       '$GUEST_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$GUEST_net
+echo
+echo
+echo
+echo 'IP-Address:           '$ACCESS_SERVER
+echo 'Gateway:              '$INET_GW
+echo 'Domain:               '$LOCAL_DOMAIN
+echo
+echo 'GUI-Access:           https://'$INET_ip':8443'
+echo 'User:                 '$USERNAME
+echo 'Password:             password'
+echo
 
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="CMOVIE"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="CMOVIE"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="CMOVIE"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="VOICE"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="VOICE"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="VOICE"
-uci commit firewall && reload_config >/dev/null
-
-uci add firewall zone >/dev/null
-uci set firewall.@zone[-1]=zone
-uci set firewall.@zone[-1].name="ENTERTAIN"
-uci set firewall.@zone[-1].input="ACCEPT"
-uci set firewall.@zone[-1].forward="ACCEPT"
-uci set firewall.@zone[-1].network="ENTERTAIN"
-uci set firewall.@zone[-1].output="ACCEPT"
-#uci set firewall.@zone[-1].log="1"
-uci commit firewall >/dev/null
-uci add firewall forwarding >/dev/null
-uci set firewall.@forwarding[-1]=forwarding
-uci set firewall.@forwarding[-1].dest="wan"
-uci set firewall.@forwarding[-1].src="ENTERTAIN"
-uci commit firewall && reload_config >/dev/null
-
-
-mkdir /etc/dnsmasq.d  >/dev/null
-mkdir /etc/dnsmasq.d/Blacklist >/dev/null
-mkdir /etc/dnsmasq.d/Whitelist >/dev/null
-mkdir /etc/dnsmasq.d/BlockAll >/dev/null
-mkdir /etc/dnsmasq.d/AllowAll >/dev/null
-
-uci commit dhcp && reload_config >/dev/null
 }
 
-set_dhcp() {
-#uci -q delete dhcp >/dev/null
-##uci delete dhcp.odhcpd >/dev/null
-#uci delete dhcp.BlacklistSERVER >/dev/null
-#uci delete dhcp.BlacklistHCONTROL >/dev/null
-#uci delete dhcp.BlacklistCONTROL >/dev/null
-#uci delete dhcp.BlacklistINET >/dev/null
-#uci delete dhcp.WhitelistVOICE >/dev/null
-#uci delete dhcp.WhitelistENTERTAIN >/dev/null
-#uci delete dhcp.WhitelistGUEST >/dev/null
-#uci delete dhcp.WhitelistCMOVIE >/dev/null
-#uci delete dhcp.SERVER >/dev/null
-#uci delete dhcp.HCONTROL >/dev/null
-#uci delete dhcp.CONTROL >/dev/null
-#uci delete dhcp.INET >/dev/null
-#uci delete dhcp.VOICE >/dev/null
-#uci delete dhcp.ENTERTAIN >/dev/null
-#uci delete dhcp.GUEST >/dev/null
-#uci delete dhcp.CMOVIE >/dev/null
-#uci delete dhcp.Blacklist>/dev/null
-#uci delete dhcp.Whitelist >/dev/null
-#uci delete dhcp.lan >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci commit dhcp >/dev/null
+set_tor() {
+/etc/init.d/tor stop >> install.log
+/etc/init.d/log restart >> install.log
 
-uci set dhcp.Blacklist=dnsmasq
-uci set dhcp.Blacklist.domainneeded='1'
-uci set dhcp.Blacklist.boguspriv='1'
-uci set dhcp.Blacklist.filterwin2k='0'
-uci set dhcp.Blacklist.localise_queries='1'
-uci set dhcp.Blacklist.rebind_protection='1'
-uci set dhcp.Blacklist.rebind_localhost='1'
-uci set dhcp.Blacklist.expandhosts='1'
-uci set dhcp.Blacklist.nonegcache='0'
-uci set dhcp.Blacklist.authoritative='1'
-uci set dhcp.Blacklist.readethers='1'
-uci set dhcp.Blacklist.nonwildcard='1'
-uci set dhcp.Blacklist.localservice='1'
-uci set dhcp.Blacklist.ednspacket_max='1232'
-uci set dhcp.Blacklist.local='/'$LOCAL_DOMAIN'/'
-uci set dhcp.Blacklist.domain=$LOCAL_DOMAIN
-uci set dhcp.Blacklist.leasefile='/tmp/dhcp.leases'
-uci set dhcp.Blacklist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
-uci set dhcp.Blacklist.serversfile='/etc/dnsmasq.d/Blacklist/'
-uci add_list dhcp.Blacklist.notinterface='br-VOICE'
-uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN' 
-uci add_list dhcp.Blacklist.notinterface='br-GUEST'
-uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
-uci add_list dhcp.Whitelist.interface='br-INET'
-uci add_list dhcp.Whitelist.interface='br-SERVER' 
-uci add_list dhcp.Whitelist.interface='br-HCONTROL'
-uci add_list dhcp.Whitelist.interface='br-CONTROL'
+# Configure Tor client
+cat << EOF > /etc/tor/main
+AutomapHostsOnResolve 1
+VirtualAddrNetworkIPV4 10.192.0.0/10
+VirtualAddrNetworkIPv6 fc00::/7
+
+SocksListenAddress 127.0.0.1
+SocksListenAddress $(echo $SERVER_ip)
+SocksListenAddress $(echo $HCONTROL_ip)
+SocksListenAddress $(echo $CONTROL_ip)
+SocksListenAddress $(echo $INET_ip)
+SocksListenAddress [0::1]
+
+ControlPort 127.0.0.1:9051
+ControlPort [0::1]:9051
+ControlPort $(echo $SERVER_ip):9051
+ControlPort $(echo $HCONTROL_ip):9051
+ControlPort $(echo $CONTROL_ip):9051
+ControlPort $(echo $INET_ip):9051
+
+DNSPort 127.0.0.1:9053
+DNSPort 127.0.0.1:9153
+DNSPort 127.0.0.1:853
+DNSPort 127.0.10.1:53
+DNSPort 127.0.0.1:54
+DNSPort [0::1]:9053
+DNSPort [0::1]:9153
+DNSPort [0::1]:853
+DNSPort [0::1]:54
+
+DNSPort $(echo $SERVER_ip):9053
+DNSPort $(echo $HCONTROL_ip):9053
+DNSPort $(echo $CONTROL_ip):9053
+DNSPort $(echo $INET_ip):9053
+
+DNSPort $(echo $SERVER_ip):9153
+DNSPort $(echo $HCONTROL_ip):9153
+DNSPort $(echo $CONTROL_ip):9153
+DNSPort $(echo $INET_ip):9153
+
+DNSPort $(echo $SERVER_ip):54
+DNSPort $(echo $HCONTROL_ip):54
+DNSPort $(echo $CONTROL_ip):54
+DNSPort $(echo $INET_ip):54
+
+TransPort $(echo $SERVER_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort $(echo $HCONTROL_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort $(echo $CONTROL_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort $(echo $INET_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 127.0.0.1:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort [0::1]:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+
+#SocksPort ist der Port für die Clientverbindung
+SocksPort $(echo $SERVER_ip):9050
+SocksPort $(echo $HCONTROL_ip):9050
+SocksPort $(echo $CONTROL_ip):9050
+SocksPort $(echo $INET_ip):9050
+SocksPort 127.0.0.1:9050
+SocksPort [0::1]:9050
+
+SocksPort $(echo $SERVER_ip):9150
+SocksPort $(echo $HCONTROL_ip):9150
+SocksPort $(echo $CONTROL_ip):9150
+SocksPort $(echo $INET_ip):9150
+SocksPort 127.0.0.1:9150
+SocksPort [0::1]:9150
+
+#ORPort empfängt Daten aus dem Tor Netzwerk im Internet
+#ORPort $(echo $WAN_ip):9049
+#DirPort zum Spiegeln der Tor-Server-Adressen
+#DirPort $(echo $WAN_ip):9030
+
+HTTPTunnelPort $(echo $SERVER_ip):9060
+HTTPTunnelPort $(echo $HCONTROL_ip):9060
+HTTPTunnelPort $(echo $CONTROL_ip):9060
+HTTPTunnelPort $(echo $INET_ip):9060
+HTTPTunnelPort 127.0.0.1:9060
+HTTPTunnelPort [0::1]:9060
+
+#ExitPolicy reject *:*
+#ExitPolicy stellt den Node Type ein. Hier Weiterleitung
+RelayBandwidthRate 10000 KB
+RelayBandwidthBurst 50000 KB
+DisableDebuggerAttachment 0
+AccountingStart day 06:00
+AccountingMax 50 GBytes
+
+NumCPUs 1
+
+#Nur sichere Exitnodes Benutzen
+StrictExitNodes 1 # war aktiv
+
+ExcludeNodes {AU}, {CA}, {FR}, {GB}, {NZ}, {US}, {DE}, {CH}, {JP}, {FR}, {SE}, {DK}, {NL}, {NO}, {IT}, {ES}, {BE}, {BG}, {EE}, {FI}, {GR}, {IL}, {SG}, {KR}, {HR}, {LV}, {LT}, {LU}, {MT}, {NO}, {AT}, {PL}, {PT}, {RO}, {RU}, {SE}, {SK}, {SI}, {CZ}, {HU}, {CY}, {EU}, {HU}, {UA}, {SZ}, {CS}, {TR}, {RS}, {MF}, {BL}, {RE}, {MK}, {ME}, {MY}, {HR}, {IE}, {PF}, {GF}, {CK}, {BA}  
+ExitNodes {CL}, {LI}, {LV}, {TW}, {AE}, {TH}, {IS}, {KW}, {PA}
+
+SafeSocks 1
+WarnUnsafeSocks 1
+#Log warn syslog
+#Das Schreiben auf die Disk verringern AvoidDiskWrites 1
+AvoidDiskWrites 1
+RunAsDaemon 1
+Nickname EnemyOneEU
+AutomapHostsSuffixes .onion,.exit
+
+## Tor hidden sites do not have real IP addresses. This specifies what range of
+## IP addresses will be handed to the application as "cookies" for .onion names.
+## Of course, you should pick a block of addresses which you aren't going to
+## ever need to actually connect to. This is similar to the MapAddress feature
+## of the main tor daemon.
+## OnionAddrRange 127.42.42.0/24
+##
+## ServerDNSResolvConfFile filename
+## ServerDNSAllowBrokenConfig 0|1
+## ServerDNSSearchDomains 1
+##
+## CacheIPv4DNS 1
+##
+## HiddenServiceDir /home/pi/hidden_service/
+## HiddenServicePort 80 192.168.175.250:80
+##
+## HiddenServiceDir /var/lib/tor/other_hidden_service/
+## HiddenServicePort 80 127.0.0.1:80
+## HiddenServicePort 22 127.0.0.1:22
+##
+## SOCKS5 Username and Password. This is used to isolate the torsocks connection
+## circuit from other streams in Tor. Use with option IsolateSOCKSAuth (on by
+## default) in tor(1). TORSOCKS_USERNAME and TORSOCKS_PASSWORD environment
+## variable overrides these options.
+## SOCKS5Username <username>
+## SOCKS5Password <password>
+##
+## Log notice file /var/log/tor/tor-notices.log
+DataDirectory /var/lib/tor
+User tor
+
+EOF
 
 
-uci set dhcp.Whitelist=dnsmasq
-uci set dhcp.Whitelist.domainneeded='1'
-uci set dhcp.Whitelist.boguspriv='1'
-uci set dhcp.Whitelist.filterwin2k='0'
-uci set dhcp.Whitelist.localise_queries='1'
-uci set dhcp.Whitelist.rebind_protection='1'
-uci set dhcp.Whitelist.rebind_localhost='1'
-uci set dhcp.Whitelist.expandhosts='1'
-uci set dhcp.Whitelist.nonegcache='0'
-uci set dhcp.Whitelist.authoritative='1'
-uci set dhcp.Whitelist.readethers='1'
-uci set dhcp.Whitelist.nonwildcard='1'
-uci set dhcp.Whitelist.localservice='1'
-uci set dhcp.Whitelist.ednspacket_max='1232'
-uci set dhcp.Whitelist.local='/local/'
-uci set dhcp.Whitelist.domain='local'
-uci set dhcp.Whitelist.leasefile='/tmp/dhcp.leases'
-uci set dhcp.Whitelist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
-uci set dhcp.Whitelist.serversfile='/etc/dnsmasq.d/Whitelist/'
-uci add_list dhcp.Whitelist.interface='br-VOICE'
-uci add_list dhcp.Whitelist.interface='br-ENTERTAIN' 
-uci add_list dhcp.Whitelist.interface='br-GUEST'
-uci add_list dhcp.Whitelist.interface='br-CMOVIE'
-uci add_list dhcp.Whitelist.notinterface='br-INET'
-uci add_list dhcp.Whitelist.notinterface='br-SERVER' 
-uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
-uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
+uci del_list tor.conf.tail_include="/etc/tor/main" >> install.log
+uci add_list tor.conf.tail_include="/etc/tor/main" >> install.log
+uci commit tor && reload_config >> install.log
 
+/etc/init.d/tor start  >> install.log
 
-uci set dhcp.HCONTROL=dhcp
-uci set dhcp.HCONTROL.dhcpv4='server'
-uci set dhcp.HCONTROL.dhcpv6='server'
-uci set dhcp.HCONTROL.ra='server'
-uci set dhcp.HCONTROL.ra_slaac='1'
-uci add_list dhcp.HCONTROL.ra_flags='managed-config'
-uci add_list dhcp.HCONTROL.ra_flags='other-config'
-uci set dhcp.HCONTROL.interface='HCONTROL'
-uci set dhcp.HCONTROL.start='2'
-uci set dhcp.HCONTROL.limit='250'
-uci set dhcp.HCONTROL.leasetime='24h'
-uci set dhcp.HCONTROL.domain=$HCONTROL_domain
-uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
-uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
-#uci add_list dhcp.HCONTROL.dhcp_option='6,'$INET_GW
-uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
-uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
-uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_Relay_port
-uci set dhcp.HCONTROL.force='1'
+echo 
+echo 'Tor-Onion-Services activated'
+echo
 
-uci set dhcp.CONTROL=dhcp
-uci set dhcp.CONTROL.dhcpv4='server'
-uci set dhcp.CONTROL.dhcpv6='server'
-uci set dhcp.CONTROL.ra='server'
-uci set dhcp.CONTROL.ra_slaac='1'
-uci add_list dhcp.CONTROL.ra_flags='managed-config'
-uci add_list dhcp.CONTROL.ra_flags='other-config'
-uci set dhcp.CONTROL.interface='CONTROL'
-uci set dhcp.CONTROL.start='2'
-uci set dhcp.CONTROL.limit='250'
-uci set dhcp.CONTROL.leasetime='24h'
-uci set dhcp.CONTROL.domain=$CONTROL_domain
-uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
-uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip 
-#uci add_list dhcp.CONTROL.dhcp_option='6,'$INET_GW
-uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
-uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
-uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_Relay_port
-uci set dhcp.CONTROL.force='1'
-
-uci set dhcp.INET=dhcp
-uci set dhcp.INET.dhcpv4='server'
-uci set dhcp.INET.dhcpv6='server'
-uci set dhcp.INET.ra='server'
-uci set dhcp.INET.ra_slaac='1'
-uci add_list dhcp.INET.ra_flags='managed-config'
-uci add_list dhcp.INET.ra_flags='other-config'
-uci set dhcp.INET.interface='INET'
-uci set dhcp.INET.start='2'
-uci set dhcp.INET.limit='250'
-uci set dhcp.INET.leasetime='24h'
-uci set dhcp.INET.domain=$HCONTROL_domain
-uci set dhcp.INET.local='/'$HCONTROL_domain'/'
-uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
-#uci add_list dhcp.INET.dhcp_option='6,'$INET_GW
-uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
-uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
-uci set dhcp.INET.server=$INET_ip'#'$DNS_Relay_port
-uci set dhcp.INET.force='1'
-
-uci set dhcp.SERVER=dhcp
-uci set dhcp.SERVER.dhcpv4='server'
-uci set dhcp.SERVER.dhcpv6='server'
-uci set dhcp.SERVER.ra='server'
-uci set dhcp.SERVER.ra_slaac='1'
-uci add_list dhcp.SERVER.ra_flags='managed-config'
-uci add_list dhcp.SERVER.ra_flags='other-config'
-uci set dhcp.SERVER.interface='SERVER'
-uci set dhcp.SERVER.start='2'
-uci set dhcp.SERVER.limit='250'
-uci set dhcp.SERVER.leasetime='24h'
-uci set dhcp.SERVER.domain=$SERVER_domain
-uci set dhcp.SERVER.local='/'$SERVER_domain'/'
-uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
-#uci add_list dhcp.SERVER.dhcp_option='6,'$INET_GW
-uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
-uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
-uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_Relay_port
-uci set dhcp.SERVER.force='1'
-
-uci set dhcp.VOICE=dhcp
-uci set dhcp.VOICE.dhcpv4='server'
-uci set dhcp.VOICE.dhcpv6='server'
-uci set dhcp.VOICE.ra='server'
-uci set dhcp.VOICE.ra_slaac='1'
-uci add_list dhcp.VOICE.ra_flags='managed-config'
-uci add_list dhcp.VOICE.ra_flags='other-config'
-uci set dhcp.VOICE.interface='VOICE'
-uci set dhcp.VOICE.start='2'
-uci set dhcp.VOICE.limit='250'
-uci set dhcp.VOICE.leasetime='24h'
-uci set dhcp.VOICE.domain=$VOICE_domain
-uci set dhcp.VOICE.local='/'$VOICE_domain'/'
-uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
-#uci add_list dhcp.VOICE.dhcp_option='6,'$INET_GW
-uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
-uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.VOICE.dhcp_option='15,'$HVOICE_domain
-uci set dhcp.VOICE.server=$VOICEL_ip'#'$DNS_Relay_port
-uci set dhcp.VOICE.force='1'
-
-uci set dhcp.ENTERTAIN=dhcp
-uci set dhcp.ENTERTAIN.dhcpv4='server'
-uci set dhcp.ENTERTAIN.dhcpv6='server'
-uci set dhcp.ENTERTAIN.ra='server'
-uci set dhcp.ENTERTAIN.ra_slaac='1'
-uci add_list dhcp.ENTERTAIN.ra_flags='managed-config'
-uci add_list dhcp.ENTERTAIN.ra_flags='other-config'
-uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
-uci set dhcp.ENTERTAIN.start='2'
-uci set dhcp.ENTERTAIN.limit='250'
-uci set dhcp.ENTERTAIN.leasetime='24h'
-uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
-uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
-uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
-#uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$INET_GW
-uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
-uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
-uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_Relay_port
-uci set dhcp.ENTERTAIN.force='1'
-
-uci set dhcp.GUEST=dhcp
-uci set dhcp.GUEST.dhcpv4='server'
-uci set dhcp.GUEST.dhcpv6='server'
-uci set dhcp.GUEST.ra='server'
-uci set dhcp.GUEST.ra_slaac='1'
-uci add_list dhcp.GUEST.ra_flags='managed-config'
-uci add_list dhcp.GUEST.ra_flags='other-config'
-uci set dhcp.GUEST.interface='GUEST'
-uci set dhcp.GUEST.start='2'
-uci set dhcp.GUEST.limit='250'
-uci set dhcp.GUEST.leasetime='24h'
-uci set dhcp.GUEST.domain=$GUEST_domain
-uci set dhcp.GUEST.local='/'$GUEST_domain'/'
-uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
-#uci add_list dhcp.GUEST.dhcp_option='6,'$INET_GW
-uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
-uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
-uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_Relay_port
-uci set dhcp.GUEST.force='1'
-
-uci set dhcp.CMOVIE=dhcp
-uci set dhcp.CMOVIE.dhcpv4='server'
-uci set dhcp.CMOVIE.dhcpv6='server'
-uci set dhcp.CMOVIE.ra='server'
-uci set dhcp.CMOVIE.ra_slaac='1'
-uci add_list dhcp.CMOVIE.ra_flags='managed-config'
-uci add_list dhcp.CMOVIE.ra_flags='other-config'
-uci set dhcp.CMOVIE.interface='CMOVIE'
-uci set dhcp.CMOVIE.start='2'
-uci set dhcp.CMOVIE.limit='250'
-uci set dhcp.CMOVIE.leasetime='24h'
-uci set dhcp.CMOVIE.domain=$CMOVIEGUEST_domain
-uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
-uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
-#uci add_list dhcp.CMOVIE.dhcp_option='6,'$INET_GW
-uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
-uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
-uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_Relay_port
-uci set dhcp.CMOVIE.force='1'
-
-uci commit && reload_config
-/etc/init.d/dnsmasq restart >/dev/null
+echo
+echo 'On Error enter logread'
+echo
 }
 
-set_dhcp_old() {
+set_stubby() {
+#Configure stubby
+cat << EOF > /etc/config/stubby
+config stubby 'global'
+       option manual '0'
+       option trigger 'wan'
+       # option triggerdelay '2'
+       list dns_transport 'GETDNS_TRANSPORT_TLS'
+       option tls_authentication '1'
+       option tls_query_padding_blocksize '128'
+       # option tls_connection_retries '2'
+       # option tls_backoff_time '3600'
+       # option timeout '5000'
+       # option dnssec_return_status '0'
+       option appdata_dir '/var/lib/stubby'
+       # option trust_anchors_backoff_time 2500
+       # option dnssec_trust_anchors '/var/lib/stubby/getdns-root.key'
+       option edns_client_subnet_private '1'
+       option idle_timeout '10000'
+       option round_robin_upstreams '1'
+       list listen_address '127.0.0.1@$(echo $DNS_STUBBY_port)'
+       list listen_address '0::1@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $INET_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $SERVER_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $HCONTROL_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $CONTROL_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $VOICE_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $GUEST_ip)@$(echo $DNS_STUBBY_port)'
+       list listen_address '$(echo $ENTERTAIN_ip)@$(echo $DNS_STUBBY_port)'
+       # option log_level '7'
+       # option command_line_arguments ''
+       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
+       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
+       option tls_min_version '1.2'
+       # option tls_max_version '1.3'
 
-uci -q delete dhcp >/dev/null
-#uci delete dhcp.odhcpd >/dev/null
-uci delete dhcp.BlacklistSERVER >/dev/null
-uci delete dhcp.BlacklistHCONTROL >/dev/null
-uci delete dhcp.BlacklistCONTROL >/dev/null
-uci delete dhcp.BlacklistINET >/dev/null
-uci delete dhcp.WhitelistVOICE >/dev/null
-uci delete dhcp.WhitelistENTERTAIN >/dev/null
-uci delete dhcp.WhitelistGUEST >/dev/null
-uci delete dhcp.WhitelistCMOVIE >/dev/null
-uci delete dhcp.SERVER >/dev/null
-uci delete dhcp.HCONTROL >/dev/null
-uci delete dhcp.CONTROL >/dev/null
-uci delete dhcp.INET >/dev/null
-uci delete dhcp.VOICE >/dev/null
-uci delete dhcp.ENTERTAIN >/dev/null
-uci delete dhcp.GUEST >/dev/null
-uci delete dhcp.CMOVIE >/dev/null
-uci delete dhcp.Blacklist>/dev/null
-uci delete dhcp.Whitelist >/dev/null
-uci delete dhcp.lan >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci commit dhcp >/dev/null
-uci set dhcp.Blacklist=dnsmasq
-uci set dhcp.Blacklist.domainneeded='1'
-uci set dhcp.Blacklist.localise_queries='1'
-uci set dhcp.Blacklist.rebind_protection='1'
-uci set dhcp.Blacklist.rebind_localhost='1'
-uci set dhcp.Blacklist.filterwin2k='1'
-uci set dhcp.Blacklist.local='/'$INET_domain'/'
-uci set dhcp.Blacklist.expandhosts='1'
-uci set dhcp.Blacklist.authoritative='1'
-uci set dhcp.Blacklist.readethers='1'
-uci set dhcp.Blacklist.leasefile='/tmp/dhcp.blacklist.leases'
-uci set dhcp.Blacklist.resolvfile='/tmp/resolv.blacklist.conf.auto'
-uci set dhcp.Blacklist.localservice='1'
-uci set dhcp.Blacklist.cachesize='1'
-uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
-uci set dhcp.Blacklist.boguspriv='1'
-uci set dhcp.Blacklist.logqueries='0'
-uci set dhcp.Blacklist.logfacility='/var/log/dnsmasq.blacklist.log'
-uci add_list dhcp.Blacklist.notinterface='br-VOICE'
-uci add_list dhcp.Blacklist.notinterface='br-GUEST'
-uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN'
-uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
-uci set dhcp.Blacklist.interface='br-INET'
-uci add_list dhcp.Blacklist.interface='br-HCONTROL'
-uci add_list dhcp.Blacklist.interface='br-CONTROL'
-uci add_list dhcp.Blacklist.interface='br-SERVER'
-uci set dhcp.Blacklist.domain=$INET_domain
+config resolver
+        option address '1.1.1.3'
+        option tls_auth_name 'family.cloudflare-dns.com'
 
-uci set dhcp.Whitelist=dnsmasq
-uci set dhcp.Whitelist.domainneeded='1'
-uci set dhcp.Whitelist.localise_queries='1'
-uci set dhcp.Whitelist.rebind_protection='1'
-uci set dhcp.Whitelist.rebind_localhost='1'
-uci set dhcp.Whitelist.filterwin2k='1'
-uci set dhcp.Whitelist.local='/'$VOICE_domain'/'
-uci set dhcp.Whitelist.expandhosts='1'
-uci set dhcp.Whitelist.authoritative='1'
-uci set dhcp.Whitelist.readethers='1'
-uci set dhcp.Whitelist.leasefile='/tmp/dhcp.whitelist.leases'
-uci set dhcp.Whitelist.resolvfile='/tmp/resolv.whitelist.conf.auto'
-uci set dhcp.Whitelist.localservice='1'
-uci set dhcp.Whitelist.cachesize='1'
-uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
-uci set dhcp.Whitelist.boguspriv='1'
-uci set dhcp.Whitelist.logqueries='0'
-uci set dhcp.Whitelist.logfacility='/var/log/dnsmasq.whitelist.log'
-uci set dhcp.Whitelist.interface='br-VOICE' 
-uci add_list dhcp.Whitelist.interface='br-GUEST'
-uci add_list dhcp.Whitelist.interface='br-ENTERTAIN'
-uci add_list dhcp.Whitelist.interface='br-CMOVIE'
-uci set dhcp.Whitelist.notinterface='br-INET'
-uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
-uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
-uci add_list dhcp.Whitelist.notinterface='br-SERVER'
-uci set dhcp.Whitelist.domain=$VOICE_domain
 
-#uci set dhcp.lan=dhcp
-#uci set dhcp.lan.interface='lan'
-#uci set dhcp.lan.start='1'
-#uci set dhcp.lan.limit='250'
-#uci set dhcp.lan.leasetime='24h'
-#uci set dhcp.lan.dhcpv6='server'
-#uci set dhcp.lan.ra='server'
+config resolver
+        option address '1.0.0.3'
+        option tls_auth_name 'family.cloudflare-dns.com'
 
-uci set dhcp.wan=dhcp
-uci set dhcp.wan.interface='wan'
-uci set dhcp.wan.ignore='1'
 
-uci set dhcp.SERVER=dhcp
-#uci set dhcp.SERVER.dhcpv4='server'
-#uci set dhcp.SERVER.dhcpv6='server'
-#uci set dhcp.SERVER.ra='server'
-#uci set dhcp.SERVER.ra_slaac='1'
-#uci add_list dhcp.SERVER.ra_flags='managed-config'
-#uci add_list dhcp.SERVER.ra_flags='other-config'
-uci set dhcp.SERVER.start='1'
-uci set dhcp.SERVER.limit='250'
-uci set dhcp.SERVER.interface='SERVER'
-uci set dhcp.SERVER.leasetime='24h'
-uci set dhcp.SERVER.dhcpv6='server'
-uci set dhcp.SERVER.domain=$SERVER_domain
-uci set dhcp.SERVER.local='/'$SERVER_domain'/'
-#uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
-uci add_list dhcp.SERVER.dhcp_option='6,'$INET_GW
-uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
-uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
-uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
+#config resolver
+#        option address '80.241.218.68'
+#        option tls_auth_name 'fdns1.dismail.de'
+#        list spki 'sha256/MMi3E2HZr5A5GL+badqe3tzEPCB00+OmApZqJakbqUU='
 
-uci set dhcp.CONTROL=dhcp
-#uci set dhcp.CONTROL.dhcpv4='server'
-#uci set dhcp.CONTROL.dhcpv6='server'
-#uci set dhcp.CONTROL.ra='server'
-#uci set dhcp.CONTROL.ra_slaac='1'
-#uci add_list dhcp.CONTROL.ra_flags='managed-config'
-#uci add_list dhcp.CONTROL.ra_flags='other-config'
-uci set dhcp.CONTROL.start='1'
-uci set dhcp.CONTROL.limit='250'
-uci set dhcp.CONTROL.interface='CONTROL'
-uci set dhcp.CONTROL.leasetime='24h'
-uci set dhcp.CONTROL.dhcpv6='server'
-uci set dhcp.CONTROL.domain=$CONTROL_domain
-uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
-uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
-#uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip
-uci add_list dhcp.CONTROL.dhcp_option='6,'$INET_GW
-uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
-uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_UNBOUND_port
+#config resolver
+#        option address '46.182.19.48'
+#        option tls_auth_name 'dns2.digitalcourage.de'
+#        list spki 'sha256/v7rm6OtQQD3x/wbsdHDZjiDg+utMZvnoX3jq3Vi8tGU='
 
-uci set dhcp.HCONTROL=dhcp
-#uci set dhcp.HCONTROL.dhcpv4='server'
-#uci set dhcp.HCONTROL.dhcpv6='server'
-#uci set dhcp.HCONTROL.ra='server'
-#uci set dhcp.HCONTROL.ra_slaac='1'
-#uci add_list dhcp.HCONTROL.ra_flags='managed-config'
-#uci add_list dhcp.HCONTROL.ra_flags='other-config'
-uci set dhcp.HCONTROL.start='1'
-uci set dhcp.HCONTROL.limit='250'
-uci set dhcp.HCONTROL.interface='HCONTROL'
-uci set dhcp.HCONTROL.leasetime='24h'
-uci set dhcp.HCONTROL.dhcpv6='server'
-uci set dhcp.HCONTROL.domain=$HCONTROL_domain
-uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
-#uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
-uci add_list dhcp.HCONTROL.dhcp_option='6,'$INET_GW
-uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
-uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
-uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_UNBOUND_port
 
-uci set dhcp.INET=dhcp
-#uci set dhcp.INET.dhcpv4='server'
-#uci set dhcp.INET.dhcpv6='server'
-#uci set dhcp.INET.ra='server'
-#uci set dhcp.INET.ra_slaac='1'
-#uci add_list dhcp.INET.ra_flags='managed-config'
-#uci add_list dhcp.INET.ra_flags='other-config'
-uci set dhcp.INET.start='1'
-uci set dhcp.INET.limit='250'
-uci set dhcp.INET.interface='INET'
-uci set dhcp.INET.leasetime='24h'
-uci set dhcp.INET.dhcpv6='server'
-uci set dhcp.INET.domain=$INET_domain
-uci set dhcp.INET.local='/'$INET_domain'/'
-#uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
-uci add_list dhcp.INET.dhcp_option='6,'$INET_GW
-uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
-uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
-uci set dhcp.INET.server=$INET_ip'#'$DNS_UNBOUND_port
+EOF
 
-uci set dhcp.ENTERTAIN=dhcp
-#uci set dhcp.ENTERTAIN.dhcpv4='server'
-#uci set dhcp.ENTERTAIN.dhcpv6='server'
-#uci set dhcp.ENTERTAIN.ra='server'
-#uci set dhcp.ENTERTAIN.ra_slaac='1'
-#uci add_list dhcp.ENTERTAIN.ra_flags='managed-config'
-#uci add_list dhcp.ENTERTAIN.ra_flags='other-config'
-uci set dhcp.ENTERTAIN.start='1'
-uci set dhcp.ENTERTAIN.limit='250'
-uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
-uci set dhcp.ENTERTAIN.leasetime='24h'
-uci set dhcp.ENTERTAIN.dhcpv6='server'
-uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
-uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
-#uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
-uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$INET_GW
-uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
-uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
-uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_UNBOUND_port
+uci commit stubby && reload_config >> install.log
 
-uci set dhcp.VOICE=dhcp
-#uci set dhcp.VOICE.dhcpv4='server'
-#uci set dhcp.VOICE.dhcpv6='server'
-#uci set dhcp.VOICE.ra='server'
-#uci set dhcp.VOICE.ra_slaac='1'
-#uci add_list dhcp.VOICE.ra_flags='managed-config'
-#uci add_list dhcp.VOICE.ra_flags='other-config'
-uci set dhcp.VOICE.start='1'
-uci set dhcp.VOICE.limit='250'
-uci set dhcp.VOICE.interface='VOICE'
-uci set dhcp.VOICE.leasetime='24h'
-uci set dhcp.VOICE.dhcpv6='server'
-uci set dhcp.VOICE.domain=$VOICE_domain
-uci set dhcp.VOICE.local='/'$VOICE_domain'/'
-#uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
-uci add_list dhcp.VOICE.dhcp_option='6,'$INET_GW
-uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
-uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
-uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_UNBOUND_port
+/etc/init.d/stubby restart  >> install.log
+# Configure unbound client
 
-uci set dhcp.GUEST=dhcp
-#uci set dhcp.GUEST.dhcpv4='server'
-#uci set dhcp.GUEST.dhcpv6='server'
-#uci set dhcp.GUEST.ra='server'
-#uci set dhcp.GUEST.ra_slaac='1'
-#uci add_list dhcp.GUEST.ra_flags='managed-config'
-#uci add_list dhcp.GUEST.ra_flags='other-config'
-uci set dhcp.GUEST.start='100'
-uci set dhcp.GUEST.limit='150'
-uci set dhcp.GUEST.interface='GUEST'
-uci set dhcp.GUEST.leasetime='24h'
-uci set dhcp.GUEST.dhcpv6='server'
-uci set dhcp.GUEST.domain=$GUEST_domain
-uci set dhcp.GUEST.local='/'$GUEST_domain'/'
-#uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
-uci add_list dhcp.GUEST.dhcp_option='6,'$INET_GW
-uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
-uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
-uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
-uci commit && reload_config
+echo
+echo 'Stubby Pivaticy over cloudflair.com'
+echo
 
-uci set dhcp.CMOVIE=dhcp
-#uci set dhcp.CMOVIE.dhcpv4='server'
-#uci set dhcp.CMOVIE.dhcpv6='server'
-#uci set dhcp.CMOVIE.ra='server'
-#uci set dhcp.CMOVIE.ra_slaac='1'
-#uci add_list dhcp.CMOVIE.ra_flags='managed-config'
-#uci add_list dhcp.CMOVIE.ra_flags='other-config'
-uci set dhcp.CMOVIE.start='100'
-uci set dhcp.CMOVIE.limit='150'
-uci set dhcp.CMOVIE.interface='CMOVIE'
-uci set dhcp.CMOVIE.leasetime='24h'
-uci set dhcp.CMOVIE.dhcpv6='server'
-uci set dhcp.CMOVIE.domain=$CMOVIE_domain
-uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
-#uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
-uci add_list dhcp.CMOVIE.dhcp_option='6,'$INET_GW
-uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
-uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
-uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
-uci commit && reload_config
+echo
+echo 'On Error enter logread'
+echo
 
-uci commit dhcp && reload_config >/dev/null
+/etc/init.d/unbound stop  >> install.log
+/etc/init.d/log restart  >> install.log
 
-#/etc/init.d/dnsmasq restart >/dev/null
+#Configure stubby
 
-uci set network.wan.peerdns='0'
-uci set network.wan.dns='127.0.0.1'
-uci set network.wan6.peerdns='0'
-uci set network.wan6.dns='0::1'
-uci commit && reload_config >/dev/null
+}
 
-#uci set dhcp.@dnsmasq[-1].dnssec=1
-#uci set dhcp.@dnsmasq[-1].dnsseccheckunsigned=1
-#uci commit && reload_config >/dev/null
+set_unbound() {
+mkdir /etc/unbound/unbound.conf.d >> install.log
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
+curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
-uci set dhcp.wan=dhcp
-uci set dhcp.wan.interface='wan'
-uci set dhcp.wan.ignore='1'
+cat << EOF > /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
 
-uci commit dhcp && reload_config >/dev/null
+::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
 
-/etc/init.d/dnsmasq restart >/dev/null
-cp /usr/share/dnsmasq/trust-anchors.conf /etc/ >/dev/null
+uci set unbound.ub_main=unbound
+uci set unbound.ub_main.enabled='1'
+#uci set unbound.ub_main.include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
+uci set unbound.ub_main.tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
+uci set unbound.ub_main.auto_trust_anchor_file='/var/lib/unbound/root.key'
+uci set unbound.ub_main.root_hints='/var/lib/unbound/root.hints'
+uci set unbound.ub_main.add_extra_dns='0'
+uci set unbound.ub_main.add_local_fqdn='1'
+uci set unbound.ub_main.add_wan_fqdn='0'
+uci set unbound.ub_main.dhcp_link='dnsmasq'
+uci set unbound.ub_main.dhcp4_slaac6='0'
+uci set unbound.ub_main.do_ip4='yes'
+uci set unbound.ub_main.do_ip6='yes'
+uci set unbound.ub_main.do_tcp='yes'
+uci set unbound.ub_main.do_udp='yes'
+uci set unbound.ub_main.dns64='0'
+uci set unbound.ub_main.do_not_query_localhost='no'
+uci set unbound.ub_main.domain=$LOCAL_DOMAIN
+uci set unbound.ub_main.domain_type='static'
+uci set unbound.ub_main.edns_size='1280'
+uci set unbound.ub_main.edns_buffer_size='1472'
+uci set unbound.ub_main.extended_stats='0'
+uci set unbound.ub_main.hide_binddata='1'
+uci set unbound.ub_main.interface_auto='1'
+uci set unbound.ub_main.listen_port=$DNS_UNBOUND_port
+uci set unbound.ub_main.localservice='1'
+uci set unbound.ub_main.manual_conf='0'
+uci set unbound.ub_main.num_threads='1'
+uci set unbound.ub_main.protocol='default'
+#uci set unbound.ub_main.query_minimize='0'
+uci set unbound.ub_main.query_minimize='1'
+uci set unbound.ub_main.query_min_strict='1'
+uci set unbound.ub_main.rate_limit='0'
+uci set unbound.ub_main.rebind_localhost='0'
+uci set unbound.ub_main.rebind_protection='1'
+#uci set unbound.ub_main.recursion='default'
+#uci set unbound.ub_main.resource='default'
+uci set unbound.ub_main.recursion='passiv'
+uci set unbound.ub_main.resource='medium'
+uci set unbound.ub_main.root_age='9'
+uci set unbound.ub_main.ttl_min='300'
+uci set unbound.ub_main.ttl_max='86400'
+uci set unbound.ub_main.cache_min_ttl='300'
+uci set unbound.ub_main.cache_max_ttl='86400'
+uci set unbound.ub_main.cache_size='10000'
+#uci set unbound.ub_main.unbound_control='0'
+uci set unbound.ub_main.unbound_control='2'
+uci set unbound.ub_main.prefetch='yes'
+uci set unbound.ub_main.prefetch_key='yes'
+uci set unbound.ub_main.validator='1'
+uci set unbound.ub_main.validator_ntp='1'
+uci set unbound.ub_main.verbosity='0'
+uci set unbound.ub_main.hide_identity='yes'
+uci set unbound.ub_main.hide_version='yes'
+uci set unbound.ub_main.harden_glue='yes'
+uci set unbound.ub_main.harden_dnssec_stripped='yes'
+uci set unbound.ub_main.harden_large_queries='yes'
+uci set unbound.ub_main.harden_short_bufsize='yes'
+uci set unbound.ub_main.harden_below_nxdomain='yes'
+uci set unbound.ub_main.use_caps_for_id='yes'
+uci set unbound.ub_main.so_reuseport='yes'
+uci set unbound.ub_main.msg_cache_slabs='2'
+uci set unbound.ub_main.rrset_cache_slabs='2'
+uci set unbound.ub_main.infra_cache_slabs='2'
+uci set unbound.ub_main.key_cache_slabs='2'
+uci set unbound.ub_main.qname_minimisation='yes'
+uci set unbound.ub_main.qname_minimisation_strict='yes'
+uci set unbound.ub_main.rrset_roundrobin='yes'
+uci set unbound.ub_main.serve_expired='yes'
+uci set unbound.ub_main.so_rcvbuf='1m'
+uci set unbound.ub_main.protocol='ip4_only'
+uci add_list unbound.ub_main.private_address='192.168.0.0/16'
+uci add_list unbound.ub_main.private_address='169.254.0.0/16'
+uci add_list unbound.ub_main.private_address='172.16.0.0/12'
+uci add_list unbound.ub_main.private_address='10.0.0.0/8'
+uci add_list unbound.ub_main.private_address='fd00::/8'
+uci add_list unbound.ub_main.private_address='fe80::/10'
+uci add_list unbound.ub_main.access_control='0.0.0.0/0 refuse'
+uci add_list unbound.ub_main.access_control='::0/0 refuse'
+uci add_list unbound.ub_main.access_control='127.0.0.1 allow'
+uci add_list unbound.ub_main.access_control='::1 allow'
+uci add_list unbound.ub_main.access_control=$SERVER_net' allow'
+uci add_list unbound.ub_main.access_control=$CONTROL_net' allow'
+uci add_list unbound.ub_main.access_control=$HCONTROL_net' allow'
+uci add_list unbound.ub_main.access_control=$INET_net' allow'
+uci add_list unbound.ub_main.iface_trig='CONTROL'
+uci add_list unbound.ub_main.iface_trig='HCONTROL'
+uci add_list unbound.ub_main.iface_trig='INET_CLIENTS'
+uci add_list unbound.ub_main.iface_trig='SERVER'
+uci add_list unbound.ub_main.iface_trig='VOICE'
+uci add_list unbound.ub_main.iface_trig='ENTERTAIN'
+uci add_list unbound.ub_main.iface_trig='CMOVIE'
+uci add_list unbound.ub_main.iface_trig='GUEST'
+uci add_list unbound.ub_main.iface_trig='wan6'
+uci add_list unbound.ub_main..iface_trig='lo'
+uci del_list unbound.ub_main.iface_trig='lan'
+uci set unbound.ub_main.domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
+uci add_list unbound.ub_main.domain_insecure=$INET_domain
+uci add_list unbound.ub_main.domain_insecure=$SERVER_domain
+uci add_list unbound.ub_main.domain_insecure=$HCONTROL_domain
+uci add_list unbound.ub_main.domain_insecure=$CONTROL_domain
+uci add_list unbound.ub_main.domain_insecure=$VOICE_domain
+uci add_list unbound.ub_main.domain_insecure=$GUEST_domain
+uci add_list unbound.ub_main.domain_insecure=$ENTERTAIN_domain
+uci add_list unbound.ub_main.domain_insecure=$CMOVIE_domain
+uci add_list unbound.ub_main.domain_insecure='onion'
+uci add_list unbound.ub_main.domain_insecure='exit'
+uci add_list unbound.ub_main.private_domain=$INET_domain
+uci add_list unbound.ub_main.private_domain=$SERVER_domain
+uci add_list unbound.ub_main.private_domain=$HCONTROL_domain
+uci add_list unbound.ub_main.private_domain=$CONTROL_domain
+uci add_list unbound.ub_main.private_domain=$VOICE_domain
+uci add_list unbound.ub_main.private_domain=$GUEST_domain
+uci add_list unbound.ub_main.private_domain=$ENTERTAIN_domain
+uci add_list unbound.ub_main.private_domain=$CMOVIE_domain
+uci add_list unbound.ub_main.private_domain='onion'
+uci add_list unbound.ub_main.private_domain='exit'
 
+uci add_list unbound.ub_main.outgoing_port_permit=$SDNS_port
+uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS_port
+#uci add_list unbound.ub_main.outgoing_port_permit='9150'
+uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
+#uci add_list unbound.ub_main.outgoing_port_permit='9153'
+#uci add_list unbound.ub_main.outgoing_port_permit='10240-65335'
+
+#uci add unbound zone
+#uci set unbound.@zone[-1].name='onion'
+#uci set unbound.@zone[-1].zone_type='forward_zone'
+#uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+#uci add unbound zone
+#uci set unbound.@zone[-1].name='exit'
+#uci set unbound.@zone[-1].zone_type='forward_zone'
+#uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+#uci add unbound zone
+#uci set unbound.@zone[-1].name='.'
+#uci set unbound.@zone[-1].zone_type='forward_zone'
+#uci set unbound.@zone[-1].fallback='0'
+#uci set unbound.@zone[-1].tls_upstream='1'
+#uci set unbound.@zone[-1].tls_index='dns.cloudflair'
+#uci set unbound.@zone[-1].forward_tls_upstream='yes'
+#uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
+
+#uci set unbound.@unbound[0]=unbound
+#uci set unbound.@unbound[0].enabled='1'
+#uci set unbound.@unbound[0].include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
+#uci set unbound.@unbound[0].tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
+#uci set unbound.@unbound[0].auto_trust_anchor_file='/var/lib/unbound/root.key'
+#uci set unbound.@unbound[0].root_hints='/var/lib/unbound/root.hints'
+#uci set unbound.@unbound[0].add_extra_dns='0'
+#uci set unbound.@unbound[0].add_local_fqdn='1'
+#uci set unbound.@unbound[0].add_wan_fqdn='0'
+#uci set unbound.@unbound[0].dhcp_link='dnsmasq'
+#uci set unbound.@unbound[0].dhcp4_slaac6='0'
+#uci set unbound.@unbound[0].do_ip4='yes'
+#uci set unbound.@unbound[0].do_ip6='yes'
+#uci set unbound.@unbound[0].do_tcp='yes'
+#uci set unbound.@unbound[0].do_udp='yes'
+#uci set unbound.@unbound[0].dns64='0'
+#uci set unbound.@unbound[0].do_not_query_localhost='no'
+#uci set unbound.@unbound[0].domain=$LOCAL_DOMAIN
+#uci set unbound.@unbound[0].domain_type='static'
+#uci set unbound.@unbound[0].edns_size='1280'
+#uci set unbound.@unbound[0].edns_buffer_size='1472'
+#uci set unbound.@unbound[0].extended_stats='0'
+#uci set unbound.@unbound[0].hide_binddata='1'
+#uci set unbound.@unbound[0].interface_auto='1'
+#uci set unbound.@unbound[0].listen_port=$DNS_UNBOUND_port
+#uci set unbound.@unbound[0].localservice='1'
+#uci set unbound.@unbound[0].manual_conf='0'
+#uci set unbound.@unbound[0].num_threads='1'
+#uci set unbound.@unbound[0].protocol='default'
+#uci set unbound.@unbound[0].query_minimize='0'
+#uci set unbound.@unbound[0].query_minimize='1'
+#uci set unbound.@unbound[0].query_min_strict='1'
+#uci set unbound.@unbound[0].rate_limit='0'
+#uci set unbound.@unbound[0].rebind_localhost='0'
+#uci set unbound.@unbound[0].rebind_protection='1'
+#uci set unbound.@unbound[0].recursion='default'
+#uci set unbound.@unbound[0].resource='default'
+#uci set unbound.@unbound[0].recursion='passiv'
+#uci set unbound.@unbound[0].resource='medium'
+#uci set unbound.@unbound[0].root_age='9'
+#uci set unbound.@unbound[0].ttl_min='300'
+#uci set unbound.@unbound[0].ttl_max='86400'
+#uci set unbound.@unbound[0].cache_min_ttl='300'
+#uci set unbound.@unbound[0].cache_max_ttl='86400'
+#uci set unbound.@unbound[0].cache_size='10000'
+#uci set unbound.@unbound[0].unbound_control='0'
+#uci set unbound.@unbound[0].unbound_control='2'
+#uci set unbound.@unbound[0].prefetch='yes'
+#uci set unbound.@unbound[0].prefetch_key='yes'
+#uci set unbound.@unbound[0].validator='1'
+#uci set unbound.@unbound[0].validator_ntp='1'
+#uci set unbound.@unbound[0].verbosity='0'
+#uci set unbound.@unbound[0].hide_identity='yes'
+#uci set unbound.@unbound[0].hide_version='yes'
+#uci set unbound.@unbound[0].harden_glue='yes'
+#uci set unbound.@unbound[0].harden_dnssec_stripped='yes'
+#uci set unbound.@unbound[0].harden_large_queries='yes'
+#uci set unbound.@unbound[0].harden_short_bufsize='yes'
+#uci set unbound.@unbound[0].harden_below_nxdomain='yes'
+#uci set unbound.@unbound[0].use_caps_for_id='yes'
+#uci set unbound.@unbound[0].so_reuseport='yes'
+#uci set unbound.@unbound[0].msg_cache_slabs='2'
+#uci set unbound.@unbound[0].rrset_cache_slabs='2'
+#uci set unbound.@unbound[0].infra_cache_slabs='2'
+#uci set unbound.@unbound[0].key_cache_slabs='2'
+#uci set unbound.@unbound[0].qname_minimisation='yes'
+#uci set unbound.@unbound[0].qname_minimisation_strict='yes'
+#uci set unbound.@unbound[0].rrset_roundrobin='yes'
+#uci set unbound.@unbound[0].serve_expired='yes'
+#uci set unbound.@unbound[0].so_rcvbuf='1m'
+#uci set unbound.@unbound[0].protocol='ip4_only'
+#uci add_list unbound.@unbound[0].private_address='192.168.0.0/16'
+#uci add_list unbound.@unbound[0].private_address='169.254.0.0/16'
+#uci add_list unbound.@unbound[0].private_address='172.16.0.0/12'
+#uci add_list unbound.@unbound[0].private_address='10.0.0.0/8'
+#uci add_list unbound.@unbound[0].private_address='fd00::/8'
+#uci add_list unbound.@unbound[0].private_address='fe80::/10'
+#uci add_list unbound.@unbound[0].access_control='0.0.0.0/0 refuse'
+#uci add_list unbound.@unbound[0].access_control='::0/0 refuse'
+#uci add_list unbound.@unbound[0].access_control='127.0.0.1 allow'
+#uci add_list unbound.@unbound[0].access_control='::1 allow'
+#uci add_list unbound.@unbound[0].access_control=$SERVER_net' allow'
+#uci add_list unbound.@unbound[0].access_control=$CONTROL_net' allow'
+#uci add_list unbound.@unbound[0].access_control=$HCONTROL_net' allow'
+#uci add_list unbound.@unbound[0].access_control=$INET_net' allow'
+#uci add_list unbound.@unbound[0].trigger_interface='CONTROL'
+#uci add_list unbound.@unbound[0].trigger_interface='HCONTROL'
+#uci add_list unbound.@unbound[0].trigger_interface='INET_CLIENTS'
+#uci add_list unbound.@unbound[0].trigger_interface='SERVER'
+#uci add_list unbound.@unbound[0].trigger_interface='VOICE'
+#uci add_list unbound.@unbound[0].trigger_interface='ENTERTAIN'
+#uci add_list unbound.@unbound[0].trigger_interface='CMOVIE'
+#uci add_list unbound.@unbound[0].trigger_interface='GUEST'
+#uci add_list unbound.@unbound[0].trigger_interface='wan6'
+#uci set unbound.@unbound[0].domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
+#uci add_list unbound.@unbound[0].domain_insecure=$INET_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$SERVER_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$HCONTROL_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$CONTROL_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$VOICE_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$GUEST_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$ENTERTAIN_domain
+#uci add_list unbound.@unbound[0].domain_insecure=$CMOVIE_domain
+#uci add_list unbound.@unbound[0].domain_insecure='onion'
+#uci add_list unbound.@unbound[0].domain_insecure='exit'
+#uci add_list unbound.@unbound[0].private_domain=$INET_domain
+#uci add_list unbound.@unbound[0].private_domain=$SERVER_domain
+#uci add_list unbound.@unbound[0].private_domain=$HCONTROL_domain
+#uci add_list unbound.@unbound[0].private_domain=$CONTROL_domain
+#uci add_list unbound.@unbound[0].private_domain=$VOICE_domain
+#uci add_list unbound.@unbound[0].private_domain=$GUEST_domain
+#uci add_list unbound.@unbound[0].private_domain=$ENTERTAIN_domain
+#uci add_list unbound.@unbound[0].private_domain=$CMOVIE_domain
+#uci add_list unbound.@unbound[0].private_domain='onion'
+#uci add_list unbound.@unbound[0].private_domain='exit'
+
+#uci add_list unbound.@unbound[0].outgoing_port_permit=$SDNS_port
+#uci add_list unbound.@unbound[0].outgoing_port_permit=$TOR_SOCKS_port
+##uci add_list unbound.@unbound[0].outgoing_port_permit='9150'
+#uci add_list unbound.@unbound[0].outgoing_port_permit=$DNS_TOR_port
+##uci add_list unbound.@unbound[0].outgoing_port_permit='9153'
+##uci add_list unbound.@unbound[0].outgoing_port_permit='10240-65335'
+
+
+uci add unbound zone
+uci set unbound.@zone[-1].name='onion'
+uci set unbound.@zone[-1].zone_type='forward_zone'
+uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+uci add unbound zone
+uci set unbound.@zone[-1].name='exit'
+uci set unbound.@zone[-1].zone_type='forward_zone'
+uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+uci add unbound zone
+uci set unbound.@zone[-1].name='.'
+uci set unbound.@zone[-1].zone_type='forward_zone'
+uci set unbound.@zone[-1].fallback='0'
+uci set unbound.@zone[-1].tls_upstream='1'
+uci set unbound.@zone[-1].tls_index='dns.cloudflair'
+uci set unbound.@zone[-1].forward_tls_upstream='yes'
+uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
+
+uci commit unbound && reload_config  >> install.log
+/etc/init.d/unbound start  >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
+
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
+echo '#                                                      #'
+echo '########################################################'
 view_config
-echo 'Please wait until Reboot ....'
 
+/etc/init.d/unbound restart  >> install.log
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                AD- and Porn-Filter installed         #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
 }
 
 create_dnsmasq_url_filter() {
@@ -4298,13 +2649,13 @@ echo '########################################################'
 view_config
 
 
-mkdir /etc/dnsmasq.d  >/dev/null
-mkdir /etc/dnsmasq.d/Blacklist >/dev/null
-mkdir /etc/dnsmasq.d/Whitelist >/dev/null
-mkdir /etc/dnsmasq.d/BlockAll >/dev/null
-mkdir /etc/dnsmasq.d/AllowAll >/dev/null
+mkdir /etc/dnsmasq.d  >> install.log
+mkdir /etc/dnsmasq.d/Blacklist >> install.log
+mkdir /etc/dnsmasq.d/Whitelist >> install.log
+mkdir /etc/dnsmasq.d/BlockAll >> install.log
+mkdir /etc/dnsmasq.d/AllowAll >> install.log
 
-uci commit dhcp && reload_config >/dev/null
+uci commit dhcp && reload_config >> install.log
 
 #DNS_Relay_port=9053
 
@@ -9383,5112 +7734,14 @@ server=/commerzbank.de/127.0.0.1#$(echo $DNS_Relay_port)
 EOF
 
 
-cp /etc/dnsmasq.d/Blacklist/ads /etc/dnsmasq.d/Whitelist/ads >/dev/null
-cp /etc/dnsmasq.d/Blacklist/agency /etc/dnsmasq.d/Whitelist/agency >/dev/null
-cp /etc/dnsmasq.d/Blacklist/banking /etc/dnsmasq.d/Whitelist/banking >/dev/null
-cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys >/dev/null
-cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn >/dev/null
-cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white >/dev/null
+cp /etc/dnsmasq.d/Blacklist/ads /etc/dnsmasq.d/Whitelist/ads >> install.log
+cp /etc/dnsmasq.d/Blacklist/agency /etc/dnsmasq.d/Whitelist/agency >> install.log
+cp /etc/dnsmasq.d/Blacklist/banking /etc/dnsmasq.d/Whitelist/banking >> install.log
+cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys >> install.log
+cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn >> install.log
+cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white >> install.log
 
-/etc/init.d/dnsmasq restart >/dev/null
-
-echo
-echo
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#                AD- and Porn-Filter installed         #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-
-# Configure Black and Whitelsit
-cat << EOF > /etc/dnsmasq.d/Blacklist/z_all_allow
-server=/dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/127.0.0.1
-server=/#/127.0.0.1#$(echo $DNS_Relay_port)
-EOF
-
-cat << EOF > /etc/dnsmasq.d/AllowAll/all_allow
-server=/#/127.0.0.1#$(echo $DNS_Relay_port)
-EOF
-
-cat << EOF > /etc/dnsmasq.d/BlockAll/block_all
-address=/#/
-EOF
-
-cat << EOF > /etc/dnsmasq.d/Blacklist/agency
-address=/us-gov.amazonaws.com/
-address=/us-gov-east-1.amazonaws.com/
-address=/us-gov-east-2.amazonaws.com/
-address=/us-gov-east-3.amazonaws.com/
-address=/us-gov-east-4.amazonaws.com/
-address=/us-gov-east-5.amazonaws.com/
-address=/us-gov-west-1.amazonaws.com/
-address=/us-gov-west-2.amazonaws.com/
-address=/us-gov-west-3.amazonaws.com/
-address=/us-gov-west-4.amazonaws.com/
-address=/us-gov-west-5.amazonaws.com/
-address=/us-gov-south-1.amazonaws.com/
-address=/us-gov-south-2.amazonaws.com/
-address=/us-gov-south-3.amazonaws.com/
-address=/us-gov-south-4.amazonaws.com/
-address=/us-gov-south-5.amazonaws.com/
-address=/us-gov-north-1.amazonaws.com/
-address=/us-gov-north-2.amazonaws.com/
-address=/us-gov-north-3.amazonaws.com/
-address=/us-gov-north-4.amazonaws.com/
-address=/us-gov-north-5.amazonaws.com/
-address=/cn-north-1.amazonaws.com.cn/
-address=/cn-north-2.amazonaws.com.cn/
-address=/cn-north-3.amazonaws.com.cn/
-address=/cn-north-4.amazonaws.com.cn/
-address=/cn-north-5.amazonaws.com.cn/
-address=/cn-northwest-1.amazonaws.com.cn/
-address=/cn-northwest-2.amazonaws.com.cn/
-address=/cn-northwest-3.amazonaws.com.cn/
-address=/cn-northwest-4.amazonaws.com.cn/
-address=/cn-northwest-5.amazonaws.com.cn/
-address=/cn-northeast-1.amazonaws.com.cn/
-address=/cn-northeast-2.amazonaws.com.cn/
-address=/cn-northeast-3.amazonaws.com.cn/
-address=/cn-northeast-4.amazonaws.com.cn/
-address=/cn-northeast-5.amazonaws.com.cn/
-address=/cn-north-1.amazonaws.com.cn/
-address=/cn-north-2.amazonaws.com.cn/
-address=/cn-north-3.amazonaws.com.cn/
-address=/cn-north-4.amazonaws.com.cn/
-address=/cn-north-5.amazonaws.com.cn/
-address=/cn-southwest-1.amazonaws.com.cn/
-address=/cn-southwest-2.amazonaws.com.cn/
-address=/cn-southwest-3.amazonaws.com.cn/
-address=/cn-southwest-4.amazonaws.com.cn/
-address=/cn-southwest-5.amazonaws.com.cn/
-address=/cn-southeast-1.amazonaws.com.cn/
-address=/cn-southeast-2.amazonaws.com.cn/
-address=/cn-southeast-3.amazonaws.com.cn/
-address=/cn-southeast-4.amazonaws.com.cn/
-address=/cn-southeast-5.amazonaws.com.cn/
-address=/us-gov.compute.amazonaws.com/
-address=/us-gov-east-1.compute.amazonaws.com/
-address=/us-gov-east-2.compute.amazonaws.com/
-address=/us-gov-east-3.compute.amazonaws.com/
-address=/us-gov-east-4.compute.amazonaws.com/
-address=/us-gov-east-5.compute.amazonaws.com/
-address=/us-gov-west-1.compute.amazonaws.com/
-address=/us-gov-west-2.compute.amazonaws.com/
-address=/us-gov-west-3.compute.amazonaws.com/
-address=/us-gov-west-4.compute.amazonaws.com/
-address=/us-gov-west-5.compute.amazonaws.com/
-address=/us-gov-south-1.compute.amazonaws.com/
-address=/us-gov-south-2.compute.amazonaws.com/
-address=/us-gov-south-3.compute.amazonaws.com/
-address=/us-gov-south-4.compute.amazonaws.com/
-address=/us-gov-south-5.compute.amazonaws.com/
-address=/us-gov-north-1.compute.amazonaws.com/
-address=/us-gov-north-2.compute.amazonaws.com/
-address=/us-gov-north-3.compute.amazonaws.com/
-address=/us-gov-north-4.compute.amazonaws.com/
-address=/us-gov-north-5.compute.amazonaws.com/
-address=/cn-north-1.compute.amazonaws.com.cn/
-address=/cn-north-2.compute.amazonaws.com.cn/
-address=/cn-north-3.compute.amazonaws.com.cn/
-address=/cn-north-4.compute.amazonaws.com.cn/
-address=/cn-north-5.compute.amazonaws.com.cn/
-address=/cn-northwest-1.compute.amazonaws.com.cn/
-address=/cn-northwest-2.compute.amazonaws.com.cn/
-address=/cn-northwest-3.compute.amazonaws.com.cn/
-address=/cn-northwest-4.compute.amazonaws.com.cn/
-address=/cn-northwest-5.compute.amazonaws.com.cn/
-address=/cn-northeast-1.compute.amazonaws.com.cn/
-address=/cn-northeast-2.compute.amazonaws.com.cn/
-address=/cn-northeast-3.compute.amazonaws.com.cn/
-address=/cn-northeast-4.compute.amazonaws.com.cn/
-address=/cn-northeast-5.compute.amazonaws.com.cn/
-address=/cn-north-1.compute.amazonaws.com.cn/
-address=/cn-north-2.compute.amazonaws.com.cn/
-address=/cn-north-3.compute.amazonaws.com.cn/
-address=/cn-north-4.compute.amazonaws.com.cn/
-address=/cn-north-5.compute.amazonaws.com.cn/
-address=/cn-southwest-1.compute.amazonaws.com.cn/
-address=/cn-southwest-2.compute.amazonaws.com.cn/
-address=/cn-southwest-3.compute.amazonaws.com.cn/
-address=/cn-southwest-4.compute.amazonaws.com.cn/
-address=/cn-southwest-5.compute.amazonaws.com.cn/
-address=/cn-southeast-1.compute.amazonaws.com.cn/
-address=/cn-southeast-2.compute.amazonaws.com.cn/
-address=/cn-southeast-3.compute.amazonaws.com.cn/
-address=/cn-southeast-4.compute.amazonaws.com.cn/
-address=/cn-southeast-5.compute.amazonaws.com.cn/
-
-address=/fbi.gov/
-address=/cia.gov/
-address=/nsa.gov/
-address=/dia.gov/
-address=/bnd.de/
-address=/bka.de/
-address=/lka.de/
-address=/mad.de/
-address=/mil.de/
-address=/cia.de/
-address=/nsa.de/
-address=/fbi.de/
-address=/bka.de/
-address=/lka.de/
-address=/bnd.de/
-address=/mad.de/
-address=/bavsa.de/
-address=/gov.de/
-address=/goverment.de/
-address=/bnd.at/
-address=/bka.at/
-address=/lka.at/
-address=/mad.at/
-address=/mil.at/
-address=/cia.at/
-address=/nsa.at/
-address=/fbi.at/
-address=/bka.at/
-address=/lka.at/
-address=/bnd.at/
-address=/mad.at/
-address=/cobra.at/
-address=/bavsa.at/
-address=/gov.at/
-address=/bnd.ch/
-address=/bka.ch/
-address=/lka.ch/
-address=/mad.ch/
-address=/mil.ch/
-address=/cia.ch/
-address=/nsa.ch/
-address=/fbi.ch/
-address=/bka.ch/
-address=/lka.ch/
-address=/bnd.ch/
-address=/mad.ch/
-address=/bavsa.ch/
-address=/gov.ch/
-address=/goverment.ch/
-address=/bnd.eu/
-address=/bka.eu/
-address=/lka.eu/
-address=/mad.eu/
-address=/mil.eu/
-address=/cia.eu/
-address=/nsa.eu/
-address=/fbi.eu/
-address=/bka.eu/
-address=/lka.eu/
-address=/bnd.eu/
-address=/mad.eu/
-address=/bavsa.eu/
-address=/gov.eu/
-address=/goverment.eu/
-address=/mil.com/
-address=/cia.com/
-address=/nsa.com/
-address=/fbi.com/
-address=/bka.com/
-address=/lka.com/
-address=/bnd.com/
-address=/mad.com/
-address=/bavsa.com/
-address=/bvs.com/
-address=/gov.com/
-address=/goverment/
-address=/mil/
-address=/cia/
-address=/nsa/
-address=/fbi/
-address=/bka/
-address=/lka/
-address=/bnd/
-address=/mad/
-address=/bavsa/
-address=/bvs/
-address=/gov/
-EOF
-
-cat << EOF > /etc/dnsmasq.d/Whitelist/z_block_all
-address=/#/
-EOF
-
-cat << EOF > /etc/dnsmasq.d/Blacklist/contrys
-address=/.ac/
-address=/.ad/
-address=/.ae/
-address=/.af/
-address=/.ag/
-address=/.ai/
-address=/.al/
-address=/.am/
-address=/.an/
-address=/.ao/
-address=/.aq/
-address=/.ar/
-address=/.as/
-address=/.au/
-address=/.aw/
-address=/.ax/
-address=/.az/
-address=/.ba/
-address=/.bb/
-address=/.bd/
-address=/.bf/
-address=/.bg/
-address=/.bh/
-address=/.bi/
-address=/.bj/
-address=/.bl/
-address=/.bm/
-address=/.bn/
-address=/.bo/
-address=/.bq/
-address=/.br/
-address=/.bs/
-address=/.bt/
-address=/.bv/
-address=/.bw/
-address=/.by/
-address=/.bz/
-address=/.cc/
-address=/.cd/
-address=/.cf/
-address=/.cg/
-address=/.ci/
-address=/.ck/
-address=/.cl/
-address=/.cm/
-address=/.cn/
-address=/.co/
-address=/.cr/
-address=/.cu/
-address=/.cv/
-address=/.cw/
-address=/.cx/
-address=/.cy/
-address=/.cz/
-address=/.dj/
-address=/.dm/
-address=/.do/
-address=/.dz/
-address=/.ec/
-address=/.ee/
-address=/.eg/
-address=/.eh/
-address=/.er/
-address=/.es/
-address=/.et/
-address=/.fi/
-address=/.fj/
-address=/.fk/
-address=/.fm/
-address=/.fo/
-address=/.fr/
-address=/.ga/
-address=/.gb/
-address=/.gd/
-address=/.ge/
-address=/.gf/
-address=/.gg/
-address=/.gh/
-address=/.gi/
-address=/.gl/
-address=/.gm/
-address=/.gn/
-address=/.gp/
-address=/.gq/
-address=/.gr/
-address=/.gs/
-address=/.gt/
-address=/.gu/
-address=/.gw/
-address=/.gy/
-address=/.hk/
-address=/.hm/
-address=/.hn/
-address=/.hr/
-address=/.ht/
-address=/.hu/
-address=/.id/
-address=/.ie/
-address=/.il/
-address=/.im/
-address=/.in/
-address=/.io/
-address=/.iq/
-address=/.ir/
-address=/.is/
-address=/.it/
-address=/.je/
-address=/.jm/
-address=/.jo/
-address=/.ke/
-address=/.kg/
-address=/.kh/
-address=/.ki/
-address=/.km/
-address=/.kn/
-address=/.kp/
-address=/.kr/
-address=/.kw/
-address=/.ky/
-address=/.kz/
-address=/.la/
-address=/.lb/
-address=/.lc/
-address=/.lk/
-address=/.lr/
-address=/.ls/
-address=/.lt/
-address=/.lu/
-address=/.lv/
-address=/.ly/
-address=/.ma/
-address=/.mc/
-address=/.md/
-address=/.me/
-address=/.mf/
-address=/.mg/
-address=/.mh/
-address=/.mk/
-address=/.ml/
-address=/.mm/
-address=/.mn/
-address=/.mo/
-address=/.mp/
-address=/.mq/
-address=/.mr/
-address=/.ms/
-address=/.mt/
-address=/.mu/
-address=/.mv/
-address=/.mw/
-address=/.mx/
-address=/.my/
-address=/.mz/
-address=/.na/
-address=/.nc/
-address=/.ne/
-address=/.nf/
-address=/.ng/
-address=/.ni/
-address=/.no/
-address=/.np/
-address=/.nr/
-address=/.nu/
-address=/.nz/
-address=/.om/
-address=/.pa/
-address=/.pe/
-address=/.pf/
-address=/.pg/
-address=/.ph/
-address=/.pk/
-address=/.pl/
-address=/.pm/
-address=/.pn/
-address=/.pr/
-address=/.ps/
-address=/.pt/
-address=/.pw/
-address=/.py/
-address=/.qa/
-address=/.re/
-address=/.ro/
-address=/.rs/
-address=/.ru/
-address=/.rw/
-address=/.sa/
-address=/.sb/
-address=/.sc/
-address=/.sd/
-address=/.se/
-address=/.sg/
-address=/.sh/
-address=/.si/
-address=/.sj/
-address=/.sk/
-address=/.sl/
-address=/.sm/
-address=/.sn/
-address=/.so/
-address=/.sr/
-address=/.ss/
-address=/.st/
-address=/.su/
-address=/.sv/
-address=/.sx/
-address=/.sy/
-address=/.sz/
-address=/.tc/
-address=/.td/
-address=/.tf/
-address=/.tg/
-address=/.th/
-address=/.tj/
-address=/.tk/
-address=/.tl/
-address=/.tm/
-address=/.tn/
-address=/.to/
-address=/.tp/
-address=/.tr/
-address=/.tt/
-address=/.tz/
-address=/.ua/
-address=/.ug/
-address=/.um/
-address=/.uy/
-address=/.uz/
-address=/.va/
-address=/.vc/
-address=/.ve/
-address=/.vg/
-address=/.vi/
-address=/.vn/
-address=/.vu/
-address=/.wf/
-address=/.ws/
-address=/.ye/
-address=/.yt/
-address=/.za/
-address=/.zm/
-address=/.zw/
-EOF
-
-cat << EOF > /etc/dnsmasq.d/Blacklist/ads
-address=/1.f.ix.de/
-address=/101com.com/
-address=/101order.com/
-address=/1-1ads.com/
-address=/123freeavatars.com/
-address=/180hits.de/
-address=/180searchassistant.com/
-address=/1rx.io/
-address=/207.net/
-address=/247media.com/
-address=/24log.com/
-address=/24log.de/
-address=/24pm-affiliation.com/
-address=/2mdn.net/
-address=/2o7.net/
-address=/2znp09oa.com/
-address=/30ads.com/
-address=/3337723.com/
-address=/33across.com/
-address=/360yield.com/
-address=/3lift.com/
-address=/4affiliate.net/
-address=/4d5.net/
-address=/4info.com/
-address=/4jnzhl0d0.com/
-address=/50websads.com/
-address=/518ad.com/
-address=/51yes.com/
-address=/5ijo.01net.com/
-address=/5mcwl.pw/
-address=/6ldu6qa.com/
-address=/6sc.co/
-address=/777partner.com/
-address=/77tracking.com/
-address=/7bpeople.com/
-address=/7search.com/
-address=/80asehdb/
-address=/80aswg/
-address=/82o9v830.com/
-address=/a.aproductmsg.com/
-address=/a.consumer.net/
-address=/a.mktw.net/
-address=/a.muloqot.uz/
-address=/a.pub.network/
-address=/a.sakh.com/
-address=/a.ucoz.net/
-address=/a.ucoz.ru/
-address=/a.vartoken.com/
-address=/a.vfghd.com/
-address=/a.vfgtb.com/
-address=/a.xanga.com/
-address=/a135.wftv.com/
-address=/a5.overclockers.ua/
-address=/a8a8altrk.com/
-address=/aaddzz.com/
-address=/a-ads.com/
-address=/aa-metrics.beauty.hotpepper.jp/
-address=/aa-metrics.recruit-card.jp/
-address=/aa-metrics.trip-ai.jp/
-address=/aaxads.com/
-address=/aaxdetect.com/
-address=/aax-eu.amazon-adsystem.com/
-address=/aax-eu-dub.amazon.com/
-address=/abacho.net/
-address=/abackchain.com/
-address=/abandonedaction.com/
-address=/abc-ads.com/
-address=/aboardlevel.com/
-address=/aboutads.gr/
-address=/abruptroad.com/
-address=/absentstream.com/
-address=/absoluteclickscom.com/
-address=/absorbingband.com/
-address=/absurdwater.com/
-address=/abtasty.com/
-address=/abz.com/
-address=/ac.rnm.ca/
-address=/acbsearch.com/
-address=/acceptable.a-ads.com/
-address=/acid-adserver.click/
-address=/acridtwist.com/
-address=/actionsplash.com/
-address=/actonsoftware.com/
-address=/actualdeals.com/
-address=/actuallysheep.com/
-address=/actuallysnake.com/
-address=/acuityads.com/
-address=/acuityplatform.com/
-address=/ad.100.tbn.ru/
-address=/ad.71i.de/
-address=/ad.a8.net/
-address=/ad.a-ads.com/
-address=/ad.abcnews.com/
-address=/ad.abctv.com/
-address=/ad.aboutwebservices.com/
-address=/ad.abum.com/
-address=/ad.admitad.com/
-address=/ad.allboxing.ru/
-address=/ad.allstar.cz/
-address=/ad.altervista.org/
-address=/ad.amgdgt.com/
-address=/ad.anuntis.com/
-address=/ad.auditude.com/
-address=/ad.bitmedia.io/
-address=/ad.bizo.com/
-address=/ad.bnmla.com/
-address=/ad.bondage.com/
-address=/ad.caradisiac.com/
-address=/ad.centrum.cz/
-address=/ad.cgi.cz/
-address=/ad.choiceradio.com/
-address=/ad.clix.pt/
-address=/ad.cooks.com/
-address=/ad.digitallook.com/
-address=/ad.domainfactory.de/
-address=/ad.eurosport.com/
-address=/ad.exyws.org/
-address=/ad.flurry.com/
-address=/ad.foxnetworks.com/
-address=/ad.freecity.de/
-address=/ad.grafika.cz/
-address=/ad.gt/
-address=/ad.hbv.de/
-address=/ad.hodomobile.com/
-address=/ad.hyena.cz/
-address=/ad.iinfo.cz/
-address=/ad.ilove.ch/
-address=/ad.infoseek.com/
-address=/ad.intl.xiaomi.com/
-address=/ad.jacotei.com.br/
-address=/ad.jamba.net/
-address=/ad.jamster.co.uk/
-address=/ad.jetsoftware.com/
-address=/ad.keenspace.com/
-address=/ad.liveinternet.ru/
-address=/ad.lupa.cz/
-address=/ad.media-servers.net/
-address=/ad.mediastorm.hu/
-address=/ad.mg/
-address=/ad.mobstazinc.cn/
-address=/ad.musicmatch.com/
-address=/ad.myapple.pl/
-address=/ad.mynetreklam.com.streamprovider.net/
-address=/ad.nachtagenten.de/
-address=/ad.nozonedata.com/
-address=/ad.nttnavi.co.jp/
-address=/ad.nwt.cz/
-address=/ad.pandora.tv/
-address=/ad.period-calendar.com/
-address=/ad.preferances.com/
-address=/ad.profiwin.de/
-address=/ad.prv.pl/
-address=/ad.reunion.com/
-address=/ad.sensismediasmart.com.au/
-address=/ad.simflight.com/
-address=/ad.simgames.net/
-address=/ad.style/
-address=/ad.tapthislink.com/
-address=/ad.tbn.ru/
-address=/ad.technoratimedia.com/
-address=/ad.thewheelof.com/
-address=/ad.turn.com/
-address=/ad.tv2.no/
-address=/ad.universcine.com/
-address=/ad.usatoday.com/
-address=/ad.virtual-nights.com/
-address=/ad.wavu.hu/
-address=/ad.way.cz/
-address=/ad.weatherbug.com/
-address=/ad.wsod.com/
-address=/ad.wz.cz/
-address=/ad.xiaomi.com/
-address=/ad.xmovies8.si/
-address=/ad.xrea.com/
-address=/ad.yadro.ru/
-address=/ad.zanox.com/
-address=/ad0.bigmir.net/
-address=/ad01.mediacorpsingapore.com/
-address=/ad1.emule-project.org/
-address=/ad1.eventmanager.co.kr/
-address=/ad1.kde.cz/
-address=/ad1.pamedia.com.au/
-address=/ad1mat.de/
-address=/ad2.iinfo.cz/
-address=/ad2.lupa.cz/
-address=/ad2.netriota.hu/
-address=/ad2.nmm.de/
-address=/ad2.xrea.com/
-address=/ad2mat.de/
-address=/ad3.iinfo.cz/
-address=/ad3.pamedia.com.au/
-address=/ad3.xrea.com/
-address=/ad3mat.de/
-address=/ad4game.com/
-address=/ad4mat.com/
-address=/ad4mat.de/
-address=/ad4mat.net/
-address=/adabra.com/
-address=/adaction.de/
-address=/adadvisor.net/
-address=/adalliance.io/
-address=/adap.tv/
-address=/adapt.tv/
-address=/adaranth.com/
-address=/ad-balancer.at/
-address=/ad-balancer.net/
-address=/adbilty.me/
-address=/adblade.com/
-address=/adblade.org/
-address=/adblockanalytics.com/
-address=/adbooth.net/
-address=/adbot.com/
-address=/adbrite.com/
-address=/adbrn.com/
-address=/adbroker.de/
-address=/adbunker.com/
-address=/adbutler.com/
-address=/adbuyer.com/
-address=/adbuyer3.lycos.com/
-address=/adcampo.com/
-address=/adcannyads.com/
-address=/adcash.com/
-address=/adcast.deviantart.com/
-address=/adcell.de/
-address=/adcenter.net/
-address=/adcentriconline.com/
-address=/adclick.com/
-address=/adclick.de/
-address=/adclick.net/
-address=/adclient1.tucows.com/
-address=/adcolony.com/
-address=/adcomplete.com/
-address=/adconion.com/
-address=/adcontent.gamespy.com/
-address=/adcontrolsolutions.net/
-address=/ad-cupid.com/
-address=/adcycle.com/
-address=/add.newmedia.cz/
-address=/ad-delivery.net/
-address=/addfreestats.com/
-address=/addme.com/
-address=/adecn.com/
-address=/adeimptrck.com/
-address=/ademails.com/
-address=/adengage.com/
-address=/adetracking.com/
-address=/adexc.net/
-address=/adexchangegate.com/
-address=/adexchangeprediction.com/
-address=/adexpose.com/
-address=/adext.inkclub.com/
-address=/adf.ly/
-address=/adfarm.com/
-address=/adfarm.de/
-address=/adfarm.mediaplex.com/
-address=/adfarm.net/
-address=/adfarm1.com/
-address=/adfarm1.net/
-address=/adfarm2.com/
-address=/adfarm2.net/
-address=/adfarm3.com/
-address=/adfarm3.de/
-address=/adfarm3.net/
-address=/adfarm4.com/
-address=/adfarm4.de/
-address=/adfarm4.net/
-address=/adfarmonline.com/
-address=/adfarmonline.de/
-address=/adfarmonline.net/
-address=/adflight.com/
-address=/adforce.com/
-address=/adform.com/
-address=/adform.de/
-address=/adform.net/
-address=/adformdsp.net/
-address=/adfram.net/
-address=/adfram1.de/
-address=/adfram2.de/
-address=/adfrom.com/
-address=/adfrom.de/
-address=/adfrom.net/
-address=/adfs.senacrs.com.br/
-address=/adgardener.com/
-address=/adgoto.com/
-address=/adhaven.com/
-address=/adhese.be/
-address=/adhese.com/
-address=/adhigh.net/
-address=/adhoc4.net/
-address=/adhunter.media/
-address=/adidas-deutschland.com/
-address=/adimage.guardian.co.uk/
-address=/adimages.been.com/
-address=/adimages.carsoup.com/
-address=/adimages.go.com/
-address=/adimages.homestore.com/
-address=/adimages.omroepzeeland.nl/
-address=/adimages.sanomawsoy.fi/
-address=/adimg.com.com/
-address=/adimg.uimserv.net/
-address=/adimg1.chosun.com/
-address=/adimgs.sapo.pt/
-address=/adinjector.net/
-address=/adinterax.com/
-address=/adisfy.com/
-address=/adition.com/
-address=/adition.de/
-address=/adition.net/
-address=/adizio.com/
-address=/adjix.com/
-address=/ad-js.*/
-address=/ad-js.bild.de/
-address=/ad-js.chip.de/
-address=/ad-js.focus.de/
-address=/ad-js.welt.de/
-address=/adjug.com/
-address=/adjuggler.com/
-address=/adjuggler.yourdictionary.com/
-address=/adjustnetwork.com/
-address=/adk2.co/
-address=/adk2.com/
-address=/adland.ru/
-address=/adledge.com/
-address=/adlegend.com/
-address=/adlightning.com/
-address=/adlog.com.com/
-address=/adloox.com/
-address=/adlooxtracking.com/
-address=/adlure.net/
-address=/adm.fwmrm.net/
-address=/admagnet.net/
-address=/admailtiser.com/
-address=/adman.gr/
-address=/adman.otenet.gr/
-address=/admanagement.ch/
-address=/admanager.btopenworld.com/
-address=/admanager.carsoup.com/
-address=/admanmedia.com/
-address=/admantx.com/
-address=/admarketplace.net/
-address=/admarvel.com/
-address=/admaster.com.cn/
-address=/admatchly.com/
-address=/admax.nexage.com/
-address=/admedia.com/
-address=/admeld.com/
-address=/admeridianads.com/
-address=/admeta.com/
-address=/admex.com/
-address=/admidadsp.com/
-address=/adminder.com/
-address=/adminshop.com/
-address=/admix.in/
-address=/admixer.net/
-address=/admized.com/
-address=/admob.com/
-address=/admonitor.com/
-address=/admotion.com.ar/
-address=/adn.lrb.co.uk/
-address=/adnet.asahi.com/
-address=/adnet.biz/
-address=/adnet.de/
-address=/adnet.ru/
-address=/adnetinteractive.com/
-address=/adnetwork.net/
-address=/adnetworkperformance.com/
-address=/adnews.maddog2000.de/
-address=/adnium.com/
-address=/adnxs.com/
-address=/adocean.pl/
-address=/adonspot.com/
-address=/adoric-om.com/
-address=/adorigin.com/
-address=/adotmob.com/
-address=/ad-pay.de/
-address=/adpenguin.biz/
-address=/adpepper.dk/
-address=/adpepper.nl/
-address=/adperium.com/
-address=/adpia.vn/
-address=/adplus.co.id/
-address=/adplxmd.com/
-address=/adprofits.ru/
-address=/adrazzi.com/
-address=/adreactor.com/
-address=/adreclaim.com/
-address=/adrecover.com/
-address=/adrecreate.com/
-address=/adremedy.com/
-address=/adreporting.com/
-address=/adrevolver.com/
-address=/adriver.ru/
-address=/adrolays.de/
-address=/adrotate.de/
-address=/ad-rotator.com/
-address=/adrotic.girlonthenet.com/
-address=/adrta.com/
-address=/ads.365.mk/
-address=/ads.4tube.com/
-address=/ads.5ci.lt/
-address=/ads.5min.at/
-address=/ads.73dpi.com/
-address=/ads.aavv.com/
-address=/ads.abovetopsecret.com/
-address=/ads.aceweb.net/
-address=/ads.acpc.cat/
-address=/ads.acrosspf.com/
-address=/ads.activestate.com/
-address=/ads.ad-center.com/
-address=/ads.adfox.ru/
-address=/ads.administrator.de/
-address=/ads.adred.de/
-address=/ads.adstream.com.ro/
-address=/ads.adultfriendfinder.com/
-address=/ads.advance.net/
-address=/ads.adverline.com/
-address=/ads.affiliates.match.com/
-address=/ads.alive.com/
-address=/ads.alt.com/
-address=/ads.amdmb.com/
-address=/ads.amigos.com/
-address=/ads.annabac.com/
-address=/ads.aol.co.uk/
-address=/ads.apn.co.nz/
-address=/ads.appsgeyser.com/
-address=/ads.apteka254.ru/
-address=/ads.as4x.tmcs.net/
-address=/ads.as4x.tmcs.ticketmaster.com/
-address=/ads.asiafriendfinder.com/
-address=/ads.aspalliance.com/
-address=/ads.avazu.net/
-address=/ads.bb59.ru/
-address=/ads.belointeractive.com/
-address=/ads.betfair.com/
-address=/ads.bigchurch.com/
-address=/ads.bigfoot.com/
-address=/ads.bing.com/
-address=/ads.bittorrent.com/
-address=/ads.biz.tr/
-address=/ads.blog.com/
-address=/ads.bloomberg.com/
-address=/ads.bluemountain.com/
-address=/ads.boerding.com/
-address=/ads.bonniercorp.com/
-address=/ads.boylesports.com/
-address=/ads.brabys.com/
-address=/ads.brazzers.com/
-address=/ads.bumq.com/
-address=/ads.businessweek.com/
-address=/ads.canalblog.com/
-address=/ads.casinocity.com/
-address=/ads.casumoaffiliates.com/
-address=/ads.cbc.ca/
-address=/ads.cc/
-address=/ads.cc-dt.com/
-address=/ads.centraliprom.com/
-address=/ads.channel4.com/
-address=/ads.cheabit.com/
-address=/ads.citymagazine.si/
-address=/ads.clasificadox.com/
-address=/ads.clearchannel.com/
-address=/ads.co.com/
-address=/ads.colombiaonline.com/
-address=/ads.com.com/
-address=/ads.comeon.com/
-address=/ads.contactmusic.com/
-address=/ads.contentabc.com/
-address=/ads.contextweb.com/
-address=/ads.crakmedia.com/
-address=/ads.creative-serving.com/
-address=/ads.cybersales.cz/
-address=/ads.dada.it/
-address=/ads.dailycamera.com/
-address=/ads.datingyes.com/
-address=/ads.delfin.bg/
-address=/ads.deltha.hu/
-address=/ads.dennisnet.co.uk/
-address=/ads.desmoinesregister.com/
-address=/ads.detelefoongids.nl/
-address=/ads.deviantart.com/
-address=/ads.devmates.com/
-address=/ads.digital-digest.com/
-address=/ads.digitalmedianet.com/
-address=/ads.digitalpoint.com/
-address=/ads.directionsmag.com/
-address=/ads.domain.com/
-address=/ads.domeus.com/
-address=/ads.dtpnetwork.biz/
-address=/ads.eagletribune.com/
-address=/ads.easy-forex.com/
-address=/ads.economist.com/
-address=/ads.edbindex.dk/
-address=/ads.egrana.com.br/
-address=/ads.elcarado.com/
-address=/ads.electrocelt.com/
-address=/ads.elitetrader.com/
-address=/ads.emdee.ca/
-address=/ads.emirates.net.ae/
-address=/ads.epi.sk/
-address=/ads.epltalk.com/
-address=/ads.eu.msn.com/
-address=/ads.exactdrive.com/
-address=/ads.expat-blog.biz/
-address=/ads.fairfax.com.au/
-address=/ads.fastcomgroup.it/
-address=/ads.fasttrack-ignite.com/
-address=/ads.faxo.com/
-address=/ads.femmefab.nl/
-address=/ads.ferianc.com/
-address=/ads.filmup.com/
-address=/ads.financialcontent.com/
-address=/ads.flooble.com/
-address=/ads.fool.com/
-address=/ads.footymad.net/
-address=/ads.forbes.net/
-address=/ads.formit.cz/
-address=/ads.fortunecity.com/
-address=/ads.fotosidan.se/
-address=/ads.foxnetworks.com/
-address=/ads.freecity.de/
-address=/ads.friendfinder.com/
-address=/ads.gamecity.net/
-address=/ads.gamershell.com/
-address=/ads.gamespyid.com/
-address=/ads.gamigo.de/
-address=/ads.gaming1.com/
-address=/ads.gaming-universe.de/
-address=/ads.gawker.com/
-address=/ads.gaypoint.hu/
-address=/ads.geekswithblogs.net/
-address=/ads.getlucky.com/
-address=/ads.gld.dk/
-address=/ads.glispa.com/
-address=/ads.gmodules.com/
-address=/ads.goyk.com/
-address=/ads.gplusmedia.com/
-address=/ads.gradfinder.com/
-address=/ads.grindinggears.com/
-address=/ads.groupewin.fr/
-address=/ads.gsmexchange.com/
-address=/ads.gsm-exchange.com/
-address=/ads.guardian.co.uk/
-address=/ads.guardianunlimited.co.uk/
-address=/ads.guru3d.com/
-address=/ads.harpers.org/
-address=/ads.hbv.de/
-address=/ads.hearstmags.com/
-address=/ads.heartlight.org/
-address=/ads.heias.com/
-address=/ads.hollywood.com/
-address=/ads.horsehero.com/
-address=/ads.horyzon-media.com/
-address=/ads.ibest.com.br/
-address=/ads.ibryte.com/
-address=/ads.icq.com/
-address=/ads.ign.com/
-address=/ads.imagistica.com/
-address=/ads.img.co.za/
-address=/ads.imgur.com/
-address=/ads.independent.com.mt/
-address=/ads.infi.net/
-address=/ads.internic.co.il/
-address=/ads.ipowerweb.com/
-address=/ads.isoftmarketing.com/
-address=/ads.itv.com/
-address=/ads.iwon.com/
-address=/ads.jewishfriendfinder.com/
-address=/ads.jiwire.com/
-address=/ads.joaffs.com/
-address=/ads.jobsite.co.uk/
-address=/ads.jpost.com/
-address=/ads.junctionbox.com/
-address=/ads.justhungry.com/
-address=/ads.kabooaffiliates.com/
-address=/ads.kaktuz.net/
-address=/ads.kelbymediagroup.com/
-address=/ads.kinobox.cz/
-address=/ads.kinxxx.com/
-address=/ads.kompass.com/
-address=/ads.krawall.de/
-address=/ads.lapalingo.com/
-address=/ads.larryaffiliates.com/
-address=/ads.leovegas.com/
-address=/ads.lesbianpersonals.com/
-address=/ads.liberte.pl/
-address=/ads.lifethink.net/
-address=/ads.linkedin.com/
-address=/ads.livenation.com/
-address=/ads.lordlucky.com/
-address=/ads.ma7.tv/
-address=/ads.mail.bg/
-address=/ads.mariuana.it/
-address=/ads.massinfra.nl/
-address=/ads.mcafee.com/
-address=/ads.mediaodyssey.com/
-address=/ads.mediasmart.es/
-address=/ads.medienhaus.de/
-address=/ads.meetcelebs.com/
-address=/ads.metaplug.com/
-address=/ads.mgnetwork.com/
-address=/ads.miarroba.com/
-address=/ads.mic.com/
-address=/ads.mmania.com/
-address=/ads.mobilebet.com/
-address=/ads.mopub.com/
-address=/ads.motor-forum.nl/
-address=/ads.msn.com/
-address=/ads.multimania.lycos.fr/
-address=/ads.muslimehelfen.org/
-address=/ads.mvscoelho.com/
-address=/ads.myadv.org/
-address=/ads.nccwebs.com/
-address=/ads.ncm.com/
-address=/ads.ndtv1.com/
-address=/ads.networksolutions.com/
-address=/ads.newgrounds.com/
-address=/ads.newmedia.cz/
-address=/ads.newsint.co.uk/
-address=/ads.newsquest.co.uk/
-address=/ads.ninemsn.com.au/
-address=/ads.nj.com/
-address=/ads.nola.com/
-address=/ads.nordichardware.com/
-address=/ads.nordichardware.se/
-address=/ads.nyi.net/
-address=/ads.nytimes.com/
-address=/ads.nyx.cz/
-address=/ads.nzcity.co.nz/
-address=/ads.o2.pl/
-address=/ads.oddschecker.com/
-address=/ads.okcimg.com/
-address=/ads.ole.com/
-address=/ads.oneplace.com/
-address=/ads.opensubtitles.org/
-address=/ads.optusnet.com.au/
-address=/ads.outpersonals.com/
-address=/ads.oxyshop.cz/
-address=/ads.passion.com/
-address=/ads.pennet.com/
-address=/ads.pfl.ua/
-address=/ads.phpclasses.org/
-address=/ads.pinterest.com/
-address=/ads.planet.nl/
-address=/ads.pni.com/
-address=/ads.pof.com/
-address=/ads.powweb.com/
-address=/ads.ppvmedien.de/
-address=/ads.praguetv.cz/
-address=/ads.primissima.it/
-address=/ads.printscr.com/
-address=/ads.prisacom.com/
-address=/ads.privatemedia.co/
-address=/ads.program3.com/
-address=/ads.programattik.com/
-address=/ads.psd2html.com/
-address=/ads.pushplay.com/
-address=/ads.quoka.de/
-address=/ads.radialserver.com/
-address=/ads.radio1.lv/
-address=/ads.rcncdn.de/
-address=/ads.rcs.it/
-address=/ads.recoletos.es/
-address=/ads.rediff.com/
-address=/ads.redlightcenter.com/
-address=/ads.revjet.com/
-address=/ads.satyamonline.com/
-address=/ads.saymedia.com/
-address=/ads.schmoozecom.net/
-address=/ads.scifi.com/
-address=/ads.seniorfriendfinder.com/
-address=/ads.servebom.com/
-address=/ads.sexgratuit.tv/
-address=/ads.sexinyourcity.com/
-address=/ads.shizmoo.com/
-address=/ads.shopstyle.com/
-address=/ads.sift.co.uk/
-address=/ads.silverdisc.co.uk/
-address=/ads.simplyhired.com/
-address=/ads.sjon.info/
-address=/ads.smartclick.com/
-address=/ads.socapro.com/
-address=/ads.socialtheater.com/
-address=/ads.soft32.com/
-address=/ads.soweb.gr/
-address=/ads.space.com/
-address=/ads.stackoverflow.com/
-address=/ads.sun.com/
-address=/ads.suomiautomaatti.com/
-address=/ads.supplyframe.com/
-address=/ads.syscdn.de/
-address=/ads.tahono.com/
-address=/ads.themovienation.com/
-address=/ads.thestar.com/
-address=/ads.thrillsaffiliates.com/
-address=/ads.tiktok.com/
-address=/ads.tmcs.net/
-address=/ads.todoti.com.br/
-address=/ads.toplayaffiliates.com/
-address=/ads.totallyfreestuff.com/
-address=/ads.townhall.com/
-address=/ads.travelaudience.com/
-address=/ads.tremorhub.com/
-address=/ads.trinitymirror.co.uk/
-address=/ads.tripod.com/
-address=/ads.tripod.lycos.co.uk/
-address=/ads.tripod.lycos.de/
-address=/ads.tripod.lycos.es/
-address=/ads.tripod.lycos.it/
-address=/ads.tripod.lycos.nl/
-address=/ads.tso.dennisnet.co.uk/
-address=/ads.twitter.com/
-address=/ads.twojatv.info/
-address=/ads.uknetguide.co.uk/
-address=/ads.ultimate-guitar.com/
-address=/ads.uncrate.com/
-address=/ads.undertone.com/
-address=/ads.unison.bg/
-address=/ads.usatoday.com/
-address=/ads.uxs.at/
-address=/ads.verticalresponse.com/
-address=/ads.vgchartz.com/
-address=/ads.videosz.com/
-address=/ads.viksaffiliates.com/
-address=/ads.virtual-nights.com/
-address=/ads.virtuopolitan.com/
-address=/ads.v-lazer.com/
-address=/ads.vnumedia.com/
-address=/ads.walkiberia.com/
-address=/ads.waps.cn/
-address=/ads.wapx.cn/
-address=/ads.watson.ch/
-address=/ads.weather.ca/
-address=/ads.web.de/
-address=/ads.webinak.sk/
-address=/ads.webmasterpoint.org/
-address=/ads.websiteservices.com/
-address=/ads.whoishostingthis.com/
-address=/ads.wiezoekje.nl/
-address=/ads.wikia.nocookie.net/
-address=/ads.wineenthusiast.com/
-address=/ads.wwe.biz/
-address=/ads.xhamster.com/
-address=/ads.xtra.co.nz/
-address=/ads.yahoo.com/
-address=/ads.yap.yahoo.com/
-address=/ads.yimg.com/
-address=/ads.yldmgrimg.net/
-address=/ads.yourfreedvds.com/
-address=/ads.youtube.com/
-address=/ads.yumenetworks.com/
-address=/ads.zmarsa.com/
-address=/ads.ztod.com/
-address=/ads1.mediacapital.pt/
-address=/ads1.msn.com/
-address=/ads1.rne.com/
-address=/ads1.virtual-nights.com/
-address=/ads10.speedbit.com/
-address=/ads180.com/
-address=/ads1-adnow.com/
-address=/ads2.brazzers.com/
-address=/ads2.clearchannel.com/
-address=/ads2.contentabc.com/
-address=/ads2.femmefab.nl/
-address=/ads2.gamecity.net/
-address=/ads2.net-communities.co.uk/
-address=/ads2.oneplace.com/
-address=/ads2.opensubtitles.org/
-address=/ads2.rne.com/
-address=/ads2.techads.info/
-address=/ads2.virtual-nights.com/
-address=/ads2.webdrive.no/
-address=/ads2.xnet.cz/
-address=/ads2004.treiberupdate.de/
-address=/ads24h.net/
-address=/ads3.contentabc.com/
-address=/ads3.gamecity.net/
-address=/ads3.virtual-nights.com/
-address=/ads3-adnow.com/
-address=/ads4.clearchannel.com/
-address=/ads4.gamecity.net/
-address=/ads4.virtual-nights.com/
-address=/ads4homes.com/
-address=/ads5.virtual-nights.com/
-address=/ads6.gamecity.net/
-address=/ads7.gamecity.net/
-address=/adsafeprotected.com/
-address=/adsatt.abc.starwave.com/
-address=/adsatt.abcnews.starwave.com/
-address=/adsatt.espn.go.com/
-address=/adsatt.espn.starwave.com/
-address=/adsatt.go.starwave.com/
-address=/adsby.bidtheatre.com/
-address=/adsbydelema.com/
-address=/adscale.de/
-address=/adscholar.com/
-address=/adscience.nl/
-address=/ads-click.com/
-address=/adsco.re/
-address=/ad-score.com/
-address=/adscpm.com/
-address=/adsdaq.com/
-address=/ads-dev.pinterest.com/
-address=/adsend.de/
-address=/adsense.com/
-address=/adsense.de/
-address=/adsensecustomsearchads.com/
-address=/adserve.ams.rhythmxchange.com/
-address=/adserve.gkeurope.de/
-address=/adserve.io/
-address=/adserve.jbs.org/
-address=/adserver.71i.de/
-address=/adserver.adultfriendfinder.com/
-address=/adserver.adverty.com/
-address=/adserver.anawe.cz/
-address=/adserver.aol.fr/
-address=/adserver.ariase.org/
-address=/adserver.bdoce.cl/
-address=/adserver.betandwin.de/
-address=/adserver.bing.com/
-address=/adserver.bizedge.com/
-address=/adserver.bizhat.com/
-address=/adserver.break-even.it/
-address=/adserver.cams.com/
-address=/adserver.cdnstream.com/
-address=/adserver.com/
-address=/adserver.diariodosertao.com.br/
-address=/adserver.digitoday.com/
-address=/adserver.echdk.pl/
-address=/adserver.ekokatu.com/
-address=/adserver.freecity.de/
-address=/adserver.friendfinder.com/
-address=/ad-server.gulasidorna.se/
-address=/adserver.html.it/
-address=/adserver.hwupgrade.it/
-address=/adserver.ilango.de/
-address=/adserver.info7.mx/
-address=/adserver.irishwebmasterforum.com/
-address=/adserver.janes.com/
-address=/adserver.lecool.com/
-address=/adserver.libero.it/
-address=/adserver.madeby.ws/
-address=/adserver.mobi/
-address=/adserver.msmb.biz/
-address=/adserver.news.com.au/
-address=/adserver.nydailynews.com/
-address=/adserver.o2.pl/
-address=/adserver.oddschecker.com/
-address=/adserver.omroepzeeland.nl/
-address=/adserver.otthonom.hu/
-address=/adserver.pampa.com.br/
-address=/adserver.pl/
-address=/adserver.portugalmail.net/
-address=/adserver.pressboard.ca/
-address=/adserver.sanomawsoy.fi/
-address=/adserver.sciflicks.com/
-address=/adserver.scr.sk/
-address=/adserver.sharewareonline.com/
-address=/adserver.theonering.net/
-address=/adserver.trojaner-info.de/
-address=/adserver.twitpic.com/
-address=/adserver.virginmedia.com/
-address=/adserver.yahoo.com/
-address=/adserver01.de/
-address=/adserver1.backbeatmedia.com/
-address=/adserver1.mindshare.de/
-address=/adserver1-images.backbeatmedia.com/
-address=/adserver2.mindshare.de/
-address=/adserverplus.com/
-address=/adserverpub.com/
-address=/adserversolutions.com/
-address=/adserverxxl.de/
-address=/adservice.google.com/
-address=/adservice.google.com.mt/
-address=/adservices.google.com/
-address=/adserving.unibet.com/
-address=/adservingfront.com/
-address=/adsfac.eu/
-address=/adsfac.net/
-address=/adsfac.us/
-address=/adsfactor.net/
-address=/adsfeed.brabys.com/
-address=/ads-game-187f4.firebaseapp.com/
-address=/adshrink.it/
-address=/adside.com/
-address=/adsiduous.com/
-address=/adskeeper.co.uk/
-address=/ads-kesselhaus.com/
-address=/adsklick.de/
-address=/adskpak.com/
-address=/adsmart.com/
-address=/adsmart.net/
-address=/adsmogo.com/
-address=/adsnative.com/
-address=/adsoftware.com/
-address=/adsoldier.com/
-address=/adsolut.in/
-address=/ad-space.net/
-address=/adspeed.net/
-address=/adspirit.de/
-address=/adsponse.de/
-address=/adspsp.com/
-address=/adsroller.com/
-address=/adsrv.deviantart.com/
-address=/adsrv.eacdn.com/
-address=/adsrv.iol.co.za/
-address=/adsrv.moebelmarkt.tv/
-address=/adsrv.swidnica24.pl/
-address=/adsrv2.swidnica24.pl/
-address=/adsrvr.org/
-address=/adsrvus.com/
-address=/adstacks.in/
-address=/adstage.io/
-address=/adstanding.com/
-address=/adstat.4u.pl/
-address=/adstest.weather.com/
-address=/ads-trk.vidible.tv/
-address=/ads-twitter.com/
-address=/adsupply.com/
-address=/adswizz.com/
-address=/adsxyz.com/
-address=/adsymptotic.com/
-address=/adsynergy.com/
-address=/adsys.townnews.com/
-address=/adsystem.simplemachines.org/
-address=/adtech.com/
-address=/ad-tech.com/
-address=/adtech.de/
-address=/adtech-digital.ru/
-address=/adtechjp.com/
-address=/adtechus.com/
-address=/adtegrity.net/
-address=/adthis.com/
-address=/adthrive.com/
-address=/adthurst.com/
-address=/adtiger.de/
-address=/adtilt.com/
-address=/adtng.com/
-address=/adtology.com/
-address=/adtoma.com/
-address=/adtrace.org/
-address=/adtrade.net/
-address=/adtrak.net/
-address=/adtriplex.com/
-address=/adult/
-address=/adultadvertising.com/
-address=/ad-up.com/
-address=/adv.cooperhosting.net/
-address=/adv.donejty.pl/
-address=/adv.freeonline.it/
-address=/adv.hwupgrade.it/
-address=/adv.livedoor.com/
-address=/adv.mezon.ru/
-address=/adv.mpvc.it/
-address=/adv.nexthardware.com/
-address=/adv.webmd.com/
-address=/adv.wp.pl/
-address=/adv.yo.cz/
-address=/adv-adserver.com/
-address=/advangelists.com/
-address=/advariant.com/
-address=/adv-banner.libero.it/
-address=/adventory.com/
-address=/advert.bayarea.com/
-address=/advert.dyna.ultraweb.hu/
-address=/adverticum.com/
-address=/adverticum.net/
-address=/adverticus.de/
-address=/advertise.com/
-address=/advertiseireland.com/
-address=/advertisementafterthought.com/
-address=/advertiserurl.com/
-address=/advertising.com/
-address=/advertisingbanners.com/
-address=/advertisingbox.com/
-address=/advertmarket.com/
-address=/advertmedia.de/
-address=/advertpro.ya.com/
-address=/advertserve.com/
-address=/advertstream.com/
-address=/advertwizard.com/
-address=/advideo.uimserv.net/
-address=/adview.com/
-address=/advisormedia.cz/
-address=/adviva.net/
-address=/advnt.com/
-address=/advolution.com/
-address=/advolution.de/
-address=/adwebone.com/
-address=/adwhirl.com/
-address=/adwordsecommerce.com.br/
-address=/adworldnetwork.com/
-address=/adworx.at/
-address=/adworx.nl/
-address=/adx.allstar.cz/
-address=/adx.atnext.com/
-address=/adx.bild.de/
-address=/adx.chip.de/
-address=/adx.focus.de/
-address=/adx.gayboy.at/
-address=/adx.relaksit.ru/
-address=/adx.welt.de/
-address=/adxpansion.com/
-address=/adxpose.com/
-address=/adxvalue.com/
-address=/adyea.com/
-address=/adyoulike.com/
-address=/adz.rashflash.com/
-address=/adz2you.com/
-address=/adzbazar.com/
-address=/adzerk.net/
-address=/adzerk.s3.amazonaws.com/
-address=/adzestocp.com/
-address=/adzone.temp.co.za/
-address=/adzones.com/
-address=/aerserv.com/
-address=/af-ad.co.uk/
-address=/affec.tv/
-address=/affili.net/
-address=/affiliate.1800flowers.com/
-address=/affiliate.doubleyourdating.com/
-address=/affiliate.dtiserv.com/
-address=/affiliate.gamestop.com/
-address=/affiliate.mogs.com/
-address=/affiliate.offgamers.com/
-address=/affiliate.rusvpn.com/
-address=/affiliate.travelnow.com/
-address=/affiliate.treated.com/
-address=/affiliatefuture.com/
-address=/affiliates.allposters.com/
-address=/affiliates.babylon.com/
-address=/affiliates.digitalriver.com/
-address=/affiliates.globat.com/
-address=/affiliates.rozetka.com.ua/
-address=/affiliates.streamray.com/
-address=/affiliates.thinkhost.net/
-address=/affiliates.thrixxx.com/
-address=/affiliates.ultrahosting.com/
-address=/affiliatetracking.com/
-address=/affiliatetracking.net/
-address=/affiliatewindow.com/
-address=/affiliation-france.com/
-address=/affinity.com/
-address=/afftracking.justanswer.com/
-address=/agkn.com/
-address=/agof.de/
-address=/agreeablestew.com/
-address=/ahalogy.com/
-address=/aheadday.com/
-address=/ah-ha.com/
-address=/aim4media.com/
-address=/airmaxschuheoutlet.com/
-address=/airpush.com/
-address=/aistat.net/
-address=/ak0gsh40.com/
-address=/akamaized.net/
-address=/akku-laden.at/
-address=/aktrack.pubmatic.com/
-address=/aladel.net/
-address=/alchemist.go2cloud.org/
-address=/alclick.com/
-address=/alenty.com/
-address=/alert.com.mt/
-address=/alexametrics.com/
-address=/alexa-sitestats.s3.amazonaws.com/
-address=/algorix.co/
-address=/alipromo.com/
-address=/all4spy.com/
-address=/allosponsor.com/
-address=/aloofvest.com/
-address=/alphonso.tv/
-address=/als-svc.nytimes.com/
-address=/altrk.net/
-address=/amazingcounters.com/
-address=/amazon.dedp/
-address=/amazon-adsystem.com/
-address=/ambiguousquilt.com/
-address=/ambitiousagreement.com/
-address=/americash.com/
-address=/amplitude.com/
-address=/amung.us/
-address=/analdin.com/
-address=/analytics.adpost.org/
-address=/analytics.bitrix.info/
-address=/analytics.cloudron.io/
-address=/analytics.cohesionapps.com/
-address=/analytics.dnsfilter.com/
-address=/analytics.ext.go-tellm.com/
-address=/analytics.fkz.re/
-address=/analytics.google.com/
-address=/analytics.htmedia.in/
-address=/analytics.icons8.com/
-address=/analytics.inlinemanual.com/
-address=/analytics.jst.ai/
-address=/analytics.justuno.com/
-address=/analytics.live.com/
-address=/analytics.mailmunch.co/
-address=/analytics.myfinance.com/
-address=/analytics.mytvzion.pro/
-address=/analytics.ostr.io/
-address=/analytics.phando.com/
-address=/analytics.picsart.com/
-address=/analytics.poolshool.com/
-address=/analytics.posttv.com/
-address=/analytics.samdd.me/
-address=/analytics.siliconexpert.com/
-address=/analytics.swiggy.com/
-address=/analytics.xelondigital.com/
-address=/analytics.yahoo.com/
-address=/analyticsapi.happypancake.net/
-address=/analytics-production.hapyak.com/
-address=/aniview.com/
-address=/annonser.dagbladet.no/
-address=/annoyedairport.com/
-address=/anrdoezrs.net/
-address=/anstrex.com/
-address=/anuncios.edicaoms.com.br/
-address=/anxiousapples.com/
-address=/anycracks.com/
-address=/aos.prf.hnclick/
-address=/apathetictheory.com/
-address=/api.adrtx.net/
-address=/api.intensifier.de/
-address=/api.kameleoon.com/
-address=/apolloprogram.io/
-address=/app.pendo.io/
-address=/app-analytics.snapchat.com/
-address=/appboycdn.com/
-address=/appliedsemantics.com/
-address=/apps5.oingo.com/
-address=/appsflyer.com/
-address=/aps.hearstnp.com/
-address=/apsalar.com/
-address=/apture.com/
-address=/apu.samsungelectronics.com/
-address=/aquaticowl.com/
-address=/ar1nvz5.com/
-address=/aralego.com/
-address=/arc1.msn.com/
-address=/archswimming.com/
-address=/ard.xxxblackbook.com/
-address=/argyresthia.com/
-address=/aromamirror.com/
-address=/as.webmd.com/
-address=/as2.adserverhd.com/
-address=/aserv.motorsgate.com/
-address=/asewlfjqwlflkew.com/
-address=/assets1.exgfnetwork.com/
-address=/assoc-amazon.com/
-address=/aswpapius.com/
-address=/aswpsdkus.com/
-address=/at-adserver.alltop.com/
-address=/atdmt.com/
-address=/athena-ads.wikia.com/
-address=/ato.mx/
-address=/at-o.net/
-address=/attractiveafternoon.com/
-address=/attribution.report/
-address=/attributiontracker.com/
-address=/atwola.com/
-address=/auctionads.com/
-address=/auctionads.net/
-address=/audience.media/
-address=/audience2media.com/
-address=/audienceinsights.com/
-address=/audit.median.hu/
-address=/audit.webinform.hu/
-address=/augur.io/
-address=/auto-bannertausch.de/
-address=/automaticflock.com/
-address=/avazutracking.net/
-address=/avenuea.com/
-address=/avocet.io/
-address=/avpa.javalobby.org/
-address=/awakebird.com/
-address=/awempire.com/
-address=/awin1.com/
-address=/awzbijw.com/
-address=/axiomaticalley.com/
-address=/axonix.com/
-address=/aztracking.net/
-address=/b-1st.com/
-address=/ba.afl.rakuten.co.jp/
-address=/babs.tv2.dk/
-address=/backbeatmedia.com/
-address=/balloontexture.com/
-address=/banik.redigy.cz/
-address=/banner.ad.nu/
-address=/banner.ambercoastcasino.com/
-address=/banner.buempliz-online.ch/
-address=/banner.casino.net/
-address=/banner.casinodelrio.com/
-address=/banner.cotedazurpalace.com/
-address=/banner.coza.com/
-address=/banner.cz/
-address=/banner.easyspace.com/
-address=/banner.elisa.net/
-address=/banner.eurogrand.com/
-address=/banner.finzoom.ro/
-address=/banner.goldenpalace.com/
-address=/banner.icmedia.eu/
-address=/banner.img.co.za/
-address=/banner.inyourpocket.com/
-address=/banner.kiev.ua/
-address=/banner.linux.se/
-address=/banner.media-system.de/
-address=/banner.mindshare.de/
-address=/banner.nixnet.cz/
-address=/banner.noblepoker.com/
-address=/banner.northsky.com/
-address=/banner.orb.net/
-address=/banner.penguin.cz/
-address=/banner.rbc.ru/
-address=/banner.reinstil.de/
-address=/banner.relcom.ru/
-address=/banner.tanto.de/
-address=/banner.titan-dsl.de/
-address=/banner.t-online.de/
-address=/banner.vadian.net/
-address=/banner.webmersion.com/
-address=/banner10.zetasystem.dk/
-address=/bannerads.de/
-address=/bannerboxes.com/
-address=/bannerconnect.com/
-address=/bannerconnect.net/
-address=/banner-exchange-24.de/
-address=/bannergrabber.internet.gr/
-address=/bannerimage.com/
-address=/bannerlandia.com.ar/
-address=/bannermall.com/
-address=/bannermanager.bnr.bg/
-address=/bannermarkt.nl/
-address=/bannerpower.com/
-address=/banners.adultfriendfinder.com/
-address=/banners.amigos.com/
-address=/banners.asiafriendfinder.com/
-address=/banners.babylon-x.com/
-address=/banners.bol.com.br/
-address=/banners.cams.com/
-address=/banners.clubseventeen.com/
-address=/banners.czi.cz/
-address=/banners.dine.com/
-address=/banners.direction-x.com/
-address=/banners.friendfinder.com/
-address=/banners.getiton.com/
-address=/banners.golfasian.com/
-address=/banners.iq.pl/
-address=/banners.isoftmarketing.com/
-address=/banners.linkbuddies.com/
-address=/banners.passion.com/
-address=/banners.payserve.com/
-address=/banners.resultonline.com/
-address=/banners.sys-con.com/
-address=/banners.thomsonlocal.com/
-address=/banners.videosz.com/
-address=/banners.virtuagirlhd.com/
-address=/bannerserver.com/
-address=/bannersgomlm.com/
-address=/bannershotlink.perfectgonzo.com/
-address=/bannersng.yell.com/
-address=/bannerspace.com/
-address=/bannerswap.com/
-address=/bannertesting.com/
-address=/bannertrack.net/
-address=/bannery.cz/
-address=/bannieres.acces-contenu.com/
-address=/bannieres.wdmedia.net/
-address=/bans.bride.ru/
-address=/barbarousnerve.com/
-address=/barnesandnoble.bfast.com/
-address=/basebanner.com/
-address=/baskettexture.com/
-address=/bat.bing.com/
-address=/batbuilding.com/
-address=/bawdybeast.com/
-address=/baypops.com/
-address=/bbelements.com/
-address=/bbjacke.de/
-address=/bbn.img.com.ua/
-address=/beachfront.com/
-address=/beacon.gu-web.net/
-address=/beamincrease.com/
-address=/bebi.com/
-address=/beemray.com/
-address=/begun.ru/
-address=/behavioralengine.com/
-address=/belstat.com/
-address=/belstat.nl/
-address=/berp.com/
-address=/bestboundary.com/
-address=/bestcheck.de/
-address=/bestsearch.net/
-address=/bewilderedblade.com/
-address=/bfmio.com/
-address=/bg/
-address=/bhcumsc.com/
-address=/biallo.de/
-address=/bidbarrel.cbsnews.com/
-address=/bidclix.com/
-address=/bidclix.net/
-address=/bidr.io/
-address=/bidsopt.com/
-address=/bidswitch.net/
-address=/bidtellect.com/
-address=/bidvertiser.com/
-address=/big-bang-ads.com/
-address=/bigbangmedia.com/
-address=/bigclicks.com/
-address=/bigpoint.com/
-address=/bigreal.org/
-address=/bilano.de/
-address=/bild.ivwbox.de/
-address=/billalo.de/
-address=/billboard.cz/
-address=/billiger.decommonmodulesapi/
-address=/biohazard.xz.cz/
-address=/biosda.com/
-address=/bitmedianetwork.com/
-address=/bizad.nikkeibp.co.jp/
-address=/bizible.com/
-address=/bizographics.com/
-address=/bizrate.com/
-address=/bizzclick.com/
-address=/bkrtx.com/
-address=/blingbucks.com/
-address=/blis.com/
-address=/blockadblock.com/
-address=/blockthrough.com/
-address=/blogads.com/
-address=/blogcounter.de/
-address=/blogherads.com/
-address=/blogtoplist.se/
-address=/blogtopsites.com/
-address=/blueadvertise.com/
-address=/blueconic.com/
-address=/blueconic.net/
-address=/bluekai.com/
-address=/bluelithium.com/
-address=/bluewhaleweb.com/
-address=/blushingbeast.com/
-address=/blushingboundary.com/
-address=/bm.annonce.cz/
-address=/bn.bfast.com/
-address=/bnnrrv.qontentum.de/
-address=/bnrs.ilm.ee/
-address=/boffoadsapi.com/
-address=/boilingbeetle.com/
-address=/boilingumbrella.com/
-address=/bongacash.com/
-address=/boomads.com/
-address=/boomtrain.com/
-address=/boost-my-pr.de/
-address=/boredcrown.com/
-address=/boringcoat.com/
-address=/boudja.com/
-address=/bounceads.net/
-address=/bounceexchange.com/
-address=/bowie-cdn.fathomdns.com/
-address=/box.anchorfree.net/
-address=/bpath.com/
-address=/bpu.samsungelectronics.com/
-address=/bpwhamburgorchardpark.org/
-address=/braincash.com/
-address=/brand-display.com/
-address=/brandreachsys.com/
-address=/breaktime.com.tw/
-address=/brealtime.com/
-address=/bridgetrack.com/
-address=/brightcom.com/
-address=/brightinfo.com/
-address=/brightmountainmedia.com/
-address=/british-banners.com/
-address=/broadboundary.com/
-address=/broadcastbed.com/
-address=/broaddoor.com/
-address=/browser-http-intake.logs.datadoghq.com/
-address=/browser-http-intake.logs.datadoghq.eu/
-address=/bs.yandex.ru/
-address=/btez8.xyz/
-address=/btrll.com/
-address=/bttrack.com/
-address=/bu/
-address=/bucketbean.com/
-address=/bullseye.backbeatmedia.com/
-address=/businessbells.com/
-address=/bustlinganimal.com/
-address=/buysellads.com/
-address=/buzzonclick.com/
-address=/bwp.download.com/
-address=/by/
-address=/c.bigmir.net/
-address=/c1.nowlinux.com/
-address=/c1exchange.com/
-address=/calculatingcircle.com/
-address=/calculatingtoothbrush.com/
-address=/calculatorcamera.com/
-address=/callousbrake.com/
-address=/callrail.com/
-address=/calmcactus.com/
-address=/campaign.bharatmatrimony.com/
-address=/caniamedia.com/
-address=/cannads.urgrafix.com/
-address=/capablecows.com/
-address=/captainbicycle.com/
-address=/carambo.la/
-address=/carbonads.com/
-address=/carbonads.net/
-address=/casalemedia.com/
-address=/casalmedia.com/
-address=/cash4members.com/
-address=/cash4popup.de/
-address=/cashcrate.com/
-address=/cashengines.com/
-address=/cashfiesta.com/
-address=/cashpartner.com/
-address=/cashstaging.me/
-address=/casinopays.com/
-address=/casinorewards.com/
-address=/casinotraffic.com/
-address=/causecherry.com/
-address=/cbanners.virtuagirlhd.com/
-address=/cdn.bannerflow.com/
-address=/cdn.branch.io/
-address=/cdn.flashtalking.com/
-address=/cdn.freefarcy.com/
-address=/cdn.freshmarketer.com/
-address=/cdn.heapanalytics.com/
-address=/cdn.keywee.co/
-address=/cdn.onesignal.com/
-address=/cdn.segment.com/
-address=/cdn1.spiegel.deimages/
-address=/cecash.com/
-address=/cedato.com/
-address=/celtra.com/
-address=/centerpointmedia.com/
-address=/centgebote.tv/
-address=/ceskydomov.alias.ngs.modry.cz/
-address=/cetrk.com/
-address=/cgicounter.puretec.de/
-address=/chairscrack.com/
-address=/chameleon.ad/
-address=/channelintelligence.com/
-address=/chardwardse.club/
-address=/chart.dk/
-address=/chartbeat.com/
-address=/chartbeat.net/
-address=/chartboost.com/
-address=/checkm8.com/
-address=/checkstat.nl/
-address=/cheerfulrange.com/
-address=/chewcoat.com/
-address=/chickensstation.com/
-address=/chinsnakes.com/
-address=/chitika.net/
-address=/cision.com/
-address=/cityads.telus.net/
-address=/cj.com/
-address=/cjbmanagement.com/
-address=/cjlog.com/
-address=/cl0udh0st1ng.com/
-address=/claria.com/
-address=/clevernt.com/
-address=/click/
-address=/click.a-ads.com/
-address=/click.cartsguru.io/
-address=/click.email.bbc.com/
-address=/click.email.sonos.com/
-address=/click.fool.com/
-address=/click.kmindex.ru/
-address=/click.negociosdigitaisnapratica.com.br/
-address=/click.redditmail.com/
-address=/click.twcwigs.com/
-address=/click2freemoney.com/
-address=/clickability.com/
-address=/clickadz.com/
-address=/clickagents.com/
-address=/clickbank.com/
-address=/clickbooth.com/
-address=/clickboothlnk.com/
-address=/clickbrokers.com/
-address=/clickcompare.co.uk/
-address=/clickdensity.com/
-address=/clickedyclick.com/
-address=/clickfuse.com/
-address=/clickhereforcellphones.com/
-address=/clickhouse.com/
-address=/clickhype.com/
-address=/clicklink.jp/
-address=/clickmate.io/
-address=/clickonometrics.pl/
-address=/clicks.equantum.com/
-address=/clicks.mods.de/
-address=/clickserve.cc-dt.com/
-address=/clicktag.de/
-address=/clickthruserver.com/
-address=/clickthrutraffic.com/
-address=/clicktrace.info/
-address=/clicktrack.ziyu.net/
-address=/clicktracks.com/
-address=/clicktrade.com/
-address=/clickwith.bid/
-address=/clickxchange.com/
-address=/clickyab.com/
-address=/clickz.com/
-address=/clientmetrics-pa.googleapis.com/
-address=/clikerz.net/
-address=/cliksolution.com/
-address=/clixgalore.com/
-address=/clk1005.com/
-address=/clk1011.com/
-address=/clk1015.com/
-address=/clkrev.com/
-address=/clksite.com/
-address=/cloisteredhydrant.com/
-address=/cloudcoins.biz/
-address=/clrstm.com/
-address=/cluster.adultworld.com/
-address=/clustrmaps.com/
-address=/cmp.dmgmediaprivacy.co.uk/
-address=/cmvrclicks000.com/
-address=/cnomy.com/
-address=/cnt.spbland.ru/
-address=/cnt1.pocitadlo.cz/
-address=/cny.yoyo.org/
-address=/codeadnetwork.com/
-address=/code-server.biz/
-address=/cognitiv.ai/
-address=/cognitiveadscience.com/
-address=/coinhive.com/
-address=/coin-hive.com/
-address=/cointraffic.io/
-address=/colonize.com/
-address=/comclick.com/
-address=/comfortablecheese.com/
-address=/commindo-media-ressourcen.de/
-address=/commissionmonster.com/
-address=/commonswing.com/
-address=/compactbanner.com/
-address=/completecabbage.com/
-address=/complextoad.com/
-address=/comprabanner.it/
-address=/concernedcondition.com/
-address=/conductrics.com/
-address=/connatix.com/
-address=/connectad.io/
-address=/connextra.com/
-address=/consciouschairs.com/
-address=/consensad.com/
-address=/consensu.org/
-address=/contadores.miarroba.com/
-address=/contaxe.de/
-address=/content.acc-hd.de/
-address=/content.ad/
-address=/content22.online.citi.com/
-address=/contextweb.com/
-address=/converge-digital.com/
-address=/conversantmedia.com/
-address=/conversionbet.com/
-address=/conversionruler.com/
-address=/convertingtraffic.com/
-address=/convrse.media/
-address=/cookies.cmpnet.com/
-address=/coordinatedcub.com/
-address=/cootlogix.com/
-address=/copperchickens.com/
-address=/copycarpenter.com/
-address=/copyrightaccesscontrols.com/
-address=/coqnu.com/
-address=/coremetrics.com/
-address=/cormast.com/
-address=/cosmopolitads.com/
-address=/count.rin.ru/
-address=/count.west263.com/
-address=/counted.com/
-address=/counter.bloke.com/
-address=/counter.cnw.cz/
-address=/counter.cz/
-address=/counter.dreamhost.com/
-address=/counter.mirohost.net/
-address=/counter.mojgorod.ru/
-address=/counter.nowlinux.com/
-address=/counter.rambler.ru/
-address=/counter.search.bg/
-address=/counter.snackly.co/
-address=/counter.sparklit.com/
-address=/counter.yadro.ru/
-address=/counters.honesty.com/
-address=/counting.kmindex.ru/
-address=/coupling-media.de/
-address=/coxmt.com/
-address=/cp.abbp1.pw/
-address=/cpalead.com/
-address=/cpays.com/
-address=/cpmstar.com/
-address=/cpu.samsungelectronics.com/
-address=/cpx.to/
-address=/cpxinteractive.com/
-address=/cqcounter.com/
-address=/crabbychin.com/
-address=/crakmedia.com/
-address=/craktraffic.com/
-address=/crawlability.com/
-address=/crawlclocks.com/
-address=/crazyegg.com/
-address=/crazypopups.com/
-address=/creafi-online-media.com/
-address=/creatives.livejasmin.com/
-address=/criteo.com/
-address=/criteo.net/
-address=/critictruck.com/
-address=/croissed.info/
-address=/crowdgravity.com/
-address=/crsspxl.com/
-address=/crta.dailymail.co.uk/
-address=/crtv.mate1.com/
-address=/crwdcntrl.net/
-address=/crypto-loot.org/
-address=/cs/
-address=/ctnetwork.hu/
-address=/cubics.com/
-address=/cuii.info/
-address=/culturedcrayon.com/
-address=/cumbersomecloud.com/
-address=/cuponation.de/
-address=/curtaincows.com/
-address=/custom.plausible.io/
-address=/customad.cnn.com/
-address=/customers.kameleoon.com/
-address=/cutecushion.com/
-address=/cuteturkey.com/
-address=/cxense.com/
-address=/cyberbounty.com/
-address=/d.adroll.com/
-address=/d2cmedia.ca/
-address=/dabiaozhi.com/
-address=/dacdn.visualwebsiteoptimizer.com/
-address=/dakic-ia-300.com/
-address=/damdoor.com/
-address=/dancemistake.com/
-address=/dapper.net/
-address=/dashbida.com/
-address=/dashingdirt.com/
-address=/dashingsweater.com/
-address=/data.namesakeoscilloscopemarquis.com/
-address=/data8a8altrk.com/
-address=/dbbsrv.com/
-address=/dc-storm.com/
-address=/de.mediaplex.com/
-address=/de17a.com/
-address=/deadpantruck.com/
-address=/dealdotcom.com/
-address=/debonairway.com/
-address=/debtbusterloans.com/
-address=/decenterads.com/
-address=/decisivedrawer.com/
-address=/decisiveducks.com/
-address=/decknetwork.net/
-address=/decoycreation.com/
-address=/deepintent.com/
-address=/defectivesun.com/
-address=/delegatediscussion.com/
-address=/deloo.de/
-address=/deloplen.com/
-address=/deloton.com/
-address=/demandbase.com/
-address=/demdex.net/
-address=/deployads.com/
-address=/desertedbreath.com/
-address=/desertedrat.com/
-address=/detailedglue.com/
-address=/detailedgovernment.com/
-address=/detectdiscovery.com/
-address=/dev.visualwebsiteoptimizer.com/
-address=/dianomi.com/
-address=/didtheyreadit.com/
-address=/digital-ads.s3.amazonaws.com/
-address=/digitalmerkat.com/
-address=/directaclick.com/
-address=/direct-events-collector.spot.im/
-address=/directivepub.com/
-address=/directleads.com/
-address=/directorym.com/
-address=/directtrack.com/
-address=/direct-xxx-access.com/
-address=/discountclick.com/
-address=/discreetfield.com/
-address=/dispensablestranger.com/
-address=/displayadsmedia.com/
-address=/disqusads.com/
-address=/dist.belnk.com/
-address=/distillery.wistia.com/
-address=/districtm.ca/
-address=/districtm.io/
-address=/dk4ywix.com/
-address=/dmp.mall.tv/
-address=/dmtracker.com/
-address=/dmtracking.alibaba.com/
-address=/dmtracking2.alibaba.com/
-address=/dnsdelegation.io/
-address=/dntrax.com/
-address=/docksalmon.com/
-address=/dogcollarfavourbluff.com/
-address=/do-global.com/
-address=/domaining.in/
-address=/domainsponsor.com/
-address=/domainsteam.de/
-address=/domdex.com/
-address=/dotmetrics.net/
-address=/doubleclick.com/
-address=/doubleclick.de/
-address=/doubleclick.net/
-address=/doublepimp.com/
-address=/doubleverify.com/
-address=/doubtfulrainstorm.com/
-address=/downloadr.xyz/
-address=/download-service.de/
-address=/download-sofort.com/
-address=/dpbolvw.net/
-address=/dpu.samsungelectronics.com/
-address=/dq95d35.com/
-address=/drabsize.com/
-address=/dragzebra.com/
-address=/drumcash.com/
-address=/drydrum.com/
-address=/ds.serving-sys.com/
-address=/dsp.colpirio.com/
-address=/dsp.io/
-address=/dstillery.com/
-address=/dyntrk.com/
-address=/e.kde.cz/
-address=/eadexchange.com/
-address=/e-adimages.scrippsnetworks.com/
-address=/earthquakescarf.com/
-address=/earthycopy.com/
-address=/eas.almamedia.fi/
-address=/easycracks.net/
-address=/easyhits4u.com/
-address=/ebayadvertising.com/
-address=/ebuzzing.com/
-address=/ecircle-ag.com/
-address=/ecleneue.com/
-address=/eclick.vn/
-address=/eclkmpbn.com/
-address=/eclkspbn.com/
-address=/economicpizzas.com/
-address=/ecoupons.com/
-address=/edaa.eu/
-address=/emetriq.com/
-address=/emetriq.de/
-address=/xplosion.de/
-address=/xplosion.com/
-address=/efahrer.chip.de/
-address=/efahrer.de/
-address=/efahrer.fokus.de/
-address=/effectivemeasure.com/
-address=/effectivemeasure.net/
-address=/efficaciouscactus.com/
-address=/eiv.baidu.com/
-address=/ejyymghi.com/
-address=/elasticchange.com/
-address=/elderlyscissors.com/
-address=/elderlytown.com/
-address=/elephantqueue.com/
-address=/elitedollars.com/
-address=/elitetoplist.com/
-address=/elthamely.com/
-address=/e-m.fr/
-address=/emarketer.com/
-address=/emebo.com/
-address=/emebo.io/
-address=/emediate.eu/
-address=/emerse.com/
-address=/emetriq.de/
-address=/emjcd.com/
-address=/emltrk.com/
-address=/emodoinc.com/
-address=/emptyescort.com/
-address=/emxdigital.com/
-address=/en25.com/
-address=/encouragingwilderness.com/
-address=/endurableshop.com/
-address=/energeticladybug.com/
-address=/engage.dnsfilter.com/
-address=/engagebdr.com/
-address=/engine.espace.netavenir.com/
-address=/enginenetwork.com/
-address=/enormousearth.com/
-address=/enquisite.com/
-address=/ensighten.com/
-address=/entercasino.com/
-address=/enthusiasticdad.com/
-address=/entrecard.s3.amazonaws.com/
-address=/enviousthread.com/
-address=/e-planning.net/
-address=/epom.com/
-address=/epp.bih.net.ba/
-address=/eqads.com/
-address=/erne.co/
-address=/ero-advertising.com/
-address=/espn.com.ssl.sc.omtrdc.net/
-address=/estat.com/
-address=/esty.com/
-address=/et.nytimes.com/
-address=/etahub.com/
-address=/etargetnet.com/
-address=/etracker.com/
-address=/etracker.de/
-address=/eu1.madsone.com/
-address=/eu-adcenter.net/
-address=/eule1.pmu.fr/
-address=/eulerian.net/
-address=/eurekster.com/
-address=/euros4click.de/
-address=/eusta.de/
-address=/evadav.com/
-address=/evadavdsp.pro/
-address=/everestads.net/
-address=/everesttech.net/
-address=/evergage.com/
-address=/eversales.space/
-address=/evidon.com/
-address=/evyy.net/
-address=/ewebcounter.com/
-address=/exchangead.com/
-address=/exchangeclicksonline.com/
-address=/exchange-it.com/
-address=/exclusivebrass.com/
-address=/exelate.com/
-address=/exelator.com/
-address=/exit76.com/
-address=/exitexchange.com/
-address=/exitfuel.com/
-address=/exoclick.com/
-address=/exosrv.com/
-address=/experianmarketingservices.digital/
-address=/explorads.com/
-address=/exponea.com/
-address=/exponential.com/
-address=/express-submit.de/
-address=/extreme-dm.com/
-address=/extremetracking.com/
-address=/eyeblaster.com/
-address=/eyeota.net/
-address=/eyereturn.com/
-address=/eyeviewads.com/
-address=/eyewonder.com/
-address=/ezula.com/
-address=/f7ds.liberation.fr/
-address=/facilitategrandfather.com/
-address=/fadedprofit.com/
-address=/fadedsnow.com/
-address=/fallaciousfifth.com/
-address=/famousquarter.com/
-address=/fancy.com/
-address=/fancy.de/
-address=/fapdu.com/
-address=/fapmaps.com/
-address=/faracoon.com/
-address=/farethief.com/
-address=/farmergoldfish.com/
-address=/fascinatedfeather.com/
-address=/fastclick.com/
-address=/fastclick.com.edgesuite.net/
-address=/fastclick.net/
-address=/fastgetsoftware.com/
-address=/fastly-insights.com/
-address=/fast-redirecting.com/
-address=/faultycanvas.com/
-address=/faultyfowl.com/
-address=/fc.webmasterpro.de/
-address=/feathr.co/
-address=/feebleshock.com/
-address=/feedbackresearch.com/
-address=/feedjit.com/
-address=/feedmob.com/
-address=/ffxcam.fairfax.com.au/
-address=/fimserve.com/
-address=/findcommerce.com/
-address=/findepended.com/
-address=/findyourcasino.com/
-address=/fineoffer.net/
-address=/fingahvf.top/
-address=/first.nova.cz/
-address=/firstlightera.com/
-address=/fixel.ai/
-address=/flairadscpc.com/
-address=/flakyfeast.com/
-address=/flashtalking.com/
-address=/fleshlightcash.com/
-address=/flexbanner.com/
-address=/flimsycircle.com/
-address=/floodprincipal.com/
-address=/flowgo.com/
-address=/flurry.com/
-address=/fly-analytics.com/
-address=/focus.deajax/
-address=/foo.cosmocode.de/
-address=/foresee.com/
-address=/forex-affiliate.net/
-address=/forkcdn.com/
-address=/fourarithmetic.com/
-address=/fpctraffic.com/
-address=/fpctraffic2.com/
-address=/fpjs.io/
-address=/fqtag.com/
-address=/frailoffer.com/
-address=/franzis-sportswear.de/
-address=/freebanner.com/
-address=/free-banners.com/
-address=/free-counter.co.uk/
-address=/free-counters.co.uk/
-address=/freecounterstat.com/
-address=/freelogs.com/
-address=/freeonlineusers.com/
-address=/freepay.com/
-address=/freeskreen.com/
-address=/freestats.com/
-address=/freestats.tv/
-address=/freewebcounter.com/
-address=/freewheel.com/
-address=/freewheel.tv/
-address=/frightenedpotato.com/
-address=/frtyj.com/
-address=/frtyk.com/
-address=/fukc69xo.us/
-address=/fullstory.com/
-address=/functionalcrown.com/
-address=/funklicks.com/
-address=/fusionads.net/
-address=/fusionquest.com/
-address=/futuristicapparatus.com/
-address=/futuristicfairies.com/
-address=/fuzzybasketball.com/
-address=/fuzzyflavor.com/
-address=/fuzzyweather.com/
-address=/fxstyle.net/
-address=/g.msn.comAIPRIV/
-address=/g4u.me/
-address=/ga.clearbit.com/
-address=/ga87z2o.com/
-address=/gadsbee.com/
-address=/galaxien.com/
-address=/game-advertising-online.com/
-address=/gamehouse.com/
-address=/gamesites100.net/
-address=/gamesites200.com/
-address=/gammamaximum.com/
-address=/gearwom.de/
-address=/gekko.spiceworks.com/
-address=/gemini.yahoo.com/
-address=/geo.digitalpoint.com/
-address=/geobanner.adultfriendfinder.com/
-address=/georiot.com/
-address=/geovisite.com/
-address=/getclicky.com/
-address=/getintent.com/
-address=/getmyads.com/
-address=/giddycoat.com/
-address=/globalismedia.com/
-address=/globaltakeoff.net/
-address=/globus-inter.com/
-address=/glossysense.com/
-address=/gloyah.net/
-address=/gmads.net/
-address=/gml.email/
-address=/go2affise.com/
-address=/go-clicks.de/
-address=/goingplatinum.com/
-address=/goldstats.com/
-address=/go-mpulse.net/
-address=/gondolagnome.com/
-address=/google.comadsense/
-address=/google.comurl?q=*/
-address=/googleadservices.com/
-address=/googleanalytics.com/
-address=/google-analytics.com/
-address=/googlesyndication.com/
-address=/googletagmanager.com/
-address=/googletagservices.com/
-address=/go-rank.de/
-address=/gorgeousground.com/
-address=/gostats.com/
-address=/gothamads.com/
-address=/gotraffic.net/
-address=/gp.dejanews.com/
-address=/gracefulsock.com/
-address=/graizoah.com/
-address=/grandioseguide.com/
-address=/grapeshot.co.uk/
-address=/greetzebra.com/
-address=/greyinstrument.com/
-address=/greystripe.com/
-address=/grosshandel-angebote.de/
-address=/groundtruth.com/
-address=/gscontxt.net/
-address=/gtop100.com/
-address=/guardedschool.com/
-address=/gunggo.com/
-address=/guruads.de/
-address=/gutscheine.bild.de/
-address=/gutscheine.chip.de/
-address=/gutscheine.focus.de/
-address=/gutscheine.welt.de/
-address=/h0.t.hubspotemail.net/
-address=/h78xb.pw/
-address=/habitualhumor.com/
-address=/hackpalace.com/
-address=/hadskiz.com/
-address=/haltingbadge.com/
-address=/hammerhearing.com/
-address=/handyfield.com/
-address=/hardtofindmilk.com/
-address=/harrenmedia.com/
-address=/harrenmedianetwork.com/
-address=/havamedia.net/
-address=/hb.afl.rakuten.co.jp/
-address=/hbb.afl.rakuten.co.jp/
-address=/h-bid.com/
-address=/hdscout.com/
-address=/heap.com/
-address=/heias.com/
-address=/heise.demediadaten/
-address=/heise.demediadatenheise-online/
-address=/heise.demediadatenonline/
-address=/hellobar.com/
-address=/hentaicounter.com/
-address=/herbalaffiliateprogram.com/
-address=/hexcan.com/
-address=/hexusads.fluent.ltd.uk/
-address=/heyos.com/
-address=/hfc195b.com/
-address=/hgads.com/
-address=/highfalutinroom.com/
-address=/hightrafficads.com/
-address=/hilariouszinc.com/
-address=/hilltopads.net/
-address=/histats.com/
-address=/historicalrequest.com/
-address=/hit.bg/
-address=/hit.ua/
-address=/hit.webcentre.lycos.co.uk/
-address=/hitbox.com/
-address=/hitcounters.miarroba.com/
-address=/hitfarm.com/
-address=/hitiz.com/
-address=/hitlist.ru/
-address=/hitlounge.com/
-address=/hitometer.com/
-address=/hit-parade.com/
-address=/hits.europuls.eu/
-address=/hits.informer.com/
-address=/hits.puls.lv/
-address=/hits.theguardian.com/
-address=/hits4me.com/
-address=/hits-i.iubenda.com/
-address=/hitslink.com/
-address=/hittail.com/
-address=/hlok.qertewrt.com/
-address=/hocgeese.com/
-address=/hollps.win/
-address=/homepageking.de/
-address=/honeygoldfish.com/
-address=/honorablehall.com/
-address=/honorableland.com/
-address=/hookupsonline.com/
-address=/hostedads.realitykings.com/
-address=/hotjar.com/
-address=/hotkeys.com/
-address=/hotlog.ru/
-address=/hotrank.com.tw/
-address=/hoverowl.com/
-address=/hsadspixel.net/
-address=/hs-analytics.net/
-address=/hs-banner.com/
-address=/hsrd.yahoo.com/
-address=/htlbid.com/
-address=/httpool.com/
-address=/hubadnetwork.com/
-address=/hueads.com/
-address=/hueadsortb.com/
-address=/hueadsxml.com/
-address=/hurricanedigitalmedia.com/
-address=/hurtteeth.com/
-address=/hydramedia.com/
-address=/hyperbanner.net/
-address=/hypertracker.com/
-address=/hyprmx.com/
-address=/hystericalhelp.com/
-address=/i1img.com/
-address=/i1media.no/
-address=/ia.iinfo.cz/
-address=/iad.anm.co.uk/
-address=/iadnet.com/
-address=/iasds01.com/
-address=/ibillboard.com/
-address=/i-clicks.net/
-address=/iconadserver.com/
-address=/iconpeak2trk.com/
-address=/icptrack.com/
-address=/id5-sync.com/
-address=/idealadvertising.net/
-address=/identads.com/
-address=/idevaffiliate.com/
-address=/idtargeting.com/
-address=/ientrymail.com/
-address=/iesnare.com/
-address=/ifa.tube8live.com/
-address=/i-i.lt/
-address=/ilbanner.com/
-address=/ilead.itrack.it/
-address=/illfatedsnail.com/
-address=/illustriousoatmeal.com/
-address=/imagecash.net/
-address=/images-pw.secureserver.net/
-address=/imarketservices.com/
-address=/img.prohardver.hu/
-address=/imgpromo.easyrencontre.com/
-address=/imgs.chip.de/
-address=/immensehoney.com/
-address=/imonitor.nethost.cz/
-address=/imonomy.com/
-address=/importedincrease.com/
-address=/impossibleexpansion.com/
-address=/imprese.cz/
-address=/impressionmedia.cz/
-address=/impressionmonster.com/
-address=/impressionz.co.uk/
-address=/improvedigital.com/
-address=/impulsehands.com/
-address=/imrworldwide.com/
-address=/inaccused.com/
-address=/incentaclick.com/
-address=/inclk.com/
-address=/incognitosearches.com/
-address=/incoming.telemetry.mozilla.org/
-address=/indexexchange.com/
-address=/indexstats.com/
-address=/indexww.com/
-address=/indieclick.com/
-address=/industrybrains.com/
-address=/inetlog.ru/
-address=/infinite-ads.com/
-address=/infinityads.com/
-address=/infolinks.com/
-address=/information.com/
-address=/inmobi.com/
-address=/inner-active.com/
-address=/innocentwax.com/
-address=/innovid.com/
-address=/inquisitiveinvention.com/
-address=/inringtone.com/
-address=/insgly.net/
-address=/insightexpress.com/
-address=/insightexpressai.com/
-address=/inskinad.com/
-address=/inspectlet.com/
-address=/install.365-stream.com/
-address=/instantmadness.com/
-address=/insticator.com/
-address=/instinctiveads.com/
-address=/instrumentsponge.com/
-address=/intelliads.com/
-address=/intelligent.com/
-address=/intellitext.de/
-address=/intellitxt.com/
-address=/intellitxt.de/
-address=/interactive.forthnet.gr/
-address=/intergi.com/
-address=/internetfuel.com/
-address=/interreklame.de/
-address=/intnotif.club/
-address=/inventionpassenger.com/
-address=/invitesugar.com/
-address=/ioam.de/
-address=/iomoio.com/
-address=/ip.ro/
-address=/ip193.cn/
-address=/iperceptions.com/
-address=/iporntv.com/
-address=/iporntv.net/
-address=/ipredictive.com/
-address=/ipro.com/
-address=/ipstack.com/
-address=/iqm.de/
-address=/irchan.com/
-address=/ireklama.cz/
-address=/is-tracking-pixel-api-prod.appspot.com/
-address=/itfarm.com/
-address=/itop.cz/
-address=/itsptp.com/
-address=/its-that-easy.com/
-address=/ivwbox.de/
-address=/ivw-online.de/
-address=/ivykiosk.com/
-address=/iyfnzgb.com/
-address=/j93557g.com/
-address=/jadeitite.com/
-address=/jads.co/
-address=/jaizouji.com/
-address=/jauchuwa.net/
-address=/jcount.com/
-address=/jdoqocy.com/
-address=/jinkads.de/
-address=/jjhouse.com/
-address=/joetec.net/
-address=/js.users.51.la/
-address=/js-agent.newrelic.com/
-address=/jsecoin.com/
-address=/jsrdn.com/
-address=/juicyads.com/
-address=/juicyads.me/
-address=/jumptap.com/
-address=/jungroup.com/
-address=/justicejudo.com/
-address=/justpremium.com/
-address=/justrelevant.com/
-address=/k.iinfo.cz/
-address=/kameleoon.eu/
-address=/kanoodle.com/
-address=/kargo.com/
-address=/karonty.com/
-address=/keygen.us/
-address=/keygenguru.com/
-address=/keygens.pro/
-address=/keymedia.hu/
-address=/kindads.com/
-address=/kinox.to/
-address=/kissmetrics.com/
-address=/klclick.com/
-address=/klclick1.com/
-address=/kleinanzaige.spiegel,de/
-address=/kleinanzeige.bild,de/
-address=/kleinanzeige.chip.de/
-address=/kleinanzeige.focus.de/
-address=/kleinanzeige.welt.de/
-address=/kliks.nl/
-address=/kliktrek.com/
-address=/klsdee.com/
-address=/kmpiframe.keepmeposted.com.mt/
-address=/knorex.com/
-address=/komoona.com/
-address=/kompasads.com/
-address=/kontera.com/
-address=/kost.tv/
-address=/kpu.samsungelectronics.com/
-address=/krxd.net/
-address=/kt5850pjz0.com/
-address=/ktu.sv2.biz/
-address=/ktxtr.com/
-address=/kubient.com/
-address=/l1.britannica.com/
-address=/l6b587txj1.com/
-address=/ladsreds.com/
-address=/ladsup.com/
-address=/lakequincy.com/
-address=/lameletters.com/
-address=/lanistaads.com/
-address=/larati.net/
-address=/laughablecopper.com/
-address=/laughcloth.com/
-address=/launchbit.com/
-address=/layer-ad.de/
-address=/layer-ads.de/
-address=/lbn.ru/
-address=/lead-analytics.nl/
-address=/leadboltads.net/
-address=/leadclick.com/
-address=/leadingedgecash.com/
-address=/leadplace.fr/
-address=/leady.com/
-address=/leadzupc.com/
-address=/leaplunchroom.com/
-address=/leedsads.com/
-address=/lemmatechnologies.com/
-address=/lettucelimit.com/
-address=/levelrate.de/
-address=/lfeeder.com/
-address=/lfstmedia.com/
-address=/li.alibris.com/
-address=/li.azstarnet.com/
-address=/li.dailycaller.com/
-address=/li.gatehousemedia.com/
-address=/li.gq.com/
-address=/li.hearstmags.com/
-address=/li.livingsocial.com/
-address=/li.mw.drhinternet.net/
-address=/li.onetravel.com/
-address=/li.patheos.com/
-address=/li.pmc.com/
-address=/li.purch.com/
-address=/li.realtor.com/
-address=/li.walmart.com/
-address=/li.ziffimages.com/
-address=/liadm.com/
-address=/lifeimpressions.net/
-address=/liftdna.com/
-address=/ligatus.com/
-address=/ligatus.de/
-address=/lightcast.leadscoringcenter.com/
-address=/lightcushion.com/
-address=/lightspeedcash.com/
-address=/lijit.com/
-address=/line.jzs001.cn/
-address=/link4ads.com/
-address=/linkadd.de/
-address=/link-booster.de/
-address=/linkbuddies.com/
-address=/linkexchange.com/
-address=/linkprice.com/
-address=/linkrain.com/
-address=/linkreferral.com/
-address=/linkshighway.com/
-address=/links-ranking.de/
-address=/linkstorms.com/
-address=/linkswaper.com/
-address=/linktarget.com/
-address=/liquidad.narrowcastmedia.com/
-address=/litix.io/
-address=/liveadexchanger.com/
-address=/liveintent.com/
-address=/liverail.com/
-address=/lizardslaugh.com/
-address=/lkqd.com/
-address=/lnks.gd/
-address=/loading321.com/
-address=/locked4.com/
-address=/lockerdome.com/
-address=/log.btopenworld.com/
-address=/log.logrocket.io/
-address=/log.pinterest.com/
-address=/log.videocampaign.co/
-address=/logger.snackly.co/
-address=/logs.roku.com/
-address=/logs.spilgames.com/
-address=/logsss.com/
-address=/logua.com/
-address=/longinglettuce.com/
-address=/look.djfiln.com/
-address=/look.ichlnk.com/
-address=/look.opskln.com/
-address=/look.udncoeln.com/
-address=/look.ufinkln.com/
-address=/loopme.com/
-address=/lop.com/
-address=/loudlunch.com/
-address=/lp3tdqle.com/
-address=/lucidmedia.com/
-address=/lucklayed.info/
-address=/lytics.io/
-address=/lzjl.com/
-address=/m.trb.com/
-address=/m\\303\\266se/
-address=/m\\303\\266se.com/
-address=/m\\303\\266se.de/
-address=/m1.webstats4u.com/
-address=/m2.ai/
-address=/m32.media/
-address=/m4n.nl/
-address=/m6r.eu/
-address=/macerkopf.dego/
-address=/mackeeperapp.mackeeper.com/
-address=/madbid.com/
-address=/madclient.uimserv.net/
-address=/madcpms.com/
-address=/madinad.com/
-address=/madisonavenue.com/
-address=/madvertise.de/
-address=/magicadz.co/
-address=/magnificentmist.com/
-address=/mail-ads.google.com/
-address=/mainstoreonline.com/
-address=/malaysia-online-bank-kasino.com/
-address=/manageadv.cblogs.eu/
-address=/marchex.com/
-address=/marinsm.com/
-address=/markedcrayon.com/
-address=/markedpail.com/
-address=/market-buster.com/
-address=/marketing.888.com/
-address=/marketing.hearstmagazines.nl/
-address=/marketing.net.brillen.de/
-address=/marketing.net.home24.de/
-address=/marketing.nyi.net/
-address=/marketing.osijek031.com/
-address=/marketingsolutions.yahoo.com/
-address=/marketo.com/
-address=/mas.sector.sk/
-address=/massivemark.com/
-address=/matchcraft.com/
-address=/materialmoon.com/
-address=/matheranalytics.com/
-address=/mathtag.com/
-address=/matomo.activate.cz/
-address=/matomo.hdweb.ru/
-address=/matomo.kmkb.ru/
-address=/mautic.com/
-address=/max.i12.de/
-address=/maximiser.net/
-address=/maximumcash.com/
-address=/maxonclick.com/
-address=/mbs.megaroticlive.com/
-address=/mcdlks.com/
-address=/me/
-address=/measure.office.com/
-address=/measuremap.com/
-address=/media.funpic.de/
-address=/media.net/
-address=/media01.eu/
-address=/media6degrees.com/
-address=/media-adrunner.mycomputer.com/
-address=/mediaarea.eu/
-address=/mediabridge.cc/
-address=/mediacharger.com/
-address=/mediageneral.com/
-address=/mediaiqdigital.com/
-address=/mediamath.com/
-address=/mediamgr.ugo.com/
-address=/mediaplazza.com/
-address=/mediaplex.com/
-address=/mediascale.de/
-address=/mediaserver.bwinpartypartners.it/
-address=/media-servers.net/
-address=/mediasmart.io/
-address=/mediatext.com/
-address=/mediavine.com/
-address=/mediavoice.com/
-address=/mediax.angloinfo.com/
-address=/mediaz.angloinfo.com/
-address=/medleyads.com/
-address=/medyanetads.com/
-address=/meetrics.net/
-address=/megacash.de/
-address=/mega-einkaufsquellen.de/
-address=/megapu.sh/
-address=/megastats.com/
-address=/megawerbung.de/
-address=/mellowads.com/
-address=/memorizeneck.com/
-address=/memorycobweb.com/
-address=/messagenovice.com/
-address=/metadsp.co.uk/
-address=/metaffiliation.com/
-address=/metanetwork.com/
-address=/methodcash.com/
-address=/metrics.api.drift.com/
-address=/metrics.cnn.com/
-address=/metrics.consumerreports.org/
-address=/metrics.ctv.ca/
-address=/metrics.foxnews.com/
-address=/metrics.getrockerbox.com/
-address=/metrics.gfycat.com/
-address=/metrics.govexec.com/
-address=/metrics-logger.spot.im/
-address=/metrilo.com/
-address=/mfadsrvr.com/
-address=/mg2connext.com/
-address=/mgid.com/
-address=/microstatic.pl/
-address=/microticker.com/
-address=/militaryverse.com/
-address=/milotree.com/
-address=/minewhat.com/
-address=/minormeeting.com/
-address=/mintegral.com/
-address=/mixedreading.com/
-address=/mixpanel.com/
-address=/mkto-ab410147.com/
-address=/mktoresp.com/
-address=/ml314.com/
-address=/mlm.de/
-address=/mltrk.io/
-address=/mmismm.com/
-address=/mmstat.com/
-address=/mmtro.com/
-address=/moartraffic.com/
-address=/moat.com/
-address=/moatads.com/
-address=/moatpixel.com/
-address=/mobclix.com/
-address=/mobfox.com/
-address=/mobileanalytics.us-east-1.amazonaws.com/
-address=/mobilefuse.com/
-address=/mobileiconnect.com/
-address=/mobperads.net/
-address=/modernpricing.com/
-address=/modifyeyes.com/
-address=/moldyicicle.com/
-address=/mon.byteoversea.com/
-address=/monarchads.com/
-address=/monetate.net/
-address=/monetizer101.com/
-address=/moneyexpert.co.uk/
-address=/monsterpops.com/
-address=/mookie1.com/
-address=/mopub.com/
-address=/motionspots.com/
-address=/mouseflow.com/
-address=/mousestats.com/
-address=/movad.net/
-address=/movie4k.to/
-address=/mowfruit.com/
-address=/mp3fiesta.com/
-address=/mp3sugar.com/
-address=/mp3va.com/
-address=/mparticle.com/
-address=/mpstat.us/
-address=/mr-rank.de/
-address=/mrskincash.com/
-address=/msads.net/
-address=/mstrlytcs.com/
-address=/mtrcs.samba.tv/
-address=/mtree.com/
-address=/munchkin.marketo.net/
-address=/musiccounter.ru/
-address=/musicmp3.ru/
-address=/muwmedia.com/
-address=/mxptint.net/
-address=/myads.company/
-address=/myads.net/
-address=/myads.telkomsel.com/
-address=/myaffiliateprogram.com/
-address=/mybestmv.com/
-address=/mybetterdl.com/
-address=/mybloglog.com/
-address=/mybuys.com/
-address=/mycounter.ua/
-address=/mydas.mobi/
-address=/mylink-today.com/
-address=/mymoneymakingapp.com/
-address=/mypagerank.net/
-address=/mypagerank.ru/
-address=/mypass.de/
-address=/mypowermall.com/
-address=/mysafeads.com/
-address=/mystat.pl/
-address=/mystat-in.net/
-address=/mysteriousmonth.com/
-address=/mytop-in.net/
-address=/myvisualiq.net/
-address=/n69.com/
-address=/na.ads.yahoo.com/
-address=/naj.sk/
-address=/naradxb.com/
-address=/nastydollars.com/
-address=/nativeroll.tv/
-address=/naturalbid.com/
-address=/navegg.com/
-address=/navigator.io/
-address=/navrcholu.cz/
-address=/nbjmp.com/
-address=/ncaudienceexchange.com/
-address=/ndparking.com/
-address=/nedstatbasic.net/
-address=/neighborlywatch.com/
-address=/nend.net/
-address=/neocounter.neoworx-blog-tools.net/
-address=/nervoussummer.com/
-address=/netaffiliation.com/
-address=/netagent.cz/
-address=/netclickstats.com/
-address=/netcommunities.com/
-address=/netdirect.nl/
-address=/net-filter.com/
-address=/netincap.com/
-address=/netmng.com/
-address=/netpool.netbookia.net/
-address=/netshelter.net/
-address=/networkadvertising.org/
-address=/neudesicmediagroup.com/
-address=/newads.bangbros.com/
-address=/newbie.com/
-address=/newnet.qsrch.com/
-address=/newnudecash.com/
-address=/newopenx.detik.com/
-address=/newsadsppush.com/
-address=/newsletter-link.com/
-address=/newstarads.com/
-address=/newt1.adultadworld.com/
-address=/newt1.adultworld.com/
-address=/nexac.com/
-address=/nexage.com/
-address=/ng3.ads.warnerbros.com/
-address=/nhpfvdlbjg.com/
-address=/nitratory.com/
-address=/nitroclicks.com/
-address=/noiselessplough.com/
-address=/nondescriptcrowd.com/
-address=/nondescriptsmile.com/
-address=/nondescriptstocking.com/
-address=/novem.pl/
-address=/npttech.com/
-address=/nr-data.net/
-address=/ns1p.net/
-address=/ntv.io/
-address=/ntvk1.ru/
-address=/nuggad.net/
-address=/nuseek.com/
-address=/nuttyorganization.com/
-address=/nzaza.com/
-address=/o0bc.com/
-address=/o333o.com/
-address=/oafishobservation.com/
-address=/oas.benchmark.fr/
-address=/oas.repubblica.it/
-address=/oas.roanoke.com/
-address=/oas.toronto.com/
-address=/oas.uniontrib.com/
-address=/oas.villagevoice.com/
-address=/oascentral.chicagobusiness.com/
-address=/oascentral.fortunecity.com/
-address=/oascentral.register.com/
-address=/obscenesidewalk.com/
-address=/observantice.com/
-address=/oclasrv.com/
-address=/odbierz-bony.ovp.pl/
-address=/oewa.at/
-address=/offaces-butional.com/
-address=/offer.fyber.com/
-address=/offer.sponsorpay.com/
-address=/offerforge.com/
-address=/offermatica.com/
-address=/offerzone.click/
-address=/oglasi.posjetnica.com/
-address=/ogury.com/
-address=/oingo.com/
-address=/omnijay.com/
-address=/omniscientspark.com/
-address=/omniture.com/
-address=/omtrdc.net/
-address=/onaudience.com/
-address=/onclasrv.com/
-address=/onclickads.net/
-address=/oneandonlynetwork.com/
-address=/onenetworkdirect.com/
-address=/onestat.com/
-address=/onestatfree.com/
-address=/online.miarroba.com/
-address=/onlinecash.com/
-address=/onlinefilme.tv/
-address=/online-metrix.net/
-address=/onlinerewardcenter.com/
-address=/online-tests.de/
-address=/onlineticketexpress.com/
-address=/onscroll.com/
-address=/onthe.io/
-address=/opads.us/
-address=/open.oneplus.net/
-address=/openad.tf1.fr/
-address=/openad.travelnow.com/
-address=/openads.friendfinder.com/
-address=/openads.org/
-address=/openadsnetwork.com/
-address=/opentag-stats.qubit.com/
-address=/openx.actvtech.com/
-address=/openx.angelsgroup.org.uk/
-address=/openx.cairo360.com/
-address=/openx.kgmedia.eu/
-address=/openx.net/
-address=/openx.skinet.cz/
-address=/openx.smcaen.fr/
-address=/openx2.kytary.cz/
-address=/operationkettle.com/
-address=/opienetwork.com/
-address=/opmnstr.com/
-address=/optimallimit.com/
-address=/optimizely.com/
-address=/optimize-stats.voxmedia.com/
-address=/optimost.com/
-address=/optmd.com/
-address=/optmnstr.com/
-address=/optmstr.com/
-address=/optnmstr.com/
-address=/ota.cartrawler.com/
-address=/otto-images.developershed.com/
-address=/ouh3igaeb.com/
-address=/outbrain.com/
-address=/overconfidentfood.com/
-address=/overture.com/
-address=/owebanalytics.com/
-address=/owebmoney.ru/
-address=/owlsr.us/
-address=/owneriq.net/
-address=/ox1.shopcool.com.tw/
-address=/oxado.com/
-address=/oxcash.com/
-address=/oxen.hillcountrytexas.com/
-address=/p.nag.ru/
-address=/p2r14.com/
-address=/padsbrown.com/
-address=/padssup.com/
-address=/pagead.l.google.com/
-address=/pagefair.com/
-address=/pagefair.net/
-address=/pagerank4you.com/
-address=/pagerank-ranking.de/
-address=/pageranktop.com/
-address=/paleleaf.com/
-address=/panickycurtain.com/
-address=/paradoxfactor.com/
-address=/parchedangle.com/
-address=/parketsy.pro/
-address=/parsely.com/
-address=/parsimoniouspolice.com/
-address=/partner.pelikan.cz/
-address=/partnerad.l.google.com/
-address=/partner-ads.com/
-address=/partnerads.ysm.yahoo.com/
-address=/partnercash.de/
-address=/partnernet.amazon.de/
-address=/partners.priceline.com/
-address=/partners.webmasterplan.com/
-address=/passeura.com/
-address=/passion-4.net/
-address=/paycounter.com/
-address=/paypopup.com/
-address=/pbnet.ru/
-address=/pbterra.com/
-address=/pcash.imlive.com/
-address=/pctracking.net/
-address=/peep-auktion.de/
-address=/peer39.com/
-address=/pennyweb.com/
-address=/pepperjamnetwork.com/
-address=/perceivequarter.com/
-address=/percentmobile.com/
-address=/perfectaudience.com/
-address=/perfiliate.com/
-address=/performancerevenue.com/
-address=/performancerevenues.com/
-address=/performancing.com/
-address=/permutive.com/
-address=/personagraph.com/
-address=/petiteumbrella.com/
-address=/pgl.example.com/
-address=/pgl.example0101/
-address=/pgmediaserve.com/
-address=/pgpartner.com/
-address=/pheedo.com/
-address=/phoenix-adrunner.mycomputer.com/
-address=/photographpan.com/
-address=/phpadsnew.new.natuurpark.nl/
-address=/pi.pardot.com/
-address=/piano.io/
-address=/picadmedia.com/
-address=/piet2eix3l.com/
-address=/pietexture.com/
-address=/pilotaffiliate.com/
-address=/pimproll.com/
-address=/ping.ublock.org/
-address=/pipedream.wistia.com/
-address=/pippio.com/
-address=/piquantpigs.com/
-address=/pix.spot.im/
-address=/pixel.adsafeprotected.com/
-address=/pixel.bild.de/
-address=/pixel.condenastdigital.com/
-address=/pixel.digitru.st/
-address=/pixel.keywee.co/
-address=/pixel.mathtag.com/
-address=/pixel.mtrcs.samba.tv/
-address=/pixel.sojern.com/
-address=/pixel.watch/
-address=/pixel.yabidos.com/
-address=/pl/
-address=/placed.com/
-address=/play4traffic.com/
-address=/playhaven.com/
-address=/pleasantpump.com/
-address=/plista.com/
-address=/plotrabbit.com/
-address=/plugrush.com/
-address=/p-n.io/
-address=/pocketmath.com/
-address=/podtraff.com/
-address=/podtraft.com/
-address=/pointroll.com/
-address=/pokkt.com/
-address=/popads.net/
-address=/popcash.net/
-address=/popmyads.com/
-address=/popub.com/
-address=/popunder.ru/
-address=/popup.msn.com/
-address=/popup.taboola.com/
-address=/popupmoney.com/
-address=/popupnation.com/
-address=/popups.infostart.com/
-address=/popuptraffic.com/
-address=/porngraph.com/
-address=/porntrack.com/
-address=/possessivebucket.com/
-address=/possibleboats.com/
-address=/post.spmailtechno.com/
-address=/postback.iqm.com/
-address=/postrelease.com/
-address=/praddpro.de/
-address=/prchecker.info/
-address=/prebid.org/
-address=/predictad.com/
-address=/premium-offers.com/
-address=/presetrabbits.com/
-address=/previousplayground.com/
-address=/previouspotato.com/
-address=/primetime.net/
-address=/privatecash.com/
-address=/prmtracking.com/
-address=/pro-advertising.com/
-address=/prodtraff.com/
-address=/producecopy.com/
-address=/producer.getwisdom.io/
-address=/proext.com/
-address=/profero.com/
-address=/profi-kochrezepte.de/
-address=/profitrumour.com/
-address=/profiwin.de/
-address=/programattik.com/
-address=/projectwonderful.com/
-address=/pro-market.net/
-address=/promo.badoink.com/
-address=/promo.ulust.com/
-address=/promobenef.com/
-address=/promos.bwin.it/
-address=/promos.fling.com/
-address=/promote.pair.com/
-address=/promotions-884485.c.cdn77.org/
-address=/pronetadvertising.com/
-address=/proof-x.com/
-address=/propellerads.com/
-address=/propellerclick.com/
-address=/proper.io/
-address=/props.id/
-address=/prosper.on-line-casino.ca/
-address=/protectcrev.com/
-address=/protectsubrev.com/
-address=/proton-tm.com/
-address=/protraffic.com/
-address=/provexia.com/
-address=/prsaln.com/
-address=/prsitecheck.com/
-address=/pr-star.de/
-address=/ps7894.com/
-address=/pstmrk.it/
-address=/ptoushoa.com/
-address=/pub.chez.com/
-address=/pub.club-internet.fr/
-address=/pub.hardware.fr/
-address=/pub.network/
-address=/pub.realmedia.fr/
-address=/pubdirecte.com/
-address=/publicidad.elmundo.es/
-address=/publicidees.com/
-address=/pubmatic.com/
-address=/pubmine.com/
-address=/pubnative.net/
-address=/puffyloss.com/
-address=/puffypaste.com/
-address=/puffypull.com/
-address=/puffypurpose.com/
-address=/pushame.com/
-address=/pushance.com/
-address=/pushazer.com/
-address=/pushengage.com/
-address=/pushno.com/
-address=/pushtrack.co/
-address=/pushwhy.com/
-address=/px.ads.linkedin.com/
-address=/px.dynamicyield.com/
-address=/px.gfycat.com/
-address=/px.spiceworks.com/
-address=/pxl.iqm.com/
-address=/pymx5.com/
-address=/q.azcentral.com/
-address=/q1connect.com/
-address=/qcontentdelivery.info/
-address=/qctop.com/
-address=/qnsr.com/
-address=/qservz.com/
-address=/quacksquirrel.com/
-address=/quaintcan.com/
-address=/quantcast.com/
-address=/quantcount.com/
-address=/quantserve.com/
-address=/quantummetric.com/
-address=/quarterbean.com/
-address=/quarterserver.de/
-address=/questaffiliates.net/
-address=/quibids.com/
-address=/quicksandear.com/
-address=/quietknowledge.com/
-address=/quinst.com/
-address=/quisma.com/
-address=/quizzicalzephyr.com/
-address=/r.logrocket.io/
-address=/r.msn.com/
-address=/r.scoota.co/
-address=/radar.cedexis.com/
-address=/radarurl.com/
-address=/radiate.com/
-address=/rads.alfamedia.pl/
-address=/rads.realadmin.pl/
-address=/railwayrainstorm.com/
-address=/railwayreason.com/
-address=/rampidads.com/
-address=/rankchamp.de/
-address=/rankingchart.de/
-address=/ranking-charts.de/
-address=/ranking-hits.de/
-address=/ranking-links.de/
-address=/ranking-liste.de/
-address=/rankingscout.com/
-address=/rank-master.com/
-address=/rankyou.com/
-address=/rapidape.com/
-address=/rapidcounter.com/
-address=/rapidkittens.com/
-address=/raresummer.com/
-address=/rate.ru/
-address=/ratings.lycos.com/
-address=/rayjump.com/
-address=/reachjunction.com/
-address=/reactx.com/
-address=/readgoldfish.com/
-address=/readingguilt.com/
-address=/readingopera.com/
-address=/readserver.net/
-address=/readymoon.com/
-address=/realcastmedia.com/
-address=/realclever.com/
-address=/realclix.com/
-address=/realmedia-a800.d4p.net/
-address=/realsrv.com/
-address=/realtechnetwork.com/
-address=/realtracker.com/
-address=/rebelsubway.com/
-address=/receptiveink.com/
-address=/receptivereaction.com/
-address=/recoco.it/
-address=/record.affiliates.karjalakasino.com/
-address=/record.bonniergaming.com/
-address=/record.mrwin.com/
-address=/redirectingat.com/
-address=/re-directme.com/
-address=/redirectvoluum.com/
-address=/redshell.io/
-address=/reduxmedia.com/
-address=/referralware.com/
-address=/referrer.disqus.com/
-address=/reflectivereward.com/
-address=/reforge.in/
-address=/regnow.com/
-address=/regularplants.com/
-address=/reklam.rfsl.se/
-address=/reklama.mironet.cz/
-address=/reklama.reflektor.cz/
-address=/reklamcsere.hu/
-address=/reklamdsp.com/
-address=/reklame.unwired-i.net/
-address=/relevanz10.de/
-address=/relmaxtop.com/
-address=/remistrainew.club/
-address=/remox.com/
-address=/republika.onet.pl/
-address=/research.de.com/
-address=/resolutekey.com/
-address=/resonantbrush.com/
-address=/resonate.com/
-address=/responsiveads.com/
-address=/retargeter.com/
-address=/revcatch.com/
-address=/revcontent.com/
-address=/reveal.clearbit.com/
-address=/revenue.net/
-address=/revenuedirect.com/
-address=/revenuehits.com/
-address=/revive.docmatic.org/
-address=/revive.dubcnm.com/
-address=/revive.haskovo.net/
-address=/revive.netriota.hu/
-address=/revive.plays.bg/
-address=/revlift.io/
-address=/revprotect.com/
-address=/revsci.net/
-address=/revstats.com/
-address=/reyden-x.com/
-address=/rhombusads.com/
-address=/rhythmone.com/
-address=/richmails.com/
-address=/richmedia.yimg.com/
-address=/richstring.com/
-address=/richwebmaster.com/
-address=/rightstats.com/
-address=/rinconpx.net/
-address=/ringsrecord.com/
-address=/ritzykey.com/
-address=/rlcdn.com/
-address=/rle.ru/
-address=/rmads.msn.com/
-address=/rmedia.boston.com/
-address=/rmgserving.com/
-address=/ro/
-address=/roar.com/
-address=/robotreplay.com/
-address=/rockabox.co/
-address=/roia.biz/
-address=/rok.com.com/
-address=/roq.ad/
-address=/rose.ixbt.com/
-address=/rotabanner.com/
-address=/rotten.com/
-address=/rotten.de/
-address=/roughroll.com/
-address=/roxr.net/
-address=/royalgames.com/
-address=/rs/
-address=/rs6.net/
-address=/rta.dailymail.co.uk/
-address=/rtb.gumgum.com/
-address=/rtbadzesto.com/
-address=/rtbflairads.com/
-address=/rtbidhost.com/
-address=/rtbplatform.net/
-address=/rtbpop.com/
-address=/rtbpopd.com/
-address=/rtbsbengine.com/
-address=/rtbtradein.com/
-address=/rtmark.net/
-address=/rtpdn11.com/
-address=/rtxplatform.com/
-address=/ru/
-address=/ru4.com/
-address=/rubiconproject.com/
-address=/rum-http-intake.logs.datadoghq.com/
-address=/rum-http-intake.logs.datadoghq.eu/
-address=/runads.com/
-address=/rundsp.com/
-address=/ruthlessrobin.com/
-address=/s.adroll.com/
-address=/s1-adfly.com/
-address=/s20dh7e9dh.com/
-address=/s24hc8xzag.com/
-address=/s2d6.com/
-address=/sa.api.intl.miui.com/
-address=/sabio.us/
-address=/sageanalyst.net/
-address=/sail-horizon.com/
-address=/samsungacr.com/
-address=/samsungads.com/
-address=/saysidewalk.com/
-address=/sbx.pagesjaunes.fr/
-address=/scambiobanner.aruba.it/
-address=/sc-analytics.appspot.com/
-address=/scanscout.com/
-address=/scarcesign.com/
-address=/scatteredheat.com/
-address=/scintillatingscissors.com/
-address=/scintillatingspace.com/
-address=/scoobyads.com/
-address=/scopelight.com/
-address=/scorecardresearch.com/
-address=/scratch2cash.com/
-address=/screechingfurniture.com/
-address=/script.ioam.de/
-address=/scripte-monster.de/
-address=/scrubswim.com/
-address=/sdkfjxjertertry.com/
-address=/seadform.net/
-address=/searching-place.com/
-address=/searchmarketing.com/
-address=/searchramp.com/
-address=/secretivecub.com/
-address=/secretspiders.com/
-address=/secure.webconnect.net/
-address=/securedopen-bp.com/
-address=/securemetrics.apple.com/
-address=/sedoparking.com/
-address=/sedotracker.com/
-address=/segmetrics.io/
-address=/selectivesummer.com/
-address=/semasio.net/
-address=/sendmepixel.com/
-address=/sensismediasmart.com.au/
-address=/separatesilver.com/
-address=/serials.ws/
-address=/serienjunkies.org/
-address=/serienstream.to/
-address=/serv0.com/
-address=/servads.net/
-address=/servadsdisrupt.com/
-address=/servedbyadbutler.com/
-address=/servedby-buysellads.com/
-address=/servedbyopenx.com/
-address=/servethis.com/
-address=/service.urchin.com/
-address=/services.hearstmags.com/
-address=/servingmillions.com/
-address=/serving-sys.com/
-address=/sessioncam.com/
-address=/sexcounter.com/
-address=/sexinyourcity.com/
-address=/sexlist.com/
-address=/sextracker.com/
-address=/shakesea.com/
-address=/shakesuggestion.com/
-address=/shakytaste.com/
-address=/shallowsmile.com/
-address=/shareadspace.com/
-address=/shareasale.com/
-address=/sharethrough.com/
-address=/sharppatch.com/
-address=/sher.index.hu/
-address=/shermore.info/
-address=/shinystat.com/
-address=/shinystat.it/
-address=/shockinggrass.com/
-address=/shooshtime.com/
-address=/shoppingads.com/
-address=/sicksmash.com/
-address=/sidebar.angelfire.com/
-address=/silkysquirrel.com/
-address=/sillyscrew.com/
-address=/silvalliant.info/
-address=/silvermob.com/
-address=/simpleanalytics.io/
-address=/simplehitcounter.com/
-address=/simpli.fi/
-address=/sincerebuffalo.com/
-address=/sinoa.com/
-address=/sitedataprocessing.com/
-address=/siteimproveanalytics.com/
-address=/siteimproveanalytics.io/
-address=/siteintercept.qualtrics.com/
-address=/sitemeter.com/
-address=/sixscissors.com/
-address=/sixsigmatraffic.com/
-address=/sizesidewalk.com/
-address=/sizmek.com/
-address=/skimresources.com/
-address=/skylink.vn/
-address=/sleepcartoon.com/
-address=/slipperysack.com/
-address=/slopeaota.com/
-address=/smaato.com/
-address=/smallbeginner.com/
-address=/smart4ads.com/
-address=/smartadserver.com/
-address=/smartadserver.de/
-address=/smartadserver.net/
-address=/smartclip.net/
-address=/smartlook.com/
-address=/smartstream.tv/
-address=/smart-traffik.com/
-address=/smart-traffik.io/
-address=/smartyads.com/
-address=/smashsurprise.com/
-address=/smetrics.10daily.com.au/
-address=/smetrics.bestbuy.com/
-address=/smetrics.ctv.ca/
-address=/smetrics.foxnews.com/
-address=/smetrics.walgreens.com/
-address=/smetrics.washingtonpost.com/
-address=/smilingwaves.com/
-address=/smokerland.net/
-address=/smrtb.com/
-address=/snapads.com/
-address=/sneakystamp.com/
-address=/snoobi.com/
-address=/socialspark.com/
-address=/softclick.com.br/
-address=/sombersea.com/
-address=/sombersquirrel.com/
-address=/sombersurprise.com/
-address=/somniture.stuff.co.nz/
-address=/somoaudience.com/
-address=/sonobi.com/
-address=/sortable.com/
-address=/sourcepoint.vice.com/
-address=/sovrn.com/
-address=/spacash.com/
-address=/spaceleadster.com/
-address=/sparkstudios.com/
-address=/specially4u.net/
-address=/specificmedia.co.uk/
-address=/specificpop.com/
-address=/speedomizer.com/
-address=/speedshiftmedia.com/
-address=/spezialreporte.de/
-address=/spidersboats.com/
-address=/spiegel.deimages/
-address=/spiffymachine.com/
-address=/spinbox.techtracker.com/
-address=/spinbox.versiontracker.com/
-address=/spirebaboon.com/
-address=/sponsorads.de/
-address=/sponsorpro.de/
-address=/sponsors.thoughtsmedia.com/
-address=/sportsad.net/
-address=/spot.fitness.com/
-address=/spotscenered.info/
-address=/spotx.tv/
-address=/spotxchange.com/
-address=/springaftermath.com/
-address=/springserve.com/
-address=/spulse.net/
-address=/spurioussteam.com/
-address=/spykemediatrack.com/
-address=/spylog.com/
-address=/spywarelabs.com/
-address=/spywords.com/
-address=/squirrelhands.com/
-address=/srvmath.com/
-address=/srvtrck.com/
-address=/srwww1.com/
-address=/st.dynamicyield.com/
-address=/stackadapt.com/
-address=/stack-sonar.com/
-address=/stakingscrew.com/
-address=/stakingslope.com/
-address=/stalesummer.com/
-address=/standingnest.com/
-address=/starffa.com/
-address=/start.freeze.com/
-address=/startapp.com/
-address=/stat.cliche.se/
-address=/stat.dyna.ultraweb.hu/
-address=/stat.pl/
-address=/stat.webmedia.pl/
-address=/stat.xiaomi.com/
-address=/stat.zenon.net/
-address=/stat24.com/
-address=/stat24.meta.ua/
-address=/statcounter.com/
-address=/statdynamic.com/
-address=/static.a-ads.com/
-address=/static.fmpub.net/
-address=/static.itrack.it/
-address=/static.kameleoon.com/
-address=/staticads.btopenworld.com/
-address=/statistik-gallup.net/
-address=/statm.the-adult-company.com/
-address=/stats.blogger.com/
-address=/stats.hyperinzerce.cz/
-address=/stats.merriam-webster.com/
-address=/stats.mirrorfootball.co.uk/
-address=/stats.nextgen-email.com/
-address=/stats.olark.com/
-address=/stats.pusher.com/
-address=/stats.rdphv.net/
-address=/stats.self.com/
-address=/stats.townnews.com/
-address=/stats.unwired-i.net/
-address=/stats.wordpress.com/
-address=/stats.wp.com/
-address=/stats.x14.eu/
-address=/stats2.self.com/
-address=/stats4all.com/
-address=/statserv.net/
-address=/statsie.com/
-address=/stat-track.com/
-address=/statxpress.com/
-address=/steadfastsound.com/
-address=/steadfastsystem.com/
-address=/steelhouse.com/
-address=/steelhousemedia.com/
-address=/stepplane.com/
-address=/stickssheep.com/
-address=/stickyadstv.com/
-address=/stiffgame.com/
-address=/storesurprise.com/
-address=/storetail.io/
-address=/stormyachiever.com/
-address=/storygize.net/
-address=/stoveseashore.com/
-address=/straightnest.com/
-address=/stream.useriq.com/
-address=/stripedburst.com/
-address=/strivesidewalk.com/
-address=/structurerod.com/
-address=/stupendoussleet.com/
-address=/su/
-address=/subscribe.hearstmags.com/
-address=/succeedscene.com/
-address=/suddensidewalk.com/
-address=/sudoku.de/
-address=/sugarcurtain.com/
-address=/sugoicounter.com/
-address=/sulkybutter.com/
-address=/summerhamster.com/
-address=/summerobject.com/
-address=/sumo.com/
-address=/sumome.com/
-address=/superclix.de/
-address=/superficialsquare.com/
-address=/supersonicads.com/
-address=/superstats.com/
-address=/supertop.ru/
-address=/supertop100.com/
-address=/supertracking.net/
-address=/supply.colossusssp.com/
-address=/surfmusik-adserver.de/
-address=/surveygizmobeacon.s3.amazonaws.com/
-address=/sw88.espn.com/
-address=/swan-swan-goose.com/
-address=/swimslope.com/
-address=/swoggi.de/
-address=/swordfishdc.com/
-address=/swordgoose.com/
-address=/systemcdn.net/
-address=/t.bawafx.com/
-address=/t.eloqua.com/
-address=/t.firstpromoter.com/
-address=/t.insigit.com/
-address=/t.irtyd.com/
-address=/t.ktxtr.com/
-address=/taboola.com/
-address=/tag.links-analytics.com/
-address=/tagan.adlightning.com/
-address=/tagcommander.com/
-address=/tagger.opecloud.com/
-address=/tags.tiqcdn.com/
-address=/tagular.com/
-address=/tailsweep.com/
-address=/tailsweep.se/
-address=/takethatad.com/
-address=/takru.com/
-address=/talentedsteel.com/
-address=/tamgrt.com/
-address=/tangerinenet.biz/
-address=/tangibleteam.com/
-address=/tapad.com/
-address=/tapfiliate.com/
-address=/tapinfluence.com/
-address=/tapjoy.com/
-address=/tappx.com/
-address=/targad.de/
-address=/target.microsoft.com/
-address=/targeting.api.drift.com/
-address=/targeting.nzme.arcpublishing.com/
-address=/targeting.voxus.tv/
-address=/targetingnow.com/
-address=/targetnet.com/
-address=/targetpoint.com/
-address=/tastefulsongs.com/
-address=/tatsumi-sys.jp/
-address=/tawdryson.com/
-address=/tcads.net/
-address=/teads.tv/
-address=/tealeaf.com/
-address=/tealium.cbsnews.com/
-address=/tealium.com/
-address=/tealiumiq.com/
-address=/techclicks.net/
-address=/tedioustooth.com/
-address=/teenrevenue.com/
-address=/teenyvolcano.com/
-address=/teethfan.com/
-address=/telaria.com/
-address=/telemetry.dropbox.com/
-address=/telemetry.v.dropbox.com/
-address=/temelio.com/
-address=/tendertest.com/
-address=/tercept.com/
-address=/terriblethumb.com/
-address=/textad.sexsearch.com/
-address=/textads.biz/
-address=/text-link-ads.com/
-address=/textlinks.com/
-address=/tfag.de/
-address=/theadex.com/
-address=/theadhost.com/
-address=/thebugs.ws/
-address=/theclickads.com/
-address=/themoneytizer.com/
-address=/the-ozone-project.com/
-address=/therapistla.com/
-address=/thinkablerice.com/
-address=/thirdrespect.com/
-address=/thirstytwig.com/
-address=/thomastorch.com/
-address=/threechurch.com/
-address=/throattrees.com/
-address=/throtle.io/
-address=/thruport.com/
-address=/ti.domainforlite.com/
-address=/tia.timeinc.net/
-address=/ticketaunt.com/
-address=/ticklesign.com/
-address=/ticksel.com/
-address=/tidaltv.com/
-address=/tidint.pro/
-address=/tinybar.com/
-address=/tkbo.com/
-address=/tls.telemetry.swe.quicinc.com/
-address=/tlvmedia.com/
-address=/tnkexchange.com/
-address=/tns-counter.ru/
-address=/tntclix.co.uk/
-address=/toecircle.com/
-address=/toothbrushnote.com/
-address=/top.list.ru/
-address=/top.mail.ru/
-address=/top.proext.com/
-address=/top100.mafia.ru/
-address=/top100-images.rambler.ru/
-address=/top123.ro/
-address=/top20free.com/
-address=/top90.ro/
-address=/topbucks.com/
-address=/top-casting-termine.de/
-address=/topforall.com/
-address=/topgamesites.net/
-address=/toplist.cz/
-address=/toplist.pornhost.com/
-address=/toplista.mw.hu/
-address=/toplistcity.com/
-address=/topping.com.ua/
-address=/toprebates.com/
-address=/topsir.com/
-address=/topsite.lv/
-address=/top-site-list.com/
-address=/topsites.com.br/
-address=/topstats.com/
-address=/totemcash.com/
-address=/touchclarity.com/
-address=/touchclarity.natwest.com/
-address=/tour.brazzers.com/
-address=/track.addevent.com/
-address=/track.adform.net/
-address=/track.anchorfree.com/
-address=/track.contently.com/
-address=/track.effiliation.com/
-address=/track.flexlinks.com/
-address=/track.flexlinkspro.com/
-address=/track.freemmo2017.com/
-address=/track.game18click.com/
-address=/track.gawker.com/
-address=/track.hexcan.com/
-address=/track.mailerlite.com/
-address=/track.nuxues.com/
-address=/track.themaccleanup.info/
-address=/track.tkbo.com/
-address=/track.ultravpn.com/
-address=/track.undressingpics.work/
-address=/track.unear.net/
-address=/track.vcdc.com/
-address=/track.viewdeos.com/
-address=/track1.viewdeos.com/
-address=/trackalyzer.com/
-address=/trackedlink.net/
-address=/trackedweb.net/
-address=/tracker.bannerflow.com/
-address=/tracker.cdnbye.com/
-address=/tracker.comunidadmarriott.com/
-address=/tracker.icerocket.com/
-address=/tracker.mmdlv.it/
-address=/tracker.samplicio.us/
-address=/tracker.vgame.us/
-address=/tracker-pm2.spilleren.com/
-address=/tracking.1-a1502-bi.co.uk/
-address=/tracking.1-kv015-ap.co.uk/
-address=/tracking.21-a4652-bi.co.uk/
-address=/tracking.39-bb4a9-osm.co.uk/
-address=/tracking.42-01pr5-osm-secure.co.uk/
-address=/tracking.5-47737-bi.co.uk/
-address=/tracking.epicgames.com/
-address=/tracking.gajmp.com/
-address=/tracking.hyros.com/
-address=/tracking.ibxlink.com/
-address=/tracking.internetstores.de/
-address=/tracking.intl.miui.com/
-address=/tracking.jiffyworld.com/
-address=/tracking.lenddom.com/
-address=/tracking.markethero.io/
-address=/tracking.miui.com/
-address=/tracking.olx-st.com/
-address=/tracking.orixa-media.com/
-address=/tracking.publicidees.com/
-address=/tracking.thinkabt.com/
-address=/tracking01.walmart.com/
-address=/tracking101.com/
-address=/tracking22.com/
-address=/trackingfestival.com/
-address=/trackingsoft.com/
-address=/tracklink-tel.de/
-address=/trackmysales.com/
-address=/trackuhub.com/
-address=/tradeadexchange.com/
-address=/tradedoubler.com/
-address=/trading-rtbg.com/
-address=/traffic.focuusing.com/
-address=/traffic-exchange.com/
-address=/trafficfactory.biz/
-address=/trafficforce.com/
-address=/trafficholder.com/
-address=/traffichunt.com/
-address=/trafficjunky.net/
-address=/trafficleader.com/
-address=/traffic-redirecting.com/
-address=/trafficreps.com/
-address=/trafficrouter.io/
-address=/trafficshop.com/
-address=/trafficspaces.net/
-address=/trafficstrategies.com/
-address=/trafficswarm.com/
-address=/traffictrader.net/
-address=/trafficz.com/
-address=/traffiq.com/
-address=/trafic.ro/
-address=/traktrafficflow.com/
-address=/tranquilside.com/
-address=/travis.bosscasinos.com/
-address=/trck.a8.net/
-address=/trcking4wdm.de/
-address=/trcklion.com/
-address=/treasuredata.com/
-address=/trekdata.com/
-address=/tremendoustime.com/
-address=/tremorhub.com/
-address=/trendcounter.com/
-address=/trendmd.com/
-address=/tribalfusion.com/
-address=/trickycelery.com/
-address=/triplelift.com/
-address=/triptease.io/
-address=/trix.net/
-address=/trk.bee-data.com/
-address=/trk.techtarget.com/
-address=/trk42.net/
-address=/trkn.us/
-address=/trknths.com/
-address=/trmit.com/
-address=/truckstomatoes.com/
-address=/truehits.net/
-address=/truehits1.gits.net.th/
-address=/truehits2.gits.net.th/
-address=/trust.titanhq.com/
-address=/truste/
-address=/trusted.de/
-address=/trustx.org/
-address=/tsyndicate.com/
-address=/tsyndicate.net/
-address=/tubelibre.com/
-address=/tubemogul.com/
-address=/tubepatrol.net/
-address=/tubesafari.com/
-address=/turboadv.com/
-address=/turn.com/
-address=/tvmtracker.com/
-address=/twiago.com/
-address=/twittad.com/
-address=/twyn.com/
-address=/tynt.com/
-address=/typicalteeth.com/
-address=/tyroo.com/
-address=/uarating.com/
-address=/ucfunnel.com/
-address=/udkcrj.com/
-address=/udncoeln.com/
-address=/uib.ff.avast.com/
-address=/ukbanners.com/
-address=/ultimateclixx.com/
-address=/ultramercial.com/
-address=/ultraoranges.com/
-address=/unarmedindustry.com/
-address=/undertone.com/
-address=/unister-adserver.de/
-address=/unknowntray.com/
-address=/unless.com/
-address=/unrulymedia.com/
-address=/untd.com/
-address=/untidyquestion.com/
-address=/unup4y/
-address=/unusualtitle.com/
-address=/unwieldyhealth.com/
-address=/unwrittenspot.com/
-address=/upu.samsungelectronics.com/
-address=/urbandictionary.com/
-address=/urchin.com/
-address=/urlcash.net/
-address=/urldata.net/
-address=/us.a1.yimg.com/
-address=/userreplay.com/
-address=/userreplay.net/
-address=/utils.mediageneral.net/
-address=/utl-1.com/
-address=/uttermosthobbies.com/
-address=/uu.domainforlite.com/
-address=/uzk4umokyri3.com/
-address=/v1.cnzz.com/
-address=/v1adserver.com/
-address=/validclick.com/
-address=/valuead.com/
-address=/valueclick.com/
-address=/valueclickmedia.com/
-address=/valuecommerce.com/
-address=/valuesponsor.com/
-address=/vanfireworks.com/
-address=/variablefitness.com/
-address=/vcommission.com/
-address=/veille-referencement.com/
-address=/velismedia.com/
-address=/ventivmedia.com/
-address=/venturead.com/
-address=/verblife-3.co/
-address=/verblife-4.co/
-address=/verblife-5.co/
-address=/vericlick.com/
-address=/vertamedia.com/
-address=/verticalmass.com/
-address=/vervewireless.com/
-address=/vgwort.com/
-address=/vgwort.de/
-address=/vgwort.org/
-address=/vibrantmedia.com/
-address=/vidcpm.com/
-address=/videoadex.com/
-address=/videoamp.com/
-address=/videoegg.com/
-address=/videostats.kakao.com/
-address=/video-stats.video.google.com/
-address=/vidible.tv/
-address=/vidora.com/
-address=/view4cash.de/
-address=/viglink.com/
-address=/visiblemeasures.com/
-address=/visistat.com/
-address=/visit.webhosting.yahoo.com/
-address=/visitbox.de/
-address=/visitpath.com/
-address=/visual-pagerank.fr/
-address=/visualrevenue.com/
-address=/vivads.net/
-address=/vivatube.com/
-address=/vivime.net.fr/
-address=/vivtracking.com/
-address=/vmmpxl.com/
-address=/vodafone-affiliate.de/
-address=/voicefive.com/
-address=/voicevegetable.com/
-address=/voluum.com/
-address=/voluumtrk.com/
-address=/voluumtrk2.com/
-address=/volvelle.tech/
-address=/voodoo-ads.io/
-address=/vpon.com/
-address=/vrs.cz/
-address=/vrtzcontextualads.com/
-address=/vs.tucows.com/
-address=/vtracy.de/
-address=/vungle.com/
-address=/vwo.com/
-address=/vx.org.ua/
-address=/w55c.net/
-address=/wa.and.co.uk/
-address=/waardex.com/
-address=/warlog.ru/
-address=/warmafterthought.com/
-address=/waryfog.com/
-address=/wateryvan.com/
-address=/wdads.sx.atl.publicus.com/
-address=/wd-track.de/
-address=/wearbasin.com/
-address=/web.informer.com/
-address=/web2.deja.com/
-address=/webads.co.nz/
-address=/webads.nl/
-address=/webcash.nl/
-address=/webcontentassessor.com/
-address=/webcounter.cz/
-address=/webcounter.goweb.de/
-address=/webctrx.com/
-address=/webgains.com/
-address=/weborama.com/
-address=/weborama.fr/
-address=/webpower.com/
-address=/web-redirecting.com/
-address=/webreseau.com/
-address=/webseoanalytics.com/
-address=/websponsors.com/
-address=/webstat.channel4.com/
-address=/webstat.com/
-address=/web-stat.com/
-address=/webstat.net/
-address=/webstats4u.com/
-address=/webtracker.jp/
-address=/webtrackerplus.com/
-address=/webtracky.com/
-address=/webtraffic.se/
-address=/webtraxx.de/
-address=/webtrends.telegraph.co.uk/
-address=/webtrendslive.com/
-address=/webxcdn.com/
-address=/wellmadefrog.com/
-address=/werbung.meteoxpress.com/
-address=/wetrack.it/
-address=/whaleads.com/
-address=/wheredoyoucomefrom.ovh/
-address=/whirlwealth.com/
-address=/whiskyqueue.com/
-address=/whispa.com/
-address=/whisperingcrib.com/
-address=/whitexxxtube.com/
-address=/whoisonline.net/
-address=/wholesaletraffic.info/
-address=/widespace.com/
-address=/widget.privy.com/
-address=/widgetbucks.com/
-address=/wikia-ads.wikia.com/
-address=/win.iqm.com/
-address=/window.nixnet.cz/
-address=/wintricksbanner.googlepages.com/
-address=/wirecomic.com/
-address=/wisepops.com/
-address=/witch-counter.de/
-address=/wizaly.com/
-address=/wlmarketing.com/
-address=/womanear.com/
-address=/wonderlandads.com/
-address=/wondoads.de/
-address=/woopra.com/
-address=/worldwide-cash.net/
-address=/worldwidedigitalads.com/
-address=/worriednumber.com/
-address=/wpnrtnmrewunrtok.xyz/
-address=/wryfinger.com/
-address=/ws/
-address=/wt.bankmillennium.pl/
-address=/wt-eu02.net/
-address=/wtlive.com/
-address=/www.amazon.in/
-address=/www.dnps.com/
-address=/www.kaplanindex.com/
-address=/www.photo-ads.co.uk/
-address=/www8.glam.com/
-address=/www-banner.chat.ru/
-address=/www-google-analytics.l.google.com/
-address=/wwwpromoter.com/
-address=/x.bild.de/
-address=/x.chip.de/
-address=/x.fokus.de/
-address=/x.welt.de/
-address=/x6.yakiuchi.com/
-address=/xad.com/
-address=/xapads.com/
-address=/xchange.ro/
-address=/xertive.com/
-address=/xfreeservice.com/
-address=/xg4ken.com/
-address=/xiti.com/
-address=/xovq5nemr.com/
-address=/xplusone.com/
-address=/xponsor.com/
-address=/xpu.samsungelectronics.com/
-address=/xq1.net/
-address=/xtendmedia.com/
-address=/x-traceur.com/
-address=/xtracker.logimeter.com/
-address=/xtremetop100.com/
-address=/xxxcounter.com/
-address=/xxxmyself.com/
-address=/y.ibsys.com/
-address=/yab-adimages.s3.amazonaws.com/
-address=/yadro.ru/
-address=/yepads.com/
-address=/yesads.com/
-address=/yesadvertising.com/
-address=/yieldads.com/
-address=/yieldlab.net/
-address=/yieldmanager.com/
-address=/yieldmanager.net/
-address=/yieldmo.com/
-address=/yieldtraffic.com/
-address=/yldbt.com/
-address=/ymetrica1.com/
-address=/yoggrt.com/
-address=/ypu.samsungelectronics.com/
-address=/z3dmbpl6309s.com/
-address=/z5x.net/
-address=/zangocash.com/
-address=/zanox.com/
-address=/zanox-affiliate.de/
-address=/zantracker.com/
-address=/zarget.com/
-address=/zbwp6ghm.com/
-address=/zealousfield.com/
-address=/zedo.com/
-address=/zemanta.com/
-address=/zencudo.co.uk/
-address=/zenkreka.com/
-address=/zenra.com/
-address=/zenra.de/
-address=/zenzuu.com/
-address=/zeus.developershed.com/
-address=/zeusclicks.com/
-address=/zlp6s.pw/
-address=/zm232.com/
-address=/zmedia.com/
-address=/zpu.samsungelectronics.com/
-address=/zqtk.net/
-address=/zukxd6fkxqn.com/
-address=/zy16eoat1w.com/
-address=/zzhc.vnet.cn/
-address=/gewinnspiel.focus.de/
-address=/gewinnspiel.chip.de/
-address=/gewinnspiel.bild.de/
-address=/gewinnspiel.stern.de/
-address=/gewinnspiel.welt.de/
-address=/service.focus.de/
-address=/service.chip.de/
-address=/service.bild.de/
-address=/service.stern.de/
-address=/service.welt.de/
-address=/shopping.focus.de/
-address=/shopping.chip.de/
-address=/shopping.bild.de/
-address=/shopping.stern.de/
-address=/shopping.welt.de/
-address=/deals.focus.de/
-address=/deals.chip.de/
-address=/deals.bild.de/
-address=/deals.stern.de/
-address=/deals.welt.de/
-address=/shop.focus.de/
-address=/shop.chip.de/
-address=/shop.bild.de/
-address=/shop.stern.de/
-address=/shop.welt.de/
-address=/tarif.focus.de/
-address=/tarif.chip.de/
-address=/tarif.bild.de/
-address=/tarif.stern.de/
-address=/tarif.welt.de/
-address=/kuendigen.focus.de/
-address=/kuendigen.chip.de/
-address=/kuendigen.bild.de/
-address=/kuendigen.stern.de/
-address=/kuendigen.welt.de/
-address=/rechnerportal.focus.de/
-address=/rechnerportal.chip.de/
-address=/rechnerportal.bild.de/
-address=/rechnerportal.stern.de/
-address=/rechnerportal.welt.de/
-address=/vergleich.focus.de/
-address=/vergleich.chip.de/
-address=/vergleich.bild.de/
-address=/vergleich.stern.de/
-address=/vergleich.welt.de/
-address=/games.focus.de/
-address=/games.chip.de/
-address=/games.bild.de/
-address=/games.stern.de/
-address=/games.welt.de/
-address=/prospekte.focus.de/
-address=/prospekte.chip.de/
-address=/prospekte.bild.de/
-address=/prospekte.stern.de/
-address=/prospekte.welt.de/
-address=/x.focus.de/
-address=/x.chip.de/
-address=/x.bild.de/
-address=/x.stern.de/
-address=/x.welt.de/
-address=/amazon-adsystem.com/
-address=/amazon-adsystem.eu/
-address=/amazon-adsystem.de/
-address=/amazon-adsystem.co.uk/
-address=/amazon-adsystem.net/
-address=/investor-praemien.de/
-address=/glomex.com/
-address=/smartredirect.de/
-address=/smartredirect.com/
-address=/criteo.net/
-address=/criteo.com/
-address=/criteo.de/
-address=/permutive.com/
-address=/permutive.de/
-address=/bf-ad.net/
-address=/bf-tools.net/
-address=/somniture.chip.de/
-address=/somniture.focus.de/
-address=/somniture.bild.de/
-address=/somniture.stern.de/
-address=/somniture.welt.de/
-address=/somniture.spiegel.de/
-address=/adtm.chip.de/
-address=/adtm.focus.de/
-
-address=/apester.com/
-address=/apester.de/
-address=/.bing/
-address=/.bingo/
-address=/.ads/
-address=/.pocker/
-address=/.promo/
-address=/.qvcs/
-address=/.sale/
-address=/.vegas/
-EOF
-
-cat << EOF > /etc/dnsmasq.d/Blacklist/porn
-address=/sex.com/
-address=/sex.net/
-address=/sex.de/
-address=/porn.com/
-address=/porn.net/
-address=/porn.de/
-address=/porno.de/
-address=/porno.com/
-address=/porno.net/
-address=/inthevip.com/
-address=/inthevip.net/
-address=/inthevip.de/
-address=/intellitxt.com/
-address=/intellitxt.net/
-address=/intellitxt.de/
-address=/outbrain.com/
-address=/outbrain.net/
-address=/outbrain.de/
-address=/efahrer\.[a-z]*\.com/
-address=/efahrer\.*[a-z]*\.de/
-address=/efahrer.chip.de/
-address=/efahrer.de/
-address=/allporntubes.net/
-address=/allsexclips.com/
-address=/beateuhse.com/
-address=/beate-uhse.com/
-address=/beate-uhse.de/
-address=/bordell.com/
-address=/bordell.de/
-address=/bpwhamburgorchardpark.org/
-address=/bundesporno.com/
-address=/bundesporno.net/
-address=/burningangle.com/
-address=/burningangle.de/
-address=/burningangles.com/
-address=/burningangles.de/
-address=/centgebote.tv/
-address=/chaturbate.com/
-address=/chumshot.com/
-address=/chumshot.de/
-address=/collectionofbestporn.com/
-address=/cyberotic.com/
-address=/cyberotic.de/
-address=/cyberotic.mobi/
-address=/de.mediaplex.com/
-address=/deutschepornos.xyz/
-address=/deutschsexvideos.com/
-address=/einfachporno.com/
-address=/einfachporno.de/
-address=/emediate.eu/
-address=/emohotties.com/
-address=/endloseporno.com/
-address=/erotica.com/
-address=/fancy.com/
-address=/fancy.de/
-address=/fapdu.com/
-address=/fatpornfuck.com/
-address=/ficken.com/
-address=/ficken.de/
-address=/firstporno.com/
-address=/firstporno.de/
-address=/fotze.com/
-address=/fotze.de/
-address=/fotzen.com/
-address=/fotzen.de/
-address=/freeporn.com/
-address=/freeporn.de/
-address=/geilemaedchen.com/
-address=/geiltube.com/
-address=/german-porno-deutsch.com/
-address=/girlsavenue.com/
-address=/girlsavenue.de/
-address=/girldorado.com/
-address=/girldorado.de/
-address=/girldorado.net/
-address=/girldorado.tv/
-address=/girldorado.org/
-address=/gratispornosfilm.com/
-address=/guterporn.com/
-address=/guterporn.de/
-address=/hclips.com/
-address=/hellporno.com/
-address=/hellporno.de/
-address=/hotntubes.com/
-address=/hotntubes.de/
-address=/hustler.com/
-address=/hustler.de/
-address=/iporntv.com/
-address=/iporntv.net/
-address=/jjhouse.com/
-address=/justporno.com/
-address=/justporno.de/
-address=/justporno.tv/
-address=/literotica.com/
-address=/livejasmin.com/
-address=/livejasmin.de/
-address=/lockerdome.com/
-address=/lupoporno.com/
-address=/lustdays.com/
-address=/lustparkplatz.com/
-address=/moese.com/
-address=/moese.de/
-address=/movie4k.to/
-address=/mp3fiesta.com/
-address=/mp3sugar.com/
-address=/mp3va.com/
-address=/msads.net/
-address=/nudevista.com/
-address=/nudevista.tv/
-address=/nursexfilme.com/
-address=/penis.com/
-address=/penis.de/
-address=/prno.de/
-address=/prno.com/
-address=/porn.de/
-address=/porn.com/
-address=/pornburst.com/
-address=/porndoe.com/
-address=/pornhub.com/
-address=/pornhub.de/
-address=/pornodoe.com/
-address=/pornoente.com/
-address=/pornoente.de/
-address=/pornoente.net/
-address=/pornofi.com/
-address=/porno-himmel.net/
-address=/pornohirsch.com/
-address=/pornokonig.com/
-address=/pornoleeuw.com/
-address=/pornoorzel.com/
-address=/pornos-kostenlos.tv/
-address=/pornostunde.com/
-address=/puff.com/
-address=/puff.de/
-address=/pussyspace.com/
-address=/realetykings.com/
-address=/realetykings.de/
-address=/realitykings.com/
-address=/realitykings.de/
-address=/redporn.com/
-address=/redtube.com/
-address=/redtube.de/
-address=/rk.com/
-address=/rk.de/
-address=/schwanz.com/
-address=/schwanz.de/
-address=/script.ioam.de/
-address=/selbstbefriedigung.com/
-address=/selbstbefriedigung.de/
-address=/sexhubhd.com/
-address=/sexhubhd.de/
-address=/sexhubhd.net/
-address=/spermswap.com/
-address=/spermswap.de/
-address=/spermswap.us/
-address=/starshows.de/
-address=/starshows.com/
-address=/starshows.org/
-address=/toroporno.com/
-address=/toys4you.com/
-address=/toys4you.de/
-address=/tubelibre.com/
-address=/tubepatrol.net/
-address=/tubesafari.com/
-address=/tubevintageporn.com/
-address=/urbandictionary.com/
-address=/vagina.com/
-address=/vagina.de/
-address=/vivatube.com/
-address=/whitexxxtube.com/
-address=/wichsen.com/
-address=/wichsen.de/
-address=/wildesporno.com/
-address=/wixen.com/
-address=/wixen.de/
-address=/xhamster.com/
-address=/xhamster.de/
-address=/xhamsterdeutsch.biz/
-address=/youporn.com/
-address=/youporn.de/
-address=/yourporn.com/
-address=/yourporn.de/
-address=/xvideo.de/
-address=/xvideo.com/
-address=/xvideos.de/
-address=/xvideos.com/
-address=/xnxx.com/
-address=/xnxx.de/
-address=/fundorado.de/
-address=/fundorado.com/
-address=/starshows.de/
-address=/starshows.com/
-address=/youjizz.com/
-address=/youjizz.de/
-address=/tube8.com/
-address=/tube8.de/
-address=/bestandfree.com/
-address=/bestandfree.de/
-address=/sexgirls.de/
-address=/sexstories.de/
-address=/sexstorys.de/
-address=/sexstrories.com/
-address=/sexstorys.com/
-address=/sexstories.net/
-address=/sexstorys.net/
-address=/anysex.com/
-address=/anysex.de/
-address=/apornostories.com/
-address=/apornstories.de/
-address=/apornostories.de/
-address=/apornstories.com/
-address=/apornstory.com/
-address=/apornstory.de/
-address=/emogirlsfuck.com/
-address=/emogirlfuck.com/
-address=/emogirlsfuck.de/
-address=/emogirlfuck.de/
-address=/emogirls.com/
-address=/emogirl.com/
-address=/emogirls.de/
-address=/emogirl.de/
-address=/bongacams.com/
-address=/bongacams.de/
-address=/bongacam.com/
-address=/bongacam.de/
-address=/bongaporn.com/
-address=/bongaporn.de/
-address=/bongaporno.com/
-address=/bongaporno.de/
-address=/bongasex.de/
-address=/bongasex.com/
-address=/tubesplash.com/
-address=/tubesplash.de/
-address=/txxx.com/
-address=/txxx.de/
-address=/.porn/
-address=/.porno/
-address=/.xxx/
-address=/.sex/
-address=/.adult/
-address=/.girl/
-address=/.girls/
-address=/.dating/
-address=/.gay/
-address=/.pink/
-address=/.sexy/
-address=/.tube/
-address=/.xyz/
-EOF
-
-cat << EOF > /etc/dnsmasq.d/Blacklist/white
-server=/dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/127.0.0.1#9053
-
-server=/microsoftconnecttest.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/msftncsi.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/clients3.google.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/connectivitycheck.gstatic.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/detectportal.firefox.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tplinkcloud.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/captive.apple.com/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/3sat.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/7tv.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/7tv.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/accuweather.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/accuweather.comde/127.0.0.1#$(echo $DNS_Relay_port)
-server=/aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/aio-control.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/aio-controls.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/aio-controls.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/akamaihd.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/alexasounds.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/alice.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/alice.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/alice-dsl.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/alice-dsl.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/amazon.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
-server=/amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/amazonsilk.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/amazon.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/amazon.eu/127.0.0.1#$(echo $DNS_Relay_port)
-server=/amazonaws.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
-server=/.amazon/127.0.0.1#$(echo $DNS_Relay_port)
-server=/mlis.amazon.eu/127.0.0.1#$(echo $DNS_Relay_port)
-server=/spectrum.s3.amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/amazonaws.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/a2z.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/images-amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/andreas-stawinski.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/android.clients.google.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/antenne.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/api.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/api.co.uk.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/api.crittercism.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/api.eu.amazonalexa.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/amazonvideo.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/api-global.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/openwrt.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/raspbery.org/127.0.0.1#$(echo $DNS_Relay_port)
-
-
-server=/apple.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/mzstatic.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/apple.de/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/ard.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ardmediathek.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/arte.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/avm.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/bing.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/br.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/br24.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/br-24.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/br24.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/br-24.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cddbp.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/chip.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/chip.smarttv.cellular.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cinepass.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cinepass.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cloud.mediola.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cloudfront.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cloudflare-dns.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cloudflare.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/connectors.yonomi.co/127.0.0.1#$(echo $DNS_Relay_port)
-server=/connectors.yonomi.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/content.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ct.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cyberandi.blog/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cyberandi.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cyberandi.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cyberandi.eu/127.0.0.1#$(echo $DNS_Relay_port)
-server=/daserste.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/deutschewelle.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/deutschewelle.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/directions.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/directions.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/dnssec-or-not.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/dnssec.vs.uni-due.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/dw.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/dw.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/elasticbeanstalk.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/epg.corio.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/erf.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/erf1.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/erste.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/filmstarts.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/focus.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/freestream.nmdn.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/fritz.box/127.0.0.1#$(echo $DNS_Relay_port)
-server=/flip.it/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ftp.stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/github.io/127.0.0.1#$(echo $DNS_Relay_port)
-server=/github.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/github.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/galileo.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/gallileo.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/geonames.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/getinvoked.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ggpht.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/googleapis.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/google.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/googlevideo.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/gracenote.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/gvt1.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/harmonyremote.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/harmony-remote.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/harmonyremote.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/harmony-remote.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/hbbtv.*/127.0.0.1#$(echo $DNS_Relay_port)
-server=/heise.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/heise-online.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/heute.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/hinter.bibeltv.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/home.stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/hotmail.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/hotmail.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ichnaea.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/icloud.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/icloud.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ifttt.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ihealthlabs.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/imdb.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/imdb.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/invokedapps.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/invokedapps.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ipleak.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ipv4_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ipv6_*.*.*.fra*.ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ism/127.0.0.1#$(echo $DNS_Relay_port)
-server=/it-business.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/it-business.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/itunes.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ix.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ix.nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/joyn.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/api.segment.io/127.0.0.1#$(echo $DNS_Relay_port)
-server=/seventv.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/route71.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ak-t1p-vod-playout-prod.akamaized.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/prosieben-ctr.live.ott.irdeto.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/p7s1video.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/joyn.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/joyn.tv/127.0.0.1#$(echo $DNS_Relay_port)
-server=/joyn.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/kabeleins.de/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/laut.fm/127.0.0.1#$(echo $DNS_Relay_port)
-server=/live.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/live.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/llnwd.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/llnwd.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/logging.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/m.media-amazon.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/m.tvinfo.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/macandi.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/mediola.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/mediola.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/members.harmonyremote.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/metafilegenerator.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/microsoft.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/microsoft.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/mobile.chip.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/myfritz.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/myharmony.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/myharmony.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/myremotesetup.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/mytvscout.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/n24.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/push.prod.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nccp.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/uiboot.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/secure.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/customerevents.netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/netflix.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/netflix.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nflximg.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nflximg.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nflxvideo.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nflxvideo.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nflxvideo.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nflxso.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nfximg.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nflxso.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nfximg.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nflxso.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nfximg.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nodejs.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/no-ip.biz/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nokia.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/nokia.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/npmjs.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ntp.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/n-tv.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/o2.box/127.0.0.1#$(echo $DNS_Relay_port)
-server=/office.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/office.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/office365.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/office365.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/onlinewetter.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/onlinewetter.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/openstreetmap.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/openstreetmap.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/openstreetmap.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/outlook.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/outlook.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/outlook.live.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/pcwelt.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/pc-welt.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/philips.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/philips.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/philips.nl/127.0.0.1#$(echo $DNS_Relay_port)
-server=/phobos.apple.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/phobos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/photos.apple.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/photos.apple.com.edgesuite.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/pionieer.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/play.google.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/playstation.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/prosieben.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ps3.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/pubsub.pubnub.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/pubnub.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/radio.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/radiogong.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/radiotime.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/remotes.aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/remotes.aio-control.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/remotes.aio-controls.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/remotes.aio-controls.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/remotesneo.aio-control.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/resolver1.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/resolver2.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/resolver3.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/resolver4.opendns.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/rtl.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/rtl2.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/s3-directional-w.amazonaws.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/samsung.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/sat1.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/script.ioam.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/shoutcast.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/sony.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/spn.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/startpage.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/startpage.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/startpage.nl/127.0.0.1#$(echo $DNS_Relay_port)
-server=/stawimedia.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/stawimedia.eu/127.0.0.1#$(echo $DNS_Relay_port)
-server=/stawimedia.local/127.0.0.1#$(echo $DNS_Relay_port)
-server=/stream.erf.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/streamfarm.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/sus.dhg.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/svcs.myharmony.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/t3n.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/telegram.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/t.me/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tagesschau.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tagesschau24.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/time.nist.gov/127.0.0.1#$(echo $DNS_Relay_port)
-server=/time.windows.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/torproject.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tumblr.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tumblr.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tumblr.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tune_in.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tune_in.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tunein.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tune-in.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tunein.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tune-in.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tvnow.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tvnow.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/twitter.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/twitter.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/t.co/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tvtv.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/unifiedlayer.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/vevo.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/vevo.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/video.google.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/videobuster.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/videobuster.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/videociety.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/videociety.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/vimeo.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/vimeo.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wbsapi.withings.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/waipu.tv/127.0.0.1#$(echo $DNS_Relay_port)
-server=/waipu.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/waipu.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/whatismyip.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wpstr.tv/127.0.0.1#$(echo $DNS_Relay_port)
-server=/waipu.ch/127.0.0.1#$(echo $DNS_Relay_port)
-server=/weather.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/weather.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/welt.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wetter.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wetter.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wetteronline.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wetter-online.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wikimedia.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wikipedia.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wikipedia.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wikipedia.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/withings.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/withings.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ws.withings.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wunderlist.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/y2u.be/127.0.0.1#$(echo $DNS_Relay_port)
-server=/yelp.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
-server=/yelp.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/yelp.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/yelp.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/yelpcdn.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/yonomi.co/127.0.0.1#$(echo $DNS_Relay_port)
-server=/yonomi.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/youtu.be/127.0.0.1#$(echo $DNS_Relay_port)
-server=/youtube.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/youtube-nocookie.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ytimg.com/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/zattoo.ch/127.0.0.1#$(echo $DNS_Relay_port)
-server=/zattoo.co.uk/127.0.0.1#$(echo $DNS_Relay_port)
-server=/zattoo.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/zattoo.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/zattic.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/zahs.tv/127.0.0.1#$(echo $DNS_Relay_port)
-server=/zattoo.eu/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/zdf.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/zdf-cdn.live.cellular.de/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/dlive.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/dlive.tv/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/twitch.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/twitch.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/twitch.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/twitchcdn.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ttvnw.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/jtvnw.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/twitch.tv/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/disneyplus.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/disney+.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/disneyplus.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/disney+.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/disneyplus.tv/127.0.0.1#$(echo $DNS_Relay_port)
-server=/bamgrid.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/bam.nr-data.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cdn.registerdisney.go.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/cws.convia.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/d9.flashtalking.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/disney-portal.my.onetrust.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/disneyplus.bn5x.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/js-agent.newrelic.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/disney-plus.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/dssott.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/adobedtm.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/disney+.tv/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/pluto.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/pluto.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/pluto.tv/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tvnow.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tvnow.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tvnow.tv/127.0.0.1#$(echo $DNS_Relay_port)
-server=/duckduck.go/127.0.0.1#$(echo $DNS_Relay_port)
-server=/duckduckgo.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/duckduckgo.com/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/fireoscaptiveportal.com/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/bitchute.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/bitchute.tv/127.0.0.1#$(echo $DNS_Relay_port)
-server=/instagram.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/instagram.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/pinterest.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/pinterest.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/pinterest.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/flickr.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/flickr.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/flickr.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/imdb.tv/127.0.0.1#$(echo $DNS_Relay_port)
-server=/imdb.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/imdb.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/imdb.org/127.0.0.1#$(echo $DNS_Relay_port)
-server=/you2.be/127.0.0.1#$(echo $DNS_Relay_port)
-server=/youtu.be/127.0.0.1#$(echo $DNS_Relay_port)
-server=/spotify.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/spotify.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/spotify.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/www.bit.ly/127.0.0.1#$(echo $DNS_Relay_port)
-server=/bit.ly/127.0.0.1#$(echo $DNS_Relay_port)
-server=/ow.ly/127.0.0.1#$(echo $DNS_Relay_port)
-server=/tinyurl.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/buff.ly/127.0.0.1#$(echo $DNS_Relay_port)
-server=/trib.al/127.0.0.1#$(echo $DNS_Relay_port)
-server=/serienstream.sx/127.0.0.1#$(echo $DNS_Relay_port)
-server=/goo.gl/127.0.0.1#$(echo $DNS_Relay_port)
-server=/duckduckgo.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/duckduck.go/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wetter-online.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/wetter-online.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/snapcraft.io/127.0.0.1#$(echo $DNS_Relay_port)
-server=/easylist.to/127.0.0.1#$(echo $DNS_Relay_port)
-server=/secure.fanboy.co.nz/127.0.0.1#$(echo $DNS_Relay_port)
-server=/glm.io/127.0.0.1#$(echo $DNS_Relay_port)
-server=/heise.cloudimg.io/127.0.0.1#$(echo $DNS_Relay_port)
-server=/im.bestcheck.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/eum.instana.io/127.0.0.1#$(echo $DNS_Relay_port)
-server=/s.w-x.co/127.0.0.1#$(echo $DNS_Relay_port)
-server=/docker.io/127.0.0.1#$(echo $DNS_Relay_port)
-server=/bibelserver.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/bibelserver.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/bibleserver.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/bibleserver.com/127.0.0.1#$(echo $DNS_Relay_port)
-server=/erf.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/icf.ch/127.0.0.1#$(echo $DNS_Relay_port)
-server=/icf.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/icf.church/127.0.0.1#$(echo $DNS_Relay_port)
-
-server=/.skype/127.0.0.1#$(echo $DNS_Relay_port)
-server=/.youtube/127.0.0.1#$(echo $DNS_Relay_port)
-server=/.office/127.0.0.1#$(echo $DNS_Relay_port)
-server=/.exit/127.0.0.1#9053
-server=/.onion/127.0.0.1#9053
-EOF
-
-cat << EOF > /etc/dnsmasq.d/Blacklist/banking
-
-server=/.banking/127.0.0.1#$(echo $DNS_Relay_port)
-server=/unicredit.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/hvb.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/unicredit.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/hvb.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/hypovereinsbak.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/hypovereinsbank.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/comdirekt.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/comdirect.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/comdirect.net/127.0.0.1#$(echo $DNS_Relay_port)
-server=/postbank.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/satander.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/n26.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/deutschebank.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/reiba.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/sparkasse.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/sskm.de/127.0.0.1#$(echo $DNS_Relay_port)
-server=/commerzbank.de/127.0.0.1#$(echo $DNS_Relay_port)
-
-EOF
-
-
-cp /etc/dnsmasq.d/Blacklist/ads /etc/dnsmasq.d/Whitelist/ads >/dev/null
-cp /etc/dnsmasq.d/Blacklist/agency /etc/dnsmasq.d/Whitelist/agency >/dev/null
-cp /etc/dnsmasq.d/Blacklist/banking /etc/dnsmasq.d/Whitelist/banking >/dev/null
-cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys >/dev/null
-cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn >/dev/null
-cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white >/dev/null
-
-/etc/init.d/dnsmasq restart >/dev/null
+/etc/init.d/dnsmasq restart >> install.log
 
 echo
 echo
@@ -14503,243 +7756,6 @@ echo '#                AD- and Porn-Filter installed         #'
 echo '#                                                      #'
 echo '########################################################'
 view_config
-uci commit  && reload_config >/dev/null
-}
-
-set_tor() {
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '#                  Tor Definitions                     #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-
-/etc/init.d/tor stop >/dev/null
-/etc/init.d/log restart >/dev/null
-
-# Configure Tor client
-cat << EOF > /etc/tor/main
-AutomapHostsOnResolve 1
-VirtualAddrNetworkIPV4 10.192.0.0/10
-VirtualAddrNetworkIPv6 fc00::/7
-
-SocksListenAddress 127.0.0.1
-SocksListenAddress $(echo $SERVER_ip)
-SocksListenAddress $(echo $HCONTROL_ip)
-SocksListenAddress $(echo $CONTROL_ip)
-SocksListenAddress $(echo $INET_ip)
-SocksListenAddress [0::1]
-
-ControlPort 127.0.0.1:9051
-ControlPort [0::1]:9051
-ControlPort $(echo $SERVER_ip):9051
-ControlPort $(echo $HCONTROL_ip):9051
-ControlPort $(echo $CONTROL_ip):9051
-ControlPort $(echo $INET_ip):9051
-
-DNSPort 127.0.0.1:9053
-DNSPort 127.0.0.1:9153
-DNSPort 127.0.0.1:853
-DNSPort 127.0.10.1:53
-DNSPort 127.0.0.1:54
-DNSPort [0::1]:9053
-DNSPort [0::1]:9153
-DNSPort [0::1]:853
-DNSPort [0::1]:54
-
-DNSPort $(echo $SERVER_ip):9053
-DNSPort $(echo $HCONTROL_ip):9053
-DNSPort $(echo $CONTROL_ip):9053
-DNSPort $(echo $INET_ip):9053
-
-DNSPort $(echo $SERVER_ip):9153
-DNSPort $(echo $HCONTROL_ip):9153
-DNSPort $(echo $CONTROL_ip):9153
-DNSPort $(echo $INET_ip):9153
-
-DNSPort $(echo $SERVER_ip):54
-DNSPort $(echo $HCONTROL_ip):54
-DNSPort $(echo $CONTROL_ip):54
-DNSPort $(echo $INET_ip):54
-
-TransPort $(echo $SERVER_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort $(echo $HCONTROL_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort $(echo $CONTROL_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort $(echo $INET_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort 127.0.0.1:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort [0::1]:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-
-#SocksPort ist der Port für die Clientverbindung
-SocksPort $(echo $SERVER_ip):9050
-SocksPort $(echo $HCONTROL_ip):9050
-SocksPort $(echo $CONTROL_ip):9050
-SocksPort $(echo $INET_ip):9050
-SocksPort 127.0.0.1:9050
-SocksPort [0::1]:9050
-
-SocksPort $(echo $SERVER_ip):9150
-SocksPort $(echo $HCONTROL_ip):9150
-SocksPort $(echo $CONTROL_ip):9150
-SocksPort $(echo $INET_ip):9150
-SocksPort 127.0.0.1:9150
-SocksPort [0::1]:9150
-
-#ORPort empfängt Daten aus dem Tor Netzwerk im Internet
-#ORPort $(echo $WAN_ip):9049
-#DirPort zum Spiegeln der Tor-Server-Adressen
-#DirPort $(echo $WAN_ip):9030
-
-HTTPTunnelPort $(echo $SERVER_ip):9060
-HTTPTunnelPort $(echo $HCONTROL_ip):9060
-HTTPTunnelPort $(echo $CONTROL_ip):9060
-HTTPTunnelPort $(echo $INET_ip):9060
-HTTPTunnelPort 127.0.0.1:9060
-HTTPTunnelPort [0::1]:9060
-
-#ExitPolicy reject *:*
-#ExitPolicy stellt den Node Type ein. Hier Weiterleitung
-#RelayBandwidthRate 10000 KB
-#RelayBandwidthBurst 50000 KB
-#BandwidthRate 10000 KB
-#RelayBandwidthBurst 50000 KB
-#DebuggerAttachment 0
-#AccountingStart day 06:00
-#AccountingMax 50 GBytes
-
-NumCPUs 1
-
-#Nur sichere Exitnodes Benutzen
-StrictExitNodes 1 # war aktiv
-
-ExcludeNodes {AU}, {CA}, {FR}, {GB}, {NZ}, {US}, {DE}, {CH}, {JP}, {FR}, {SE}, {DK}, {NL}, {NO}, {IT}, {ES}, {BE}, {BG}, {EE}, {FI}, {GR}, {IL}, {SG}, {KR}, {HR}, {LV}, {LT}, {LU}, {MT}, {NO}, {AT}, {PL}, {PT}, {RO}, {RU}, {SE}, {SK}, {SI}, {CZ}, {HU}, {CY}, {EU}
-
-SafeSocks 1
-WarnUnsafeSocks 1
-#Log warn syslog
-#Das Schreiben auf die Disk verringern AvoidDiskWrites 1
-AvoidDiskWrites 1
-RunAsDaemon 1
-Nickname EnemyOneEU
-AutomapHostsSuffixes .onion,.exit
-
-## Tor hidden sites do not have real IP addresses. This specifies what range of
-## IP addresses will be handed to the application as "cookies" for .onion names.
-## Of course, you should pick a block of addresses which you aren't going to
-## ever need to actually connect to. This is similar to the MapAddress feature
-## of the main tor daemon.
-## OnionAddrRange 127.42.42.0/24
-##
-## ServerDNSResolvConfFile filename
-## ServerDNSAllowBrokenConfig 0|1
-## ServerDNSSearchDomains 1
-##
-## CacheIPv4DNS 1
-##
-## HiddenServiceDir /home/pi/hidden_service/
-## HiddenServicePort 80 192.168.175.250:80
-##
-## HiddenServiceDir /var/lib/tor/other_hidden_service/
-## HiddenServicePort 80 127.0.0.1:80
-## HiddenServicePort 22 127.0.0.1:22
-##
-## SOCKS5 Username and Password. This is used to isolate the torsocks connection
-## circuit from other streams in Tor. Use with option IsolateSOCKSAuth (on by
-## default) in tor(1). TORSOCKS_USERNAME and TORSOCKS_PASSWORD environment
-## variable overrides these options.
-## SOCKS5Username <username>
-## SOCKS5Password <password>
-##
-## Log notice file /var/log/tor/tor-notices.log
-DataDirectory /var/lib/tor
-User tor
-
-EOF
-
-
-uci del_list tor.conf.tail_include="/etc/tor/main" >/dev/null
-uci add_list tor.conf.tail_include="/etc/tor/main" >/dev/null
-
-uci commit tor && reload_config >/dev/null
-
-/etc/init.d/tor start  >/dev/null
-
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#               Tor-Onion-Services activated           #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
-}
-
-set_stubby() {
-#Configure stubby
-cat << EOF > /etc/config/stubby
-config stubby 'global'
-       option manual '0'
-       option trigger 'wan'
-       # option triggerdelay '2'
-       list dns_transport 'GETDNS_TRANSPORT_TLS'
-       option tls_authentication '1'
-       option tls_query_padding_blocksize '128'
-       # option tls_connection_retries '2'
-       # option tls_backoff_time '3600'
-       # option timeout '5000'
-       # option dnssec_return_status '0'
-       option appdata_dir '/var/lib/stubby'
-       # option trust_anchors_backoff_time 2500
-       # option dnssec_trust_anchors '/var/lib/stubby/getdns-root.key'
-       option edns_client_subnet_private '1'
-       option idle_timeout '10000'
-       option round_robin_upstreams '1'
-       list listen_address '127.0.0.1@$(echo $DNS_STUBBY_port)'
-       list listen_address '0::1@$(echo $DNS_STUBBY_port)'
-       list listen_address '$(echo $INET_ip)@$(echo $DNS_STUBBY_port)'
-       list listen_address '$(echo $SERVER_ip)@$(echo $DNS_STUBBY_port)'
-       list listen_address '$(echo $HCONTROL_ip)@$(echo $DNS_STUBBY_port)'
-       list listen_address '$(echo $CONTROL_ip)@$(echo $DNS_STUBBY_port)'
-       list listen_address '$(echo $VOICE_ip)@$(echo $DNS_STUBBY_port)'
-       list listen_address '$(echo $GUEST_ip)@$(echo $DNS_STUBBY_port)'
-       list listen_address '$(echo $ENTERTAIN_ip)@$(echo $DNS_STUBBY_port)'
-       # option log_level '7'
-       # option command_line_arguments ''
-       # option tls_cipher_list 'EECDH+AESGCM:EECDH+CHACHA20'
-       # option tls_ciphersuites 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
-       option tls_min_version '1.2'
-       # option tls_max_version '1.3'
-
-config resolver
-        option address '1.1.1.3'
-        option tls_auth_name 'family.cloudflare-dns.com'
-
-
-config resolver
-        option address '1.0.0.3'
-        option tls_auth_name 'family.cloudflare-dns.com'
-
-
-#config resolver
-#        option address '80.241.218.68'
-#        option tls_auth_name 'fdns1.dismail.de'
-#        list spki 'sha256/MMi3E2HZr5A5GL+badqe3tzEPCB00+OmApZqJakbqUU='
-
-#config resolver
-#        option address '46.182.19.48'
-#        option tls_auth_name 'dns2.digitalcourage.de'
-#        list spki 'sha256/v7rm6OtQQD3x/wbsdHDZjiDg+utMZvnoX3jq3Vi8tGU='
-
-
-EOF
-
-uci commit stubby && reload_config >/dev/null
-
-/etc/init.d/stubby restart  >/dev/null
 }
 
 create_unbound_url_filter() {
@@ -14755,8 +7771,8 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-/etc/init.d/unbound stop  >/dev/null
-/etc/init.d/log restart  >/dev/null
+/etc/init.d/unbound stop  >> install.log
+/etc/init.d/log restart  >> install.log
 
 #Configure stubby
 
@@ -24954,6 +17970,11 @@ local-zone: "cdn.permutive.com" always_null
 local-zone: "twin-iq.kickfire.com" always_null
 
 EOF
+
+echo
+echo 'On Error enter logread'
+echo
+
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -24967,332 +17988,551 @@ echo '########################################################'
 view_config
 }
 
-set_unbound() {
-mkdir /etc/unbound/unbound.conf.d >/dev/null
-curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >/dev/null
-curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
+set_dhcp() {
 
-cat << EOF > /etc/hosts
-127.0.0.1 localhost
-127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+uci -q delete dhcp >> install.log
+uci delete dhcp.SERVER >> install.log
+uci delete dhcp.HCONTROL >> install.log
+uci delete dhcp.CONTROL >> install.log
+uci delete dhcp.INET >> install.log
+uci delete dhcp.VOICE >> install.log
+uci delete dhcp.ENTERTAIN >> install.log
+uci delete dhcp.GUEST >> install.log
+uci delete dhcp.CMOVIE >> install.log
+uci delete dhcp.TELEKOM >> install.log
+uci delete dhcp.Blacklist>> install.log
+uci delete dhcp.Whitelist >> install.log
+uci delete dhcp.lan >> install.log
+uci delete dhcp.@dnsmasq[0] >> install.log
+uci commit dhcp >> install.log
 
-::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
-::1     localhost ip6-localhost ip6-loopback
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
+uci set dhcp.lan=dnsmasq
+uci set dhcp.lan.domainneeded='1'
+uci set dhcp.lan.localise_queries='1'
+uci set dhcp.lan.rebind_protection='1'
+uci set dhcp.lan.rebind_localhost='1'
+uci set dhcp.lan.filterwin2k='1'
+uci set dhcp.lan.local='/lan/'
+uci set dhcp.lan.expandhosts='1'
+uci set dhcp.lan.authoritative='1'
+uci set dhcp.lan.readethers='1'
+uci set dhcp.lan.leasefile='/tmp/dhcp.lan.leases'
+uci set dhcp.lan.resolvfile='/tmp/resolv.lan.conf.auto'
+uci set dhcp.lan.localservice='1'
+uci set dhcp.lan.cachesize='1'
+uci set dhcp.lan.confdir='/etc/dnsmasq.d/lan/'
+uci set dhcp.lan.boguspriv='1'
+uci set dhcp.lan.logqueries='0'
+uci set dhcp.lan.logfacility='/var/log/dnsmasq.lan.log'
+uci add_list dhcp.lan.interface='br-lan'
+uci add_list dhcp.lan.notinterface='br-VOICE'
+uci add_list dhcp.lan.notinterface='br-GUEST'
+uci add_list dhcp.lan.notinterface='br-ENTERTAIN'
+uci add_list dhcp.lan.notinterface='br-CMOVIE'
+uci add_list dhcp.lan.notinterface='br-INET'
+uci add_list dhcp.lan.notinterface='br-HCONTROL'
+uci add_list dhcp.lan.notinterface='br-CONTROL'
+uci add_list dhcp.lan.notinterface='br-SERVER'
+uci set dhcp.lan.domain='lan'
+
+uci set dhcp.Blacklist=dnsmasq
+uci set dhcp.Blacklist.domainneeded='1'
+uci set dhcp.Blacklist.localise_queries='1'
+uci set dhcp.Blacklist.rebind_protection='1'
+uci set dhcp.Blacklist.rebind_localhost='1'
+uci set dhcp.Blacklist.filterwin2k='1'
+uci set dhcp.Blacklist.local='/'$INET_domain'/'
+uci set dhcp.Blacklist.expandhosts='1'
+uci set dhcp.Blacklist.authoritative='1'
+uci set dhcp.Blacklist.readethers='1'
+uci set dhcp.Blacklist.leasefile='/tmp/dhcp.blacklist.leases'
+uci set dhcp.Blacklist.resolvfile='/tmp/resolv.blacklist.conf.auto'
+uci set dhcp.Blacklist.localservice='1'
+uci set dhcp.Blacklist.cachesize='1'
+uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
+uci set dhcp.Blacklist.boguspriv='1'
+uci set dhcp.Blacklist.logqueries='0'
+uci set dhcp.Blacklist.logfacility='/var/log/dnsmasq.blacklist.log'
+uci add_list dhcp.Blacklist.notinterface='br-VOICE'
+uci add_list dhcp.Blacklist.notinterface='br-GUEST'
+uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN'
+uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
+uci add_list dhcp.Blacklist.notinterface='br-lan'
+uci set dhcp.Blacklist.interface='br-INET'
+uci add_list dhcp.Blacklist.interface='br-HCONTROL'
+uci add_list dhcp.Blacklist.interface='br-CONTROL'
+uci add_list dhcp.Blacklist.interface='br-SERVER'
+uci set dhcp.Blacklist.domain=$INET_domain
+
+uci set dhcp.Whitelist=dnsmasq
+uci set dhcp.Whitelist.domainneeded='1'
+uci set dhcp.Whitelist.localise_queries='1'
+uci set dhcp.Whitelist.rebind_protection='1'
+uci set dhcp.Whitelist.rebind_localhost='1'
+uci set dhcp.Whitelist.filterwin2k='1'
+uci set dhcp.Whitelist.local='/'$VOICE_domain'/'
+uci set dhcp.Whitelist.expandhosts='1'
+uci set dhcp.Whitelist.authoritative='1'
+uci set dhcp.Whitelist.readethers='1'
+uci set dhcp.Whitelist.leasefile='/tmp/dhcp.whitelist.leases'
+uci set dhcp.Whitelist.resolvfile='/tmp/resolv.whitelist.conf.auto'
+uci set dhcp.Whitelist.localservice='1'
+uci set dhcp.Whitelist.cachesize='1'
+uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
+uci set dhcp.Whitelist.boguspriv='1'
+uci set dhcp.Whitelist.logqueries='0'
+uci set dhcp.Whitelist.logfacility='/var/log/dnsmasq.whitelist.log'
+uci set dhcp.Whitelist.interface='br-VOICE' 
+uci add_list dhcp.Whitelist.interface='br-GUEST'
+uci add_list dhcp.Whitelist.interface='br-ENTERTAIN'
+uci add_list dhcp.Whitelist.interface='br-CMOVIE'
+uci set dhcp.Whitelist.notinterface='br-INET'
+uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-SERVER'
+uci add_list dhcp.Whitelist.notinterface='br-lan'
+uci set dhcp.Whitelist.domain=$VOICE_domain
+
+uci set dhcp.wan=dhcp
+uci set dhcp.wan.interface='wan'
+uci set dhcp.wan.ignore='1'
+
+uci set dhcp.SERVER=dhcp
+uci set dhcp.SERVER.start='1'
+uci set dhcp.SERVER.limit='250'
+uci set dhcp.SERVER.interface='SERVER'
+uci set dhcp.SERVER.leasetime='24h'
+uci set dhcp.SERVER.dhcpv6='server'
+uci set dhcp.SERVER.domain=$SERVER_domain
+uci set dhcp.SERVER.local='/'$SERVER_domain'/'
+uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
+uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
+uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
+uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.CONTROL=dhcp
+uci set dhcp.CONTROL.start='1'
+uci set dhcp.CONTROL.limit='250'
+uci set dhcp.CONTROL.interface='CONTROL'
+uci set dhcp.CONTROL.leasetime='24h'
+uci set dhcp.CONTROL.dhcpv6='server'
+uci set dhcp.CONTROL.domain=$CONTROL_domain
+uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
+uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
+uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip
+uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
+uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.HCONTROL=dhcp
+uci set dhcp.HCONTROL.start='1'
+uci set dhcp.HCONTROL.limit='250'
+uci set dhcp.HCONTROL.interface='HCONTROL'
+uci set dhcp.HCONTROL.leasetime='24h'
+uci set dhcp.HCONTROL.dhcpv6='server'
+uci set dhcp.HCONTROL.domain=$HCONTROL_domain
+uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
+uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
+uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
+uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
+uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.INET=dhcp
+uci set dhcp.INET.start='1'
+uci set dhcp.INET.limit='250'
+uci set dhcp.INET.interface='INET'
+uci set dhcp.INET.leasetime='24h'
+uci set dhcp.INET.dhcpv6='server'
+uci set dhcp.INET.domain=$INET_domain
+uci set dhcp.INET.local='/'$INET_domain'/'
+uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
+uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
+uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
+uci set dhcp.INET.server=$INET_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.ENTERTAIN=dhcp
+uci set dhcp.ENTERTAIN.start='1'
+uci set dhcp.ENTERTAIN.limit='250'
+uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
+uci set dhcp.ENTERTAIN.leasetime='24h'
+uci set dhcp.ENTERTAIN.dhcpv6='server'
+uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
+uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
+uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
+uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.VOICE=dhcp
+uci set dhcp.VOICE.start='1'
+uci set dhcp.VOICE.limit='250'
+uci set dhcp.VOICE.interface='VOICE'
+uci set dhcp.VOICE.leasetime='24h'
+uci set dhcp.VOICE.dhcpv6='server'
+uci set dhcp.VOICE.domain=$VOICE_domain
+uci set dhcp.VOICE.local='/'$VOICE_domain'/'
+uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
+uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
+uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
+uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_UNBOUND_port
+
+uci set dhcp.GUEST=dhcp
+uci set dhcp.GUEST.start='100'
+uci set dhcp.GUEST.limit='150'
+uci set dhcp.GUEST.interface='GUEST'
+uci set dhcp.GUEST.leasetime='24h'
+uci set dhcp.GUEST.dhcpv6='server'
+uci set dhcp.GUEST.domain=$GUEST_domain
+uci set dhcp.GUEST.local='/'$GUEST_domain'/'
+uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
+uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
+uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
+uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
+uci commit && reload_config
+
+uci set dhcp.CMOVIE=dhcp
+uci set dhcp.CMOVIE.start='100'
+uci set dhcp.CMOVIE.limit='150'
+uci set dhcp.CMOVIE.interface='CMOVIE'
+uci set dhcp.CMOVIE.leasetime='24h'
+uci set dhcp.CMOVIE.dhcpv6='server'
+uci set dhcp.CMOVIE.domain=$CMOVIE_domain
+uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
+uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
+uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
+uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
+uci set dhcp.CMOVIE.server=$GUEST_ip'#'$DNS_UNBOUND_port
+uci commit && reload_config
+
+uci set dhcp.TELEKOM=dhcp
+uci set dhcp.TELEKOM.start='100'
+uci set dhcp.TELEKOM.limit='150'
+uci set dhcp.TELEKOM.interface='TELEKOM'
+uci set dhcp.TELEKOM.leasetime='24h'
+uci set dhcp.TELEKOM.dhcpv6='server'
+uci set dhcp.TELEKOM.domain=$TELEKOM_domain
+uci set dhcp.TELEKOM.local='/'$TELEKOM_domain'/'
+uci add_list dhcp.TELEKOM.dhcp_option='6,'$CMOVIE_ip 
+uci add_list dhcp.TELEKOM.dhcp_option='3,'$CMOVIE_ip
+uci add_list dhcp.TELEKOM.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.TELEKOM.dhcp_option='15,'$TELEKOM_domain
+uci set dhcp.TELEKOM.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
+uci commit && reload_config
+
+
+mkdir /etc/dnsmasq.d  >> install.log
+mkdir /etc/dnsmasq.d/Blacklist >> install.log
+mkdir /etc/dnsmasq.d/Whitelist >> install.log
+mkdir /etc/dnsmasq.d/BlockAll >> install.log
+mkdir /etc/dnsmasq.d/AllowAll >> install.log
+
+uci commit dhcp && reload_config >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
+
+}
+
+create_firewall_zones() {
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="REPEATER"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].network="REPEATER"
+uci set firewall.@zone[-1].output="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="REPEATER"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="CONTROL"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="CONTROL"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="CONTROL"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="HCONTROL"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="HCONTROL"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="HCONTROL"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="SERVER"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="SERVER"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="SERVER"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="INET"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="INET"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="INET"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="GUEST"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="GUEST"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="GUEST"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="VOICE"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="VOICE"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="VOICE"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="ENTERTAIN"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="ENTERTAIN"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="ENTERTAIN"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="CMOVIE"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="CMOVIE"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="CMOVIE"
+uci commit firewall && reload_config >> install.log
+
+uci add firewall zone >> install.log
+uci set firewall.@zone[-1]=zone
+uci set firewall.@zone[-1].name="TELEKOM"
+uci set firewall.@zone[-1].input="ACCEPT"
+uci set firewall.@zone[-1].forward="ACCEPT"
+uci set firewall.@zone[-1].network="TELEKOM"
+uci set firewall.@zone[-1].output="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+uci commit firewall >> install.log
+uci add firewall forwarding >> install.log
+uci set firewall.@forwarding[-1]=forwarding
+uci set firewall.@forwarding[-1].dest="wan"
+uci set firewall.@forwarding[-1].src="TELEKOM"
+uci commit firewall && reload_config >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
+}
+
+set_HS_Firewall() {
+uci set firewall.OfficeClient.enabled='1'
+uci set firewall.OfficeWebClient.enabled='1'
+uci set firewall.Amazon_Alexa.enabled='1'
+uci set firewall.Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_only_OfficeClient.enabled='1'
+uci set firewall.Allow_only_OfficeWebClient.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
+uci set firewall.Allow_Only_WebClient1.enabled='1'
+uci set firewall.Allow_Only_WebClient2.enabled='1'
+uci set firewall.Allow_Only_WebClient3.enabled='1'
+uci set firewall.Allow_Only_WebClient4.enabled='1'
+uci set firewall.Allow_Only_WebClient5.enabled='1'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
+}
+
+set_HS_Firewall_disable() {
+uci set firewall.OfficeClient.enabled='0'
+uci set firewall.OfficeWebClient.enabled='0'
+uci set firewall.Amazon_Alexa.enabled='0'
+uci set firewall.Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_only_OfficeClient.enabled='0'
+uci set firewall.Allow_only_OfficeWebClient.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_Only_WebClient1.enabled='0'
+uci set firewall.Allow_Only_WebClient2.enabled='0'
+uci set firewall.Allow_Only_WebClient3.enabled='0'
+uci set firewall.Allow_Only_WebClient4.enabled='0'
+uci set firewall.Allow_Only_WebClient5.enabled='0'
+uci set firewall.otherProt.enabled='1'
+uci set firewall.blockIncoming.enabled='1'
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
+}
+
+
+set_firewall_ipset() {
+# Configure IP sets
+uci -q delete firewall.filter
+uci set firewall.filter="ipset"
+uci set firewall.filter.name="filter"
+uci set firewall.filter.family="ipv4"
+uci set firewall.filter.storage="hash"
+uci set firewall.filter.match="ip"
+
+uci -q delete firewall.filter6
+uci set firewall.filter6="ipset"
+uci set firewall.filter6.name="filter6"
+uci set firewall.filter6.family="ipv6"
+uci set firewall.filter6.storage="hash"
+uci set firewall.filter6.match="ip"
+ 
+# Filter LAN client traffic with IP sets
+uci -q delete firewall.filter_fwd
+uci set firewall.filter_fwd="rule"
+uci set firewall.filter_fwd.name="Filter_IPset_DNS_Forward"
+uci set firewall.filter_fwd.src="INET"
+uci set firewall.filter_fwd.dest="wan"
+uci set firewall.filter_fwd.ipset="filter dest"
+uci set firewall.filter_fwd.family="ipv4"
+uci set firewall.filter_fwd.proto="all"
+uci set firewall.filter_fwd.target="ACCEPT"
+
+uci -q delete firewall.filter6_fwd
+uci set firewall.filter6_fwd="rule"
+uci set firewall.filter6_fwd.name="Filter_IPset_DNS_Forward"
+uci set firewall.filter6_fwd.src="INET"
+uci set firewall.filter6_fwd.dest="wan"
+uci set firewall.filter6_fwd.ipset="filter6 dest"
+uci set firewall.filter6_fwd.family="ipv6"
+uci set firewall.filter6_fwd.proto="all"
+uci set firewall.filter6_fwd.target="ACCEPT"
+
+
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
+if [ "$SECURE_RULES" = "" ]
+        then
+             FW_HSactive='1'
+             set_HS_Firewall
+        elif [ "$SECURE_RULES" = "y" ]
+                then
+		FW_HSactive='1'
+                set_HS_Firewall
+        else
+              FW_HSactive='0'
+              set_HS_Firewall_disable
+fi
+
+view_config
+
+cat << "EOF" > /etc/firewall.nat6 
+iptables-save -t nat \
+| sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
+| ip6tables-restore -T nat
 EOF
+uci -q delete firewall.nat6 >> install.log
+uci set firewall.nat6="include" >> install.log
+uci set firewall.nat6.path="/etc/firewall.nat6" >> install.log
+uci set firewall.nat6.reload="1" >> install.log
+ 
+# Disable LAN to WAN forwarding
+uci rename firewall.@forwarding[0]="INET_INTERNET" >> install.log
+uci set firewall.INET_INTERNET.enabled="0" >> install.log
+uci commit firewall >> install.log
+/etc/init.d/firewall restart >> install.log
+ 
+# Configure ipset-dns
+uci set ipset-dns.@ipset-dns[0].ipset="filter" >> install.log
+uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >> install.log
+uci commit ipset-dns >> install.log
+/etc/init.d/ipset-dns restart >> install.log
+ 
+# Resolve race conditions for ipset-dns
+cat << "EOF" > /etc/firewall.ipsetdns 
+/etc/init.d/ipset-dns restart 
+EOF 
+cat << "EOF" >> /etc/sysupgrade.conf
+/etc/firewall.ipsetdns
+EOF
+uci -q delete firewall.ipsetdns >> install.log
+uci set firewall.ipsetdns="include" >> install.log
+uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >> install.log
+uci set firewall.ipsetdns.reload="1" >> install.log
+uci commit firewall >> install.log
 
-uci set unbound.ub_main=unbound
-uci set unbound.ub_main.enabled='1'
-#uci set unbound.ub_main.include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
-uci set unbound.ub_main.tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
-uci set unbound.ub_main.auto_trust_anchor_file='/var/lib/unbound/root.key'
-uci set unbound.ub_main.root_hints='/var/lib/unbound/root.hints'
-uci set unbound.ub_main.add_extra_dns='0'
-uci set unbound.ub_main.add_local_fqdn='1'
-uci set unbound.ub_main.add_wan_fqdn='0'
-uci set unbound.ub_main.dhcp_link='dnsmasq'
-uci set unbound.ub_main.dhcp4_slaac6='0'
-uci set unbound.ub_main.do_ip4='yes'
-uci set unbound.ub_main.do_ip6='yes'
-uci set unbound.ub_main.do_tcp='yes'
-uci set unbound.ub_main.do_udp='yes'
-uci set unbound.ub_main.dns64='0'
-uci set unbound.ub_main.do_not_query_localhost='no'
-uci set unbound.ub_main.domain=$LOCAL_DOMAIN
-uci set unbound.ub_main.domain_type='static'
-uci set unbound.ub_main.edns_size='1280'
-uci set unbound.ub_main.edns_buffer_size='1472'
-uci set unbound.ub_main.extended_stats='0'
-uci set unbound.ub_main.hide_binddata='1'
-uci set unbound.ub_main.interface_auto='1'
-uci set unbound.ub_main.listen_port=$DNS_UNBOUND_port
-uci set unbound.ub_main.localservice='1'
-uci set unbound.ub_main.manual_conf='0'
-uci set unbound.ub_main.num_threads='1'
-uci set unbound.ub_main.protocol='default'
-#uci set unbound.ub_main.query_minimize='0'
-uci set unbound.ub_main.query_minimize='1'
-uci set unbound.ub_main.query_min_strict='1'
-uci set unbound.ub_main.rate_limit='0'
-uci set unbound.ub_main.rebind_localhost='0'
-uci set unbound.ub_main.rebind_protection='1'
-#uci set unbound.ub_main.recursion='default'
-#uci set unbound.ub_main.resource='default'
-uci set unbound.ub_main.recursion='passiv'
-uci set unbound.ub_main.resource='medium'
-uci set unbound.ub_main.root_age='9'
-uci set unbound.ub_main.ttl_min='300'
-uci set unbound.ub_main.ttl_max='86400'
-uci set unbound.ub_main.cache_min_ttl='300'
-uci set unbound.ub_main.cache_max_ttl='86400'
-uci set unbound.ub_main.cache_size='10000'
-#uci set unbound.ub_main.unbound_control='0'
-uci set unbound.ub_main.unbound_control='2'
-uci set unbound.ub_main.prefetch='yes'
-uci set unbound.ub_main.prefetch_key='yes'
-uci set unbound.ub_main.validator='1'
-uci set unbound.ub_main.validator_ntp='1'
-uci set unbound.ub_main.verbosity='0'
-uci set unbound.ub_main.hide_identity='yes'
-uci set unbound.ub_main.hide_version='yes'
-uci set unbound.ub_main.harden_glue='yes'
-uci set unbound.ub_main.harden_dnssec_stripped='yes'
-uci set unbound.ub_main.harden_large_queries='yes'
-uci set unbound.ub_main.harden_short_bufsize='yes'
-uci set unbound.ub_main.harden_below_nxdomain='yes'
-uci set unbound.ub_main.use_caps_for_id='yes'
-uci set unbound.ub_main.so_reuseport='yes'
-uci set unbound.ub_main.msg_cache_slabs='2'
-uci set unbound.ub_main.rrset_cache_slabs='2'
-uci set unbound.ub_main.infra_cache_slabs='2'
-uci set unbound.ub_main.key_cache_slabs='2'
-uci set unbound.ub_main.qname_minimisation='yes'
-uci set unbound.ub_main.qname_minimisation_strict='yes'
-uci set unbound.ub_main.rrset_roundrobin='yes'
-uci set unbound.ub_main.serve_expired='yes'
-uci set unbound.ub_main.so_rcvbuf='1m'
-uci set unbound.ub_main.protocol='ip4_only'
-uci add_list unbound.ub_main.private_address='192.168.0.0/16'
-uci add_list unbound.ub_main.private_address='169.254.0.0/16'
-uci add_list unbound.ub_main.private_address='172.16.0.0/12'
-uci add_list unbound.ub_main.private_address='10.0.0.0/8'
-uci add_list unbound.ub_main.private_address='fd00::/8'
-uci add_list unbound.ub_main.private_address='fe80::/10'
-uci add_list unbound.ub_main.access_control='0.0.0.0/0 refuse'
-uci add_list unbound.ub_main.access_control='::0/0 refuse'
-uci add_list unbound.ub_main.access_control='127.0.0.1 allow'
-uci add_list unbound.ub_main.access_control='::1 allow'
-uci add_list unbound.ub_main.access_control=$SERVER_net' allow'
-uci add_list unbound.ub_main.access_control=$CONTROL_net' allow'
-uci add_list unbound.ub_main.access_control=$HCONTROL_net' allow'
-uci add_list unbound.ub_main.access_control=$INET_net' allow'
-uci add_list unbound.ub_main.iface_trig='CONTROL'
-uci add_list unbound.ub_main.iface_trig='HCONTROL'
-uci add_list unbound.ub_main.iface_trig='INET_CLIENTS'
-uci add_list unbound.ub_main.iface_trig='SERVER'
-uci add_list unbound.ub_main.iface_trig='VOICE'
-uci add_list unbound.ub_main.iface_trig='ENTERTAIN'
-uci add_list unbound.ub_main.iface_trig='CMOVIE'
-uci add_list unbound.ub_main.iface_trig='GUEST'
-uci add_list unbound.ub_main.iface_trig='wan6'
-uci add_list unbound.ub_main..iface_trig='lo'
-uci del_list unbound.ub_main.iface_trig='lan'
-uci set unbound.ub_main.domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
-uci add_list unbound.ub_main.domain_insecure=$INET_domain
-uci add_list unbound.ub_main.domain_insecure=$SERVER_domain
-uci add_list unbound.ub_main.domain_insecure=$HCONTROL_domain
-uci add_list unbound.ub_main.domain_insecure=$CONTROL_domain
-uci add_list unbound.ub_main.domain_insecure=$VOICE_domain
-uci add_list unbound.ub_main.domain_insecure=$GUEST_domain
-uci add_list unbound.ub_main.domain_insecure=$ENTERTAIN_domain
-uci add_list unbound.ub_main.domain_insecure=$CMOVIE_domain
-uci add_list unbound.ub_main.domain_insecure='onion'
-uci add_list unbound.ub_main.domain_insecure='exit'
-uci add_list unbound.ub_main.private_domain=$INET_domain
-uci add_list unbound.ub_main.private_domain=$SERVER_domain
-uci add_list unbound.ub_main.private_domain=$HCONTROL_domain
-uci add_list unbound.ub_main.private_domain=$CONTROL_domain
-uci add_list unbound.ub_main.private_domain=$VOICE_domain
-uci add_list unbound.ub_main.private_domain=$GUEST_domain
-uci add_list unbound.ub_main.private_domain=$ENTERTAIN_domain
-uci add_list unbound.ub_main.private_domain=$CMOVIE_domain
-uci add_list unbound.ub_main.private_domain='onion'
-uci add_list unbound.ub_main.private_domain='exit'
-
-uci add_list unbound.ub_main.outgoing_port_permit=$SDNS_port
-uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS_port
-#uci add_list unbound.ub_main.outgoing_port_permit='9150'
-uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
-#uci add_list unbound.ub_main.outgoing_port_permit='9153'
-#uci add_list unbound.ub_main.outgoing_port_permit='10240-65335'
-
-#uci add unbound zone
-#uci set unbound.@zone[-1].name='onion'
-#uci set unbound.@zone[-1].zone_type='forward_zone'
-#uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
-#uci add unbound zone
-#uci set unbound.@zone[-1].name='exit'
-#uci set unbound.@zone[-1].zone_type='forward_zone'
-#uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
-#uci add unbound zone
-#uci set unbound.@zone[-1].name='.'
-#uci set unbound.@zone[-1].zone_type='forward_zone'
-#uci set unbound.@zone[-1].fallback='0'
-#uci set unbound.@zone[-1].tls_upstream='1'
-#uci set unbound.@zone[-1].tls_index='dns.cloudflair'
-#uci set unbound.@zone[-1].forward_tls_upstream='yes'
-#uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
-
-#uci set unbound.@unbound[0]=unbound
-#uci set unbound.@unbound[0].enabled='1'
-#uci set unbound.@unbound[0].include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
-#uci set unbound.@unbound[0].tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
-#uci set unbound.@unbound[0].auto_trust_anchor_file='/var/lib/unbound/root.key'
-#uci set unbound.@unbound[0].root_hints='/var/lib/unbound/root.hints'
-#uci set unbound.@unbound[0].add_extra_dns='0'
-#uci set unbound.@unbound[0].add_local_fqdn='1'
-#uci set unbound.@unbound[0].add_wan_fqdn='0'
-#uci set unbound.@unbound[0].dhcp_link='dnsmasq'
-#uci set unbound.@unbound[0].dhcp4_slaac6='0'
-#uci set unbound.@unbound[0].do_ip4='yes'
-#uci set unbound.@unbound[0].do_ip6='yes'
-#uci set unbound.@unbound[0].do_tcp='yes'
-#uci set unbound.@unbound[0].do_udp='yes'
-#uci set unbound.@unbound[0].dns64='0'
-#uci set unbound.@unbound[0].do_not_query_localhost='no'
-#uci set unbound.@unbound[0].domain=$LOCAL_DOMAIN
-#uci set unbound.@unbound[0].domain_type='static'
-#uci set unbound.@unbound[0].edns_size='1280'
-#uci set unbound.@unbound[0].edns_buffer_size='1472'
-#uci set unbound.@unbound[0].extended_stats='0'
-#uci set unbound.@unbound[0].hide_binddata='1'
-#uci set unbound.@unbound[0].interface_auto='1'
-#uci set unbound.@unbound[0].listen_port=$DNS_UNBOUND_port
-#uci set unbound.@unbound[0].localservice='1'
-#uci set unbound.@unbound[0].manual_conf='0'
-#uci set unbound.@unbound[0].num_threads='1'
-#uci set unbound.@unbound[0].protocol='default'
-#uci set unbound.@unbound[0].query_minimize='0'
-#uci set unbound.@unbound[0].query_minimize='1'
-#uci set unbound.@unbound[0].query_min_strict='1'
-#uci set unbound.@unbound[0].rate_limit='0'
-#uci set unbound.@unbound[0].rebind_localhost='0'
-#uci set unbound.@unbound[0].rebind_protection='1'
-#uci set unbound.@unbound[0].recursion='default'
-#uci set unbound.@unbound[0].resource='default'
-#uci set unbound.@unbound[0].recursion='passiv'
-#uci set unbound.@unbound[0].resource='medium'
-#uci set unbound.@unbound[0].root_age='9'
-#uci set unbound.@unbound[0].ttl_min='300'
-#uci set unbound.@unbound[0].ttl_max='86400'
-#uci set unbound.@unbound[0].cache_min_ttl='300'
-#uci set unbound.@unbound[0].cache_max_ttl='86400'
-#uci set unbound.@unbound[0].cache_size='10000'
-#uci set unbound.@unbound[0].unbound_control='0'
-#uci set unbound.@unbound[0].unbound_control='2'
-#uci set unbound.@unbound[0].prefetch='yes'
-#uci set unbound.@unbound[0].prefetch_key='yes'
-#uci set unbound.@unbound[0].validator='1'
-#uci set unbound.@unbound[0].validator_ntp='1'
-#uci set unbound.@unbound[0].verbosity='0'
-#uci set unbound.@unbound[0].hide_identity='yes'
-#uci set unbound.@unbound[0].hide_version='yes'
-#uci set unbound.@unbound[0].harden_glue='yes'
-#uci set unbound.@unbound[0].harden_dnssec_stripped='yes'
-#uci set unbound.@unbound[0].harden_large_queries='yes'
-#uci set unbound.@unbound[0].harden_short_bufsize='yes'
-#uci set unbound.@unbound[0].harden_below_nxdomain='yes'
-#uci set unbound.@unbound[0].use_caps_for_id='yes'
-#uci set unbound.@unbound[0].so_reuseport='yes'
-#uci set unbound.@unbound[0].msg_cache_slabs='2'
-#uci set unbound.@unbound[0].rrset_cache_slabs='2'
-#uci set unbound.@unbound[0].infra_cache_slabs='2'
-#uci set unbound.@unbound[0].key_cache_slabs='2'
-#uci set unbound.@unbound[0].qname_minimisation='yes'
-#uci set unbound.@unbound[0].qname_minimisation_strict='yes'
-#uci set unbound.@unbound[0].rrset_roundrobin='yes'
-#uci set unbound.@unbound[0].serve_expired='yes'
-#uci set unbound.@unbound[0].so_rcvbuf='1m'
-#uci set unbound.@unbound[0].protocol='ip4_only'
-#uci add_list unbound.@unbound[0].private_address='192.168.0.0/16'
-#uci add_list unbound.@unbound[0].private_address='169.254.0.0/16'
-#uci add_list unbound.@unbound[0].private_address='172.16.0.0/12'
-#uci add_list unbound.@unbound[0].private_address='10.0.0.0/8'
-#uci add_list unbound.@unbound[0].private_address='fd00::/8'
-#uci add_list unbound.@unbound[0].private_address='fe80::/10'
-#uci add_list unbound.@unbound[0].access_control='0.0.0.0/0 refuse'
-#uci add_list unbound.@unbound[0].access_control='::0/0 refuse'
-#uci add_list unbound.@unbound[0].access_control='127.0.0.1 allow'
-#uci add_list unbound.@unbound[0].access_control='::1 allow'
-#uci add_list unbound.@unbound[0].access_control=$SERVER_net' allow'
-#uci add_list unbound.@unbound[0].access_control=$CONTROL_net' allow'
-#uci add_list unbound.@unbound[0].access_control=$HCONTROL_net' allow'
-#uci add_list unbound.@unbound[0].access_control=$INET_net' allow'
-#uci add_list unbound.@unbound[0].trigger_interface='CONTROL'
-#uci add_list unbound.@unbound[0].trigger_interface='HCONTROL'
-#uci add_list unbound.@unbound[0].trigger_interface='INET_CLIENTS'
-#uci add_list unbound.@unbound[0].trigger_interface='SERVER'
-#uci add_list unbound.@unbound[0].trigger_interface='VOICE'
-#uci add_list unbound.@unbound[0].trigger_interface='ENTERTAIN'
-#uci add_list unbound.@unbound[0].trigger_interface='CMOVIE'
-#uci add_list unbound.@unbound[0].trigger_interface='GUEST'
-#uci add_list unbound.@unbound[0].trigger_interface='wan6'
-#uci set unbound.@unbound[0].domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
-#uci add_list unbound.@unbound[0].domain_insecure=$INET_domain
-#uci add_list unbound.@unbound[0].domain_insecure=$SERVER_domain
-#uci add_list unbound.@unbound[0].domain_insecure=$HCONTROL_domain
-#uci add_list unbound.@unbound[0].domain_insecure=$CONTROL_domain
-#uci add_list unbound.@unbound[0].domain_insecure=$VOICE_domain
-#uci add_list unbound.@unbound[0].domain_insecure=$GUEST_domain
-#uci add_list unbound.@unbound[0].domain_insecure=$ENTERTAIN_domain
-#uci add_list unbound.@unbound[0].domain_insecure=$CMOVIE_domain
-#uci add_list unbound.@unbound[0].domain_insecure='onion'
-#uci add_list unbound.@unbound[0].domain_insecure='exit'
-#uci add_list unbound.@unbound[0].private_domain=$INET_domain
-#uci add_list unbound.@unbound[0].private_domain=$SERVER_domain
-#uci add_list unbound.@unbound[0].private_domain=$HCONTROL_domain
-#uci add_list unbound.@unbound[0].private_domain=$CONTROL_domain
-#uci add_list unbound.@unbound[0].private_domain=$VOICE_domain
-#uci add_list unbound.@unbound[0].private_domain=$GUEST_domain
-#uci add_list unbound.@unbound[0].private_domain=$ENTERTAIN_domain
-#uci add_list unbound.@unbound[0].private_domain=$CMOVIE_domain
-#uci add_list unbound.@unbound[0].private_domain='onion'
-#uci add_list unbound.@unbound[0].private_domain='exit'
-
-#uci add_list unbound.@unbound[0].outgoing_port_permit=$SDNS_port
-#uci add_list unbound.@unbound[0].outgoing_port_permit=$TOR_SOCKS_port
-##uci add_list unbound.@unbound[0].outgoing_port_permit='9150'
-#uci add_list unbound.@unbound[0].outgoing_port_permit=$DNS_TOR_port
-##uci add_list unbound.@unbound[0].outgoing_port_permit='9153'
-##uci add_list unbound.@unbound[0].outgoing_port_permit='10240-65335'
-
-
-uci add unbound zone
-uci set unbound.@zone[-1].name='onion'
-uci set unbound.@zone[-1].zone_type='forward_zone'
-uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
-uci add unbound zone
-uci set unbound.@zone[-1].name='exit'
-uci set unbound.@zone[-1].zone_type='forward_zone'
-uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
-uci add unbound zone
-uci set unbound.@zone[-1].name='.'
-uci set unbound.@zone[-1].zone_type='forward_zone'
-uci set unbound.@zone[-1].fallback='0'
-uci set unbound.@zone[-1].tls_upstream='1'
-uci set unbound.@zone[-1].tls_index='dns.cloudflair'
-uci set unbound.@zone[-1].forward_tls_upstream='yes'
-uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
-
-uci commit unbound && reload_config  >/dev/null
-/etc/init.d/unbound start  >/dev/null
+/etc/init.d/firewall restart >> install.log
+/etc/init.d/dnsmasq restart >> install.log
+/etc/init.d/network restart >> install.log
 clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
 
-/etc/init.d/unbound restart  >/dev/null
-
-#---------------------------------------------------------------------------------------------------------------------------------------------
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#                                                      #'
-echo '#                AD- and Porn-Filter installed         #'
-echo '#                                                      #'
-echo '########################################################'
-view_config
 }
 
 set_firewall_rules() {
@@ -27489,6 +20729,30 @@ uci set firewall.Allow_Only_WebClient5.target='REJECT'
 uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
 uci set firewall.Allow_Only_WebClient5.enabled='0'
 
+uci set firewall.Allow_Only_WebClient6=rule
+uci set firewall.Allow_Only_WebClient6.src='CMOVIE'
+uci set firewall.Allow_Only_WebClient6.dest='wan'
+uci set firewall.Allow_Only_WebClient6.name='Allow_only_WebClient_CMOVIE'
+uci set firewall.Allow_Only_WebClient6.target='REJECT'
+uci set firewall.Allow_Only_WebClient6.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient6.enabled='0'
+
+uci set firewall.Allow_Only_WebClient7=rule
+uci set firewall.Allow_Only_WebClient7.src='TELEKOM'
+uci set firewall.Allow_Only_WebClient7.dest='wan'
+uci set firewall.Allow_Only_WebClient7.name='Allow_only_WebClient_TELEKOM'
+uci set firewall.Allow_Only_WebClient7.target='REJECT'
+uci set firewall.Allow_Only_WebClient7.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient7.enabled='0'
+
+uci set firewall.Allow_Only_WebClient8=rule
+uci set firewall.Allow_Only_WebClient8.src='LAN'
+uci set firewall.Allow_Only_WebClient8.dest='wan'
+uci set firewall.Allow_Only_WebClient8.name='Allow_only_WebClient_LAN'
+uci set firewall.Allow_Only_WebClient8.target='REJECT'
+uci set firewall.Allow_Only_WebClient8.dest_port="$all_other_OfficeWebClient_port"
+uci set firewall.Allow_Only_WebClient8.enabled='0'
+
 #Hohe Ziel (Ports)
 #TCP 
 #10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
@@ -27537,48 +20801,2206 @@ uci commit firewall && reload_config >/dev/null
 /etc/init.d/firewall restart >/dev/null
 }
 
-set_HS_Firewall() {
-uci set firewall.OfficeClient.enabled='1'
-uci set firewall.OfficeWebClient.enabled='1'
-uci set firewall.Amazon_Alexa.enabled='1'
-uci set firewall.Amazon_Alexa_UDP.enabled='1'
+set_firewall_rules_old() {
+# Intercept SSH, HTTP and HTTPS traffic
+uci -q delete firewall.ssh_int >> install.log
+uci set firewall.ssh_int="redirect"
+uci set firewall.ssh_int.name="Intercept_SSH"
+uci set firewall.ssh_int.src="INET"
+uci set firewall.ssh_int.src_dport="$SSH_port"
+uci set firewall.ssh_int.proto="tcp"
+uci set firewall.ssh_int.target="DNAT"
+
+uci -q delete firewall.http_int >> install.log
+uci set firewall.http_int="redirect"
+uci set firewall.http_int.name="Intercept_HTTP"
+uci set firewall.http_int.src="INET"
+uci set firewall.http_int.src_dport="$ACCESS_HTTP_port"
+uci set firewall.http_int.proto="tcp"
+uci set firewall.http_int.target="DNAT"
+
+uci -q delete firewall.https_int
+uci set firewall.https_int="redirect"
+uci set firewall.https_int.name="Intercept_HTTPS"
+uci set firewall.https_int.src="INET"
+uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
+uci set firewall.https_int.proto="tcp"
+uci set firewall.https_int.target="DNAT"
+
+uci commit firewall && reload_config >> install.log
+
+# Intercept DNS and TCP traffic
+uci -q delete firewall.tcp_tor1_int >> install.log
+uci set firewall.tcp_tor1_int="redirect"
+uci set firewall.tcp_tor1_int.name="Intercept_tor"
+uci set firewall.tcp_tor1_int.src="INET"
+uci set firewall.tcp_tor1_int.src_dport="$TOR_SOCKS_port"
+uci set firewall.tcp_tor1_int.src_dip="!192.168.0.0/16"
+uci set firewall.tcp_tor1_int.proto="tcp"
+uci set firewall.tcp_tor1_int.extra="--syn"
+uci set firewall.tcp_tor1_int.target="DNAT"
+
+uci -q delete firewall.tcp_tor2_int >> install.log
+uci set firewall.tcp_tor2_int="redirect"
+uci set firewall.tcp_tor2_int.name="Intercept_tor_https"
+uci set firewall.tcp_tor2_int.src="INET"
+uci set firewall.tcp_tor2_int.dest_port="$TOR_TRANS_port"
+uci set firewall.tcp_tor2_int.src_dip="!192.168.0.0/16"
+uci set firewall.tcp_tor2_int.proto="tcp"
+uci set firewall.tcp_tor2_int.extra="--syn"
+uci set firewall.tcp_tor2_int.target="DNAT"
+uci commit && reload_config >> install.log
+
+#uci set firewall.@zone[0]=zone
+#uci set firewall.@zone[0].name="REPEATER"
+#uci set firewall.@zone[0].input="ACCEPT"
+#uci set firewall.@zone[0].network="REPEATER"
+#uci set firewall.@zone[0].output="ACCEPT"
+#uci set firewall.@zone[0].forward="ACCEPT"
+#uci set firewall.@zone[-1].log="1"
+#uci commit firewall >> install.log
+#uci add firewall forwarding >> install.log
+#uci set firewall.@forwarding[-1]=forwarding
+#uci set firewall.@forwarding[-1].dest="wan"
+#uci set firewall.@forwarding[-1].src="REPEATER"
+#uci commit firewall && reload_config >> install.log
+#uci -q delete firewall.http_int >> install.log
+
+#-----------------------------------------------------------------------------
+
+
+uci set firewall.DNS_Cloudflare=rule
+uci set firewall.DNS_Cloudflare.dest_port="$all_DNS_port"
+uci set firewall.DNS_Cloudflare.src="*"
+uci set firewall.DNS_Cloudflare.name="Allow_Cloudflare_local_DNS"
+uci set firewall.DNS_Cloudflare.dest="*"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare1_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare2_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare3_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare4_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare5_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare6_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare7_SVR" 
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare8_SVR" 
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare9_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare10_SVR" 
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare11_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare12_SVR"  
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare13_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare14_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare15_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare16_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare17_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare18_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare19_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare20_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare21_SVR" 
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare22_SVR"
+uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR" 
+uci set firewall.DNS_Cloudflare.enabled="0" 
+uci set firewall.DNS_Cloudflare.proto="tcp udp"
+uci set firewall.DNS_Cloudflare.target="ACCEPT"
+uci commit && reload_config >> install.log
+
+
+
+#WebClient (Port)
+#21, 22, 25, 53, 80, 110, 123, 443, 853, 5353, 9030, 9040, 9049, 9050, 9053, 9060, 50275, 54715, 54789, 51465, 56343, 56534, 57687, 60870
+uci set firewall.WebClient=rule
+uci set firewall.WebClient.dest_port="$WebClient_port"
+uci set firewall.WebClient.src="*"
+uci set firewall.WebClient.name="Allow_WebClient"
+uci set firewall.WebClient.enabled="0"
+uci set firewall.WebClient.dest="wan"
+uci set firewall.WebClient.target="ACCEPT"
+
+
+#Office_Client (Port)
+# 21 22 23 25 53 67 80 110 123 139 138 137 443 445 515 548 631 853 2049 5353 9030 9040 9049 9050 9053 9060 9100 50275 54715 54789 51465 56343 56534 57687 60870
+uci set firewall.OfficeClient=rule
+uci set firewall.OfficeClient.src='INET'
+uci set firewall.OfficeClient.name='Allow_OfficeClient'
+uci set firewall.OfficeClient.dest='SERVER'
+uci set firewall.OfficeClient.proto='udp tcp'
+uci set firewall.OfficeClient.target='ACCEPT'
+uci set firewall.OfficeClient.dest_port="$OfficeClient_port"
+#1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
+
+uci set firewall.OfficeWebClient=rule
+uci set firewall.OfficeWebClient.src='INET'
+uci set firewall.OfficeWebClient.name='Allow_OfficeClient_WEB'
+uci set firewall.OfficeWebClient.dest='wan'
+uci set firewall.OfficeWebClient.proto='udp tcp'
+uci set firewall.OfficeWebClient.target='ACCEPT'
+uci set firewall.OfficeWebClient.dest_port="$OfficeWebClient_port"
+
+#Alexa (Port)
+#"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
+#udp 4070 5353 40317 49317 33434 50000:60000 3478:3481
+uci set firewall.Amazon_Alexa=rule
+uci set firewall.Amazon_Alexa.name='Allow_AmazonAlexa'
+uci set firewall.Amazon_Alexa.proto='tcp'
+uci set firewall.Amazon_Alexa.dest='wan'
+uci set firewall.Amazon_Alexa.target='ACCEPT'
+uci set firewall.Amazon_Alexa.src='VOICE'
+uci set firewall.Amazon_Alexa.dest_port="$Amazon_Alexa_port"
+uci set firewall.Amazon_Alexa_UDP=rule
+uci set firewall.Amazon_Alexa_UDP.name='Allow_AmazonAlexa_UDP'
+uci set firewall.Amazon_Alexa_UDP.proto='udp'
+uci set firewall.Amazon_Alexa_UDP.dest='wan'
+uci set firewall.Amazon_Alexa_UDP.target='ACCEPT'
+uci set firewall.Amazon_Alexa_UDP.src='VOICE'
+uci set firewall.Amazon_Alexa_UDP.dest_port="$Amazon_Alexa_UDP_port"
+
+#Google Assistent (Port)
+#uci set firewall.Google_assistent=rule
+
+#Telnet (Port)
+#23
+uci set firewall.TELNET=rule
+uci set firewall.TELNET.dest_port="$TELNET_port"
+uci set firewall.TELNET.src="*"
+uci set firewall.TELNET.name="Allow_Telnet"
+uci set firewall.TELNET.enabled="0"
+uci set firewall.TELNET.dest="wan"
+uci set firewall.TELNET.target="ACCEPT"
+
+
+#SSH (Port)
+#22
+uci set firewall.SSH=rule
+uci set firewall.SSH.dest_port="$SSH_port"
+uci set firewall.SSH.src="*"
+uci set firewall.SSH.name="Allow_SSH"
+uci set firewall.SSH.dest="wan"
+uci set firewall.SSH.enabled="0"
+uci set firewall.SSH.dest="wan"
+uci set firewall.SSH.target="ACCEPT"
+
+
+#NTP
+#123
+uci set firewall.NTP=rule
+uci set firewall.NTP.dest_port="$NTP_port"
+uci set firewall.NTP.src="*"
+uci set firewall.NTP.name="Allow_NTP"
+uci set firewall.NTP.enabled="0"
+uci set firewall.NTP.dest="wan"
+uci set firewall.NTP.target="ACCEPT"
+
+#smtp
+#"25 465 587"
+uci set firewall.SMTP=rule
+uci set firewall.SMTP.dest_port="$SMTP_port"
+uci set firewall.SMTP.src="*"
+uci set firewall.SMTP.name="Allow_SMTP"
+uci set firewall.SMTP.enabled="0"
+uci set firewall.SMTP.dest="wan"
+uci set firewall.SMTP.target="ACCEPT"
+
+
+#POP3 Port
+#POP3_PORT="110 995"
+uci set firewall.POP3=rule
+uci set firewall.POP3.dest_port="$POP3_port"
+uci set firewall.POP3.src="*"
+uci set firewall.POP3.name="Allow_POP3"
+uci set firewall.POP3.enabled="0"
+uci set firewall.POP3.dest="wan"
+uci set firewall.POP3.target="ACCEPT"
+
+
+#IMAP4 Port
+#IMAP_PORT="143 993 626"
+uci set firewall.IMAP4=rule
+uci set firewall.IMAP4.dest_port="$IMAP_port"
+uci set firewall.IMAP4.src="*"
+uci set firewall.IMAP4.name="Allow_IMAP4"
+uci set firewall.IMAP4.enabled="0"
+uci set firewall.IMAP4.dest="wan"
+uci set firewall.IMAP4.target="ACCEPT"
+
+
+#KERBEROS
+#"88 749"
+uci set firewall.KERBEROS=rule
+uci set firewall.KERBEROS.dest_port="$KERBEROS_port"
+uci set firewall.KERBEROS.src="*"
+uci set firewall.KERBEROS.name="Allow_KERBEROS"
+uci set firewall.KERBEROS.enabled="0"
+uci set firewall.KERBEROS.dest="wan"
+uci set firewall.KERBEROS.proto="tcp"
+uci set firewall.KERBEROS.target="ACCEPT"
+
+
+#Password_Server
+#"106"
+uci set firewall.PASSWDSRV=rule
+uci set firewall.PASSWDSRV.dest_port="$PASSWDSRV_port"
+uci set firewall.PASSWDSRV.src="*"
+uci set firewall.PASSWDSRV.name="Allow_PASWD_SRV"
+uci set firewall.PASSWDSRV.enabled="0"
+uci set firewall.PASSWDSRV.dest="wan"
+uci set firewall.PASSWDSRV.proto="tcp"
+uci set firewall.PASSWDSRV.target="ACCEPT"
+
+#LDAP
+#"389 636"
+uci set firewall.LDAP=rule
+uci set firewall.LDAP.dest_port="$LDAP_port"
+uci set firewall.LDAP.src="*"
+uci set firewall.LDAP.name="Allow_LDAP"
+uci set firewall.LDAP.enabled="0"
+uci set firewall.LDAP.dest="wan"
+uci set firewall.LDAP.proto="tcp"
+uci set firewall.LDAP.target="ACCEPT"
+
+
+#RPC
+#"111"
+uci set firewall.RPC=rule
+uci set firewall.RPC.dest_port="$RPC_port"
+uci set firewall.RPC.src="*"
+uci set firewall.RPC.name="Allow_RPC"
+uci set firewall.RPC.enabled="0"
+uci set firewall.RPC.dest="wan"
+uci set firewall.RPC.proto="tcp"
+uci set firewall.RPC.target="ACCEPT"
+
+#NNTP
+#"119"
+uci set firewall.NNTP=rule
+uci set firewall.NNTP.dest_port="$NNTP_port"
+uci set firewall.NNTP.src="*"
+uci set firewall.NNTP.name="Allow_NNTP"
+uci set firewall.NNTP.enabled="0"
+uci set firewall.NNTP.dest="wan"
+uci set firewall.NNTP.proto="tcp"
+uci set firewall.NNTP.target="ACCEPT"
+
+#Real Time Streaming Protocol (RTSP)
+#"554"
+uci set firewall.RTSP=rule
+uci set firewall.RTSP.dest_port="$RTSP_port"
+uci set firewall.RTSP.src="*"
+uci set firewall.RTSP.name="Allow_RTSP"
+uci set firewall.RTSP.enabled="0"
+uci set firewall.RTSP.dest="wan"
+uci set firewall.RTSP.target="ACCEPT"
+
+
+#PiHole Port
+#PIHOLE_PORT="81"
+#PIHOLE_FTL_PORT="4711"
+uci set firewall.PIHOLE=rule
+uci set firewall.PIHOLE.dest_port="$all_PIHOLE_port"
+uci set firewall.PIHOLE.src="*"
+uci set firewall.PIHOLE.name="Allow_PiHole"
+uci set firewall.PIHOLE.enabled="0"
+uci set firewall.PIHOLE.dest="wan"
+uci set firewall.PIHOLE.target="ACCEPT"
+
+#Privoxy Port
+#PRIVOXY_PORT="8188"
+uci set firewall.PRIVOXY=rule
+uci set firewall.PRIVOXY.dest_port="$PRIVOXY_port"
+uci set firewall.PRIVOXY.src="*"
+uci set firewall.PRIVOXY.name="Allow_PRIVOXY"
+uci set firewall.PRIVOXY.enabled="0"
+uci set firewall.PRIVOXY.dest="wan"
+uci set firewall.PRIVOXY.target="ACCEPT"
+
+
+#NTOPNG Port
+#NTOPNG_PORT="3000"
+uci set firewall.NTOPNG=rule
+uci set firewall.NTOPNG.dest_port="$NTOPNG_port"
+uci set firewall.NTOPNG.src="*"
+uci set firewall.NTOPNG.name="Allow_NTOPNG"
+uci set firewall.NTOPNG.enabled="0"
+uci set firewall.NTOPNG.dest="wan"
+uci set firewall.NTOPNG.target="ACCEPT"
+
+
+#SDNS ports
+#DNS_PORT="853"
+uci set firewall.SDNS=rule
+uci set firewall.SDNS.dest_port="$SDNS_port"
+uci set firewall.SDNS.src="*"
+uci set firewall.SDNS.name="Allow_SDNS"
+uci set firewall.SDNS.enabled="0"
+uci set firewall.SDNS.dest="wan"
+uci set firewall.SDNS.target="ACCEPT"
+
+
+#UBOUND_DNS
+uci set firewall.UNBOUND=rule
+uci set firewall.UNBOUND.dest_port="$DNS_UNBOUND_port"
+uci set firewall.UNBOUND.src="*"
+uci set firewall.UNBOUND.name="Allow_UNBOUND"
+uci set firewall.UNBOUND.enabled="0"
+uci set firewall.UNBOUND.dest="wan"
+uci set firewall.UNBOUND.target="ACCEPT"
+
+
+#STUBBY_DNS
+uci set firewall.STUBBY=rule
+uci set firewall.STUBBY.dest_port="$DNS_STUBBY_port"
+uci set firewall.STUBBY.src="*"
+uci set firewall.STUBBY.name="Allow_STUBBY"
+uci set firewall.STUBBY.enabled="0"
+uci set firewall.STUBBY.dest="wan"
+uci set firewall.STUBBY.target="ACCEPT"
+
+
+#DNS_CRYPT
+uci set firewall.DNS_CRYPT=rule
+uci set firewall.DNS_CRYPT.dest_port="$DNS_CRYPT_port"
+uci set firewall.DNS_CRYPT.src="*"
+uci set firewall.DNS_CRYPT.name="Allow_DNS_CRYPT"
+uci set firewall.DNS_CRYPT.enabled="0"
+uci set firewall.DNS_CRYPT.dest="wan"
+uci set firewall.DNS_CRYPT.target="ACCEPT"
+
+
+#TOR_DNS
+uci set firewall.TOR_DNS=rule
+uci set firewall.TOR_DNS.dest_port="$DNS_TOR_port"
+uci set firewall.TOR_DNS.src="*"
+uci set firewall.TOR_DNS.name="Allow_TOR_DNS"
+uci set firewall.TOR_DNS.enabled="0"
+uci set firewall.TOR_DNS.dest="wan"
+uci set firewall.TOR_DNS.target="ACCEPT"
+
+
+#Bittorrent (Ports)
+#6881-6999
+uci set firewall.BITTORENT=rule
+uci set firewall.BITTORENT.dest_port="$Bittorrent_port"
+uci set firewall.BITTORENT.src="*"
+uci set firewall.BITTORENT.name="Allow_BITTORENT"
+uci set firewall.BITTORENT.enabled="0"
+uci set firewall.BITTORENT.dest="wan"
+uci set firewall.BITTORENT.target="ACCEPT"
+
+
+#eMule (Ports)
+#4662, 4672
+uci set firewall.eMule=rule
+uci set firewall.eMule.dest_port="$eMule_port"
+uci set firewall.eMule.src="*"
+uci set firewall.eMule.name="Allow_eMule"
+uci set firewall.eMule.enabled="0"
+uci set firewall.eMule.dest="wan"
+uci set firewall.eMule.target="ACCEPT"
+
+#RemoteAccess (Ports)
+#40443-40446
+uci set firewall.RemoteAccess=rule
+uci set firewall.RemoteAccess.dest_port="$Acces_http_port"
+uci set firewall.RemoteAccess.src="*"
+uci set firewall.RemoteAccess.name="Allow_RemoteAccess"
+uci set firewall.RemoteAccess.enabled="0"
+uci set firewall.RemoteAccess.dest="wan"
+uci set firewall.RemoteAccess.target="ACCEPT"
+
+#FTP-Server  (Ports)
+#20-21
+uci set firewall.FTP_Server=rule
+uci set firewall.FTP_Server.dest_port="$FTP_port"
+uci set firewall.FTP_Server.src="*"
+uci set firewall.FTP_Server.name="Allow_FTP"
+uci set firewall.FTP_Server.enabled="0"
+uci set firewall.FTP_Server.dest="wan"
+uci set firewall.FTP_Server.target="ACCEPT"
+
+
+#Hohe Ziel (Ports)
+#TCP 
+#10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
+uci set firewall.EXT_HEIGHT_PORT=rule
+uci set firewall.EXT_HEIGHT_PORT.dest_port="$EXT_HEIGHT_PORT_port"
+uci set firewall.EXT_HEIGHT_PORT.src="*"
+uci set firewall.EXT_HEIGHT_PORT.name="Allow_EXT_HEIGHT_PORT"
+uci set firewall.EXT_HEIGHT_PORT.proto="tcp"
+uci set firewall.EXT_HEIGHT_PORT.dest="wan"
+uci set firewall.EXT_HEIGHT_PORT.target="ACCEPT"
+uci set firewall.EXT_HEIGHT_PORT.enabled="0"
+
+
+#UDP
+#9000-33433, 33435-40316, 40318-49316, 49318-65535
+uci set firewall.EXT_HEIGHT_PORT_UDP=rule
+uci set firewall.EXT_HEIGHT_PORT_UDP.dest_port="$EXT_HEIGHT_PORT_UDP_port"
+uci set firewall.EXT_HEIGHT_PORT_UDP.src="*"
+uci set firewall.EXT_HEIGHT_PORT_UDP.name="Allow_EXT_HEIGHT_PORT_UDP"
+uci set firewall.EXT_HEIGHT_PORT_UDP.proto="udp"
+uci set firewall.EXT_HEIGHT_PORT_UDP.dest="wan"
+uci set firewall.EXT_HEIGHT_PORT_UDP.target="ACCEPT"
+uci set firewall.EXT_HEIGHT_PORT_UDP.enabled="0"
+
+
+#HTTP_s (Ports)
+#80, 443, 8080
+uci set firewall.HTTP_s=rule
+uci set firewall.HTTP_s.dest_port="$HTTP_s_port"
+uci set firewall.HTTP_s.src="*"
+uci set firewall.HTTP_s.name="Allow_HTTP_s"
+uci set firewall.HTTP_s.enabled="0"
+uci set firewall.HTTP_s.dest="wan"
+uci set firewall.HTTP_s.target="ACCEPT"
+
+
+#MSRDP _ Alexa Call (Ports)
+#3389
+uci set firewall.MSRDP_AlexaCall=rule
+uci set firewall.MSRDP_AlexaCall.dest_port="$MSRDP_AlexaCall_port"
+uci set firewall.MSRDP_AlexaCall.src="*"
+uci set firewall.MSRDP_AlexaCall.name="Allow_MSRDP_AlexaCall"
+uci set firewall.MSRDP_AlexaCall.enabled="0"
+uci set firewall.MSRDP_AlexaCall.dest="wan"
+uci set firewall.MSRDP_AlexaCall.target="ACCEPT"
+
+
+#Skype
+#tcp "38562 1000:10000 50000:65000 16000:26000"
+#udp "38562 3478:3481 50000:60000"
+uci set firewall.SKYPE=rule
+uci set firewall.SKYPE.dest_port="$Skype_port"
+uci set firewall.SKYPE.src="*"
+uci set firewall.SKYPE.name="Allow_Skype"
+uci set firewall.SKYPE.proto="tcp"
+uci set firewall.SKYPE.enabled="0"
+uci set firewall.SKYPE.dest="wan"
+uci set firewall.SKYPE.target="ACCEPT"
+
+uci set firewall.SKYPE_UDP=rule
+uci set firewall.SKYPE_UDP.dest_port="$Skype_udp_port"
+uci set firewall.SKYPE_UDP.src="*"
+uci set firewall.SKYPE_UDP.name="Allow_Skype_UDP"
+uci set firewall.SKYPE_UDP.proto="udp"
+uci set firewall.SKYPE_UDP.enabled="0"
+uci set firewall.SKYPE_UDP.dest="wan"
+uci set firewall.SKYPE_UDP.target="ACCEPT"
+
+
+#Torrc (Ports)
+#9030, 9040, 9049, 9050, 9053, 9060
+uci set firewall.TORRC=rule
+uci set firewall.TORRC.dest_port="$TORRC_port"
+uci set firewall.TORRC.src="*"
+uci set firewall.TORRC.name="Allow_Torrc"
+uci set firewall.TORRC.enabled="0"
+uci set firewall.TORRC.dest="wan"
+uci set firewall.TORRC.target="ACCEPT"
+
+
+
+#AVM Mesh
+#TCP
+#50842
+uci set firewall.AVM_Mesh=rule
+uci set firewall.AVM_Mesh.dest_port="$AVM_Mesh_port"
+uci set firewall.AVM_Mesh.proto="tcp udp"
+uci set firewall.AVM_Mesh.src="*"
+uci set firewall.AVM_Mesh.enabled="0"
+uci set firewall.AVM_Mesh.name="Allow_AVM_Mesh"
+uci set firewall.AVM_Mesh.dest="wan"
+uci set firewall.AVM_Mesh.target="ACCEPT"
+
+
+#FRITZ!Box 
+#8183
+uci set firewall.AVM=rule
+uci set firewall.AVM.dest_port="$AVM_port"
+uci set firewall.AVM.src="*"
+uci set firewall.AVM.name="Allow_AVM"
+uci set firewall.AVM.enabled="0"
+uci set firewall.AVM.dest="wan"
+uci set firewall.AVM.target="ACCEPT"
+
+#Telefonie (SOP, RTP, RTCP)
+#7077-7097
+uci set firewall.Telephonie=rule
+uci set firewall.Telephonie.dest_port="$SIP_RTP_RTCP_port"
+uci set firewall.Telephonie.src="*"
+uci set firewall.Telephonie.name="Allow_Telephonie_SIP_RTP_RTCP"
+uci set firewall.Telephonie.enabled="0"
+uci set firewall.Telephonie.dest="wan"
+uci set firewall.Telephonie.target="ACCEPT"
+
+
+#Telefonie (SIP)
+#5060
+uci set firewall.SIP=rule
+uci set firewall.SIP.dest_port="$SIP_port"
+uci set firewall.SIP.src="*"
+uci set firewall.SIP.name="Allow_SIP_Telephonie"
+uci set firewall.SIP.enabled="0"
+uci set firewall.SIP.dest="wan"
+uci set firewall.SIP.target="ACCEPT"
+
+#Link Local Multicast Name Resolution (LLMNR)
+#5357
+uci set firewall.LLMNR=rule
+uci set firewall.LLMNR.dest_port="$LLMNR_port"
+uci set firewall.LLMNR.src="*"
+uci set firewall.LLMNR.name="Allow_LLMNR"
+uci set firewall.LLMNR.enabled="0"
+uci set firewall.LLMNR.dest="wan"
+uci set firewall.LLMNR.target="ACCEPT"
+
+#Multicast Domain Name Service (mDNS)
+#5353
+uci set firewall.mDNS=rule
+uci set firewall.mDNS.dest_port="$mDNS_port"
+uci set firewall.mDNS.src="*"
+uci set firewall.mDNS.name="Allow_mDNS"
+uci set firewall.mDNS.enabled="0"
+uci set firewall.mDNS.dest="wan"
+uci set firewall.mDNS.target="ACCEPT"
+
+#Port Control Protocol (PCP)
+#5351
+uci set firewall.PCP=rule
+uci set firewall.PCP.dest_port="$PCP_port"
+uci set firewall.PCP.src="*"
+uci set firewall.PCP.name="Allow_PCP"
+uci set firewall.PCP.enabled="0"
+uci set firewall.PCP.dest="wan"
+uci set firewall.PCP.target="ACCEPT"
+
+#Web Services Dynamic Discovery (WS-Discovery)
+#UDP
+#3702
+uci set firewall.WS_Discovery=rule
+uci set firewall.WS_Discovery.dest_port="$WS_Discovery_port"
+uci set firewall.WS_Discovery.proto="udp tcp"
+uci set firewall.WS_Discovery.src="*"
+uci set firewall.WS_Discovery.enabled="0"
+uci set firewall.WS_Discovery.name="Allow_WS_Discovery"
+uci set firewall.WS_Discovery.dest="wan"
+uci set firewall.WS_Discovery.target="ACCEPT"
+
+#Simple Service Discovery Protocol (SSDP)
+#UDP
+#1900
+uci set firewall.SSDP=rule
+uci set firewall.SSDP.dest_port="$SSDP_port"
+uci set firewall.SSDP.proto="udp"
+uci set firewall.SSDP.src="*"
+uci set firewall.SSDP.enabled="0"
+uci set firewall.SSDP.name="Allow_SSDP"
+uci set firewall.SSDP.dest="wan"
+uci set firewall.SSDP.target="ACCEPT"
+
+#WINS
+#UDP
+#137
+uci set firewall.WINS=rule
+uci set firewall.WINS.dest_port="$WINS_port"
+uci set firewall.WINS.proto="udp"
+uci set firewall.WINS.src="*"
+uci set firewall.WINS.enabled="0"
+uci set firewall.WINS.name="Allow_WINS"
+uci set firewall.WINS.dest="wan"
+uci set firewall.WINS.target="ACCEPT"
+
+
+#NetBIOS
+#UDP
+#138
+uci set firewall.NetBIOS=rule
+uci set firewall.NetBIOS.dest_port="$NetBIOS_port"
+uci set firewall.NetBIOS.proto="udp"
+uci set firewall.NetBIOS.src="*"
+uci set firewall.NetBIOS.enabled="0"
+uci set firewall.NetBIOS.name="Allow_NetBIOS"
+uci set firewall.NetBIOS.dest="wan"
+uci set firewall.NetBIOS.target="ACCEPT"
+
+
+#Syslog
+#UDP
+#514
+uci set firewall.Syslog=rule
+uci set firewall.Syslog.dest_port="$Syslog_port"
+uci set firewall.Syslog.proto="udp"
+uci set firewall.Syslog.src="*"
+uci set firewall.Syslog.enabled="0"
+uci set firewall.Syslog.name="Allow_Syslog"
+uci set firewall.Syslog.dest="wan"
+uci set firewall.Syslog.target="ACCEPT"
+
+
+#Open Directory Proxy (ODProxy)
+#TCP
+#625
+uci set firewall.ODProxy=rule
+uci set firewall.ODProxy.dest_port="$ODProxy_port"
+uci set firewall.ODProxy.proto="tcp"
+uci set firewall.ODProxy.src="*"
+uci set firewall.ODProxy.enabled="0"
+uci set firewall.ODProxy.name="Allow_SSDP"
+uci set firewall.ODProxy.dest="wan"
+uci set firewall.ODProxy.target="ACCEPT"
+
+
+#Unbekannt
+#1012
+ 
+#VPN (IPSec IKE)
+#UDP
+#4500
+uci set firewall.VPN=rule
+uci set firewall.VPN.dest_port="$VPN_port"
+uci set firewall.VPN.src="*"
+uci set firewall.VPN.name="Allow_VPN"
+uci set firewall.VPN.enabled="0"
+uci set firewall.VPN.dest="wan"
+uci set firewall.VPN.target="ACCEPT"
+
+#SMB_CISC-Freigabe
+#445, 139, 138, 137
+uci set firewall.SMB=rule
+uci set firewall.SMB.dest_port="$SMB_port"
+uci set firewall.SMB.src="*"
+uci set firewall.SMB.name="Allow_SMB_Share"
+uci set firewall.SMB.enabled="0"
+uci set firewall.SMB.dest="wan"
+uci set firewall.SMB.target="ACCEPT"
+
+#AFP-Freigabe
+#548
+uci set firewall.AFP=rule
+uci set firewall.AFP.dest_port="$AFP_port"
+uci set firewall.AFP.src="*"
+uci set firewall.AFP.proto="tcp"
+uci set firewall.AFP.name="Allow_AFP_Share"
+uci set firewall.AFP.enabled="0"
+uci set firewall.AFP.dest="wan"
+uci set firewall.AFP.target="ACCEPT"
+
+#NFS
+#"2049"
+uci set firewall.NFS=rule
+uci set firewall.NFS.dest_port="$NFS_port"
+uci set firewall.NFS.src="*"
+uci set firewall.NFS.name="Allow_NFS_SHARE"
+uci set firewall.NFS.enabled="0"
+uci set firewall.NFS.dest="wan"
+uci set firewall.NFS.proto="tcp"
+uci set firewall.NFS.target="ACCEPT"
+
+#NTP
+#UDP
+#123
+uci set firewall.NTP=rule
+uci set firewall.NTP.dest_port="$NTP_port"
+uci set firewall.NTP.proto="udp"
+uci set firewall.NTP.src="*"
+uci set firewall.NTP.enabled="0"
+uci set firewall.NTP.name="Allow_NTP"
+uci set firewall.NTP.dest="wan"
+uci set firewall.NTP.target="ACCEPT"
+
+#Printer_LPR_IPP
+#"9100 515 631"
+uci set firewall.PRINTER=rule
+uci set firewall.PRINTER.dest_port="$Printer_port"
+uci set firewall.PRINTER.src="*"
+uci set firewall.PRINTER.name="Allow_Printer_LPR"
+uci set firewall.PRINTER.enabled="0"
+uci set firewall.PRINTER.dest="wan"
+uci set firewall.PRINTER.proto="tcp"
+uci set firewall.PRINTER.target="ACCEPT"
+
+
+#DHCP
+#UDP
+#67
+uci set firewall.DHCP=rule
+uci set firewall.DHCP.dest_port="$DHCP_port"
+uci set firewall.DHCP.proto="udp"
+uci set firewall.DHCP.name="Allow_DHCP"
+uci set firewall.DHCP.src="*"
+uci set firewall.DHCP.dest="wan"
+uci set firewall.DHCP.target="ACCEPT"
+uci set firewall.DHCP.enabled="0"
+
+
+#UPNP
+#49000
+uci set firewall.UPNP=rule
+uci set firewall.UPNP.dest_port="$UPMP_port"
+uci set firewall.UPNP.src="*"
+uci set firewall.UPNP.name="Allow_UPNP"
+uci set firewall.UPNP.dest="wan"
+uci set firewall.UPNP.target="ACCEPT"
+uci set firewall.UPNP.enabled="0"
+
+
+#-----------------------------------------------------------------------------
+
+uci set firewall.Block_DNS_Cloudflare=rule
+uci set firewall.Block_DNS_Cloudflare.dest_port="$all_DNS_port"
+uci set firewall.Block_DNS_Cloudflare.src="*"
+uci set firewall.Block_DNS_Cloudflare.name="Block_Cloudflare_local_DNS"
+uci set firewall.Block_DNS_Cloudflare.dest="*"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare1_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare2_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare3_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare4_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare5_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare6_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare7_SVR" 
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare8_SVR" 
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare9_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare10_SVR" 
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare11_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare12_SVR"  
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare13_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare14_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare15_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare16_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare17_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare18_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare19_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare20_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare21_SVR" 
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare22_SVR"
+uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR" 
+uci set firewall.Block_DNS_Cloudflare.enabled="0" 
+uci set firewall.Block_DNS_Cloudflare.proto="tcp udp"
+uci set firewall.Block_DNS_Cloudflare.target="REJECT"
+uci commit && reload_config >> install.log
+
+
+
+#WebClient (Port)
+#21, 22, 25, 53, 80, 110, 123, 443, 853, 5353, 9030, 9040, 9049, 9050, 9053, 9060, 50275, 54715, 54789, 51465, 56343, 56534, 57687, 60870
+uci set firewall.Block_WebClient=rule
+uci set firewall.Block_WebClient.dest_port="$WebClient_port"
+uci set firewall.Block_WebClient.src="*"
+uci set firewall.Block_WebClient.name="Block_WebClient"
+uci set firewall.Block_WebClient.enabled="0"
+uci set firewall.Block_WebClient.dest="wan"
+uci set firewall.Block_WebClient.target="REJECT"
+
+
+#Office_Client (Port)
+# 21 22 23 25 53 67 80 110 123 139 138 137 443 445 515 548 631 853 2049 5353 9030 9040 9049 9050 9053 9060 9100 50275 54715 54789 51465 56343 56534 57687 60870
+uci set firewall.Block_OfficeClient=rule
+uci set firewall.Block_OfficeClient.src='INET'
+uci set firewall.Block_OfficeClient.name='Block_OfficeClient'
+uci set firewall.Block_OfficeClient.dest='SERVER'
+uci set firewall.Block_OfficeClient.proto='udp tcp'
+uci set firewall.Block_OfficeClient.target='REJECT'
+uci set firewall.Block_OfficeClient.dest_port="$OfficeClient_port"
+#1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
+uci set firewall.Block_OfficeClient.enabled='0'
+
+uci set firewall.Block_OfficeWebClient=rule
+uci set firewall.Block_OfficeWebClient.src='INET'
+uci set firewall.Block_OfficeWebClient.name='Block_OfficeClient_WEB'
+uci set firewall.Block_OfficeWebClient.dest='wan'
+uci set firewall.Block_OfficeWebClient.proto='udp tcp'
+uci set firewall.Block_OfficeWebClient.target='REJECT'
+uci set firewall.Block_OfficeWebClient.dest_port="$OfficeWebClient_port"
+uci set firewall.Block_OfficeWebClient.enabled='0'
+
+#Alexa (Port)
+#"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
+#udp 4070 5353 40317 49317 33434 50000:60000 3478:3481
+uci set firewall.Block_Amazon_Alexa=rule
+uci set firewall.Block_Amazon_Alexa.name='Block_AmazonAlexa'
+uci set firewall.Block_Amazon_Alexa.proto='tcp'
+uci set firewall.Block_Amazon_Alexa.dest='wan'
+uci set firewall.Block_Amazon_Alexa.target='REJECT'
+uci set firewall.Block_Amazon_Alexa.src='VOICE'
+uci set firewall.Block_Amazon_Alexa.dest_port="$Amazon_Alexa_port"
+uci set firewall.Block_Amazon_Alexa.enabled='0'
+uci set firewall.Block_Amazon_Alexa_UDP=rule
+uci set firewall.Block_Amazon_Alexa_UDP.name='Block_AmazonAlexa_UDP'
+uci set firewall.Block_Amazon_Alexa_UDP.proto='udp'
+uci set firewall.Block_Amazon_Alexa_UDP.dest='wan'
+uci set firewall.Block_Amazon_Alexa_UDP.target='REJECT'
+uci set firewall.Block_Amazon_Alexa_UDP.src='VOICE'
+uci set firewall.Block_Amazon_Alexa_UDP.dest_port="$Amazon_Alexa_UDP_port"
+uci set firewall.Block_Amazon_Alexa_UDP.enabled='0'
+
+#Google Assistent (Port)
+#uci set firewall.Block_Google_assistent=rule
+
+#Telnet (Port)
+#23
+uci set firewall.Block_TELNET=rule
+uci set firewall.Block_TELNET.dest_port="$TELNET_port"
+uci set firewall.Block_TELNET.src="*"
+uci set firewall.Block_TELNET.name="Block_Telnet"
+uci set firewall.Block_TELNET.enabled="0"
+uci set firewall.Block_TELNET.dest="wan"
+uci set firewall.Block_TELNET.target="REJECT"
+
+
+#SSH (Port)
+#22
+uci set firewall.Block_SSH=rule
+uci set firewall.Block_SSH.dest_port="$SSH_port"
+uci set firewall.Block_SSH.src="*"
+uci set firewall.Block_SSH.name="Block_SSH"
+uci set firewall.Block_SSH.dest="wan"
+uci set firewall.Block_SSH.enabled="0"
+uci set firewall.Block_SSH.dest="wan"
+uci set firewall.Block_SSH.target="REJECT"
+
+
+#NTP
+#123
+uci set firewall.Block_NTP=rule
+uci set firewall.Block_NTP.dest_port="$NTP_port"
+uci set firewall.Block_NTP.src="*"
+uci set firewall.Block_NTP.name="Block_NTP"
+uci set firewall.Block_NTP.enabled="0"
+uci set firewall.Block_NTP.dest="wan"
+uci set firewall.Block_NTP.target="REJECT"
+
+#smtp
+#"25 465 587"
+uci set firewall.Block_SMTP=rule
+uci set firewall.Block_SMTP.dest_port="$SMTP_port"
+uci set firewall.Block_SMTP.src="*"
+uci set firewall.Block_SMTP.name="Block_SMTP"
+uci set firewall.Block_SMTP.enabled="0"
+uci set firewall.Block_SMTP.dest="wan"
+uci set firewall.Block_SMTP.target="REJECT"
+
+
+#POP3 Port
+#POP3_PORT="110 995"
+uci set firewall.Block_POP3=rule
+uci set firewall.Block_POP3.dest_port="$POP3_port"
+uci set firewall.Block_POP3.src="*"
+uci set firewall.Block_POP3.name="Block_POP3"
+uci set firewall.Block_POP3.enabled="0"
+uci set firewall.Block_POP3.dest="wan"
+uci set firewall.Block_POP3.target="REJECT"
+
+
+#IMAP4 Port
+#IMAP_PORT="143 993 626"
+uci set firewall.Block_IMAP4=rule
+uci set firewall.Block_IMAP4.dest_port="$IMAP_port"
+uci set firewall.Block_IMAP4.src="*"
+uci set firewall.Block_IMAP4.name="Block_IMAP4"
+uci set firewall.Block_IMAP4.enabled="0"
+uci set firewall.Block_IMAP4.dest="wan"
+uci set firewall.Block_IMAP4.target="REJECT"
+
+
+#KERBEROS
+#"88 749"
+uci set firewall.Block_KERBEROS=rule
+uci set firewall.Block_KERBEROS.dest_port="$KERBEROS_port"
+uci set firewall.Block_KERBEROS.src="*"
+uci set firewall.Block_KERBEROS.name="Block_KERBEROS"
+uci set firewall.Block_KERBEROS.enabled="0"
+uci set firewall.Block_KERBEROS.dest="wan"
+uci set firewall.Block_KERBEROS.proto="tcp"
+uci set firewall.Block_KERBEROS.target="REJECT"
+
+
+#Password_Server
+#"106"
+uci set firewall.Block_PASSWDSRV=rule
+uci set firewall.Block_PASSWDSRV.dest_port="$PASSWDSRV_port"
+uci set firewall.Block_PASSWDSRV.src="*"
+uci set firewall.Block_PASSWDSRV.name="Block_PASWD_SRV"
+uci set firewall.Block_PASSWDSRV.enabled="0"
+uci set firewall.Block_PASSWDSRV.dest="wan"
+uci set firewall.Block_PASSWDSRV.proto="tcp"
+uci set firewall.Block_PASSWDSRV.target="REJECT"
+
+#LDAP
+#"389 636"
+uci set firewall.Block_LDAP=rule
+uci set firewall.Block_LDAP.dest_port="$LDAP_port"
+uci set firewall.Block_LDAP.src="*"
+uci set firewall.Block_LDAP.name="Block_LDAP"
+uci set firewall.Block_LDAP.enabled="0"
+uci set firewall.Block_LDAP.dest="wan"
+uci set firewall.Block_LDAP.proto="tcp"
+uci set firewall.Block_LDAP.target="REJECT"
+
+
+#RPC
+#"111"
+uci set firewall.Block_RPC=rule
+uci set firewall.Block_RPC.dest_port="$RPC_port"
+uci set firewall.Block_RPC.src="*"
+uci set firewall.Block_RPC.name="Block_RPC"
+uci set firewall.Block_RPC.enabled="0"
+uci set firewall.Block_RPC.dest="wan"
+uci set firewall.Block_RPC.proto="tcp"
+uci set firewall.Block_RPC.target="REJECT"
+
+#NNTP
+#"119"
+uci set firewall.Block_NNTP=rule
+uci set firewall.Block_NNTP.dest_port="$NNTP_port"
+uci set firewall.Block_NNTP.src="*"
+uci set firewall.Block_NNTP.name="Block_NNTP"
+uci set firewall.Block_NNTP.enabled="0"
+uci set firewall.Block_NNTP.dest="wan"
+uci set firewall.Block_NNTP.proto="tcp"
+uci set firewall.Block_NNTP.target="REJECT"
+
+#Real Time Streaming Protocol (RTSP)
+#"554"
+uci set firewall.Block_RTSP=rule
+uci set firewall.Block_RTSP.dest_port="$RTSP_port"
+uci set firewall.Block_RTSP.src="*"
+uci set firewall.Block_RTSP.name="Block_RTSP"
+uci set firewall.Block_RTSP.enabled="0"
+uci set firewall.Block_RTSP.dest="wan"
+uci set firewall.Block_RTSP.target="REJECT"
+
+
+#PiHole Port
+#PIHOLE_PORT="81"
+#PIHOLE_FTL_PORT="4711"
+uci set firewall.Block_PIHOLE=rule
+uci set firewall.Block_PIHOLE.dest_port="$all_PIHOLE_port"
+uci set firewall.Block_PIHOLE.src="*"
+uci set firewall.Block_PIHOLE.name="Block_PiHole"
+uci set firewall.Block_PIHOLE.enabled="0"
+uci set firewall.Block_PIHOLE.dest="wan"
+uci set firewall.Block_PIHOLE.target="REJECT"
+
+#Privoxy Port
+#PRIVOXY_PORT="8188"
+uci set firewall.Block_PRIVOXY=rule
+uci set firewall.Block_PRIVOXY.dest_port="$PRIVOXY_port"
+uci set firewall.Block_PRIVOXY.src="*"
+uci set firewall.Block_PRIVOXY.name="Block_PRIVOXY"
+uci set firewall.Block_PRIVOXY.enabled="0"
+uci set firewall.Block_PRIVOXY.dest="wan"
+uci set firewall.Block_PRIVOXY.target="REJECT"
+
+
+#NTOPNG Port
+#NTOPNG_PORT="3000"
+uci set firewall.Block_NTOPNG=rule
+uci set firewall.Block_NTOPNG.dest_port="$NTOPNG_port"
+uci set firewall.Block_NTOPNG.src="*"
+uci set firewall.Block_NTOPNG.name="Block_NTOPNG"
+uci set firewall.Block_NTOPNG.enabled="0"
+uci set firewall.Block_NTOPNG.dest="wan"
+uci set firewall.Block_NTOPNG.target="REJECT"
+
+
+#SDNS ports
+#DNS_PORT="853"
+uci set firewall.Block_SDNS=rule
+uci set firewall.Block_SDNS.dest_port="$SDNS_port"
+uci set firewall.Block_SDNS.src="*"
+uci set firewall.Block_SDNS.name="Block_SDNS"
+uci set firewall.Block_SDNS.enabled="0"
+uci set firewall.Block_SDNS.dest="wan"
+uci set firewall.Block_SDNS.target="REJECT"
+
+
+#UBOUND_DNS
+uci set firewall.Block_UNBOUND=rule
+uci set firewall.Block_UNBOUND.dest_port="$DNS_UNBOUND_port"
+uci set firewall.Block_UNBOUND.src="*"
+uci set firewall.Block_UNBOUND.name="Block_UNBOUND"
+uci set firewall.Block_UNBOUND.enabled="0"
+uci set firewall.Block_UNBOUND.dest="wan"
+uci set firewall.Block_UNBOUND.target="REJECT"
+
+
+#STUBBY_DNS
+uci set firewall.Block_STUBBY=rule
+uci set firewall.Block_STUBBY.dest_port="$DNS_STUBBY_port"
+uci set firewall.Block_STUBBY.src="*"
+uci set firewall.Block_STUBBY.name="Block_STUBBY"
+uci set firewall.Block_STUBBY.enabled="0"
+uci set firewall.Block_STUBBY.dest="wan"
+uci set firewall.Block_STUBBY.target="REJECT"
+
+
+#DNS_CRYPT
+uci set firewall.Block_DNS_CRYPT=rule
+uci set firewall.Block_DNS_CRYPT.dest_port="$DNS_CRYPT_port"
+uci set firewall.Block_DNS_CRYPT.src="*"
+uci set firewall.Block_DNS_CRYPT.name="Block_DNS_CRYPT"
+uci set firewall.Block_DNS_CRYPT.enabled="0"
+uci set firewall.Block_DNS_CRYPT.dest="wan"
+uci set firewall.Block_DNS_CRYPT.target="REJECT"
+
+
+#TOR_DNS
+uci set firewall.Block_TOR_DNS=rule
+uci set firewall.Block_TOR_DNS.dest_port="$DNS_TOR_port"
+uci set firewall.Block_TOR_DNS.src="*"
+uci set firewall.Block_TOR_DNS.name="Block_TOR_DNS"
+uci set firewall.Block_TOR_DNS.enabled="0"
+uci set firewall.Block_TOR_DNS.dest="wan"
+uci set firewall.Block_TOR_DNS.target="REJECT"
+
+
+#Bittorrent (Ports)
+#6881-6999
+uci set firewall.Block_BITTORENT=rule
+uci set firewall.Block_BITTORENT.dest_port="$Bittorrent_port"
+uci set firewall.Block_BITTORENT.src="*"
+uci set firewall.Block_BITTORENT.name="Block_BITTORENT"
+uci set firewall.Block_BITTORENT.enabled="0"
+uci set firewall.Block_BITTORENT.dest="wan"
+uci set firewall.Block_BITTORENT.target="REJECT"
+
+
+#eMule (Ports)
+#4662, 4672
+uci set firewall.Block_eMule=rule
+uci set firewall.Block_eMule.dest_port="$eMule_port"
+uci set firewall.Block_eMule.src="*"
+uci set firewall.Block_eMule.name="Block_eMule"
+uci set firewall.Block_eMule.enabled="0"
+uci set firewall.Block_eMule.dest="wan"
+uci set firewall.Block_eMule.target="REJECT"
+
+#RemoteAccess (Ports)
+#40443-40446
+uci set firewall.Block_RemoteAccess=rule
+uci set firewall.Block_RemoteAccess.dest_port="$Acces_http_port"
+uci set firewall.Block_RemoteAccess.src="*"
+uci set firewall.Block_RemoteAccess.name="Block_RemoteAccess"
+uci set firewall.Block_RemoteAccess.enabled="0"
+uci set firewall.Block_RemoteAccess.dest="wan"
+uci set firewall.Block_RemoteAccess.target="REJECT"
+
+#FTP-Server  (Ports)
+#20-21
+uci set firewall.Block_FTP_Server=rule
+uci set firewall.Block_FTP_Server.dest_port="$FTP_port"
+uci set firewall.Block_FTP_Server.src="*"
+uci set firewall.Block_FTP_Server.name="Block_FTP"
+uci set firewall.Block_FTP_Server.enabled="0"
+uci set firewall.Block_FTP_Server.dest="wan"
+uci set firewall.Block_FTP_Server.target="REJECT"
+
+
+#Hohe Ziel (Ports)
+#TCP 
+#10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
+uci set firewall.Block_EXT_HEIGHT_PORT=rule
+uci set firewall.Block_EXT_HEIGHT_PORT.dest_port="$EXT_HEIGHT_PORT_port"
+uci set firewall.Block_EXT_HEIGHT_PORT.src="*"
+uci set firewall.Block_EXT_HEIGHT_PORT.name="Block_EXT_HEIGHT_PORT"
+uci set firewall.Block_EXT_HEIGHT_PORT.proto="tcp"
+uci set firewall.Block_EXT_HEIGHT_PORT.dest="wan"
+uci set firewall.Block_EXT_HEIGHT_PORT.target="REJECT"
+uci set firewall.Block_EXT_HEIGHT_PORT.enabled="0"
+
+
+#UDP
+#9000-33433, 33435-40316, 40318-49316, 49318-65535
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP=rule
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.dest_port="$EXT_HEIGHT_PORT_UDP_port"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.src="*"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.name="Block_EXT_HEIGHT_PORT_UDP"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.proto="udp"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.dest="wan"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.target="REJECT"
+uci set firewall.Block_EXT_HEIGHT_PORT_UDP.enabled="0"
+
+
+#HTTP_s (Ports)
+#80, 443, 8080
+uci set firewall.Block_HTTP_s=rule
+uci set firewall.Block_HTTP_s.dest_port="$HTTP_s_port"
+uci set firewall.Block_HTTP_s.src="*"
+uci set firewall.Block_HTTP_s.name="Block_HTTP_s"
+uci set firewall.Block_HTTP_s.enabled="0"
+uci set firewall.Block_HTTP_s.dest="wan"
+uci set firewall.Block_HTTP_s.target="REJECT"
+
+
+#MSRDP _ Alexa Call (Ports)
+#3389
+uci set firewall.Block_MSRDP_AlexaCall=rule
+uci set firewall.Block_MSRDP_AlexaCall.dest_port="$MSRDP_AlexaCall_port"
+uci set firewall.Block_MSRDP_AlexaCall.src="*"
+uci set firewall.Block_MSRDP_AlexaCall.name="Block_MSRDP_AlexaCall"
+uci set firewall.Block_MSRDP_AlexaCall.enabled="0"
+uci set firewall.Block_MSRDP_AlexaCall.dest="wan"
+uci set firewall.Block_MSRDP_AlexaCall.target="REJECT"
+
+
+#Skype
+#tcp "38562 1000:10000 50000:65000 16000:26000"
+#udp "38562 3478:3481 50000:60000"
+uci set firewall.Block_SKYPE=rule
+uci set firewall.Block_SKYPE.dest_port="$Skype_port"
+uci set firewall.Block_SKYPE.src="*"
+uci set firewall.Block_SKYPE.name="Block_Skype"
+uci set firewall.Block_SKYPE.proto="tcp"
+uci set firewall.Block_SKYPE.enabled="0"
+uci set firewall.Block_SKYPE.dest="wan"
+uci set firewall.Block_SKYPE.target="REJECT"
+
+uci set firewall.Block_SKYPE_UDP=rule
+uci set firewall.Block_SKYPE_UDP.dest_port="$Skype_udp_port"
+uci set firewall.Block_SKYPE_UDP.src="*"
+uci set firewall.Block_SKYPE_UDP.name="Block_Skype_UDP"
+uci set firewall.Block_SKYPE_UDP.proto="udp"
+uci set firewall.Block_SKYPE_UDP.enabled="0"
+uci set firewall.Block_SKYPE_UDP.dest="wan"
+uci set firewall.Block_SKYPE_UDP.target="REJECT"
+
+
+#Torrc (Ports)
+#9030, 9040, 9049, 9050, 9053, 9060
+uci set firewall.Block_TORRC=rule
+uci set firewall.Block_TORRC.dest_port="$TORRC_port"
+uci set firewall.Block_TORRC.src="*"
+uci set firewall.Block_TORRC.name="Block_Torrc"
+uci set firewall.Block_TORRC.enabled="0"
+uci set firewall.Block_TORRC.dest="wan"
+uci set firewall.Block_TORRC.target="REJECT"
+
+
+
+#AVM Mesh
+#TCP
+#50842
+uci set firewall.Block_AVM_Mesh=rule
+uci set firewall.Block_AVM_Mesh.dest_port="$AVM_Mesh_port"
+uci set firewall.Block_AVM_Mesh.proto="tcp udp"
+uci set firewall.Block_AVM_Mesh.src="*"
+uci set firewall.Block_AVM_Mesh.enabled="0"
+uci set firewall.Block_AVM_Mesh.name="Block_AVM_Mesh"
+uci set firewall.Block_AVM_Mesh.dest="wan"
+uci set firewall.Block_AVM_Mesh.target="REJECT"
+
+
+#FRITZ!Box 
+#8183
+uci set firewall.Block_AVM=rule
+uci set firewall.Block_AVM.dest_port="$AVM_port"
+uci set firewall.Block_AVM.src="*"
+uci set firewall.Block_AVM.name="Block_AVM"
+uci set firewall.Block_AVM.enabled="0"
+uci set firewall.Block_AVM.dest="wan"
+uci set firewall.Block_AVM.target="REJECT"
+
+#Telefonie (SOP, RTP, RTCP)
+#7077-7097
+uci set firewall.Block_Telephonie=rule
+uci set firewall.Block_Telephonie.dest_port="$SIP_RTP_RTCP_port"
+uci set firewall.Block_Telephonie.src="*"
+uci set firewall.Block_Telephonie.name="Block_Telephonie_SIP_RTP_RTCP"
+uci set firewall.Block_Telephonie.enabled="0"
+uci set firewall.Block_Telephonie.dest="wan"
+uci set firewall.Block_Telephonie.target="REJECT"
+
+
+#Telefonie (SIP)
+#5060
+uci set firewall.Block_SIP=rule
+uci set firewall.Block_SIP.dest_port="$SIP_port"
+uci set firewall.Block_SIP.src="*"
+uci set firewall.Block_SIP.name="Block_SIP_Telephonie"
+uci set firewall.Block_SIP.enabled="0"
+uci set firewall.Block_SIP.dest="wan"
+uci set firewall.Block_SIP.target="REJECT"
+
+#Link Local Multicast Name Resolution (LLMNR)
+#5357
+uci set firewall.Block_LLMNR=rule
+uci set firewall.Block_LLMNR.dest_port="$LLMNR_port"
+uci set firewall.Block_LLMNR.src="*"
+uci set firewall.Block_LLMNR.name="Block_LLMNR"
+uci set firewall.Block_LLMNR.enabled="0"
+uci set firewall.Block_LLMNR.dest="wan"
+uci set firewall.Block_LLMNR.target="REJECT"
+
+#Multicast Domain Name Service (mDNS)
+#5353
+uci set firewall.Block_mDNS=rule
+uci set firewall.Block_mDNS.dest_port="$mDNS_port"
+uci set firewall.Block_mDNS.src="*"
+uci set firewall.Block_mDNS.name="Block_mDNS"
+uci set firewall.Block_mDNS.enabled="0"
+uci set firewall.Block_mDNS.dest="wan"
+uci set firewall.Block_mDNS.target="REJECT"
+
+#Port Control Protocol (PCP)
+#5351
+uci set firewall.Block_PCP=rule
+uci set firewall.Block_PCP.dest_port="$PCP_port"
+uci set firewall.Block_PCP.src="*"
+uci set firewall.Block_PCP.name="Block_PCP"
+uci set firewall.Block_PCP.enabled="0"
+uci set firewall.Block_PCP.dest="wan"
+uci set firewall.Block_PCP.target="REJECT"
+
+#Web Services Dynamic Discovery (WS-Discovery)
+#UDP
+#3702
+uci set firewall.Block_WS_Discovery=rule
+uci set firewall.Block_WS_Discovery.dest_port="$WS_Discovery_port"
+uci set firewall.Block_WS_Discovery.proto="udp tcp"
+uci set firewall.Block_WS_Discovery.src="*"
+uci set firewall.Block_WS_Discovery.enabled="0"
+uci set firewall.Block_WS_Discovery.name="Block_WS_Discovery"
+uci set firewall.Block_WS_Discovery.dest="wan"
+uci set firewall.Block_WS_Discovery.target="REJECT"
+
+#Simple Service Discovery Protocol (SSDP)
+#UDP
+#1900
+uci set firewall.Block_SSDP=rule
+uci set firewall.Block_SSDP.dest_port="$SSDP_port"
+uci set firewall.Block_SSDP.proto="udp"
+uci set firewall.Block_SSDP.src="*"
+uci set firewall.Block_SSDP.enabled="0"
+uci set firewall.Block_SSDP.name="Block_SSDP"
+uci set firewall.Block_SSDP.dest="wan"
+uci set firewall.Block_SSDP.target="REJECT"
+
+#WINS
+#UDP
+#137
+uci set firewall.Block_WINS=rule
+uci set firewall.Block_WINS.dest_port="$WINS_port"
+uci set firewall.Block_WINS.proto="udp"
+uci set firewall.Block_WINS.src="*"
+uci set firewall.Block_WINS.enabled="0"
+uci set firewall.Block_WINS.name="Block_WINS"
+uci set firewall.Block_WINS.dest="wan"
+uci set firewall.Block_WINS.target="REJECT"
+
+
+#NetBIOS
+#UDP
+#138
+uci set firewall.Block_NetBIOS=rule
+uci set firewall.Block_NetBIOS.dest_port="$NetBIOS_port"
+uci set firewall.Block_NetBIOS.proto="udp"
+uci set firewall.Block_NetBIOS.src="*"
+uci set firewall.Block_NetBIOS.enabled="0"
+uci set firewall.Block_NetBIOS.name="Block_NetBIOS"
+uci set firewall.Block_NetBIOS.dest="wan"
+uci set firewall.Block_NetBIOS.target="REJECT"
+
+
+#Syslog
+#UDP
+#514
+uci set firewall.Block_Syslog=rule
+uci set firewall.Block_Syslog.dest_port="$Syslog_port"
+uci set firewall.Block_Syslog.proto="udp"
+uci set firewall.Block_Syslog.src="*"
+uci set firewall.Block_Syslog.enabled="0"
+uci set firewall.Block_Syslog.name="Block_Syslog"
+uci set firewall.Block_Syslog.dest="wan"
+uci set firewall.Block_Syslog.target="REJECT"
+
+
+#Open Directory Proxy (ODProxy)
+#TCP
+#625
+uci set firewall.Block_ODProxy=rule
+uci set firewall.Block_ODProxy.dest_port="$ODProxy_port"
+uci set firewall.Block_ODProxy.proto="tcp"
+uci set firewall.Block_ODProxy.src="*"
+uci set firewall.Block_ODProxy.enabled="0"
+uci set firewall.Block_ODProxy.name="Block_SSDP"
+uci set firewall.Block_ODProxy.dest="wan"
+uci set firewall.Block_ODProxy.target="REJECT"
+
+
+#Unbekannt
+#1012
+ 
+#VPN (IPSec IKE)
+#UDP
+#4500
+uci set firewall.Block_VPN=rule
+uci set firewall.Block_VPN.dest_port="$VPN_port"
+uci set firewall.Block_VPN.src="*"
+uci set firewall.Block_VPN.name="Block_VPN"
+uci set firewall.Block_VPN.enabled="0"
+uci set firewall.Block_VPN.dest="wan"
+uci set firewall.Block_VPN.target="REJECT"
+
+#SMB_CISC-Freigabe
+#445, 139, 138, 137
+uci set firewall.Block_SMB=rule
+uci set firewall.Block_SMB.dest_port="$SMB_port"
+uci set firewall.Block_SMB.src="*"
+uci set firewall.Block_SMB.name="Block_SMB_Share"
+uci set firewall.Block_SMB.enabled="0"
+uci set firewall.Block_SMB.dest="wan"
+uci set firewall.Block_SMB.target="REJECT"
+
+#AFP-Freigabe
+#548
+uci set firewall.Block_AFP=rule
+uci set firewall.Block_AFP.dest_port="$AFP_port"
+uci set firewall.Block_AFP.src="*"
+uci set firewall.Block_AFP.proto="tcp"
+uci set firewall.Block_AFP.name="Block_AFP_Share"
+uci set firewall.Block_AFP.enabled="0"
+uci set firewall.Block_AFP.dest="wan"
+uci set firewall.Block_AFP.target="REJECT"
+
+#NFS
+#"2049"
+uci set firewall.Block_NFS=rule
+uci set firewall.Block_NFS.dest_port="$NFS_port"
+uci set firewall.Block_NFS.src="*"
+uci set firewall.Block_NFS.name="Block_NFS_SHARE"
+uci set firewall.Block_NFS.enabled="0"
+uci set firewall.Block_NFS.dest="wan"
+uci set firewall.Block_NFS.proto="tcp"
+uci set firewall.Block_NFS.target="REJECT"
+
+#NTP
+#UDP
+#123
+uci set firewall.Block_NTP=rule
+uci set firewall.Block_NTP.dest_port="$NTP_port"
+uci set firewall.Block_NTP.proto="udp"
+uci set firewall.Block_NTP.src="*"
+uci set firewall.Block_NTP.enabled="0"
+uci set firewall.Block_NTP.name="Block_NTP"
+uci set firewall.Block_NTP.dest="wan"
+uci set firewall.Block_NTP.target="REJECT"
+
+#Printer_LPR_IPP
+#"9100 515 631"
+uci set firewall.Block_PRINTER=rule
+uci set firewall.Block_PRINTER.dest_port="$Printer_port"
+uci set firewall.Block_PRINTER.src="*"
+uci set firewall.Block_PRINTER.name="Block_Printer_LPR"
+uci set firewall.Block_PRINTER.enabled="0"
+uci set firewall.Block_PRINTER.dest="wan"
+uci set firewall.Block_PRINTER.proto="tcp"
+uci set firewall.Block_PRINTER.target="REJECT"
+
+
+#DHCP
+#UDP
+#67
+uci set firewall.Block_DHCP=rule
+uci set firewall.Block_DHCP.dest_port="$DHCP_port"
+uci set firewall.Block_DHCP.proto="udp"
+uci set firewall.Block_DHCP.name="Block_DHCP"
+uci set firewall.Block_DHCP.src="*"
+uci set firewall.Block_DHCP.dest="wan"
+uci set firewall.Block_DHCP.target="REJECT"
+uci set firewall.Block_DHCP.enabled="0"
+
+
+#UPNP
+#49000
+uci set firewall.Block_UPNP=rule
+uci set firewall.Block_UPNP.dest_port="$UPMP_port"
+uci set firewall.Block_UPNP.src="*"
+uci set firewall.Block_UPNP.name="Block_UPNP"
+uci set firewall.Block_UPNP.dest="wan"
+uci set firewall.Block_UPNP.target="REJECT"
+uci set firewall.Block_UPNP.enabled="0"
+
+
+#-----------------------------------------------------------------------------
+
+
+uci set firewall.Allow_only_DNS_Cloudflare=rule
+uci set firewall.Allow_only_DNS_Cloudflare.dest_port="$all_DNS_port"
+uci set firewall.Allow_only_DNS_Cloudflare.src="*"
+uci set firewall.Allow_only_DNS_Cloudflare.name="Allow_only_Cloudflare_local_DNS"
+uci set firewall.Allow_only_DNS_Cloudflare.dest="*"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare1_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare2_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare3_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare4_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare5_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare6_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare7_SVR" 
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare8_SVR" 
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare9_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare10_SVR" 
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare11_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare12_SVR"  
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare13_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare14_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare15_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare16_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare17_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare18_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare19_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare20_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare21_SVR" 
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare22_SVR"
+uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare23_SVR" 
+uci set firewall.Allow_only_DNS_Cloudflare.enabled="0" 
+uci set firewall.Allow_only_DNS_Cloudflare.proto="tcp udp"
+uci set firewall.Allow_only_DNS_Cloudflare.target="REJECT"
+uci commit && reload_config >> install.log
+
+
+
+#WebClient (Port)
+#21, 22, 25, 53, 80, 110, 123, 443, 853, 5353, 9030, 9040, 9049, 9050, 9053, 9060, 50275, 54715, 54789, 51465, 56343, 56534, 57687, 60870
+uci set firewall.Allow_only_WebClient=rule
+uci set firewall.Allow_only_WebClient.dest_port="$all_other_WebClient_port"
+uci set firewall.Allow_only_WebClient.src="*"
+uci set firewall.Allow_only_WebClient.name="Allow_only_WebClient"
+uci set firewall.Allow_only_WebClient.enabled="0"
+uci set firewall.Allow_only_WebClient.dest="wan"
+uci set firewall.Allow_only_WebClient.target="REJECT"
+
+
+#Office_Client (Port)
+# 21 22 23 25 53 67 80 110 123 139 138 137 443 445 515 548 631 853 2049 5353 9030 9040 9049 9050 9053 9060 9100 50275 54715 54789 51465 56343 56534 57687 60870
+uci set firewall.Allow_only_OfficeClient=rule
+uci set firewall.Allow_only_OfficeClient.src='INET'
+uci set firewall.Allow_only_OfficeClient.name='Allow_only_OfficeClient'
+uci set firewall.Allow_only_OfficeClient.dest='SERVER'
+uci set firewall.Allow_only_OfficeClient.proto='udp tcp'
+uci set firewall.Allow_only_OfficeClient.target='REJECT'
+uci set firewall.Allow_only_OfficeClient.dest_port="$all_other_OfficeClient_port"
+#1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
 uci set firewall.Allow_only_OfficeClient.enabled='1'
+
+uci set firewall.Allow_only_OfficeWebClient=rule
+uci set firewall.Allow_only_OfficeWebClient.src='INET'
+uci set firewall.Allow_only_OfficeWebClient.name='Allow_only_OfficeClient_WEB'
+uci set firewall.Allow_only_OfficeWebClient.dest='wan'
+uci set firewall.Allow_only_OfficeWebClient.proto='udp tcp'
+uci set firewall.Allow_only_OfficeWebClient.target='REJECT'
+uci set firewall.Allow_only_OfficeWebClient.dest_port="$all_other_OfficeWebClient_port"
 uci set firewall.Allow_only_OfficeWebClient.enabled='1'
+
+#Alexa (Port)
+#"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
+#udp 4070 5353 40317 49317 33434 50000:60000 3478:3481
+uci set firewall.Allow_only_Amazon_Alexa=rule
+uci set firewall.Allow_only_Amazon_Alexa.name='Allow_only_AmazonAlexa'
+uci set firewall.Allow_only_Amazon_Alexa.proto='tcp'
+uci set firewall.Allow_only_Amazon_Alexa.dest='wan'
+uci set firewall.Allow_only_Amazon_Alexa.target='REJECT'
+uci set firewall.Allow_only_Amazon_Alexa.src='VOICE'
+uci set firewall.Allow_only_Amazon_Alexa.dest_port="$all_other_Amazon_Alexa_port"
 uci set firewall.Allow_only_Amazon_Alexa.enabled='1'
+
+uci set firewall.Allow_only_Amazon_Alexa_UDP=rule
+uci set firewall.Allow_only_Amazon_Alexa_UDP.name='Allow_only_AmazonAlexa_UDP'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.proto='udp'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.dest='wan'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.target='REJECT'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.src='VOICE'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.dest_port="$all_other_Amazon_Alexa_UDP_port"
 uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='1'
-uci set firewall.Allow_Only_WebClient1.enabled='1'
-uci set firewall.Allow_Only_WebClient2.enabled='1'
-uci set firewall.Allow_Only_WebClient3.enabled='1'
-uci set firewall.Allow_Only_WebClient4.enabled='1'
-uci set firewall.Allow_Only_WebClient5.enabled='1'
-uci set firewall.otherProt.enabled='1'
-uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
-}
 
-set_HS_Firewall_disable() {
-uci set firewall.OfficeClient.enabled='0'
-uci set firewall.OfficeWebClient.enabled='0'
-uci set firewall.Amazon_Alexa.enabled='0'
-uci set firewall.Amazon_Alexa_UDP.enabled='0'
-uci set firewall.Allow_only_OfficeClient.enabled='0'
-uci set firewall.Allow_only_OfficeWebClient.enabled='0'
-uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
-uci set firewall.Allow_Only_WebClient1.enabled='0'
-uci set firewall.Allow_Only_WebClient2.enabled='0'
-uci set firewall.Allow_Only_WebClient3.enabled='0'
-uci set firewall.Allow_Only_WebClient4.enabled='0'
-uci set firewall.Allow_Only_WebClient5.enabled='0'
-uci set firewall.otherProt.enabled='1'
-uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
-}
+#Google Assistent (Port)
+#uci set firewall.Allow_only_Google_assistent=rule
+
+#Telnet (Port)
+#23
+uci set firewall.Allow_only_TELNET=rule
+uci set firewall.Allow_only_TELNET.dest_port="$all_other_TELNET_port"
+uci set firewall.Allow_only_TELNET.src="*"
+uci set firewall.Allow_only_TELNET.name="Allow_only_Telnet"
+uci set firewall.Allow_only_TELNET.enabled="0"
+uci set firewall.Allow_only_TELNET.dest="wan"
+uci set firewall.Allow_only_TELNET.target="REJECT"
 
 
-set_firewall_ipset() {
+#SSH (Port)
+#22
+uci set firewall.Allow_only_SSH=rule
+uci set firewall.Allow_only_SSH.dest_port="$all_other_SSH_port"
+uci set firewall.Allow_only_SSH.src="*"
+uci set firewall.Allow_only_SSH.name="Allow_only_SSH"
+uci set firewall.Allow_only_SSH.dest="wan"
+uci set firewall.Allow_only_SSH.enabled="0"
+uci set firewall.Allow_only_SSH.dest="wan"
+uci set firewall.Allow_only_SSH.target="REJECT"
+
+
+#NTP
+#123
+uci set firewall.Allow_only_NTP=rule
+uci set firewall.Allow_only_NTP.dest_port="$all_other_NTP_port"
+uci set firewall.Allow_only_NTP.src="*"
+uci set firewall.Allow_only_NTP.name="Allow_only_NTP"
+uci set firewall.Allow_only_NTP.enabled="0"
+uci set firewall.Allow_only_NTP.dest="wan"
+uci set firewall.Allow_only_NTP.target="REJECT"
+
+#smtp
+#"25 465 587"
+uci set firewall.Allow_only_SMTP=rule
+uci set firewall.Allow_only_SMTP.dest_port="$all_other_SMTP_port"
+uci set firewall.Allow_only_SMTP.src="*"
+uci set firewall.Allow_only_SMTP.name="Allow_only_SMTP"
+uci set firewall.Allow_only_SMTP.enabled="0"
+uci set firewall.Allow_only_SMTP.dest="wan"
+uci set firewall.Allow_only_SMTP.target="REJECT"
+
+
+#POP3 Port
+#POP3_PORT="110 995"
+uci set firewall.Allow_only_POP3=rule
+uci set firewall.Allow_only_POP3.dest_port="$all_other_POP3_port"
+uci set firewall.Allow_only_POP3.src="*"
+uci set firewall.Allow_only_POP3.name="Allow_only_POP3"
+uci set firewall.Allow_only_POP3.enabled="0"
+uci set firewall.Allow_only_POP3.dest="wan"
+uci set firewall.Allow_only_POP3.target="REJECT"
+
+
+#IMAP4 Port
+#IMAP_PORT="143 993 626"
+uci set firewall.Allow_only_IMAP4=rule
+uci set firewall.Allow_only_IMAP4.dest_port="$all_other_IMAP_port"
+uci set firewall.Allow_only_IMAP4.src="*"
+uci set firewall.Allow_only_IMAP4.name="Allow_only_IMAP4"
+uci set firewall.Allow_only_IMAP4.enabled="0"
+uci set firewall.Allow_only_IMAP4.dest="wan"
+uci set firewall.Allow_only_IMAP4.target="REJECT"
+
+
+#KERBEROS
+#"88 749"
+uci set firewall.Allow_only_KERBEROS=rule
+uci set firewall.Allow_only_KERBEROS.dest_port="$all_other_KERBEROS_port"
+uci set firewall.Allow_only_KERBEROS.src="*"
+uci set firewall.Allow_only_KERBEROS.name="Allow_only_KERBEROS"
+uci set firewall.Allow_only_KERBEROS.enabled="0"
+uci set firewall.Allow_only_KERBEROS.dest="wan"
+uci set firewall.Allow_only_KERBEROS.proto="tcp"
+uci set firewall.Allow_only_KERBEROS.target="REJECT"
+
+
+#Password_Server
+#"106"
+uci set firewall.Allow_only_PASSWDSRV=rule
+uci set firewall.Allow_only_PASSWDSRV.dest_port="$all_other_PASSWDSRV_port"
+uci set firewall.Allow_only_PASSWDSRV.src="*"
+uci set firewall.Allow_only_PASSWDSRV.name="Allow_only_PASWD_SRV"
+uci set firewall.Allow_only_PASSWDSRV.enabled="0"
+uci set firewall.Allow_only_PASSWDSRV.dest="wan"
+uci set firewall.Allow_only_PASSWDSRV.proto="tcp"
+uci set firewall.Allow_only_PASSWDSRV.target="REJECT"
+
+#LDAP
+#"389 636"
+uci set firewall.Allow_only_LDAP=rule
+uci set firewall.Allow_only_LDAP.dest_port="$all_other_LDAP_port"
+uci set firewall.Allow_only_LDAP.src="*"
+uci set firewall.Allow_only_LDAP.name="Allow_only_LDAP"
+uci set firewall.Allow_only_LDAP.enabled="0"
+uci set firewall.Allow_only_LDAP.dest="wan"
+uci set firewall.Allow_only_LDAP.proto="tcp"
+uci set firewall.Allow_only_LDAP.target="REJECT"
+
+
+#RPC
+#"111"
+uci set firewall.Allow_only_RPC=rule
+uci set firewall.Allow_only_RPC.dest_port="$all_other_RPC_port"
+uci set firewall.Allow_only_RPC.src="*"
+uci set firewall.Allow_only_RPC.name="Allow_only_RPC"
+uci set firewall.Allow_only_RPC.enabled="0"
+uci set firewall.Allow_only_RPC.dest="wan"
+uci set firewall.Allow_only_RPC.proto="tcp"
+uci set firewall.Allow_only_RPC.target="REJECT"
+
+#NNTP
+#"119"
+uci set firewall.Allow_only_NNTP=rule
+uci set firewall.Allow_only_NNTP.dest_port="$all_other_NNTP_port"
+uci set firewall.Allow_only_NNTP.src="*"
+uci set firewall.Allow_only_NNTP.name="Allow_only_NNTP"
+uci set firewall.Allow_only_NNTP.enabled="0"
+uci set firewall.Allow_only_NNTP.dest="wan"
+uci set firewall.Allow_only_NNTP.proto="tcp"
+uci set firewall.Allow_only_NNTP.target="REJECT"
+
+#Real Time Streaming Protocol (RTSP)
+#"554"
+uci set firewall.Allow_only_RTSP=rule
+uci set firewall.Allow_only_RTSP.dest_port="$all_other_RTSP_port"
+uci set firewall.Allow_only_RTSP.src="*"
+uci set firewall.Allow_only_RTSP.name="Allow_only_RTSP"
+uci set firewall.Allow_only_RTSP.enabled="0"
+uci set firewall.Allow_only_RTSP.dest="wan"
+uci set firewall.Allow_only_RTSP.target="REJECT"
+
+
+#PiHole Port
+#PIHOLE_PORT="81"
+#PIHOLE_FTL_PORT="4711"
+uci set firewall.Allow_only_PIHOLE=rule
+uci set firewall.Allow_only_PIHOLE.dest_port="$all_other_all_PIHOLE_port"
+uci set firewall.Allow_only_PIHOLE.src="*"
+uci set firewall.Allow_only_PIHOLE.name="Allow_only_PiHole"
+uci set firewall.Allow_only_PIHOLE.enabled="0"
+uci set firewall.Allow_only_PIHOLE.dest="wan"
+uci set firewall.Allow_only_PIHOLE.target="REJECT"
+
+#Privoxy Port
+#PRIVOXY_PORT="8188"
+uci set firewall.Allow_only_PRIVOXY=rule
+uci set firewall.Allow_only_PRIVOXY.dest_port="$all_other_PRIVOXY_port"
+uci set firewall.Allow_only_PRIVOXY.src="*"
+uci set firewall.Allow_only_PRIVOXY.name="Allow_only_PRIVOXY"
+uci set firewall.Allow_only_PRIVOXY.enabled="0"
+uci set firewall.Allow_only_PRIVOXY.dest="wan"
+uci set firewall.Allow_only_PRIVOXY.target="REJECT"
+
+
+#NTOPNG Port
+#NTOPNG_PORT="3000"
+uci set firewall.Allow_only_NTOPNG=rule
+uci set firewall.Allow_only_NTOPNG.dest_port="$all_other_NTOPNG_port"
+uci set firewall.Allow_only_NTOPNG.src="*"
+uci set firewall.Allow_only_NTOPNG.name="Allow_only_NTOPNG"
+uci set firewall.Allow_only_NTOPNG.enabled="0"
+uci set firewall.Allow_only_NTOPNG.dest="wan"
+uci set firewall.Allow_only_NTOPNG.target="REJECT"
+
+
+#SDNS ports
+#DNS_PORT="853"
+uci set firewall.Allow_only_SDNS=rule
+uci set firewall.Allow_only_SDNS.dest_port="$all_other_SDNS_port"
+uci set firewall.Allow_only_SDNS.src="*"
+uci set firewall.Allow_only_SDNS.name="Allow_only_SDNS"
+uci set firewall.Allow_only_SDNS.enabled="0"
+uci set firewall.Allow_only_SDNS.dest="wan"
+uci set firewall.Allow_only_SDNS.target="REJECT"
+
+
+#UBOUND_DNS
+uci set firewall.Allow_only_UNBOUND=rule
+uci set firewall.Allow_only_UNBOUND.dest_port="$all_other_DNS_UNBOUND_port"
+uci set firewall.Allow_only_UNBOUND.src="*"
+uci set firewall.Allow_only_UNBOUND.name="Allow_only_UNBOUND"
+uci set firewall.Allow_only_UNBOUND.enabled="0"
+uci set firewall.Allow_only_UNBOUND.dest="wan"
+uci set firewall.Allow_only_UNBOUND.target="REJECT"
+
+
+#STUBBY_DNS
+uci set firewall.Allow_only_STUBBY=rule
+uci set firewall.Allow_only_STUBBY.dest_port="$all_other_DNS_STUBBY_port"
+uci set firewall.Allow_only_STUBBY.src="*"
+uci set firewall.Allow_only_STUBBY.name="Allow_only_STUBBY"
+uci set firewall.Allow_only_STUBBY.enabled="0"
+uci set firewall.Allow_only_STUBBY.dest="wan"
+uci set firewall.Allow_only_STUBBY.target="REJECT"
+
+
+#DNS_CRYPT
+uci set firewall.Allow_only_DNS_CRYPT=rule
+uci set firewall.Allow_only_DNS_CRYPT.dest_port="$all_other_DNS_CRYPT_port"
+uci set firewall.Allow_only_DNS_CRYPT.src="*"
+uci set firewall.Allow_only_DNS_CRYPT.name="Allow_only_DNS_CRYPT"
+uci set firewall.Allow_only_DNS_CRYPT.enabled="0"
+uci set firewall.Allow_only_DNS_CRYPT.dest="wan"
+uci set firewall.Allow_only_DNS_CRYPT.target="REJECT"
+
+
+#TOR_DNS
+uci set firewall.Allow_only_TOR_DNS=rule
+uci set firewall.Allow_only_TOR_DNS.dest_port="$all_other_DNS_TOR_port"
+uci set firewall.Allow_only_TOR_DNS.src="*"
+uci set firewall.Allow_only_TOR_DNS.name="Allow_only_TOR_DNS"
+uci set firewall.Allow_only_TOR_DNS.enabled="0"
+uci set firewall.Allow_only_TOR_DNS.dest="wan"
+uci set firewall.Allow_only_TOR_DNS.target="REJECT"
+
+
+#Bittorrent (Ports)
+#6881-6999
+uci set firewall.Allow_only_BITTORENT=rule
+uci set firewall.Allow_only_BITTORENT.dest_port="$all_other_Bittorrent_port"
+uci set firewall.Allow_only_BITTORENT.src="*"
+uci set firewall.Allow_only_BITTORENT.name="Allow_only_BITTORENT"
+uci set firewall.Allow_only_BITTORENT.enabled="0"
+uci set firewall.Allow_only_BITTORENT.dest="wan"
+uci set firewall.Allow_only_BITTORENT.target="REJECT"
+
+
+#eMule (Ports)
+#4662, 4672
+uci set firewall.Allow_only_eMule=rule
+uci set firewall.Allow_only_eMule.dest_port="$all_other_eMule_port"
+uci set firewall.Allow_only_eMule.src="*"
+uci set firewall.Allow_only_eMule.name="Allow_only_eMule"
+uci set firewall.Allow_only_eMule.enabled="0"
+uci set firewall.Allow_only_eMule.dest="wan"
+uci set firewall.Allow_only_eMule.target="REJECT"
+
+#RemoteAccess (Ports)
+#40443-40446
+uci set firewall.Allow_only_RemoteAccess=rule
+uci set firewall.Allow_only_RemoteAccess.dest_port="$all_other_Acces_http_port"
+uci set firewall.Allow_only_RemoteAccess.src="*"
+uci set firewall.Allow_only_RemoteAccess.name="Allow_only_RemoteAccess"
+uci set firewall.Allow_only_RemoteAccess.enabled="0"
+uci set firewall.Allow_only_RemoteAccess.dest="wan"
+uci set firewall.Allow_only_RemoteAccess.target="REJECT"
+
+#FTP-Server  (Ports)
+#20-21
+uci set firewall.Allow_only_FTP_Server=rule
+uci set firewall.Allow_only_FTP_Server.dest_port="$all_other_FTP_port"
+uci set firewall.Allow_only_FTP_Server.src="*"
+uci set firewall.Allow_only_FTP_Server.name="Allow_only_FTP"
+uci set firewall.Allow_only_FTP_Server.enabled="0"
+uci set firewall.Allow_only_FTP_Server.dest="wan"
+uci set firewall.Allow_only_FTP_Server.target="REJECT"
+
+
+#Hohe Ziel (Ports)
+#TCP 
+#10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
+uci set firewall.Allow_only_EXT_HEIGHT_PORT=rule
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.dest_port="$all_other_EXT_HEIGHT_PORT_port"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.src="*"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.name="Allow_only_EXT_HEIGHT_PORT"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.proto="tcp"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.dest="wan"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.target="REJECT"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT.enabled="0"
+
+
+#UDP
+#9000-33433, 33435-40316, 40318-49316, 49318-65535
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP=rule
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.dest_port="$all_other_EXT_HEIGHT_PORT_UDP_port"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.src="*"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.name="Allow_only_EXT_HEIGHT_PORT_UDP"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.proto="udp"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.dest="wan"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.target="REJECT"
+uci set firewall.Allow_only_EXT_HEIGHT_PORT_UDP.enabled="0"
+
+
+#HTTP_s (Ports)
+#80, 443, 8080
+uci set firewall.Allow_only_HTTP_s=rule
+uci set firewall.Allow_only_HTTP_s.dest_port="$all_other_HTTP_s_port"
+uci set firewall.Allow_only_HTTP_s.src="*"
+uci set firewall.Allow_only_HTTP_s.name="Allow_only_HTTP_s"
+uci set firewall.Allow_only_HTTP_s.enabled="0"
+uci set firewall.Allow_only_HTTP_s.dest="wan"
+uci set firewall.Allow_only_HTTP_s.target="REJECT"
+
+
+#MSRDP _ Alexa Call (Ports)
+#3389
+uci set firewall.Allow_only_MSRDP_AlexaCall=rule
+uci set firewall.Allow_only_MSRDP_AlexaCall.dest_port="$all_other_MSRDP_AlexaCall_port"
+uci set firewall.Allow_only_MSRDP_AlexaCall.src="*"
+uci set firewall.Allow_only_MSRDP_AlexaCall.name="Allow_only_MSRDP_AlexaCall"
+uci set firewall.Allow_only_MSRDP_AlexaCall.enabled="0"
+uci set firewall.Allow_only_MSRDP_AlexaCall.dest="wan"
+uci set firewall.Allow_only_MSRDP_AlexaCall.target="REJECT"
+
+
+#Skype
+#tcp "38562 1000:10000 50000:65000 16000:26000"
+#udp "38562 3478:3481 50000:60000"
+uci set firewall.Allow_only_SKYPE=rule
+uci set firewall.Allow_only_SKYPE.dest_port="$all_other_Skype_port"
+uci set firewall.Allow_only_SKYPE.src="*"
+uci set firewall.Allow_only_SKYPE.name="Allow_only_Skype"
+uci set firewall.Allow_only_SKYPE.proto="tcp"
+uci set firewall.Allow_only_SKYPE.enabled="0"
+uci set firewall.Allow_only_SKYPE.dest="wan"
+uci set firewall.Allow_only_SKYPE.target="REJECT"
+
+uci set firewall.Allow_only_SKYPE_UDP=rule
+uci set firewall.Allow_only_SKYPE_UDP.dest_port="$all_other_Skype_udp_port"
+uci set firewall.Allow_only_SKYPE_UDP.src="*"
+uci set firewall.Allow_only_SKYPE_UDP.name="Allow_only_Skype_UDP"
+uci set firewall.Allow_only_SKYPE_UDP.proto="udp"
+uci set firewall.Allow_only_SKYPE_UDP.enabled="0"
+uci set firewall.Allow_only_SKYPE_UDP.dest="wan"
+uci set firewall.Allow_only_SKYPE_UDP.target="REJECT"
+
+
+#Torrc (Ports)
+#9030, 9040, 9049, 9050, 9053, 9060
+uci set firewall.Allow_only_TORRC=rule
+uci set firewall.Allow_only_TORRC.dest_port="$all_other_TORRC_port"
+uci set firewall.Allow_only_TORRC.src="*"
+uci set firewall.Allow_only_TORRC.name="Allow_only_Torrc"
+uci set firewall.Allow_only_TORRC.enabled="0"
+uci set firewall.Allow_only_TORRC.dest="wan"
+uci set firewall.Allow_only_TORRC.target="REJECT"
+
+
+
+#AVM Mesh
+#TCP
+#50842
+uci set firewall.Allow_only_AVM_Mesh=rule
+uci set firewall.Allow_only_AVM_Mesh.dest_port="$all_other_AVM_Mesh_port"
+uci set firewall.Allow_only_AVM_Mesh.proto="tcp udp"
+uci set firewall.Allow_only_AVM_Mesh.src="*"
+uci set firewall.Allow_only_AVM_Mesh.enabled="0"
+uci set firewall.Allow_only_AVM_Mesh.name="Allow_only_AVM_Mesh"
+uci set firewall.Allow_only_AVM_Mesh.dest="wan"
+uci set firewall.Allow_only_AVM_Mesh.target="REJECT"
+
+
+#FRITZ!Box 
+#8183
+uci set firewall.Allow_only_AVM=rule
+uci set firewall.Allow_only_AVM.dest_port="$all_other_AVM_port"
+uci set firewall.Allow_only_AVM.src="*"
+uci set firewall.Allow_only_AVM.name="Allow_only_AVM"
+uci set firewall.Allow_only_AVM.enabled="0"
+uci set firewall.Allow_only_AVM.dest="wan"
+uci set firewall.Allow_only_AVM.target="REJECT"
+
+#Telefonie (SOP, RTP, RTCP)
+#7077-7097
+uci set firewall.Allow_only_Telephonie=rule
+uci set firewall.Allow_only_Telephonie.dest_port="$all_other_SIP_RTP_RTCP_port"
+uci set firewall.Allow_only_Telephonie.src="*"
+uci set firewall.Allow_only_Telephonie.name="Allow_only_Telephonie_SIP_RTP_RTCP"
+uci set firewall.Allow_only_Telephonie.enabled="0"
+uci set firewall.Allow_only_Telephonie.dest="wan"
+uci set firewall.Allow_only_Telephonie.target="REJECT"
+
+
+#Telefonie (SIP)
+#5060
+uci set firewall.Allow_only_SIP=rule
+uci set firewall.Allow_only_SIP.dest_port="$all_other_SIP_port"
+uci set firewall.Allow_only_SIP.src="*"
+uci set firewall.Allow_only_SIP.name="Allow_only_SIP_Telephonie"
+uci set firewall.Allow_only_SIP.enabled="0"
+uci set firewall.Allow_only_SIP.dest="wan"
+uci set firewall.Allow_only_SIP.target="REJECT"
+
+#Link Local Multicast Name Resolution (LLMNR)
+#5357
+uci set firewall.Allow_only_LLMNR=rule
+uci set firewall.Allow_only_LLMNR.dest_port="$all_other_LLMNR_port"
+uci set firewall.Allow_only_LLMNR.src="*"
+uci set firewall.Allow_only_LLMNR.name="Allow_only_LLMNR"
+uci set firewall.Allow_only_LLMNR.enabled="0"
+uci set firewall.Allow_only_LLMNR.dest="wan"
+uci set firewall.Allow_only_LLMNR.target="REJECT"
+
+#Multicast Domain Name Service (mDNS)
+#5353
+uci set firewall.Allow_only_mDNS=rule
+uci set firewall.Allow_only_mDNS.dest_port="$all_other_mDNS_port"
+uci set firewall.Allow_only_mDNS.src="*"
+uci set firewall.Allow_only_mDNS.name="Allow_only_mDNS"
+uci set firewall.Allow_only_mDNS.enabled="0"
+uci set firewall.Allow_only_mDNS.dest="wan"
+uci set firewall.Allow_only_mDNS.target="REJECT"
+
+#Port Control Protocol (PCP)
+#5351
+uci set firewall.Allow_only_PCP=rule
+uci set firewall.Allow_only_PCP.dest_port="$all_other_PCP_port"
+uci set firewall.Allow_only_PCP.src="*"
+uci set firewall.Allow_only_PCP.name="Allow_only_PCP"
+uci set firewall.Allow_only_PCP.enabled="0"
+uci set firewall.Allow_only_PCP.dest="wan"
+uci set firewall.Allow_only_PCP.target="REJECT"
+
+#Web Services Dynamic Discovery (WS-Discovery)
+#UDP
+#3702
+uci set firewall.Allow_only_WS_Discovery=rule
+uci set firewall.Allow_only_WS_Discovery.dest_port="$all_other_WS_Discovery_port"
+uci set firewall.Allow_only_WS_Discovery.proto="udp tcp"
+uci set firewall.Allow_only_WS_Discovery.src="*"
+uci set firewall.Allow_only_WS_Discovery.enabled="0"
+uci set firewall.Allow_only_WS_Discovery.name="Allow_only_WS_Discovery"
+uci set firewall.Allow_only_WS_Discovery.dest="wan"
+uci set firewall.Allow_only_WS_Discovery.target="REJECT"
+
+#Simple Service Discovery Protocol (SSDP)
+#UDP
+#1900
+uci set firewall.Allow_only_SSDP=rule
+uci set firewall.Allow_only_SSDP.dest_port="$all_other_SSDP_port"
+uci set firewall.Allow_only_SSDP.proto="udp"
+uci set firewall.Allow_only_SSDP.src="*"
+uci set firewall.Allow_only_SSDP.enabled="0"
+uci set firewall.Allow_only_SSDP.name="Allow_only_SSDP"
+uci set firewall.Allow_only_SSDP.dest="wan"
+uci set firewall.Allow_only_SSDP.target="REJECT"
+
+#WINS
+#UDP
+#137
+uci set firewall.Allow_only_WINS=rule
+uci set firewall.Allow_only_WINS.dest_port="$all_other_WINS_port"
+uci set firewall.Allow_only_WINS.proto="udp"
+uci set firewall.Allow_only_WINS.src="*"
+uci set firewall.Allow_only_WINS.enabled="0"
+uci set firewall.Allow_only_WINS.name="Allow_only_WINS"
+uci set firewall.Allow_only_WINS.dest="wan"
+uci set firewall.Allow_only_WINS.target="REJECT"
+
+
+#NetBIOS
+#UDP
+#138
+uci set firewall.Allow_only_NetBIOS=rule
+uci set firewall.Allow_only_NetBIOS.dest_port="$all_other_NetBIOS_port"
+uci set firewall.Allow_only_NetBIOS.proto="udp"
+uci set firewall.Allow_only_NetBIOS.src="*"
+uci set firewall.Allow_only_NetBIOS.enabled="0"
+uci set firewall.Allow_only_NetBIOS.name="Allow_only_NetBIOS"
+uci set firewall.Allow_only_NetBIOS.dest="wan"
+uci set firewall.Allow_only_NetBIOS.target="REJECT"
+
+
+#Syslog
+#UDP
+#514
+uci set firewall.Allow_only_Syslog=rule
+uci set firewall.Allow_only_Syslog.dest_port="$all_other_Syslog_port"
+uci set firewall.Allow_only_Syslog.proto="udp"
+uci set firewall.Allow_only_Syslog.src="*"
+uci set firewall.Allow_only_Syslog.enabled="0"
+uci set firewall.Allow_only_Syslog.name="Allow_only_Syslog"
+uci set firewall.Allow_only_Syslog.dest="wan"
+uci set firewall.Allow_only_Syslog.target="REJECT"
+
+
+#Open Directory Proxy (ODProxy)
+#TCP
+#625
+uci set firewall.Allow_only_ODProxy=rule
+uci set firewall.Allow_only_ODProxy.dest_port="$all_other_ODProxy_port"
+uci set firewall.Allow_only_ODProxy.proto="tcp"
+uci set firewall.Allow_only_ODProxy.src="*"
+uci set firewall.Allow_only_ODProxy.enabled="0"
+uci set firewall.Allow_only_ODProxy.name="Allow_only_SSDP"
+uci set firewall.Allow_only_ODProxy.dest="wan"
+uci set firewall.Allow_only_ODProxy.target="REJECT"
+
+
+#Unbekannt
+#1012
+ 
+#VPN (IPSec IKE)
+#UDP
+#4500
+uci set firewall.Allow_only_VPN=rule
+uci set firewall.Allow_only_VPN.dest_port="$all_other_VPN_port"
+uci set firewall.Allow_only_VPN.src="*"
+uci set firewall.Allow_only_VPN.name="Allow_only_VPN"
+uci set firewall.Allow_only_VPN.enabled="0"
+uci set firewall.Allow_only_VPN.dest="wan"
+uci set firewall.Allow_only_VPN.target="REJECT"
+
+#SMB_CISC-Freigabe
+#445, 139, 138, 137
+uci set firewall.Allow_only_SMB=rule
+uci set firewall.Allow_only_SMB.dest_port="$all_other_SMB_port"
+uci set firewall.Allow_only_SMB.src="*"
+uci set firewall.Allow_only_SMB.name="Allow_only_SMB_Share"
+uci set firewall.Allow_only_SMB.enabled="0"
+uci set firewall.Allow_only_SMB.dest="wan"
+uci set firewall.Allow_only_SMB.target="REJECT"
+
+#AFP-Freigabe
+#548
+uci set firewall.Allow_only_AFP=rule
+uci set firewall.Allow_only_AFP.dest_port="$all_other_AFP_port"
+uci set firewall.Allow_only_AFP.src="*"
+uci set firewall.Allow_only_AFP.proto="tcp"
+uci set firewall.Allow_only_AFP.name="Allow_only_AFP_Share"
+uci set firewall.Allow_only_AFP.enabled="0"
+uci set firewall.Allow_only_AFP.dest="wan"
+uci set firewall.Allow_only_AFP.target="REJECT"
+
+#NFS
+#"2049"
+uci set firewall.Allow_only_NFS=rule
+uci set firewall.Allow_only_NFS.dest_port="$all_other_NFS_port"
+uci set firewall.Allow_only_NFS.src="*"
+uci set firewall.Allow_only_NFS.name="Allow_only_NFS_SHARE"
+uci set firewall.Allow_only_NFS.enabled="0"
+uci set firewall.Allow_only_NFS.dest="wan"
+uci set firewall.Allow_only_NFS.proto="tcp"
+uci set firewall.Allow_only_NFS.target="REJECT"
+
+#NTP
+#UDP
+#123
+uci set firewall.Allow_only_NTP=rule
+uci set firewall.Allow_only_NTP.dest_port="$all_other_NTP_port"
+uci set firewall.Allow_only_NTP.proto="udp"
+uci set firewall.Allow_only_NTP.src="*"
+uci set firewall.Allow_only_NTP.enabled="0"
+uci set firewall.Allow_only_NTP.name="Allow_only_NTP"
+uci set firewall.Allow_only_NTP.dest="wan"
+uci set firewall.Allow_only_NTP.target="REJECT"
+
+#Printer_LPR_IPP
+#"9100 515 631"
+uci set firewall.Allow_only_PRINTER=rule
+uci set firewall.Allow_only_PRINTER.dest_port="$all_other_Printer_port"
+uci set firewall.Allow_only_PRINTER.src="*"
+uci set firewall.Allow_only_PRINTER.name="Allow_only_Printer_LPR"
+uci set firewall.Allow_only_PRINTER.enabled="0"
+uci set firewall.Allow_only_PRINTER.dest="wan"
+uci set firewall.Allow_only_PRINTER.proto="tcp"
+uci set firewall.Allow_only_PRINTER.target="REJECT"
+
+
+#DHCP
+#UDP
+#67
+uci set firewall.Allow_only_DHCP=rule
+uci set firewall.Allow_only_DHCP.dest_port="$all_other_DHCP_port"
+uci set firewall.Allow_only_DHCP.proto="udp"
+uci set firewall.Allow_only_DHCP.name="Allow_only_DHCP"
+uci set firewall.Allow_only_DHCP.src="*"
+uci set firewall.Allow_only_DHCP.dest="wan"
+uci set firewall.Allow_only_DHCP.target="REJECT"
+uci set firewall.Allow_only_DHCP.enabled="0"
+
+
+#UPNP
+#49000
+uci set firewall.Allow_only_UPNP=rule
+uci set firewall.Allow_only_UPNP.dest_port="$all_other_UPMP_port"
+uci set firewall.Allow_only_UPNP.src="*"
+uci set firewall.Allow_only_UPNP.name="Allow_only_UPNP"
+uci set firewall.Allow_only_UPNP.dest="wan"
+uci set firewall.Allow_only_UPNP.target="REJECT"
+uci set firewall.Allow_only_UPNP.enabled="0"
+
+
+uci set firewall.Allow_Only_WebClient1=rule
+uci set firewall.Allow_Only_WebClient1.src='CONTROL'
+uci set firewall.Allow_Only_WebClient1.dest='wan'
+uci set firewall.Allow_Only_WebClient1.name='Allow_only_WebClient_CONTROL'
+uci set firewall.Allow_Only_WebClient1.target='REJECT'
+uci set firewall.Allow_Only_WebClient1.dest_port="$all_other_OfficeWebClient_port"
+
+
+uci set firewall.Allow_Only_WebClient2=rule
+uci set firewall.Allow_Only_WebClient2.src='HCONTROL'
+uci set firewall.Allow_Only_WebClient2.dest='wan'
+uci set firewall.Allow_Only_WebClient2.name='Allow_only_WebClient_HCONTROL'
+uci set firewall.Allow_Only_WebClient2.target='REJECT'
+uci set firewall.Allow_Only_WebClient2.dest_port="$all_other_OfficeWebClient_port"
+
+uci set firewall.Allow_Only_WebClient3=rule
+uci set firewall.Allow_Only_WebClient3.src='SERVER'
+uci set firewall.Allow_Only_WebClient3.dest='wan'
+uci set firewall.Allow_Only_WebClient3.name='Allow_only_WebClient_SERVER'
+uci set firewall.Allow_Only_WebClient3.target='REJECT'
+uci set firewall.Allow_Only_WebClient3.dest_port="$all_other_OfficeWebClient_port"
+
+
+uci set firewall.Allow_Only_WebClient4=rule
+uci set firewall.Allow_Only_WebClient4.src='GUEST'
+uci set firewall.Allow_Only_WebClient4.dest='wan'
+uci set firewall.Allow_Only_WebClient4.name='Allow_only_WebClient_GUEST'
+uci set firewall.Allow_Only_WebClient4.target='REJECT'
+uci set firewall.Allow_Only_WebClient4.dest_port="$all_other_OfficeWebClient_port"
+
+uci set firewall.Allow_Only_WebClient5=rule
+uci set firewall.Allow_Only_WebClient5.src='ENTERTAIN'
+uci set firewall.Allow_Only_WebClient5.dest='wan'
+uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_ENTERTAIN'
+uci set firewall.Allow_Only_WebClient5.target='REJECT'
+uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
+
+uci set firewall.Allow_Only_WebClient6=rule
+uci set firewall.Allow_Only_WebClient6.src='CMOVIE'
+uci set firewall.Allow_Only_WebClient6.dest='wan'
+uci set firewall.Allow_Only_WebClient6.name='Allow_only_WebClient_CMOVIE'
+uci set firewall.Allow_Only_WebClient6.target='REJECT'
+uci set firewall.Allow_Only_WebClient6.dest_port="$all_other_OfficeWebClient_port"
+
+uci set firewall.Allow_Only_WebClient7=rule
+uci set firewall.Allow_Only_WebClient7.src='LAN'
+uci set firewall.Allow_Only_WebClient7.dest='wan'
+uci set firewall.Allow_Only_WebClient7.name='Allow_only_WebClient_LAN'
+uci set firewall.Allow_Only_WebClient7.target='REJECT'
+uci set firewall.Allow_Only_WebClient7.dest_port="$all_other_OfficeWebClient_port"
+
+uci set firewall.Allow_Only_WebClient8=rule
+uci set firewall.Allow_Only_WebClient8.src='TELEKOM'
+uci set firewall.Allow_Only_WebClient8.dest='wan'
+uci set firewall.Allow_Only_WebClient8.name='Allow_only_WebClient_TELEKOM'
+uci set firewall.Allow_Only_WebClient8.target='REJECT'
+uci set firewall.Allow_Only_WebClient8.dest_port="$all_other_OfficeWebClient_port"
+
+
+
+
+#Hohe Ziel (Ports)
+#TCP 
+#10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT=rule
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.dest_port="$all_other_EXT_HEIGHT_PORT_port"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.src="*"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.name="Block_all_other_EXT_HEIGHT_PORT"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.proto="tcp"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.dest="wan"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.target="REJECT"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.enabled="0"
+
+
+#UDP
+#9000-33433, 33435-40316, 40318-49316, 49318-65535
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP=rule
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.dest_port="$all_other_EXT_HEIGHT_PORT_UDP_port"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.src="*"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.name="Block_all_other_EXT_HEIGHT_PORT_UDP"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.proto="udp"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.dest="wan"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.target="REJECT"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.enabled="0"
+
+
+
+#Sonstige Protokolle
+#ESP, GRE, ICMP, igmp
+uci set firewall.otherProt=rule
+uci set firewall.otherProt.proto="$all_other_porto"
+uci set firewall.otherProt.src="*"
+uci set firewall.otherProt.name="Block_all_Other_Protocolls"
+uci set firewall.otherProt.dest="wan"
+uci set firewall.otherProt.target="REJECT"
+uci set firewall.otherProt.enabled="1"
+
+uci set firewall.blockIncoming=rule
+uci set firewall.blockIncoming.proto="$all_proto"
+uci set firewall.blockIncoming.src="wan"
+uci set firewall.blockIncoming.name="Block_Incoming"
+uci set firewall.blockIncoming.dest="*"
+uci set firewall.blockIncoming.target="REJECT"
+uci set firewall.blockIncoming.enabled="1"
+
 # Configure IP sets
 uci -q delete firewall.filter
 uci set firewall.filter="ipset"
@@ -27616,63 +23038,53 @@ uci set firewall.filter6_fwd.proto="all"
 uci set firewall.filter6_fwd.target="ACCEPT"
 
 
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
-if [ "$SECURE_RULES" = "" ]
-        then
-             FW_HSactive='1'
-             set_HS_Firewall
-        elif [ "$SECURE_RULES" = "y" ]
-                then
-		FW_HSactive='1'
-                set_HS_Firewall
-        else
-              FW_HSactive='0'
-              set_HS_Firewall_disable
-fi
+uci commit firewall && reload_config >> install.log
+/etc/init.d/firewall restart >> install.log
 
-view_config
-
-cat << "EOF" > /etc/firewall.nat6 
+cat << EOF > /etc/firewall.nat6 
 iptables-save -t nat \
 | sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
 | ip6tables-restore -T nat
 EOF
-uci -q delete firewall.nat6 >/dev/null
-uci set firewall.nat6="include" >/dev/null
-uci set firewall.nat6.path="/etc/firewall.nat6" >/dev/null
-uci set firewall.nat6.reload="1" >/dev/null
+
+uci -q delete firewall.nat6 >> install.log
+uci set firewall.nat6="include" >> install.log
+uci set firewall.nat6.path="/etc/firewall.nat6" >> install.log
+uci set firewall.nat6.reload="1" >> install.log
  
 # Disable LAN to WAN forwarding
-uci rename firewall.@forwarding[0]="INET_INTERNET" >/dev/null
-uci set firewall.INET_INTERNET.enabled="0" >/dev/null
-uci commit firewall >/dev/null
-/etc/init.d/firewall restart >/dev/null
+uci rename firewall.@forwarding[0]="INET_INTERNET" >> install.log
+uci set firewall.INET_INTERNET.enabled="0" >> install.log
+uci commit firewall >> install.log
+/etc/init.d/firewall restart >> install.log
  
 # Configure ipset-dns
-uci set ipset-dns.@ipset-dns[0].ipset="filter" >/dev/null
-uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >/dev/null
-uci commit ipset-dns >/dev/null
-/etc/init.d/ipset-dns restart >/dev/null
+uci set ipset-dns.@ipset-dns[0].ipset="filter" >> install.log
+uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >> install.log
+uci commit ipset-dns >> install.log
+/etc/init.d/ipset-dns restart >> install.log
  
 # Resolve race conditions for ipset-dns
-cat << "EOF" > /etc/firewall.ipsetdns 
+cat << EOF > /etc/firewall.ipsetdns 
 /etc/init.d/ipset-dns restart 
 EOF 
-cat << "EOF" >> /etc/sysupgrade.conf
+
+cat << EOF >> /etc/sysupgrade.conf
 /etc/firewall.ipsetdns
 EOF
-uci -q delete firewall.ipsetdns >/dev/null
-uci set firewall.ipsetdns="include" >/dev/null
-uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >/dev/null
-uci set firewall.ipsetdns.reload="1" >/dev/null
-uci commit firewall >/dev/null
+uci -q delete firewall.ipsetdns >> install.log
+uci set firewall.ipsetdns="include" >> install.log
+uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >> install.log
+uci set firewall.ipsetdns.reload="1" >> install.log
+uci commit firewall >> install.log
 
-/etc/init.d/firewall restart >/dev/null
-/etc/init.d/dnsmasq restart >/dev/null
-/etc/init.d/network restart >/dev/null
-clear
+/etc/init.d/firewall restart >> install.log
+/etc/init.d/dnsmasq restart >> install.log
+/etc/init.d/network restart >> install.log
 
+echo
+echo 'On Error enter logread'
+echo
 }
 
 set_mountpoints() {
@@ -27702,30 +23114,37 @@ uci commit fstab
 }
 
 #-------------------------start---------------------------------------
-
-define_variables
+define_variables > install.log
 ask_parameter $1 $2 $3 $4 $5 $6
-#install_update
-#install_adguard
-set_tor
-set_stubby
-set_unbound
-create_unbound_url_filter
-create_dnsmasq_url_filter
-view_config
-customize_firmware
-#create_websites
+install_update >> install.log
+#install_adguard >> install.log
 
-create_network
-create_switch
-#create_custom_switch
-create_wlan
-create_firewall_zones
+service log restart
+
+set_tor >> install.log
+set_stubby >> install.log
+set_unbound >> install.log
+create_unbound_url_filter >> install.log
+create_dnsmasq_url_filter >> install.log
 view_config
 
-set_dhcp
-set_firewall_rules
-#set_mountpoints
+customize_firmware >> install.log
+create_hotspot >> install.log
+#create_websites >> install.log
+
+create_network >> install.log
+create_switch >> install.log
+create_wlan >> install.log
+create_firewall_zones >> install.log
+#create_MWAN >> install.log
+view_config
+
+set_dhcp >> install.log
+set_firewall_ipset >> install.log
+set_firewall_rules >> install.log
+#set_mountpoints >> install.log
+echo >> install.log
+logread >> install.log
 
 clear
 echo '########################################################'
@@ -27736,7 +23155,47 @@ echo '########################################################'
 echo
 echo 'Firewall-Rules activated and it will reboot now.'
 echo
-view_config
+echo 'Your Config is:'
 echo
-echo 'Enter to continue'
+echo 'Client-WiFi SSID:     '$INET_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$INET_net
+echo
+echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$HCONTROL_net
+echo
+echo 'Voice-Assistent SSID: '$VOICE_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$VOICE_net
+echo
+echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$ENTERTAIN_net
+echo
+echo 'Server-WiFi SSID:     '$SERVER_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$SERVER_net
+echo
+echo 'IR/BT-Control SSID:   '$CONTROL_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$CONTROL_net
+echo
+echo 'Guests SSID is:       '$GUEST_ssid
+echo 'Key:                  '$WIFI_PASS
+echo 'IP:                   '$GUEST_net
+echo
+echo 'IP-Address:           '$ACCESS_SERVER
+echo 'Gateway:              '$INET_GW
+echo 'Domain:               '$LOCAL_DOMAIN
+echo
+echo 'GUI-Access:           https://'$INET_ip':8443'
+echo 'User:                 '$USERNAME
+echo 'Password:             password'
+echo
+echo 'On Error enter logread'
+echo
+echo 'Please wait until Reboot ....'
+echo
+
 reboot 
