@@ -182,6 +182,7 @@ button,input,select,option,textarea {
 
 button {
 	box-shadow: rgba(0,0,0,0.8) 1.3px 1.3px 3.25px !important;
+	margin: 0.75em;
 }
 
 button::-moz-focus-inner,input::-moz-focus-inner {
@@ -1624,12 +1625,14 @@ button.btn::-moz-focus-inner,input[type=submit].btn::-moz-focus-inner {
 	background: linear-gradient(#fceec1,#eedc94);
 	border: 1px solid var(--border-color-low);
 	border-radius: 4px;
-	box-shadow: 1px 1px 1px var(--border-color-low);
+	box-shadow: 0.25em 0em 0.5em rgba(0,0,0,0.8) ,inset 0 1px 3px hsla(var(--border-color-low-hsl),.01);
 	white-space: unset;
 	border-color: var(--border-color-high) var(--border-color-high) var(--border-color-low);
-	padding: .5em .5em .25em;
+	padding: .5em .5em .5em;
+	margin: 0.5em !important;
 	text-shadow: none;
 }
+
 
 .alert-message .close {
 	margin-top: 1px
