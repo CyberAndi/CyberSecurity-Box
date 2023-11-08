@@ -246,8 +246,7 @@ body {
 #maincontent {
 	width: 100%;
 	max-width: 1024px;
-	margin-left: auto;
-	margin-right: auto;
+	margin: 0 auto 4em auto;
 	backdrop-filter: blur(3.5px) !important;
 	background-color: rgba(32,32,32,0.6) !important;
 	border-radius: 0.5em !important;
@@ -256,7 +255,7 @@ body {
 	box-shadow: 0.25em 0.25em 0.5em rgba(0,0,0,0.8);
 	overflow-wrap: break-word;
 	overflow-x: auto;
-	zoom: 1;
+	zoom: 1 !important;
 	}
 
 #maincontent:is(:hover,:active,:focus) {
@@ -729,13 +728,11 @@ input[readonly],select[readonly],textarea[readonly] {
 	margin: 3px
 }
 
-.actions,.cbi-page-actions {
-	background: var(--background-color-low);
-	margin-bottom: 18px;
-	border-top: 1px solid var(--border-color-medium);
-	border-radius: 0 0 3px 3px;
+.actions, .cbi-page-actions {
+	margin: 0.5em !important;
+	border-radius: 0.3em;
 	text-align: right;
-	padding: 17px 20px 18px 17px
+	padding: 17px 20px 18px 17px;
 }
 
 .actions .secondary-action a,.cbi-page-actions .secondary-action a {
