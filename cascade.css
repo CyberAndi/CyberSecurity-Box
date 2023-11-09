@@ -573,7 +573,7 @@ input,select,.cbi-select,.cbi-dropdown:not(.btn):not(.cbi-button) {
 }
 
 .cbi-dynlist > .item::after {
-	content: "Ã—";
+	content: "-";
 	position: absolute;
 	display: inline-flex;
 	align-items: center;
@@ -2279,7 +2279,8 @@ label[for],header [data-indicator][data-clickable],th[data-sortable-row] {
 }
 
 .cbi-dynlist > .add-item,.td.cbi-section-actions > * {
-	display: flex
+	display: flex;
+	margin: unset;
 }
 
 .cbi-select select option:hover,.cbi-dropdown[open] > ul.dropdown > li.focus {
