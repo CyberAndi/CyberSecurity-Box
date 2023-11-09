@@ -180,8 +180,45 @@ button,input,select,option,textarea {
 	margin: 0
 }
 
-button {
+button, .btn {
 	box-shadow: rgba(0,0,0,0.8) 1.3px 1.3px 3.25px !important;
+}
+
+:is(.left, .center, .right, .cbi-page-actions) :is(button, .btn) {
+	margin-bottom: 1em !important;
+	margin-top: 1em !important;
+}
+
+:is(.right, .cbi-page-actions) :is(button, .btn):last-child {
+	margin-right: 1em !important;
+}
+
+:is(.left, .cbi-page-actions) :is(button, .btn):first-child {
+	margin-left: 1em !important;
+}
+
+
+.right:has(button, .btn) {
+	position: relative;
+	margin-bottom: -0.5em;
+	right: -0.75em !important;
+}
+
+.left:has(button, .btn) {
+	position: relative;
+	margin-bottom: -0.5em;
+	left: -0.75em !important;
+}
+
+.add-item {
+	margin: 0.75em;
+}
+
+.add-item.control-group {
+	margin: unset;
+}
+
+#view > :is(button, .btn) {
 	margin: 0.75em;
 }
 
@@ -730,10 +767,9 @@ input[readonly],select[readonly],textarea[readonly] {
 }
 
 .actions, .cbi-page-actions {
-	margin: 0.5em !important;
+	margin: 0 !important;
 	border-radius: 0.3em;
 	text-align: right;
-	padding: 17px 20px 18px 17px;
 }
 
 .actions .secondary-action a,.cbi-page-actions .secondary-action a {
@@ -2282,6 +2318,16 @@ li.menu,.dropdown,.cbi-dropdown[open] {
 	color: var(--text-color-high)
 }
 
+#mwan3-service-status > .alert-message {
+	display: inline-block;
+	width: 15rem;
+	height: 6rem;
+	vertical-align: middle;
+	margin: 1rem;
+	padding: 1rem;
+	box-shadow: 0.25em 0.25em 0.5em rgba(0,0,0,0.8) !important;
+}
+
 .cbi-page-actions > *,.table.valign-middle .td {
 	vertical-align: middle
 }
@@ -2351,6 +2397,10 @@ tr.tr.cbi-section-table-descr.anonymous > .th.cbi-section-table-cell[data-widget
 	color: #000;
 }
 
+:not(#maincontent) > .alert-message {
+	box-shadow: 0.25em 0.25em 0.5em rgba(0,0,0,0.8), inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0px 8px rgba(var(--focus-color-rgb),1);
+	margin: 4em auto !important;
+}
 
 @keyframes flash {
 	50% {
