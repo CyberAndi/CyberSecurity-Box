@@ -185,16 +185,16 @@ button, .btn {
 }
 
 :is(.left, .center, .right, .cbi-page-actions) :is(button, .btn) {
-	margin-bottom: 1em !important;
-	margin-top: 1em !important;
+	margin-bottom: 0.75em !important;
+	margin-top: 0.75em !important;
 }
 
-:is(.right, .cbi-page-actions) :is(button, .btn):last-child {
-	margin-right: 1em !important;
+:is(.right, .cbi-page-actions) :is(button, .btn):last-of-type {
+	margin-right: 0.75em !important;
 }
 
-:is(.left, .cbi-page-actions) :is(button, .btn):first-child {
-	margin-left: 1em !important;
+:is(.left, .cbi-page-actions) :is(button, .btn):first-of-type {
+	margin-left: 0.75em !important;
 }
 
 
