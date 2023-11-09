@@ -239,14 +239,14 @@ read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 SECURE_RULES
 if [ "$SECURE_RULES" = "" ]
         then
              FW_HSactive='1'
-             set_HS_Firewall
+           #  set_HS_Firewall
         elif [ "$SECURE_RULES" = "y" ]
                 then
 		FW_HSactive='1'
-                set_HS_Firewall
+            #    set_HS_Firewall
         else
               FW_HSactive='0'
-              set_HS_Firewall_disable
+            #  set_HS_Firewall_disable
 fi
 
 SERVER_range='192.168.'$(($SUBNET_sep - 123))'.2,192.168.'$(($SUBNET_sep - 123))'.200,24h'
@@ -330,18 +330,20 @@ echo 'Please wait ....'
 echo
 echo 'On Error enter logread'
 echo
-/etc/init.d/dnsmasq stop >> install.log
-/etc/init.d/dnsmasq disable >> install.log
-opkg update >> install.log
-opkg remove dnsmasq >> install.log
+#/etc/init.d/dnsmasq stop >> install.log
+#/etc/init.d/dnsmasq disable >> install.log
+#opkg update >> install.log
+#opkg remove dnsmasq >> install.log
 opkg update >> install.log
 opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
 opkg update >> install.log
 #opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >> install.log
-opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full
+#opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full
+opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3
+
 echo 'install opkg'
 
-/etc/init.d/dnsmasq start >> install.log
+#/etc/init.d/dnsmasq start >> install.log
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -1173,8 +1175,8 @@ wait $processes
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/cascade.css -P /www/luci-static/bootstrap/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/luci-static/bootstrap/)
+#wait $processes1
+#processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/luci-static/bootstrap/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCRAStd.woff -P /www/luci-static/bootstrap/)
 wait $processes1
@@ -1206,8 +1208,8 @@ wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/theme_variable.css -P /www/CaptivePortal/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/prophetie.htm -P /www/CaptivePortal/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/CaptivePortal/)
+#wait $processes1
+#processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/CaptivePortal/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCRAStd.woff -P /www/CaptivePortal/)
 wait $processes1
@@ -1255,9 +1257,9 @@ processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-P
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMaske.png -P /www/CaptivePortal/pic/)
 wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMAskeSky.png -P /www/CaptivePortal/pic/)
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMaskeSky.png -P /www/CaptivePortal/pic/)
 wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMAskeSky_.png -P /www/CaptivePortal/pic/)
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/pic_upload/WarMaskeSky_.png -P /www/CaptivePortal/pic/)
 
 echo
 echo 'On Error enter logread'
@@ -18306,10 +18308,10 @@ uci set dhcp.SERVER.leasetime='24h'
 uci set dhcp.SERVER.dhcpv6='server'
 uci set dhcp.SERVER.domain=$SERVER_domain
 uci set dhcp.SERVER.local='/'$SERVER_domain'/'
-uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
-uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
-uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
+#uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
+#uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
+#uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
+#uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
 uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.CONTROL=dhcp
@@ -18320,10 +18322,10 @@ uci set dhcp.CONTROL.leasetime='24h'
 uci set dhcp.CONTROL.dhcpv6='server'
 uci set dhcp.CONTROL.domain=$CONTROL_domain
 uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
-uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
-uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip
-uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
+#uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
+#uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip
+#uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
+#uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
 uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.HCONTROL=dhcp
@@ -18334,10 +18336,10 @@ uci set dhcp.HCONTROL.leasetime='24h'
 uci set dhcp.HCONTROL.dhcpv6='server'
 uci set dhcp.HCONTROL.domain=$HCONTROL_domain
 uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
-uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
-uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
-uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
+#uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
+#uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
+#uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
+#uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
 uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.INET=dhcp
@@ -18348,10 +18350,10 @@ uci set dhcp.INET.leasetime='24h'
 uci set dhcp.INET.dhcpv6='server'
 uci set dhcp.INET.domain=$INET_domain
 uci set dhcp.INET.local='/'$INET_domain'/'
-uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
-uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
-uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
+#uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
+#uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
+#uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
+#uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
 uci set dhcp.INET.server=$INET_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.ENTERTAIN=dhcp
@@ -18362,10 +18364,10 @@ uci set dhcp.ENTERTAIN.leasetime='24h'
 uci set dhcp.ENTERTAIN.dhcpv6='server'
 uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
 uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
-uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
-uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
-uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
+#uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
+#uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
+#uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
+#uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
 uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.VOICE=dhcp
@@ -18376,10 +18378,10 @@ uci set dhcp.VOICE.leasetime='24h'
 uci set dhcp.VOICE.dhcpv6='server'
 uci set dhcp.VOICE.domain=$VOICE_domain
 uci set dhcp.VOICE.local='/'$VOICE_domain'/'
-uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
-uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
-uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
+#uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
+#uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
+#uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
+#uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
 uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_UNBOUND_port
 
 uci set dhcp.GUEST=dhcp
@@ -18390,10 +18392,10 @@ uci set dhcp.GUEST.leasetime='24h'
 uci set dhcp.GUEST.dhcpv6='server'
 uci set dhcp.GUEST.domain=$GUEST_domain
 uci set dhcp.GUEST.local='/'$GUEST_domain'/'
-uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
-uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
-uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
+#uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
+#uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
+#uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
+#uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
 uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_UNBOUND_port
 uci commit && reload_config
 
@@ -18405,10 +18407,10 @@ uci set dhcp.CMOVIE.leasetime='24h'
 uci set dhcp.CMOVIE.dhcpv6='server'
 uci set dhcp.CMOVIE.domain=$CMOVIE_domain
 uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
-uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
-uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
-uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
+#uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
+#uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
+#uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
+#uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
 uci set dhcp.CMOVIE.server=$GUEST_ip'#'$DNS_UNBOUND_port
 uci commit && reload_config
 
@@ -18420,10 +18422,10 @@ uci set dhcp.TELEKOM.leasetime='24h'
 uci set dhcp.TELEKOM.dhcpv6='server'
 uci set dhcp.TELEKOM.domain=$TELEKOM_domain
 uci set dhcp.TELEKOM.local='/'$TELEKOM_domain'/'
-uci add_list dhcp.TELEKOM.dhcp_option='6,'$CMOVIE_ip 
-uci add_list dhcp.TELEKOM.dhcp_option='3,'$CMOVIE_ip
-uci add_list dhcp.TELEKOM.dhcp_option='42,'$INET_GW 
-uci add_list dhcp.TELEKOM.dhcp_option='15,'$TELEKOM_domain
+#uci add_list dhcp.TELEKOM.dhcp_option='6,'$CMOVIE_ip 
+#uci add_list dhcp.TELEKOM.dhcp_option='3,'$CMOVIE_ip
+#uci add_list dhcp.TELEKOM.dhcp_option='42,'$INET_GW 
+#uci add_list dhcp.TELEKOM.dhcp_option='15,'$TELEKOM_domain
 uci set dhcp.TELEKOM.server=$CMOVIE_ip'#'$DNS_UNBOUND_port
 uci commit && reload_config
 
@@ -23289,6 +23291,10 @@ echo
 }
 
 set_mountpoints() {
+
+opkg update
+opkg install kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1
+
 mkdir -p /mnt/sda1
 mount /dev/sda1 /mnt/sda1
 mkdir -p /tmp/cproot
