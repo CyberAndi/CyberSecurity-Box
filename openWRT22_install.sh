@@ -23361,7 +23361,7 @@ create_firewall_zones >> install.log
 view_config
 
 set_dhcp >> install.log
-set_firewall_ipset >> install.log
+#set_firewall_ipset >> install.log
 set_firewall_rules >> install.log
 #set_mountpoints >> install.log
 echo >> install.log
