@@ -23205,6 +23205,8 @@ uci set firewall.blockIncoming.dest="*"
 uci set firewall.blockIncoming.target="REJECT"
 uci set firewall.blockIncoming.enabled="1"
 
+echo "$SECURE_RULES"$SECURE_RULES
+
 if [ "$SECURE_RULES" = "" ]
         then
              FW_HSactive='1'
