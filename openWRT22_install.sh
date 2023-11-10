@@ -257,6 +257,7 @@ VOICE_range='192.168.'$(($SUBNET_sep + 1))'.2,192.168.'$(($SUBNET_sep + 1))'.200
 ENTERTAIN_range='192.168.'$(($SUBNET_sep - 1))'.2,192.168.'$(($SUBNET_sep - 1))'.200,24h'
 GUEST_range='192.168.'$(($SUBNET_sep + 10))'.2,192.168.'$(($SUBNET_sep + 10))'.200,24h'
 CMOVIE_range='192.168.'$(($SUBNET_sep + 9))'.2,192.168.'$(($SUBNET_sep + 9))'.200,24h'
+TELEKOM_range='192.168.'$(($SUBNET_sep + 8))'.2,192.168.'$(($SUBNET_sep + 8))'.200,24h'
 
 SERVER_ip='192.168.'$(($SUBNET_sep - 123))'.254'
 CONTROL_ip='192.168.'$(($SUBNET_sep - 119))'.254'
@@ -266,6 +267,7 @@ VOICE_ip='192.168.'$(($SUBNET_sep + 1))'.1'
 ENTERTAIN_ip='192.168.'$(($SUBNET_sep - 1))'.1'
 GUEST_ip='192.168.'$(($SUBNET_sep + 10))'.1'
 CMOVIE_ip='192.168.'$(($SUBNET_sep + 9))'.1'
+TELEKOM_ip='192.168.'$(($SUBNET_sep + 8))'.1'
 
 SERVER_broadcast='192.168.'$(($SUBNET_sep - 123))'.255'
 CONTROL_broadcast='192.168.'$(($SUBNET_sep - 119))'.255'
@@ -275,6 +277,7 @@ VOICE_broadcast='192.168.'$(($SUBNET_sep + 1))'.255'
 ENTERTAIN_broadcast='192.168.'$(($SUBNET_sep - 1))'.255'
 GUEST_broadcast='192.168.'$(($SUBNET_sep + 10))'.255'
 CMOVIE_broadcast='192.168.'$(($SUBNET_sep + 9))'.255'
+TELEKOM_broadcast='192.168.'$(($SUBNET_sep + 8))'.255'
 
 SERVER_lan='192.168.'$(($SUBNET_sep - 123))'.0'
 CONTROL_lan='192.168.'$(($SUBNET_sep - 119))'.0'
@@ -284,6 +287,7 @@ VOICE_lan='192.168.'$(($SUBNET_sep + 1))'.0'
 ENTERTAIN_lan='192.168.'$(($SUBNET_sep - 1))'.0'
 GUEST_lan='192.168.'$(($SUBNET_sep + 10))'.0'
 CMOVIE_lan='192.168.'$(($SUBNET_sep + 9))'.0'
+TELEKOM_lan='192.168.'$(($SUBNET_sep + 8))'.0'
 
 SERVER_net=$SERVER_ip'/24'
 CONTROL_net=$CONTROL_ip'/24'
@@ -293,6 +297,7 @@ VOICE_net=$VOICE_ip'/24'
 ENTERTAIN_net=$ENTERTAIN_ip'/24'
 GUEST_net=$GUEST_ip'/24'
 CMOVIE_net=$CMOVIE_ip'/24'
+TELEKOM_net=$TELEKOM_ip'/24'
 WAN_net=$WAN_ip'/24'
 WAN_MOBILE_net=$WAN_MOBILE_ip'/24'
 
@@ -330,21 +335,22 @@ echo 'Please wait ....'
 echo
 echo 'On Error enter logread'
 echo
-#/etc/init.d/dnsmasq stop >> install.log
-#/etc/init.d/dnsmasq disable >> install.log
-#opkg update >> install.log
-#opkg remove dnsmasq >> install.log
+/etc/init.d/dnsmasq stop >> install.log
+/etc/init.d/dnsmasq disable >> install.log
+opkg update >> install.log
+opkg remove dnsmasq >> install.log
 opkg update >> install.log
 opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
-opkg update >> install.log
-opkg remove iptable* --force-removal-of-dependent-packages >> install.log
 #opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >> install.log
 #opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full
-opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill
+opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill dnsmasq-full
+opkg update >> install.log
+opkg remove iptable* --force-removal-of-dependent-packages >> install.log
 
 echo 'install opkg'
 
-#/etc/init.d/dnsmasq start >> install.log
+/etc/init.d/dnsmasq enable >> install.log
+/etc/init.d/dnsmasq start >> install.log
 clear
 echo '########################################################'
 echo '#                                                      #'
