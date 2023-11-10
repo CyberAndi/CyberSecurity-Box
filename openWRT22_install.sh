@@ -1189,6 +1189,14 @@ processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-P
 wait $processes1
 wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/custom.css -P /www/luci-static/resources/view/dashboard/css/
 
+mv /www/luci-static/resources/view/status/include/10_system.js /www/luci-static/resources/view/status/include/90_system.js
+mv /www/luci-static/resources/view/status/include/20_memory.js /www/luci-static/resources/view/status/include/10_memory.js
+mv /www/luci-static/resources/view/status/include/25_storage.js /www/luci-static/resources/view/status/include/15_storage.js
+mv /www/luci-static/resources/view/status/include/50_dsl.js /www/luci-static/resources/view/status/include/20_dsl.js
+mv /www/luci-static/resources/view/status/include/30_network.js /www/luci-static/resources/view/status/include/22_network.js
+mv /www/luci-static/resources/view/status/include/40_dhcp.js /www/luci-static/resources/view/status/include/25_dhcp.js
+mv /www/luci-static/resources/view/status/include/60_wifi.js /www/luci-static/resources/view/status/include/30_wifi.js
+
 echo
 echo 'On Error enter logread'
 echo
