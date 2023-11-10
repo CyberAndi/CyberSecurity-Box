@@ -340,7 +340,7 @@ opkg update >> install.log
 opkg remove iptable* --force-removal-of-dependent-packages >> install.log
 #opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >> install.log
 #opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full
-opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3
+opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill
 
 echo 'install opkg'
 
@@ -18228,74 +18228,74 @@ uci set dhcp.lan.confdir='/etc/dnsmasq.d/lan/'
 uci set dhcp.lan.boguspriv='1'
 uci set dhcp.lan.logqueries='0'
 uci set dhcp.lan.logfacility='/var/log/dnsmasq.lan.log'
-uci add_list dhcp.lan.interface='br-lan'
-uci add_list dhcp.lan.notinterface='br-VOICE'
-uci add_list dhcp.lan.notinterface='br-GUEST'
-uci add_list dhcp.lan.notinterface='br-ENTERTAIN'
-uci add_list dhcp.lan.notinterface='br-CMOVIE'
-uci add_list dhcp.lan.notinterface='br-INET'
-uci add_list dhcp.lan.notinterface='br-HCONTROL'
-uci add_list dhcp.lan.notinterface='br-CONTROL'
-uci add_list dhcp.lan.notinterface='br-SERVER'
+#uci add_list dhcp.lan.interface='br-lan'
+#uci add_list dhcp.lan.notinterface='br-VOICE'
+#uci add_list dhcp.lan.notinterface='br-GUEST'
+#uci add_list dhcp.lan.notinterface='br-ENTERTAIN'
+#uci add_list dhcp.lan.notinterface='br-CMOVIE'
+#uci add_list dhcp.lan.notinterface='br-INET'
+#uci add_list dhcp.lan.notinterface='br-HCONTROL'
+#uci add_list dhcp.lan.notinterface='br-CONTROL'
+#uci add_list dhcp.lan.notinterface='br-SERVER'
 uci set dhcp.lan.domain='lan'
 
-uci set dhcp.Blacklist=dnsmasq
-uci set dhcp.Blacklist.domainneeded='1'
-uci set dhcp.Blacklist.localise_queries='1'
-uci set dhcp.Blacklist.rebind_protection='1'
-uci set dhcp.Blacklist.rebind_localhost='1'
-uci set dhcp.Blacklist.filterwin2k='1'
-uci set dhcp.Blacklist.local='/'$INET_domain'/'
-uci set dhcp.Blacklist.expandhosts='1'
-uci set dhcp.Blacklist.authoritative='1'
-uci set dhcp.Blacklist.readethers='1'
-uci set dhcp.Blacklist.leasefile='/tmp/dhcp.blacklist.leases'
-uci set dhcp.Blacklist.resolvfile='/tmp/resolv.blacklist.conf.auto'
-uci set dhcp.Blacklist.localservice='1'
-uci set dhcp.Blacklist.cachesize='1'
-uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
-uci set dhcp.Blacklist.boguspriv='1'
-uci set dhcp.Blacklist.logqueries='0'
-uci set dhcp.Blacklist.logfacility='/var/log/dnsmasq.blacklist.log'
-uci add_list dhcp.Blacklist.notinterface='br-VOICE'
-uci add_list dhcp.Blacklist.notinterface='br-GUEST'
-uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN'
-uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
-uci add_list dhcp.Blacklist.notinterface='br-lan'
-uci set dhcp.Blacklist.interface='br-INET'
-uci add_list dhcp.Blacklist.interface='br-HCONTROL'
-uci add_list dhcp.Blacklist.interface='br-CONTROL'
-uci add_list dhcp.Blacklist.interface='br-SERVER'
-uci set dhcp.Blacklist.domain=$INET_domain
+#uci set dhcp.Blacklist=dnsmasq
+#uci set dhcp.Blacklist.domainneeded='1'
+#uci set dhcp.Blacklist.localise_queries='1'
+#uci set dhcp.Blacklist.rebind_protection='1'
+#uci set dhcp.Blacklist.rebind_localhost='1'
+#uci set dhcp.Blacklist.filterwin2k='1'
+#uci set dhcp.Blacklist.local='/'$INET_domain'/'
+#uci set dhcp.Blacklist.expandhosts='1'
+#uci set dhcp.Blacklist.authoritative='1'
+#uci set dhcp.Blacklist.readethers='1'
+#uci set dhcp.Blacklist.leasefile='/tmp/dhcp.blacklist.leases'
+#uci set dhcp.Blacklist.resolvfile='/tmp/resolv.blacklist.conf.auto'
+#uci set dhcp.Blacklist.localservice='1'
+#uci set dhcp.Blacklist.cachesize='1'
+#uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
+#uci set dhcp.Blacklist.boguspriv='1'
+#uci set dhcp.Blacklist.logqueries='0'
+#uci set dhcp.Blacklist.logfacility='/var/log/dnsmasq.blacklist.log'
+#uci add_list dhcp.Blacklist.notinterface='br-VOICE'
+#uci add_list dhcp.Blacklist.notinterface='br-GUEST'
+#uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN'
+#uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
+#uci add_list dhcp.Blacklist.notinterface='br-lan'
+#uci set dhcp.Blacklist.interface='br-INET'
+#uci add_list dhcp.Blacklist.interface='br-HCONTROL'
+#uci add_list dhcp.Blacklist.interface='br-CONTROL'
+#uci add_list dhcp.Blacklist.interface='br-SERVER'
+#uci set dhcp.Blacklist.domain=$INET_domain
 
-uci set dhcp.Whitelist=dnsmasq
-uci set dhcp.Whitelist.domainneeded='1'
-uci set dhcp.Whitelist.localise_queries='1'
-uci set dhcp.Whitelist.rebind_protection='1'
-uci set dhcp.Whitelist.rebind_localhost='1'
-uci set dhcp.Whitelist.filterwin2k='1'
-uci set dhcp.Whitelist.local='/'$VOICE_domain'/'
-uci set dhcp.Whitelist.expandhosts='1'
-uci set dhcp.Whitelist.authoritative='1'
-uci set dhcp.Whitelist.readethers='1'
-uci set dhcp.Whitelist.leasefile='/tmp/dhcp.whitelist.leases'
-uci set dhcp.Whitelist.resolvfile='/tmp/resolv.whitelist.conf.auto'
-uci set dhcp.Whitelist.localservice='1'
-uci set dhcp.Whitelist.cachesize='1'
-uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
-uci set dhcp.Whitelist.boguspriv='1'
-uci set dhcp.Whitelist.logqueries='0'
-uci set dhcp.Whitelist.logfacility='/var/log/dnsmasq.whitelist.log'
-uci set dhcp.Whitelist.interface='br-VOICE' 
-uci add_list dhcp.Whitelist.interface='br-GUEST'
-uci add_list dhcp.Whitelist.interface='br-ENTERTAIN'
-uci add_list dhcp.Whitelist.interface='br-CMOVIE'
-uci set dhcp.Whitelist.notinterface='br-INET'
-uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
-uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
-uci add_list dhcp.Whitelist.notinterface='br-SERVER'
-uci add_list dhcp.Whitelist.notinterface='br-lan'
-uci set dhcp.Whitelist.domain=$VOICE_domain
+#uci set dhcp.Whitelist=dnsmasq
+#uci set dhcp.Whitelist.domainneeded='1'
+#uci set dhcp.Whitelist.localise_queries='1'
+#uci set dhcp.Whitelist.rebind_protection='1'
+#uci set dhcp.Whitelist.rebind_localhost='1'
+#uci set dhcp.Whitelist.filterwin2k='1'
+#uci set dhcp.Whitelist.local='/'$VOICE_domain'/'
+#uci set dhcp.Whitelist.expandhosts='1'
+#uci set dhcp.Whitelist.authoritative='1'
+#uci set dhcp.Whitelist.readethers='1'
+#uci set dhcp.Whitelist.leasefile='/tmp/dhcp.whitelist.leases'
+#uci set dhcp.Whitelist.resolvfile='/tmp/resolv.whitelist.conf.auto'
+#uci set dhcp.Whitelist.localservice='1'
+#uci set dhcp.Whitelist.cachesize='1'
+#uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
+#uci set dhcp.Whitelist.boguspriv='1'
+#uci set dhcp.Whitelist.logqueries='0'
+#uci set dhcp.Whitelist.logfacility='/var/log/dnsmasq.whitelist.log'
+#uci set dhcp.Whitelist.interface='br-VOICE' 
+#uci add_list dhcp.Whitelist.interface='br-GUEST'
+#uci add_list dhcp.Whitelist.interface='br-ENTERTAIN'
+#uci add_list dhcp.Whitelist.interface='br-CMOVIE'
+#uci set dhcp.Whitelist.notinterface='br-INET'
+#uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
+#uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
+#uci add_list dhcp.Whitelist.notinterface='br-SERVER'
+#uci add_list dhcp.Whitelist.notinterface='br-lan'
+#uci set dhcp.Whitelist.domain=$VOICE_domain
 
 uci set dhcp.wan=dhcp
 uci set dhcp.wan.interface='wan'
@@ -18747,123 +18747,123 @@ clear
 
 set_firewall_rules() {
 # Intercept SSH, HTTP and HTTPS traffic
-#uci -q delete firewall.ssh_int >/dev/null
-#uci set firewall.ssh_int="redirect"
-#uci set firewall.ssh_int.name="Intercept_SSH"
-#uci set firewall.ssh_int.src="INET"
-#uci set firewall.ssh_int.src_dport="$SSH_port"
-#uci set firewall.ssh_int.proto="tcp"
-#uci set firewall.ssh_int.target="DNAT"
+uci -q delete firewall.ssh_int >/dev/null
+uci set firewall.ssh_int="redirect"
+uci set firewall.ssh_int.name="Intercept_SSH"
+uci set firewall.ssh_int.src="INET"
+uci set firewall.ssh_int.src_dport="$SSH_port"
+uci set firewall.ssh_int.proto="tcp"
+uci set firewall.ssh_int.target="DNAT"
 
-#uci -q delete firewall.http_int >/dev/null
-#uci set firewall.http_int="redirect"
-#uci set firewall.http_int.name="Intercept_HTTP"
-#uci set firewall.http_int.src="INET"
-#uci set firewall.http_int.src_dport="$ACCESS_HTTP_port"
-#uci set firewall.http_int.proto="tcp"
-#uci set firewall.http_int.target="DNAT"
+uci -q delete firewall.http_int >/dev/null
+uci set firewall.http_int="redirect"
+uci set firewall.http_int.name="Intercept_HTTP"
+uci set firewall.http_int.src="INET"
+uci set firewall.http_int.src_dport="$ACCESS_HTTP_port"
+uci set firewall.http_int.proto="tcp"
+uci set firewall.http_int.target="DNAT"
 
-#uci -q delete firewall.https_int
-#uci set firewall.https_int="redirect"
-#uci set firewall.https_int.name="Intercept_HTTPS"
-#uci set firewall.https_int.src="INET"
-#uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
-#uci set firewall.https_int.proto="tcp"
-#uci set firewall.https_int.target="DNAT"
+uci -q delete firewall.https_int
+uci set firewall.https_int="redirect"
+uci set firewall.https_int.name="Intercept_HTTPS"
+uci set firewall.https_int.src="INET"
+uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
+uci set firewall.https_int.proto="tcp"
+uci set firewall.https_int.target="DNAT"
 
-#uci commit firewall && reload_config >/dev/null
+uci commit firewall && reload_config >/dev/null
 
 # Intercept DNS and TCP traffic
 
-#uci -q delete firewall.tcp_onion_int > /dev/null uci set firewall.tcp_onion_int="redirect"
-#uci set firewall.tcp_onion_int.name="Intercept_Onion_Domain"
-#uci set firewall.tcp_onion_int.src_dport=$TOR_TRANS_port
-#uci set firewall.tcp_onion_int.dest_port=$TOR_TRANS_port
-#uci set firewall.tcp_onion_int.proto="tcp"
-#uci set firewall.tcp_onion_int.target="DNAT"
-#uci set firewall.tcp_onion_int.src="INET"
-#uci set firewall.tcp_onion_int.src_dip="10.192.0.0./10"
-#uci set firewall.tcp_onion_int.extra="--syn"
+uci -q delete firewall.tcp_onion_int > /dev/null uci set firewall.tcp_onion_int="redirect"
+uci set firewall.tcp_onion_int.name="Intercept_Onion_Domain"
+uci set firewall.tcp_onion_int.src_dport=$TOR_TRANS_port
+uci set firewall.tcp_onion_int.dest_port=$TOR_TRANS_port
+uci set firewall.tcp_onion_int.proto="tcp"
+uci set firewall.tcp_onion_int.target="DNAT"
+uci set firewall.tcp_onion_int.src="INET"
+uci set firewall.tcp_onion_int.src_dip="10.192.0.0./10"
+uci set firewall.tcp_onion_int.extra="--syn"
 
-#uci -q delete firewall.tcp_onionSocks_int > /dev/null 
-#uci set firewall.tcp_onionSocks_int="redirect"
-#uci set firewall.tcp_onionSocks_int.name='Intercept_Onion_Domain'
-#uci set firewall.tcp_onionSocks_int.src='INET'
-#uci set firewall.tcp_onionSocks_int.src_dport=$TOR_SOCKS2_port
-#uci set firewall.tcp_onionSocks_int.dest_port=$TOR_SOCKS2_port
-#uci set firewall.tcp_onionSocks_int.src_dip='10.192.0.0/10'
-#uci set firewall.tcp_onionSocks_int.proto='tcp'
-#uci set firewall.tcp_onionSocks_int.target='DNAT'
-#uci set firewall.tcp_onionSocks_int.extra='--syn'
+uci -q delete firewall.tcp_onionSocks_int > /dev/null 
+uci set firewall.tcp_onionSocks_int="redirect"
+uci set firewall.tcp_onionSocks_int.name='Intercept_Onion_Domain'
+uci set firewall.tcp_onionSocks_int.src='INET'
+uci set firewall.tcp_onionSocks_int.src_dport=$TOR_SOCKS2_port
+uci set firewall.tcp_onionSocks_int.dest_port=$TOR_SOCKS2_port
+uci set firewall.tcp_onionSocks_int.src_dip='10.192.0.0/10'
+uci set firewall.tcp_onionSocks_int.proto='tcp'
+uci set firewall.tcp_onionSocks_int.target='DNAT'
+uci set firewall.tcp_onionSocks_int.extra='--syn'
 
-#uci -q delete firewall.tcp_onionSocks1_int > /dev/null 
-#uci set firewall.tcp_onionSocks1_int=redirect
-#uci set firewall.tcp_onionSocks1_int.name='Intercept_Onion1_Domain'
-#uci set firewall.tcp_onionSocks1_int.src='INET'
-#uci set firewall.tcp_onionSocks1_int.dest_port=$TOR_SOCKS_port
-#uci set firewall.tcp_onionSocks1_int.src_dport=$TOR_SOCKS_port
-#uci set firewall.tcp_onionSocks1_int.proto='tcp'
-#uci set firewall.tcp_onionSocks1_int.target='DNAT'
-#uci set firewall.tcp_onionSocks1_int.extra='--syn'
+uci -q delete firewall.tcp_onionSocks1_int > /dev/null 
+uci set firewall.tcp_onionSocks1_int=redirect
+uci set firewall.tcp_onionSocks1_int.name='Intercept_Onion1_Domain'
+uci set firewall.tcp_onionSocks1_int.src='INET'
+uci set firewall.tcp_onionSocks1_int.dest_port=$TOR_SOCKS_port
+uci set firewall.tcp_onionSocks1_int.src_dport=$TOR_SOCKS_port
+uci set firewall.tcp_onionSocks1_int.proto='tcp'
+uci set firewall.tcp_onionSocks1_int.target='DNAT'
+uci set firewall.tcp_onionSocks1_int.extra='--syn'
 
-#uci -q delete firewall.tcp_tor2_int > /dev/null 
-#uci set firewall.tcp_tor2_int=redirect
-#uci set firewall.tcp_tor2_int.src_dip='!192.168.0.0/16'
-#uci set firewall.tcp_tor2_int.proto='tcp'
-#uci set firewall.tcp_tor2_int.target='DNAT'
-#uci set firewall.tcp_tor2_int.dest_port=$TOR_TRANS_port
-#uci set firewall.tcp_tor2_int.src='INET'
-#uci set firewall.tcp_tor2_int.src_dport=$HTTPS_port
-#uci set firewall.tcp_tor2_int.extra='--syn'
-#uci set firewall.tcp_tor2_int.name='Intercept https tor'
+uci -q delete firewall.tcp_tor2_int > /dev/null 
+uci set firewall.tcp_tor2_int=redirect
+uci set firewall.tcp_tor2_int.src_dip='!192.168.0.0/16'
+uci set firewall.tcp_tor2_int.proto='tcp'
+uci set firewall.tcp_tor2_int.target='DNAT'
+uci set firewall.tcp_tor2_int.dest_port=$TOR_TRANS_port
+uci set firewall.tcp_tor2_int.src='INET'
+uci set firewall.tcp_tor2_int.src_dport=$HTTPS_port
+uci set firewall.tcp_tor2_int.extra='--syn'
+uci set firewall.tcp_tor2_int.name='Intercept https tor'
 
-#uci -q delete firewall.tcp_tor3_int > /dev/null 
-#uci set firewall.tcp_tor3_int=redirect
-#uci set firewall.tcp_tor3_int.src_dip='!192.168.0.0/16'
-#uci set firewall.tcp_tor3_int.proto='tcp'
-#uci set firewall.tcp_tor3_int.target='DNAT'
-#uci set firewall.tcp_tor3_int.dest_port=$TOR_TRANS_port
-#uci set firewall.tcp_tor3_int.src='INET'
-#uci set firewall.tcp_tor3_int.name='Intercept http tor'
-#uci set firewall.tcp_tor3_int.src_dport=$HTTP_port
-#uci set firewall.tcp_tor3_int.extra='--syn'
+uci -q delete firewall.tcp_tor3_int > /dev/null 
+uci set firewall.tcp_tor3_int=redirect
+uci set firewall.tcp_tor3_int.src_dip='!192.168.0.0/16'
+uci set firewall.tcp_tor3_int.proto='tcp'
+uci set firewall.tcp_tor3_int.target='DNAT'
+uci set firewall.tcp_tor3_int.dest_port=$TOR_TRANS_port
+uci set firewall.tcp_tor3_int.src='INET'
+uci set firewall.tcp_tor3_int.name='Intercept http tor'
+uci set firewall.tcp_tor3_int.src_dport=$HTTP_port
+uci set firewall.tcp_tor3_int.extra='--syn'
 
-#uci -q delete firewall.omada > /dev/null
-#uci set firewall.omada=redirect
-#uci set firewall.omada.dest_port=$CONTROLER_port
-#uci set firewall.omada.name='Network_omada'
-#uci set firewall.omada.src_dport=$CONTROLER_port
-#uci set firewall.omada.target='DNAT'
-#uci set firewall.omada.dest_ip='192.168.71.175'
-#uci set firewall.omada.dest='HCONTROL'
-#uci set firewall.omada.src='INET'
-#uci set firewall.omada.extra='--syn'
+uci -q delete firewall.omada > /dev/null
+uci set firewall.omada=redirect
+uci set firewall.omada.dest_port=$CONTROLER_port
+uci set firewall.omada.name='Network_omada'
+uci set firewall.omada.src_dport=$CONTROLER_port
+uci set firewall.omada.target='DNAT'
+uci set firewall.omada.dest_ip='192.168.71.175'
+uci set firewall.omada.dest='HCONTROL'
+uci set firewall.omada.src='INET'
+uci set firewall.omada.extra='--syn'
 
-#uci -q delete firewall.homematic > /dev/null
-#uci set firewall.homematic=redirect
-#uci set firewall.homematic.dest_port='80'
-#uci set firewall.homematic.target='DNAT'
-#uci set firewall.homematic.src='INET'
-#uci set firewall.homematic.dest_ip='192.168.70.52'
-#uci set firewall.homematic.dest='CONTROL'
-#uci set firewall.homematic.proto='tcp'
-#uci set firewall.homematic.name='Homematic ccu'
-#uci set firewall.homematic.src_dip='192.168.70.52/32'
-#uci set firewall.homematic.src_dport='8080'
-#uci set firewall.homematic.extra='--syn'
+uci -q delete firewall.homematic > /dev/null
+uci set firewall.homematic=redirect
+uci set firewall.homematic.dest_port='80'
+uci set firewall.homematic.target='DNAT'
+uci set firewall.homematic.src='INET'
+uci set firewall.homematic.dest_ip='192.168.70.52'
+uci set firewall.homematic.dest='CONTROL'
+uci set firewall.homematic.proto='tcp'
+uci set firewall.homematic.name='Homematic ccu'
+uci set firewall.homematic.src_dip='192.168.70.52/32'
+uci set firewall.homematic.src_dport='8080'
+uci set firewall.homematic.extra='--syn'
 
-#uci -q delete firewall.homematic1 > /dev/null
-#uci set firewall.homematic1=redirect
-#uci set firewall.homematic1.dest_port='443'
-#uci set firewall.homematic1.target='DNAT'
-#uci set firewall.homematic1.src='INET'
-#uci set firewall.homematic1.dest_ip='192.168.70.52'
-#uci set firewall.homematic1.dest='CONTROL'
-#uci set firewall.homematic1.proto='tcp'
-#uci set firewall.homematic1.name='Homematic ccu'
-#uci set firewall.homematic1.src_dip='192.168.70.52/32'
-#uci set firewall.homematic1.src_dport='4443'
-#uci set firewall.homematic1.extra='--syn'
+uci -q delete firewall.homematic1 > /dev/null
+uci set firewall.homematic1=redirect
+uci set firewall.homematic1.dest_port='443'
+uci set firewall.homematic1.target='DNAT'
+uci set firewall.homematic1.src='INET'
+uci set firewall.homematic1.dest_ip='192.168.70.52'
+uci set firewall.homematic1.dest='CONTROL'
+uci set firewall.homematic1.proto='tcp'
+uci set firewall.homematic1.name='Homematic ccu'
+uci set firewall.homematic1.src_dip='192.168.70.52/32'
+uci set firewall.homematic1.src_dport='4443'
+uci set firewall.homematic1.extra='--syn'
 
 #-----------------------------------------------------------------------------
 
@@ -21006,6 +21006,19 @@ uci set firewall.blockIncoming.name="Block_Incoming"
 uci set firewall.blockIncoming.dest="*"
 uci set firewall.blockIncoming.target="REJECT"
 uci set firewall.blockIncoming.enabled="1"
+
+if [ "$SECURE_RULES" = "" ]
+        then
+             FW_HSactive='1'
+             set_HS_Firewall
+        elif [ "$SECURE_RULES" = "y" ]
+                then
+		FW_HSactive='1'
+                set_HS_Firewall
+        else
+              FW_HSactive='0'
+              set_HS_Firewall_disable
+fi
 
 uci commit firewall && reload_config >/dev/null
 /etc/init.d/firewall restart >/dev/null
