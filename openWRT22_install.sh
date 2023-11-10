@@ -18900,6 +18900,7 @@ uci set firewall.tcp_onion_int.target="DNAT"
 uci set firewall.tcp_onion_int.src="INET"
 uci set firewall.tcp_onion_int.src_dip="10.192.0.0./10"
 uci set firewall.tcp_onion_int.extra="--syn"
+uci set firewall.tcp_onion_int.enabled='0'
 
 uci -q delete firewall.tcp_onionSocks_int > /dev/null 
 uci set firewall.tcp_onionSocks_int="redirect"
@@ -18911,6 +18912,7 @@ uci set firewall.tcp_onionSocks_int.src_dip='10.192.0.0/10'
 uci set firewall.tcp_onionSocks_int.proto='tcp'
 uci set firewall.tcp_onionSocks_int.target='DNAT'
 uci set firewall.tcp_onionSocks_int.extra='--syn'
+uci set firewall.tcp_onionSocks_int.enabled='0'
 
 uci -q delete firewall.tcp_onionSocks1_int > /dev/null 
 uci set firewall.tcp_onionSocks1_int=redirect
@@ -18921,6 +18923,7 @@ uci set firewall.tcp_onionSocks1_int.src_dport=$TOR_SOCKS_port
 uci set firewall.tcp_onionSocks1_int.proto='tcp'
 uci set firewall.tcp_onionSocks1_int.target='DNAT'
 uci set firewall.tcp_onionSocks1_int.extra='--syn'
+uci set firewall.tcp_onionSocks1_int.enabled='0'
 
 uci -q delete firewall.tcp_tor2_int > /dev/null 
 uci set firewall.tcp_tor2_int=redirect
@@ -18932,6 +18935,7 @@ uci set firewall.tcp_tor2_int.src='INET'
 uci set firewall.tcp_tor2_int.src_dport=$HTTPS_port
 uci set firewall.tcp_tor2_int.extra='--syn'
 uci set firewall.tcp_tor2_int.name='Intercept https tor'
+uci set firewall.tcp_tor2_int.enabled='0'
 
 uci -q delete firewall.tcp_tor3_int > /dev/null 
 uci set firewall.tcp_tor3_int=redirect
@@ -18943,6 +18947,7 @@ uci set firewall.tcp_tor3_int.src='INET'
 uci set firewall.tcp_tor3_int.name='Intercept http tor'
 uci set firewall.tcp_tor3_int.src_dport=$HTTP_port
 uci set firewall.tcp_tor3_int.extra='--syn'
+uci set firewall.tcp_tor3_int.enabled='0'
 
 uci -q delete firewall.omada > /dev/null
 uci set firewall.omada=redirect
@@ -18954,6 +18959,7 @@ uci set firewall.omada.dest_ip='192.168.71.175'
 uci set firewall.omada.dest='HCONTROL'
 uci set firewall.omada.src='INET'
 uci set firewall.omada.extra='--syn'
+uci set firewall.omada.enabled='0'
 
 uci -q delete firewall.homematic > /dev/null
 uci set firewall.homematic=redirect
@@ -18967,6 +18973,7 @@ uci set firewall.homematic.name='Homematic ccu'
 uci set firewall.homematic.src_dip='192.168.70.52/32'
 uci set firewall.homematic.src_dport='8080'
 uci set firewall.homematic.extra='--syn'
+uci set firewall.homematic.enabled='0'
 
 uci -q delete firewall.homematic1 > /dev/null
 uci set firewall.homematic1=redirect
@@ -18980,6 +18987,7 @@ uci set firewall.homematic1.name='Homematic ccu'
 uci set firewall.homematic1.src_dip='192.168.70.52/32'
 uci set firewall.homematic1.src_dport='4443'
 uci set firewall.homematic1.extra='--syn'
+uci set firewall.homematic1.enabled='0'
 
 #-----------------------------------------------------------------------------
 
