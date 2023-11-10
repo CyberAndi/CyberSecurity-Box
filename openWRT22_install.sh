@@ -21327,7 +21327,7 @@ create_firewall_zones >> install.log
 #create_MWAN >> install.log
 view_config
 
-set_dhcp >> install.log
+set_dhcp_ok >> install.log
 #set_firewall_ipset >> install.log
 set_firewall_rules >> install.log
 #set_mountpoints >> install.log
