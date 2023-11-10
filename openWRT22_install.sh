@@ -18194,6 +18194,99 @@ view_config
 
 set_dhcp() {
 
+uci set dhcp.CMOVIE=dhcp
+uci set dhcp.CMOVIE.interface='CMOVIE'
+uci set dhcp.CMOVIE.start='20'
+uci set dhcp.CMOVIE.limit='250'
+uci set dhcp.CMOVIE.leasetime='24h'
+uci set dhcp.CMOVIE.netmask='255.255.255.0'
+uci set dhcp.CMOVIE.domain=$CMOVIE_domain
+uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
+
+uci set dhcp.CONTROL=dhcp
+uci set dhcp.CONTROL.interface='CONTROL'
+uci set dhcp.CONTROL.start='10'
+uci set dhcp.CONTROL.limit='250'
+uci set dhcp.CONTROL.leasetime='24h'
+uci set dhcp.CONTROL.netmask='255.255.255.0'
+uci set dhcp.CONTROL.domain=$CONTROL_domain
+uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
+
+uci set dhcp.ENTERTAIN=dhcp
+uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
+uci set dhcp.ENTERTAIN.start='10'
+uci set dhcp.ENTERTAIN.limit='250'
+uci set dhcp.ENTERTAIN.leasetime='24h'
+uci set dhcp.ENTERTAIN.netmask='255.255.255.0'
+uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
+
+uci set dhcp.GUEST=dhcp
+uci set dhcp.GUEST.interface='GUEST'
+uci set dhcp.GUEST.start='10'
+uci set dhcp.GUEST.limit='250'
+uci set dhcp.GUEST.leasetime='24h'
+uci set dhcp.GUEST.netmask='255.255.255.0'
+uci set dhcp.GUEST.domain=$GUEST_domain
+uci set dhcp.GUEST.local='/'$GUEST_domain'/'
+
+uci set dhcp.HCONTROL=dhcp
+uci set dhcp.HCONTROL.interface='HCONTROL'
+uci set dhcp.HCONTROL.start='10'
+uci set dhcp.HCONTROL.limit='250'
+uci set dhcp.HCONTROL.leasetime='24h'
+uci set dhcp.HCONTROL.netmask='255.255.255.0'
+uci set dhcp.HCONTROL.domain=$HCONTROL_domain
+uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
+
+uci set dhcp.INET=dhcp
+uci set dhcp.INET.interface='INET'
+uci set dhcp.INET.start='10'
+uci set dhcp.INET.limit='250'
+uci set dhcp.INET.leasetime='24h'
+uci set dhcp.INET.netmask='255.255.255.0'
+uci set dhcp.INET.domain=$INET_domain
+uci set dhcp.INET.local='/'$INET_domain'/'
+
+uci del dhcp.lan.ra_slaac
+uci set dhcp.lan.start='10'
+uci set dhcp.lan.limit='250'
+uci set dhcp.lan.leasetime='24h'
+uci set dhcp.lan.netmask='255.255.255.0'
+uci set dhcp.lan.domain='lan.local'
+uci set dhcp.lan.local='/lan.local/'
+
+uci set dhcp.SERVER=dhcp
+uci set dhcp.SERVER.interface='SERVER'
+uci set dhcp.SERVER.start='10'
+uci set dhcp.SERVER.limit='250'
+uci set dhcp.SERVER.leasetime='24h'
+uci set dhcp.SERVER.netmask='255.255.255.0'
+uci set dhcp.SERVER.domain=$SERVER_domain
+uci set dhcp.SERVER.local='/'$SERVER_domain'/'
+
+uci set dhcp.TELEKOM=dhcp
+uci set dhcp.TELEKOM.interface='TELEKOM'
+uci set dhcp.TELEKOM.start='10'
+uci set dhcp.TELEKOM.limit='250'
+uci set dhcp.TELEKOM.leasetime='24h'
+uci set dhcp.TELEKOM.netmask='255.255.255.0'
+uci set dhcp.TELEKOM.domain=$TELEKOM_domain
+uci set dhcp.TELEKOM.local='/'$TELEKOM_domain'/'
+
+uci set dhcp.VOICE=dhcp
+uci set dhcp.VOICE.interface='VOICE'
+uci set dhcp.VOICE.start='10'
+uci set dhcp.VOICE.limit='250'
+uci set dhcp.VOICE.leasetime='24h'
+uci set dhcp.VOICE.netmask='255.255.255.0'
+uci set dhcp.VOICE.domain=$VOICE_domain
+uci set dhcp.VOICE.local='/'$VOICE_domain'/'
+
+}
+
+set_dhcp_org() {
+
 uci -q delete dhcp >> install.log
 uci delete dhcp.SERVER >> install.log
 uci delete dhcp.HCONTROL >> install.log
