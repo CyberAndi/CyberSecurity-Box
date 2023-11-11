@@ -18365,6 +18365,13 @@ uci set dhcp.VOICE.netmask='255.255.255.0'
 uci set dhcp.VOICE.domain=$VOICE_domain
 uci set dhcp.VOICE.local='/'$VOICE_domain'/'
 
+mkdir /etc/dnsmasq.d  >> install.log
+mkdir /etc/dnsmasq.d/Blacklist >> install.log
+mkdir /etc/dnsmasq.d/Whitelist >> install.log
+mkdir /etc/dnsmasq.d/BlockAll >> install.log
+mkdir /etc/dnsmasq.d/AllowAll >> install.log
+
+uci commit dhcp && reload_config >> install.log
 }
 
 set_dhcp_ok() {
