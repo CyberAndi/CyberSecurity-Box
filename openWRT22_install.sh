@@ -18218,63 +18218,72 @@ view_config
 
 set_dhcp() {
 
-uci set dhcp.Whitelist=dnsmasq
-uci set dhcp.Whitelist.domainneeded='1'
-uci set dhcp.Whitelist.localise_queries='1'
-uci set dhcp.Whitelist.rebind_protection='1'
-uci set dhcp.Whitelist.rebind_localhost='1'
-uci set dhcp.Whitelist.filterwin2k='1'
-uci set dhcp.Whitelist.local='/local/'
-uci set dhcp.Whitelist.domain='local'
-uci set dhcp.Whitelist.expandhosts='1'
-uci set dhcp.Whitelist.authoritative='1'
-uci set dhcp.Whitelist.readethers='1'
-uci set dhcp.Whitelist.leasefile='/tmp/dhcp.Whitelist.leases'
-uci set dhcp.Whitelist.resolvfile='/tmp/resolv.Whitelist.conf.auto'
-uci set dhcp.Whitelist.localservice='1'
-uci set dhcp.Whitelist.cachesize='1'
-uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
-uci set dhcp.Whitelist.boguspriv='1'
-uci set dhcp.Whitelist.logqueries='0'
-uci set dhcp.Whitelist.logfacility='/var/log/dnsmasq.Whitelist.log'
-uci add_list dhcp.Whitelist.notinterface='br-VOICE'
-uci add_list dhcp.Whitelist.notinterface='br-GUEST'
-uci add_list dhcp.Whitelist.notinterface='br-ENTERTAIN'
-uci add_list dhcp.Whitelist.notinterface='br-CMOVIE'
-uci add_list dhcp.Whitelist.interface='br-lan'
-uci add_list dhcp.Whitelist.interface='br-INET'
-uci add_list dhcp.Whitelist.interface='br-HCONTROL'
-uci add_list dhcp.Whitelist.interface='br-CONTROL'
-uci add_list dhcp.Whitelist.interface='br-SERVER'
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci commit dhcp >/dev/null
 
 uci set dhcp.Blacklist=dnsmasq
 uci set dhcp.Blacklist.domainneeded='1'
+uci set dhcp.Blacklist.boguspriv='1'
+uci set dhcp.Blacklist.filterwin2k='0'
 uci set dhcp.Blacklist.localise_queries='1'
 uci set dhcp.Blacklist.rebind_protection='1'
 uci set dhcp.Blacklist.rebind_localhost='1'
-uci set dhcp.Blacklist.filterwin2k='1'
-uci set dhcp.Blacklist.local='/stawimedia.local/'
-uci set dhcp.Blacklist.domain='stawimedia.local'
 uci set dhcp.Blacklist.expandhosts='1'
+uci set dhcp.Blacklist.nonegcache='0'
 uci set dhcp.Blacklist.authoritative='1'
 uci set dhcp.Blacklist.readethers='1'
-uci set dhcp.Blacklist.leasefile='/tmp/dhcp.Blacklist.leases'
-uci set dhcp.Blacklist.resolvfile='/tmp/resolv.Blacklist.conf.auto'
+uci set dhcp.Blacklist.nonwildcard='1'
 uci set dhcp.Blacklist.localservice='1'
-uci set dhcp.Blacklist.cachesize='1'
-uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
-uci set dhcp.Blacklist.boguspriv='1'
-uci set dhcp.Blacklist.logqueries='0'
-uci set dhcp.Blacklist.logfacility='/var/log/dnsmasq.Blacklist.log'
-uci add_list dhcp.Blacklist.interface='br-VOICE'
-uci add_list dhcp.Blacklist.interface='br-GUEST'
-uci add_list dhcp.Blacklist.interface='br-ENTERTAIN'
-uci add_list dhcp.Blacklist.interface='br-CMOVIE'
-uci add_list dhcp.Blacklist.notinterface='br-lan'
-uci add_list dhcp.Blacklist.notinterface='br-INET'
-uci add_list dhcp.Blacklist.notinterface='br-HCONTROL'
-uci add_list dhcp.Blacklist.notinterface='br-CONTROL'
-uci add_list dhcp.Blacklist.notinterface='br-SERVER'
+uci set dhcp.Blacklist.ednspacket_max='1232'
+uci set dhcp.Blacklist.cachelocal='1'
+uci set dhcp.Blacklist.cachesize='0'
+uci set dhcp.Blacklist.queryport=$DNS_Relay_port
+uci set dhcp.Blacklist.leasefile='/tmp/dhcp.leases'
+uci set dhcp.Blacklist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+uci set dhcp.Blacklist.serversfile='/etc/dnsmasq.d/Blacklist/'
+uci add_list dhcp.Blacklist.notinterface='br-VOICE'
+uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN' 
+uci add_list dhcp.Blacklist.notinterface='br-GUEST'
+uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
+uci add_list dhcp.Blacklist.notinterface='br-TELEKOM'
+uci add_list dhcp.Blacklist.notinterface='loopback'
+uci add_list dhcp.Blacklist.interface='br-INET'
+uci add_list dhcp.Blacklist.interface='br-SERVER' 
+uci add_list dhcp.Blacklist.interface='br-HCONTROL'
+uci add_list dhcp.Blacklist.interface='br-CONTROL'
+uci add_list dhcp.Blacklist.interface='br-lan'
+
+uci set dhcp.Whitelist=dnsmasq
+uci set dhcp.Whitelist.domainneeded='1'
+uci set dhcp.Whitelist.boguspriv='1'
+uci set dhcp.Whitelist.filterwin2k='0'
+uci set dhcp.Whitelist.localise_queries='1'
+uci set dhcp.Whitelist.rebind_protection='1'
+uci set dhcp.Whitelist.rebind_localhost='1'
+uci set dhcp.Whitelist.expandhosts='1'
+uci set dhcp.Whitelist.nonegcache='0'
+uci set dhcp.Whitelist.authoritative='1'
+uci set dhcp.Whitelist.readethers='1'
+uci set dhcp.Whitelist.nonwildcard='1'
+uci set dhcp.Whitelist.localservice='1'
+uci set dhcp.Whitelist.ednspacket_max='1232'
+uci set dhcp.Whitelist.cachelocal='1'
+uci set dhcp.Whitelist.cachesize='0'
+uci set dhcp.Blacklist.queryport=$DNS_Relay_port
+uci set dhcp.Whitelist.leasefile='/tmp/dhcp.leases'
+uci set dhcp.Whitelist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+uci set dhcp.Whitelist.serversfile='/etc/dnsmasq.d/Whitelist/'
+uci add_list dhcp.Whitelist.interface='br-VOICE'
+uci add_list dhcp.Whitelist.interface='br-ENTERTAIN' 
+uci add_list dhcp.Whitelist.interface='br-GUEST'
+uci add_list dhcp.Whitelist.interface='br-CMOVIE'
+uci add_list dhcp.Whitelist.interface='br-TELEKOM'
+uci add_list dhcp.Whitelist.interface='loopback'
+uci add_list dhcp.Whitelist.notinterface='br-INET'
+uci add_list dhcp.Whitelist.notinterface='br-SERVER' 
+uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-lan'
 
 uci set dhcp.CMOVIE=dhcp
 uci set dhcp.CMOVIE.interface='CMOVIE'
@@ -18284,6 +18293,7 @@ uci set dhcp.CMOVIE.leasetime='24h'
 uci set dhcp.CMOVIE.netmask='255.255.255.0'
 uci set dhcp.CMOVIE.domain=$CMOVIE_domain
 uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
+uci set dhcp.CMOVIE.instance='Whitelist'
 
 uci set dhcp.CONTROL=dhcp
 uci set dhcp.CONTROL.interface='CONTROL'
@@ -18293,6 +18303,7 @@ uci set dhcp.CONTROL.leasetime='24h'
 uci set dhcp.CONTROL.netmask='255.255.255.0'
 uci set dhcp.CONTROL.domain=$CONTROL_domain
 uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
+uci set dhcp.CONTROL.instance='Blacklist'
 
 uci set dhcp.ENTERTAIN=dhcp
 uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
@@ -18302,6 +18313,7 @@ uci set dhcp.ENTERTAIN.leasetime='24h'
 uci set dhcp.ENTERTAIN.netmask='255.255.255.0'
 uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
 uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
+uci set dhcp.ENTERTAIN.instance='Whitelist'
 
 uci set dhcp.GUEST=dhcp
 uci set dhcp.GUEST.interface='GUEST'
@@ -18311,6 +18323,7 @@ uci set dhcp.GUEST.leasetime='24h'
 uci set dhcp.GUEST.netmask='255.255.255.0'
 uci set dhcp.GUEST.domain=$GUEST_domain
 uci set dhcp.GUEST.local='/'$GUEST_domain'/'
+uci set dhcp.GUEST.instance='Whitelist'
 
 uci set dhcp.HCONTROL=dhcp
 uci set dhcp.HCONTROL.interface='HCONTROL'
@@ -18320,6 +18333,7 @@ uci set dhcp.HCONTROL.leasetime='24h'
 uci set dhcp.HCONTROL.netmask='255.255.255.0'
 uci set dhcp.HCONTROL.domain=$HCONTROL_domain
 uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
+uci set dhcp.HCONTROL.instance='Blacklist'
 
 uci set dhcp.INET=dhcp
 uci set dhcp.INET.interface='INET'
@@ -18329,6 +18343,7 @@ uci set dhcp.INET.leasetime='24h'
 uci set dhcp.INET.netmask='255.255.255.0'
 uci set dhcp.INET.domain=$INET_domain
 uci set dhcp.INET.local='/'$INET_domain'/'
+uci set dhcp.INET.instance='Blacklist'
 
 uci del dhcp.lan.ra_slaac
 uci set dhcp.lan.start='10'
@@ -18337,6 +18352,7 @@ uci set dhcp.lan.leasetime='24h'
 uci set dhcp.lan.netmask='255.255.255.0'
 uci set dhcp.lan.domain='lan.local'
 uci set dhcp.lan.local='/lan.local/'
+uci set dhcp.lan.instance='Blacklist'
 
 uci set dhcp.SERVER=dhcp
 uci set dhcp.SERVER.interface='SERVER'
@@ -18346,6 +18362,7 @@ uci set dhcp.SERVER.leasetime='24h'
 uci set dhcp.SERVER.netmask='255.255.255.0'
 uci set dhcp.SERVER.domain=$SERVER_domain
 uci set dhcp.SERVER.local='/'$SERVER_domain'/'
+uci set dhcp.SERVER.instance='Blacklist'
 
 uci set dhcp.TELEKOM=dhcp
 uci set dhcp.TELEKOM.interface='TELEKOM'
@@ -18355,6 +18372,7 @@ uci set dhcp.TELEKOM.leasetime='24h'
 uci set dhcp.TELEKOM.netmask='255.255.255.0'
 uci set dhcp.TELEKOM.domain=$TELEKOM_domain
 uci set dhcp.TELEKOM.local='/'$TELEKOM_domain'/'
+uci set dhcp.TELEKOM.instance='Whitelist'
 
 uci set dhcp.VOICE=dhcp
 uci set dhcp.VOICE.interface='VOICE'
@@ -18364,6 +18382,7 @@ uci set dhcp.VOICE.leasetime='24h'
 uci set dhcp.VOICE.netmask='255.255.255.0'
 uci set dhcp.VOICE.domain=$VOICE_domain
 uci set dhcp.VOICE.local='/'$VOICE_domain'/'
+uci set dhcp.VOICE.instance='Whitelist'
 
 mkdir /etc/dnsmasq.d  >> install.log
 mkdir /etc/dnsmasq.d/Blacklist >> install.log
@@ -21363,7 +21382,7 @@ create_firewall_zones >> install.log
 #create_MWAN >> install.log
 view_config
 
-set_dhcp_ok >> install.log
+set_dhcp >> install.log
 #set_firewall_ipset >> install.log
 set_firewall_rules >> install.log
 #set_mountpoints >> install.log
