@@ -1524,7 +1524,7 @@ uci add network device >> install.log
 uci set network.@device[-1].name='br-CONTROL'
 uci set network.@device[-1].type='bridge'
 uci set network.@device[-1].igmp_snooping='1'
-uci set network.@device[-1].ports'eth0.103'
+uci set network.@device[-1].ports='eth0.103'
 
 uci add network device >> install.log
 uci set network.@device[-1].name='br-INET'
@@ -2633,12 +2633,13 @@ uci add_list unbound.ub_main.access_control=$HCONTROL_net' allow'
 uci add_list unbound.ub_main.access_control=$INET_net' allow'
 uci add_list unbound.ub_main.iface_trig='CONTROL'
 uci add_list unbound.ub_main.iface_trig='HCONTROL'
-uci add_list unbound.ub_main.iface_trig='INET_CLIENTS'
+uci add_list unbound.ub_main.iface_trig='INET'
 uci add_list unbound.ub_main.iface_trig='SERVER'
 uci add_list unbound.ub_main.iface_trig='VOICE'
 uci add_list unbound.ub_main.iface_trig='ENTERTAIN'
 uci add_list unbound.ub_main.iface_trig='CMOVIE'
 uci add_list unbound.ub_main.iface_trig='GUEST'
+uci add_list unbound.ub_main.iface_trig='TELEKOM'
 uci add_list unbound.ub_main.iface_trig='wan6'
 uci add_list unbound.ub_main..iface_trig='lo'
 uci del_list unbound.ub_main.iface_trig='lan'
@@ -2651,6 +2652,7 @@ uci add_list unbound.ub_main.domain_insecure=$VOICE_domain
 uci add_list unbound.ub_main.domain_insecure=$GUEST_domain
 uci add_list unbound.ub_main.domain_insecure=$ENTERTAIN_domain
 uci add_list unbound.ub_main.domain_insecure=$CMOVIE_domain
+uci add_list unbound.ub_main.domain_insecure=$TELEKOM_domain
 uci add_list unbound.ub_main.domain_insecure='onion'
 uci add_list unbound.ub_main.domain_insecure='exit'
 uci add_list unbound.ub_main.private_domain=$INET_domain
@@ -2661,6 +2663,7 @@ uci add_list unbound.ub_main.private_domain=$VOICE_domain
 uci add_list unbound.ub_main.private_domain=$GUEST_domain
 uci add_list unbound.ub_main.private_domain=$ENTERTAIN_domain
 uci add_list unbound.ub_main.private_domain=$CMOVIE_domain
+uci add_list unbound.ub_main.private_domain=$TELEKOM_domain
 uci add_list unbound.ub_main.private_domain='onion'
 uci add_list unbound.ub_main.private_domain='exit'
 
