@@ -1739,6 +1739,7 @@ form.inline {
 	color: var(--success-color-high) !important;
 	background-color: #000 !important;
 	margin-bottom: 18px !important;
+	border-radius: 0.5em;
 }
 
 .cbi-section-table .tr:hover .td,.cbi-section-table .tr:hover .th,.cbi-section-table .tr:hover::before {
