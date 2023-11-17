@@ -1281,7 +1281,6 @@ echo 'On Error enter logread'
 echo
 }
 
-create_network(){
 create_network() {
 clear
 echo '########################################################'
