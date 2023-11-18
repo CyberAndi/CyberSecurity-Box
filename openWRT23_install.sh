@@ -1305,101 +1305,11 @@ uci set network.loopback.ipaddr='127.0.0.1'
 uci set network.loopback.netmask='255.0.0.0'
 uci set network.loopback.dns='127.0.0.1'
 
-uci set network.globals=globals
-uci set network.globals.ula_prefix='fdc8:f6c1:ce31::/48'
-
-
-uci add network device >> install.log
-
-uci del dhcp.lan.ra_slaac
-uci set network.lan.device='br-lan.1'
-
 uci add network device
 uci set network.@device[-1].type='8021q'
 uci set network.@device[-1].ifname='br-lan'
 uci set network.@device[-1].vid='1'
 uci set network.@device[-1].name='br-lan.1'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-CMOVIE'
-uci set network.@device[-1].igmp_snooping='1'
-uci add_list network.@device[-1].ports='lan1'
-uci add_list network.@device[-1].ports='lan2'
-uci add_list network.@device[-1].ports='lan3'
-uci add_list network.@device[-1].ports='lan4'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-CONTROL'
-uci set network.@device[-1].igmp_snooping='1'
-uci add_list network.@device[-1].ports='lan1'
-uci add_list network.@device[-1].ports='lan2'
-uci add_list network.@device[-1].ports='lan3'
-uci add_list network.@device[-1].ports='lan4'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-ENTERTAIN'
-uci set network.@device[-1].igmp_snooping='1'
-uci add_list network.@device[-1].ports='lan1'
-uci add_list network.@device[-1].ports='lan2'
-uci add_list network.@device[-1].ports='lan3'
-uci add_list network.@device[-1].ports='lan4'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-GUEST'
-uci set network.@device[-1].igmp_snooping='1'
-uci add_list network.@device[-1].ports='lan1'
-uci add_list network.@device[-1].ports='lan2'
-uci add_list network.@device[-1].ports='lan3'
-uci add_list network.@device[-1].ports='lan4'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-HCONTROL'
-uci set network.@device[-1].igmp_snooping='1'
-uci add_list network.@device[-1].ports='lan1'
-uci add_list network.@device[-1].ports='lan2'
-uci add_list network.@device[-1].ports='lan3'
-uci add_list network.@device[-1].ports='lan4'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-INET'
-uci set network.@device[-1].igmp_snooping='1'
-uci add_list network.@device[-1].ports='lan1'
-uci add_list network.@device[-1].ports='lan2'
-uci add_list network.@device[-1].ports='lan3'
-uci add_list network.@device[-1].ports='lan4'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-SERVER'
-uci set network.@device[-1].igmp_snooping='1'
-uci add_list network.@device[-1].ports='lan1'
-uci add_list network.@device[-1].ports='lan2'
-uci add_list network.@device[-1].ports='lan3'
-uci add_list network.@device[-1].ports='lan4'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-TELEKOM'
-uci set network.@device[-1].igmp_snooping='1'
-uci add_list network.@device[-1].ports='lan1'
-uci add_list network.@device[-1].ports='lan2'
-uci add_list network.@device[-1].ports='lan3'
-uci add_list network.@device[-1].ports='lan4'
-
-uci add network device
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-VOICE'
-uci set network.@device[-1].igmp_snooping='1'
-uci add_list network.@device[-1].ports='lan1'
-uci add_list network.@device[-1].ports='lan2'
-uci add_list network.@device[-1].ports='lan3'
-uci add_list network.@device[-1].ports='lan4'
 
 uci add network device
 uci set network.@device[-1].type='8021q'
@@ -1466,7 +1376,7 @@ uci set network.TELEKOM.broadcast=$CMOVIE_broadcast
 uci set network.TELEKOM.gateway=$INET_GW
 #uci set network.TELEKOM.dns=$CMOVIE_ip
 uci set network.TELEKOM.dns=$INET_GW
-uci set network.TELEKOM.device='br-TELEKOM'
+uci set network.TELEKOM.device='br-TELEKOM.110'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1480,7 +1390,7 @@ uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
 uci set network.CMOVIE.gateway=$INET_GW
 #uci set network.CMOVIE.dns=$CMOVIE_ip
 uci set network.CMOVIE.dns=$INET_GW
-uci set network.CMOVIE.device='br-CMOVIE'
+uci set network.CMOVIE.device='br-CMOVIE.108'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1494,7 +1404,7 @@ uci set network.GUEST.broadcast=$GUEST_broadcast
 uci set network.GUEST.gateway=$INET_GW
 #uci set network.GUEST.dns=$GUEST_ip
 uci set network.GUEST.dns=$INET_GW
-uci set network.GUEST.device='br-GUEST'
+uci set network.GUEST.device='br-GUEST.107'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1508,7 +1418,7 @@ uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
 uci set network.ENTERTAIN.gateway=$INET_GW
 #uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
 uci set network.ENTERTAIN.dns=$INET_GW
-uci set network.ENTERTAIN.device='br-ENTERTAIN'
+uci set network.ENTERTAIN.device='br-ENTERTAIN.106'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1522,7 +1432,7 @@ uci set network.VOICE.broadcast=$VOICE_broadcast
 uci set network.VOICE.gateway=$INET_GW
 #uci set network.VOICE.dns=$VOICE_ip
 uci set network.VOICE.dns=$INET_GW
-uci set network.VOICE.device='br-VOICE'
+uci set network.VOICE.device='br-VOICE.105'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1536,7 +1446,7 @@ uci set network.INET.broadcast=$INET_broadcast
 uci set network.INET.gateway=$INET_GW
 #uci set network.INET.dns=$INET_ip
 uci set network.INET.dns=$INET_GW
-uci set network.INET.device='br-INET'
+uci set network.INET.device='br-INET.104'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1550,7 +1460,7 @@ uci set network.CONTROL.broadcast=$CONTROL_broadcast
 uci set network.CONTROL.gateway=$INET_GW
 #uci set network.CONTROL.dns=$CONTROL_ip
 uci set network.CONTROL.dns=$INET_GW
-uci set network.CONTROL.device='br-CONTROL'
+uci set network.CONTROL.device='br-CONTROL.103'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1564,7 +1474,7 @@ uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
 uci set network.HCONTROL.gateway=$INET_GW
 #uci set network.HCONTROL.dns=$HCONTROL_ip
 uci set network.HCONTROL.dns=$INET_GW
-uci set network.HCONTROL.device='br-HCONTROL'
+uci set network.HCONTROL.device='br-HCONTROL.102'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1578,7 +1488,7 @@ uci set network.SERVER.broadcast=$SERVER_broadcast
 uci set network.SERVER.gateway=$INET_GW
 #uci set network.SERVER.dns=$SERVER_ip
 uci set network.SERVER.dns=$INET_GW
-uci set network.SERVER.device='br-SERVER'
+uci set network.SERVER.device='br-SERVER.101'
 uci commit network >> install.log
 
 uci set network.wan=interface >> install.log
@@ -2005,6 +1915,93 @@ echo
 }
 
 create_switch() {
+
+uci del dhcp.lan.ra_slaac
+uci set network.lan.device='br-lan.1'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-CMOVIE'
+uci set network.@device[-1].igmp_snooping='1'
+uci add_list network.@device[-1].ports='lan1'
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-CONTROL'
+uci set network.@device[-1].igmp_snooping='1'
+uci add_list network.@device[-1].ports='lan1'
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-ENTERTAIN'
+uci set network.@device[-1].igmp_snooping='1'
+uci add_list network.@device[-1].ports='lan1'
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-GUEST'
+uci set network.@device[-1].igmp_snooping='1'
+uci add_list network.@device[-1].ports='lan1'
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-HCONTROL'
+uci set network.@device[-1].igmp_snooping='1'
+uci add_list network.@device[-1].ports='lan1'
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-INET'
+uci set network.@device[-1].igmp_snooping='1'
+uci add_list network.@device[-1].ports='lan1'
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-SERVER'
+uci set network.@device[-1].igmp_snooping='1'
+uci add_list network.@device[-1].ports='lan1'
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-TELEKOM'
+uci set network.@device[-1].igmp_snooping='1'
+uci add_list network.@device[-1].ports='lan1'
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+
+uci add network device
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-VOICE'
+uci set network.@device[-1].igmp_snooping='1'
+uci add_list network.@device[-1].ports='lan1'
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+}
+
+create_switch_22() {
 uci set network.@switch[0]=switch
 uci set network.@switch[0].name='switch0'
 uci set network.@switch[0].reset='1'
@@ -21205,10 +21202,9 @@ view_config
 
 customize_firmware >> install.log
 create_hotspot >> install.log
-#create_websites >> install.log
 
+create_switch >> install.log
 create_network >> install.log
-#create_switch >> install.log
 create_wlan >> install.log
 create_firewall_zones >> install.log
 #create_MWAN >> install.log
