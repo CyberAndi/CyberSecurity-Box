@@ -1281,7 +1281,7 @@ echo 'On Error enter logread'
 echo
 }
 
-create_network() {
+create_network_23() {
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -1305,65 +1305,86 @@ uci set network.loopback.ipaddr='127.0.0.1'
 uci set network.loopback.netmask='255.0.0.0'
 uci set network.loopback.dns='127.0.0.1'
 
-uci add network device
-uci set network.@device[-1].type='8021q'
-uci set network.@device[-1].ifname='br-lan'
-uci set network.@device[-1].vid='1'
-uci set network.@device[-1].name='br-lan.1'
+uci add network device >> install.log
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-SERVER'
+uci add_list network.@device[-1].ports='lan1' 
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+uci set network.@device[-1].bridge_empty='1'
 
-uci add network device
-uci set network.@device[-1].type='8021q'
-uci set network.@device[-1].ifname='br-CMOVIE'
-uci set network.@device[-1].vid='108'
-uci set network.@device[-1].name='br-CMOVIE.108'
+uci add network device >> install.log
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-HCONTROL'
+uci add_list network.@device[-1].ports='lan1' 
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+uci set network.@device[-1].bridge_empty='1'
 
-uci add network device
-uci set network.@device[-1].type='8021q'
-uci set network.@device[-1].ifname='br-CONTROL'
-uci set network.@device[-1].vid='103'
-uci set network.@device[-1].name='br-CONTROL.103'
+uci add network device >> install.log
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-CONTROL'
+uci add_list network.@device[-1].ports='lan1' 
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+uci set network.@device[-1].bridge_empty='1'
 
-uci add network device
-uci set network.@device[-1].type='8021q'
-uci set network.@device[-1].ifname='br-ENTERTAIN'
-uci set network.@device[-1].vid='106'
-uci set network.@device[-1].name='br-ENTERTA.106'
+uci add network device >> install.log
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-INET'
+uci add_list network.@device[-1].ports='lan1' 
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+uci set network.@device[-1].bridge_empty='1'
 
-uci add network device
-uci set network.@device[-1].type='8021q'
-uci set network.@device[-1].ifname='br-GUEST'
-uci set network.@device[-1].vid='107'
-uci set network.@device[-1].name='br-GUEST.107'
+uci add network device >> install.log
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-VOICE'
+uci add_list network.@device[-1].ports='lan1' 
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+uci set network.@device[-1].bridge_empty='1'
 
-uci add network device
-uci set network.@device[-1].type='8021q'
-uci set network.@device[-1].ifname='br-HCONTROL'
-uci set network.@device[-1].vid='102'
-uci set network.@device[-1].name='br-HCONTROL.102'
+uci add network device >> install.log
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-ENTERTAIN'
+uci add_list network.@device[-1].ports='lan1' 
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+uci set network.@device[-1].bridge_empty='1'
 
-uci add network device # =cfg140f15
-uci set network.@device[-1].type='8021q'
-uci set network.@device[-1].ifname='br-INET'
-uci set network.@device[-1].vid='104'
-uci set network.@device[-1].name='br-INET.104'
+uci add network device >> install.log
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-GUEST'
+uci add_list network.@device[-1].ports='lan1' 
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+uci set network.@device[-1].bridge_empty='1'
 
-uci add network device
-uci set network.@device[-1].type='8021q'
-uci set network.@device[-1].ifname='br-SERVER'
-uci set network.@device[-1].vid='101'
-uci set network.@device[-1].name='br-SERVER.101'
+uci add network device >> install.log
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-CMOVIE'
+uci add_list network.@device[-1].ports='lan1' 
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+uci set network.@device[-1].bridge_empty='1'
 
-uci add network device
-uci set network.@device[-1].type='8021q'
-uci set network.@device[-1].ifname='br-TELEKOM'
-uci set network.@device[-1].vid='110'
-uci set network.@device[-1].name='br-TELEKOM.110'
-
-uci add network device
-uci set network.@device[-1].type='8021q'
-uci set network.@device[-1].ifname='br-VOICE'
-uci set network.@device[-1].vid='105'
-uci set network.@device[-1].name='br-VOICE.105'
+uci add network device >> install.log
+uci set network.@device[-1].type='bridge'
+uci set network.@device[-1].name='br-TELEKOM'
+uci add_list network.@device[-1].ports='lan1' 
+uci add_list network.@device[-1].ports='lan2'
+uci add_list network.@device[-1].ports='lan3'
+uci add_list network.@device[-1].ports='lan4'
+uci set network.@device[-1].bridge_empty='1'
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='TELEKOM'
@@ -1914,7 +1935,103 @@ echo 'On Error enter logread'
 echo
 }
 
-create_switch() {
+create_switch_23(){
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='101'
+uci set network.@bridge-vlan[-1].vid='101'
+uci set network.@bridge-vlan[-1].description='SERVER'
+uci add_list network.@bridge-vlan[-1].ports='lan1:t'
+#uci add_list network.@bridge-vlan[-1].ports='lan2'
+uci add_list network.@bridge-vlan[-1].ports='lan2:t'
+uci add_list network.@bridge-vlan[-1].ports='lan3:t'
+uci add_list network.@bridge-vlan[-1].ports='lan4:t'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='102'
+uci set network.@bridge-vlan[-1].vid='102'
+uci set network.@bridge-vlan[-1].description='HCONTROL'
+#uci add_list network.@bridge-vlan[-1].ports='lan1'
+uci add_list network.@bridge-vlan[-1].ports='lan1:t'
+uci add_list network.@bridge-vlan[-1].ports='lan2:t'
+#uci add_list network.@bridge-vlan[-1].ports='lan3'
+uci add_list network.@bridge-vlan[-1].ports='lan3:t'
+uci add_list network.@bridge-vlan[-1].ports='lan4:t'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='103'
+uci set network.@bridge-vlan[-1].vid='103'
+uci set network.@bridge-vlan[-1].description='CONTROL'
+uci add_list network.@bridge-vlan[-1].ports='lan1:t'
+uci add_list network.@bridge-vlan[-1].ports='lan2:t'
+uci add_list network.@bridge-vlan[-1].ports='lan3:t'
+uci add_list network.@bridge-vlan[-1].ports='lan4:t'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='104'
+uci set network.@bridge-vlan[-1].vid='104'
+uci set network.@bridge-vlan[-1].description='INET'
+uci add_list network.@bridge-vlan[-1].ports='lan1:t'
+uci add_list network.@bridge-vlan[-1].ports='lan2:t'
+uci add_list network.@bridge-vlan[-1].ports='lan3:t'
+uci add_list network.@bridge-vlan[-1].ports='lan4:t'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='105'
+uci set network.@bridge-vlan[-1].vid='105'
+uci set network.@bridge-vlan[-1].description='VOICE'
+uci add_list network.@bridge-vlan[-1].ports='lan1:t'
+uci add_list network.@bridge-vlan[-1].ports='lan2:t'
+uci add_list network.@bridge-vlan[-1].ports='lan3:t'
+uci add_list network.@bridge-vlan[-1].ports='lan4:t'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='106'
+uci set network.@bridge-vlan[-1].vid='106'
+uci set network.@bridge-vlan[-1].description='ENTERTAIN'
+uci add_list network.@bridge-vlan[-1].ports='lan1:t'
+uci add_list network.@bridge-vlan[-1].ports='lan2:t'
+uci add_list network.@bridge-vlan[-1].ports='lan3:t'
+uci add_list network.@bridge-vlan[-1].ports='lan4:t'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='107'
+uci set network.@bridge-vlan[-1].vid='107'
+uci set network.@bridge-vlan[-1].description='GUEST'
+uci add_list network.@bridge-vlan[-1].ports='lan1:t'
+uci add_list network.@bridge-vlan[-1].ports='lan2:t'
+uci add_list network.@bridge-vlan[-1].ports='lan3:t'
+uci add_list network.@bridge-vlan[-1].ports='lan4:t'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='108'
+uci set network.@bridge-vlan[-1].vid='108'
+uci set network.@bridge-vlan[-1].description='CMOVIE'
+uci add_list network.@bridge-vlan[-1].ports='lan1:t'
+uci add_list network.@bridge-vlan[-1].ports='lan2:t'
+uci add_list network.@bridge-vlan[-1].ports='lan3:t'
+uci add_list network.@bridge-vlan[-1].ports='lan4:t'
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='110'
+uci set network.@bridge-vlan[-1].vid='110'
+uci set network.@bridge-vlan[-1].description='TELEKOM'
+uci add_list network.@bridge-vlan[-1].ports='lan1:t'
+uci add_list network.@bridge-vlan[-1].ports='lan2:t'
+uci add_list network.@bridge-vlan[-1].ports='lan3:t'
+uci add_list network.@bridge-vlan[-1].ports='lan4:t'
+}
+
+create_switch_test() {
 
 uci del dhcp.lan.ra_slaac
 uci set network.lan.device='br-lan.1'
@@ -21203,8 +21320,8 @@ view_config
 customize_firmware >> install.log
 create_hotspot >> install.log
 
-create_switch >> install.log
-create_network >> install.log
+create_switch_23 >> install.log
+create_network_23 >> install.log
 create_wlan >> install.log
 create_firewall_zones >> install.log
 #create_MWAN >> install.log
