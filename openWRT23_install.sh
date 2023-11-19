@@ -1378,7 +1378,7 @@ uci set network.TELEKOM.broadcast=$CMOVIE_broadcast
 uci set network.TELEKOM.gateway=$INET_GW
 #uci set network.TELEKOM.dns=$CMOVIE_ip
 uci set network.TELEKOM.dns=$INET_GW
-uci set network.TELEKOM.device='br-TELEKOM'
+uci set network.TELEKOM.device='br-lan.110'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1392,7 +1392,7 @@ uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
 uci set network.CMOVIE.gateway=$INET_GW
 #uci set network.CMOVIE.dns=$CMOVIE_ip
 uci set network.CMOVIE.dns=$INET_GW
-uci set network.CMOVIE.device='br-CMOVIE'
+uci set network.CMOVIE.device='br-lan.108'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1406,7 +1406,7 @@ uci set network.GUEST.broadcast=$GUEST_broadcast
 uci set network.GUEST.gateway=$INET_GW
 #uci set network.GUEST.dns=$GUEST_ip
 uci set network.GUEST.dns=$INET_GW
-uci set network.GUEST.device='br-GUEST'
+uci set network.GUEST.device='br-lan.107'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1420,7 +1420,7 @@ uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
 uci set network.ENTERTAIN.gateway=$INET_GW
 #uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
 uci set network.ENTERTAIN.dns=$INET_GW
-uci set network.ENTERTAIN.device='br-ENTERTAIN'
+uci set network.ENTERTAIN.device='br-lan.106'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1434,7 +1434,7 @@ uci set network.VOICE.broadcast=$VOICE_broadcast
 uci set network.VOICE.gateway=$INET_GW
 #uci set network.VOICE.dns=$VOICE_ip
 uci set network.VOICE.dns=$INET_GW
-uci set network.VOICE.device='br-VOICE'
+uci set network.VOICE.device='br-lan.105'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1448,7 +1448,7 @@ uci set network.INET.broadcast=$INET_broadcast
 uci set network.INET.gateway=$INET_GW
 #uci set network.INET.dns=$INET_ip
 uci set network.INET.dns=$INET_GW
-uci set network.INET.device='br-INET'
+uci set network.INET.device='br-lan.104'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1462,7 +1462,7 @@ uci set network.CONTROL.broadcast=$CONTROL_broadcast
 uci set network.CONTROL.gateway=$INET_GW
 #uci set network.CONTROL.dns=$CONTROL_ip
 uci set network.CONTROL.dns=$INET_GW
-uci set network.CONTROL.device='br-CONTROL'
+uci set network.CONTROL.device='br-lan.103'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1476,7 +1476,7 @@ uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
 uci set network.HCONTROL.gateway=$INET_GW
 #uci set network.HCONTROL.dns=$HCONTROL_ip
 uci set network.HCONTROL.dns=$INET_GW
-uci set network.HCONTROL.device='br-HCONTROL'
+uci set network.HCONTROL.device='br-lan.102'
 uci commit network >> install.log
 
 uci add network interface >> install.log
@@ -1490,7 +1490,7 @@ uci set network.SERVER.broadcast=$SERVER_broadcast
 uci set network.SERVER.gateway=$INET_GW
 #uci set network.SERVER.dns=$SERVER_ip
 uci set network.SERVER.dns=$INET_GW
-uci set network.SERVER.device='br-SERVER'
+uci set network.SERVER.device='br-lan.101'
 uci commit network >> install.log
 
 uci set network.wan=interface >> install.log
@@ -1522,8 +1522,15 @@ echo
 
 create_vlan_bridge() {
 
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='1'
+uci add_list network.@bridge-vlan[-1].ports='lan1:u*'
+uci add_list network.@bridge-vlan[-1].ports='lan2:u*'
+uci add_list network.@bridge-vlan[-1].ports='lan3:u*'
+uci add_list network.@bridge-vlan[-1].ports='lan4:u*'
+
 uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-SERVER'
+uci set network.@bridge-vlan[-1].device='br-lan'
 uci set network.@bridge-vlan[-1].vlan='101'
 uci set network.@bridge-vlan[-1].vid='101'
 uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
@@ -1532,7 +1539,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan3:t'
 uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
 uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-HCONTROL'
+uci set network.@bridge-vlan[-1].device='br-lan'
 uci set network.@bridge-vlan[-1].vlan='102'
 uci set network.@bridge-vlan[-1].vid='102'
 uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
@@ -1541,7 +1548,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan3:t'
 uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
 uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-CONTROL'
+uci set network.@bridge-vlan[-1].device='br-lan'
 uci set network.@bridge-vlan[-1].vlan='103'
 uci set network.@bridge-vlan[-1].vid='103'
 uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
@@ -1550,7 +1557,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan3:t'
 uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
 uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-INET'
+uci set network.@bridge-vlan[-1].device='br-lan'
 uci set network.@bridge-vlan[-1].vlan='104'
 uci set network.@bridge-vlan[-1].vid='104'
 uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
@@ -1559,7 +1566,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan3:t'
 uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
 uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-VOICE'
+uci set network.@bridge-vlan[-1].device='br-lan'
 uci set network.@bridge-vlan[-1].vlan='105'
 uci set network.@bridge-vlan[-1].vid='105'
 uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
@@ -1568,7 +1575,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan3:t'
 uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
 uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-ENTERTAIN'
+uci set network.@bridge-vlan[-1].device='br-lan'
 uci set network.@bridge-vlan[-1].vlan='106'
 uci set network.@bridge-vlan[-1].vid='106'
 uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
@@ -1577,7 +1584,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan3:t'
 uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
 uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-GUEST'
+uci set network.@bridge-vlan[-1].device='br-lan'
 uci set network.@bridge-vlan[-1].vlan='107'
 uci set network.@bridge-vlan[-1].vid='107'
 uci add_list network.@bridge-vlan[-1].ports='lan1:t'
@@ -1586,7 +1593,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan3:t'
 uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
 uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-CMOVIE'
+uci set network.@bridge-vlan[-1].device='br-lan'
 uci set network.@bridge-vlan[-1].vlan='108'
 uci set network.@bridge-vlan[-1].vid='108'
 uci add_list network.@bridge-vlan[-1].ports='lan1:t'
@@ -1595,7 +1602,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan3:t'
 uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
 uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-TELEKOM'
+uci set network.@bridge-vlan[-1].device='br-lan'
 uci set network.@bridge-vlan[-1].vlan='110'
 uci set network.@bridge-vlan[-1].vid='110'
 uci add_list network.@bridge-vlan[-1].ports='lan1:t'
