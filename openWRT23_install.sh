@@ -2801,6 +2801,42 @@ uci set wireless.wifinet16.key=$WIFI_PASS
 uci set wireless.wifinet16.network='CMOVIE'
 uci set wireless.wifinet16.ssid=$CMOVIE_ssid
 
+uci delete wireless.wifinet17
+uci set wireless.wifinet17=wifi-iface
+uci set wireless.wifinet17.encryption='psk2'
+uci set wireless.wifinet17.device='radio0'
+uci set wireless.wifinet17.mode='ap'
+uci set wireless.wifinet17.key=$WIFI_PASS
+uci set wireless.wifinet17.network='TELEKOM'
+uci set wireless.wifinet17.ssid=$TELEKOM_ssid
+
+uci delete wireless.wifinet18
+uci set wireless.wifinet18=wifi-iface
+uci set wireless.wifinet18.encryption='psk2'
+uci set wireless.wifinet18.device='radio1'
+uci set wireless.wifinet18.mode='ap'
+uci set wireless.wifinet18.key=$WIFI_PASS
+uci set wireless.wifinet18.network='TELEKOM'
+uci set wireless.wifinet18.ssid=$TELEKOM_ssid
+
+uci delete wireless.wifinet19
+uci set wireless.wifinet19=wifi-iface
+uci set wireless.wifinet19.encryption='psk2'
+uci set wireless.wifinet19.device='radio0'
+uci set wireless.wifinet19.mode='ap'
+uci set wireless.wifinet19.key=$WIFI_PASS
+uci set wireless.wifinet19.network='TELEKOM'
+uci set wireless.wifinet19.ssid='Vodafon-Hotspot'
+
+uci delete wireless.wifinet20
+uci set wireless.wifinet20=wifi-iface
+uci set wireless.wifinet20.encryption='psk2'
+uci set wireless.wifinet20.device='radio1'
+uci set wireless.wifinet20.mode='ap'
+uci set wireless.wifinet20.key=$WIFI_PASS
+uci set wireless.wifinet20.network='TELEKOM'
+uci set wireless.wifinet20.ssid='Vodadon-Hotspot'
+
 uci delete wireless.radio0.disabled >> install.log
 uci delete wireless.radio1.disabled >> install.log
 
