@@ -21690,8 +21690,8 @@ create_hotspot >> install.log
 #create_switch_23 >> install.log
 #create_network_23 >> install.log
 
-create_bridge_ports
-create_network_interfaces
+#create_bridge_ports
+#create_network_interfaces
 create_vlan_bridge
 
 create_wlan >> install.log
