@@ -1522,6 +1522,23 @@ echo
 
 create_vlan_bridge() {
 
+uci del dhcp.lan.ra_slaac
+
+uci add network bridge-vlan
+uci set network.@bridge-vlan[-1].device='br-lan'
+uci set network.@bridge-vlan[-1].vlan='1'
+uci add_list network.@bridge-vlan[-1].ports='lan1'
+uci add_list network.@bridge-vlan[-1].ports='lan2'
+uci add_list network.@bridge-vlan[-1].ports='lan3'
+uci add_list network.@bridge-vlan[-1].ports='lan4'
+uci set network.lan.device='br-lan.1'
+
+}
+
+
+
+create_vlan_bridge_old() {
+
 uci set network.lan.device='br-lan.1'
 
 uci add network bridge-vlan
@@ -1617,6 +1634,180 @@ uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 uci commit && reload_config
 }
 
+create_network() {
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                Network Definitions                   #'
+echo '#                                                      #'
+echo '########################################################'
+echo 
+
+uci set network.loopback=interface
+uci set network.loopback.ifname='lo'
+uci set network.loopback.proto='static'
+uci set network.loopback.ipaddr='127.0.0.1'
+uci set network.loopback.netmask='255.0.0.0'
+uci set network.loopback.dns='127.0.0.1'
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='TELEKOM'
+uci commit network >> install.log
+uci set network.TELEKOM.proto='static'
+uci set network.TELEKOM.ipaddr=$CMOVIE_ip
+uci set network.TELEKOM.netmask='255.255.255.0'
+uci set network.TELEKOM.ip6assign='56'
+uci set network.TELEKOM.broadcast=$CMOVIE_broadcast
+uci set network.TELEKOM.gateway=$INET_GW
+#uci set network.TELEKOM.dns=$CMOVIE_ip
+uci set network.TELEKOM.dns=$INET_GW
+uci set network.TELEKOM.device='br-TELEKOM.110'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='CMOVIE'
+uci commit network >> install.log
+uci set network.CMOVIE.proto='static'
+uci set network.CMOVIE.ipaddr=$CMOVIE_ip
+uci set network.CMOVIE.netmask='255.255.255.0'
+uci set network.CMOVIE.ip6assign='56'
+uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
+uci set network.CMOVIE.gateway=$INET_GW
+#uci set network.CMOVIE.dns=$CMOVIE_ip
+uci set network.CMOVIE.dns=$INET_GW
+uci set network.CMOVIE.device='br-CMOVIE.108'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='GUEST'
+uci commit network >> install.log
+uci set network.GUEST.proto='static'
+uci set network.GUEST.ipaddr=$GUEST_ip
+uci set network.GUEST.netmask='255.255.255.0'
+uci set network.GUEST.ip6assign='56'
+uci set network.GUEST.broadcast=$GUEST_broadcast
+uci set network.GUEST.gateway=$INET_GW
+#uci set network.GUEST.dns=$GUEST_ip
+uci set network.GUEST.dns=$INET_GW
+uci set network.GUEST.device='br-GUEST.107'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='ENTERTAIN'
+uci commit network >> install.log
+uci set network.ENTERTAIN.proto='static'
+uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
+uci set network.ENTERTAIN.netmask='255.255.255.0'
+uci set network.ENTERTAIN.ip6assign='56'
+uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
+uci set network.ENTERTAIN.gateway=$INET_GW
+#uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
+uci set network.ENTERTAIN.dns=$INET_GW
+uci set network.ENTERTAIN.device='br-ENTERTAIN.106'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='VOICE'
+uci commit network >> install.log
+uci set network.VOICE.proto='static'
+uci set network.VOICE.ipaddr=$VOICE_ip
+uci set network.VOICE.netmask='255.255.255.0'
+uci set network.VOICE.ip6assign='56'
+uci set network.VOICE.broadcast=$VOICE_broadcast
+uci set network.VOICE.gateway=$INET_GW
+#uci set network.VOICE.dns=$VOICE_ip
+uci set network.VOICE.dns=$INET_GW
+uci set network.VOICE.device='br-VOICE.105'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='INET'
+uci commit network >> install.log
+uci set network.INET.proto='static'
+uci set network.INET.ipaddr=$INET_ip
+uci set network.INET.netmask='255.255.255.0'
+uci set network.INET.ip6assign='56'
+uci set network.INET.broadcast=$INET_broadcast
+uci set network.INET.gateway=$INET_GW
+#uci set network.INET.dns=$INET_ip
+uci set network.INET.dns=$INET_GW
+uci set network.INET.device='br-INET.104'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='CONTROL'
+uci commit network >> install.log
+uci set network.CONTROL.proto='static'
+uci set network.CONTROL.ipaddr=$CONTROL_ip
+uci set network.CONTROL.netmask='255.255.255.0'
+uci set network.CONTROL.ip6assign='56'
+uci set network.CONTROL.broadcast=$CONTROL_broadcast
+uci set network.CONTROL.gateway=$INET_GW
+#uci set network.CONTROL.dns=$CONTROL_ip
+uci set network.CONTROL.dns=$INET_GW
+uci set network.CONTROL.device='br-CONTROL.103'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='HCONTROL'
+uci commit network >> install.log
+uci set network.HCONTROL.proto='static'
+uci set network.HCONTROL.ipaddr=$HCONTROL_ip
+uci set network.HCONTROL.netmask='255.255.255.0'
+uci set network.HCONTROL.ip6assign='56'
+uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
+uci set network.HCONTROL.gateway=$INET_GW
+#uci set network.HCONTROL.dns=$HCONTROL_ip
+uci set network.HCONTROL.dns=$INET_GW
+uci set network.HCONTROL.device='br-HCONTROL.102'
+uci commit network >> install.log
+
+uci add network interface >> install.log
+uci rename network.@interface[-1]='SERVER'
+uci commit network >> install.log
+uci set network.SERVER.proto='static'
+uci set network.SERVER.ipaddr=$SERVER_ip
+uci set network.SERVER.netmask='255.255.255.0'
+uci set network.SERVER.ip6assign='56'
+uci set network.SERVER.broadcast=$SERVER_broadcast
+uci set network.SERVER.gateway=$INET_GW
+#uci set network.SERVER.dns=$SERVER_ip
+uci set network.SERVER.dns=$INET_GW
+uci set network.SERVER.device='br-SERVER.101'
+uci commit network >> install.log
+
+uci set network.wan=interface >> install.log
+uci set network.wan.proto='static'
+uci set network.wan.netmask='255.255.255.0'
+uci set network.wan.ip6assign='60'
+uci set network.wan.gateway=$INET_GW
+uci add_list network.wan.dns="127.0.0.1"
+uci set network.wan.ifname='eth1'
+uci set network.wan.ipaddr=$WAN_ip
+uci set network.wan.peerdns="0"
+uci commit network >> install.log
+
+uci set network.wan6.proto='dhcpv6'
+uci set network.wan6.reqaddress='try'
+uci set network.wan6.reqprefix='auto'
+uci set network.wan6.ifname='eth1'
+#uci add_list network.wan6.dns="2606:4700:4700::1113"
+#uci add_list network.wan6.dns="2606:4700:4700::1003"
+uci add_list network.wan6.dns="0::1"
+uci set network.wan6.peerdns="0"
+uci commit network >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
+
+}
+
+
 create_network_23() {
 clear
 echo '########################################################'
@@ -1638,14 +1829,14 @@ uci set network.loopback.ipaddr='127.0.0.1'
 uci set network.loopback.netmask='255.0.0.0'
 uci set network.loopback.dns='127.0.0.1'
 
-uci add network device >> install.log
-uci set network.@device[-1].type='bridge'
-uci set network.@device[-1].name='br-SERVER'
-uci add_list network.@device[-1].ports='lan1' 
-uci add_list network.@device[-1].ports='lan2'
-uci add_list network.@device[-1].ports='lan3'
-uci add_list network.@device[-1].ports='lan4'
-uci set network.@device[-1].bridge_empty='1'
+#uci add network device >> install.log
+#uci set network.@device[-1].type='bridge'
+#uci set network.@device[-1].name='br-SERVER'
+#uci add_list network.@device[-1].ports='lan1' 
+#uci add_list network.@device[-1].ports='lan2'
+#uci add_list network.@device[-1].ports='lan3'
+#uci add_list network.@device[-1].ports='lan4'
+#uci set network.@device[-1].bridge_empty='1'
 
 uci add network device >> install.log
 uci set network.@device[-1].type='bridge'
@@ -18833,8 +19024,233 @@ view_config
 
 set_dhcp() {
 
-uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci commit dhcp >/dev/null
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci commit dhcp >/dev/null
+
+uci set dhcp.Blacklist=dnsmasq
+uci set dhcp.Blacklist.domainneeded='1'
+uci set dhcp.Blacklist.boguspriv='1'
+uci set dhcp.Blacklist.filterwin2k='0'
+uci set dhcp.Blacklist.localise_queries='1'
+uci set dhcp.Blacklist.rebind_protection='1'
+uci set dhcp.Blacklist.rebind_localhost='1'
+uci set dhcp.Blacklist.expandhosts='1'
+uci set dhcp.Blacklist.nonegcache='0'
+uci set dhcp.Blacklist.authoritative='1'
+uci set dhcp.Blacklist.readethers='1'
+uci set dhcp.Blacklist.nonwildcard='1'
+uci set dhcp.Blacklist.localservice='1'
+uci set dhcp.Blacklist.ednspacket_max='1232'
+uci set dhcp.Blacklist.cachelocal='1'
+uci set dhcp.Blacklist.cachesize='0'
+uci set dhcp.Blacklist.queryport=$DNS_Relay_port
+uci set dhcp.Blacklist.leasefile='/tmp/dhcp.leases'
+uci set dhcp.Blacklist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
+uci add_list dhcp.Blacklist.notinterface='br-lan.105'
+uci add_list dhcp.Blacklist.notinterface='br-lan.106'
+uci add_list dhcp.Blacklist.notinterface='br-lan.107'
+uci add_list dhcp.Blacklist.notinterface='br-lan.108'
+uci add_list dhcp.Blacklist.notinterface='br-lan.110'
+uci add_list dhcp.Blacklist.notinterface='loopback'
+uci add_list dhcp.Blacklist.interface='br-lan.104'
+uci add_list dhcp.Blacklist.interface='br-lan.101' 
+uci add_list dhcp.Blacklist.interface='br-lan.102'
+uci add_list dhcp.Blacklist.interface='br-lan.103'
+uci add_list dhcp.Blacklist.interface='br-lan.1'
+
+uci set dhcp.Whitelist=dnsmasq
+uci set dhcp.Whitelist.domainneeded='1'
+uci set dhcp.Whitelist.boguspriv='1'
+uci set dhcp.Whitelist.filterwin2k='0'
+uci set dhcp.Whitelist.localise_queries='1'
+uci set dhcp.Whitelist.rebind_protection='1'
+uci set dhcp.Whitelist.rebind_localhost='1'
+uci set dhcp.Whitelist.expandhosts='1'
+uci set dhcp.Whitelist.nonegcache='0'
+uci set dhcp.Whitelist.authoritative='1'
+uci set dhcp.Whitelist.readethers='1'
+uci set dhcp.Whitelist.nonwildcard='1'
+uci set dhcp.Whitelist.localservice='1'
+uci set dhcp.Whitelist.ednspacket_max='1232'
+uci set dhcp.Whitelist.cachelocal='1'
+uci set dhcp.Whitelist.cachesize='0'
+uci set dhcp.Whitelist.queryport=$DNS_Relay_port
+uci set dhcp.Whitelist.leasefile='/tmp/dhcp.leases'
+uci set dhcp.Whitelist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
+uci add_list dhcp.Whitelist.interface='br-lan.105'
+uci add_list dhcp.Whitelist.interface='br-lan.106'
+uci add_list dhcp.Whitelist.interface='br-lan.107'
+uci add_list dhcp.Whitelist.interface='br-lan.108'
+uci add_list dhcp.Whitelist.interface='br-lan.110'
+uci add_list dhcp.Whitelist.interface='loopback'
+uci add_list dhcp.Whitelist.notinterface='br-lan.104'
+uci add_list dhcp.Whitelist.notinterface='br-lan.101'
+uci add_list dhcp.Whitelist.notinterface='br-lan.102'
+uci add_list dhcp.Whitelist.notinterface='br-lan.103'
+uci add_list dhcp.Whitelist.notinterface='br-lan.1'
+
+uci set dhcp.CMOVIE=dhcp
+uci set dhcp.CMOVIE.interface='CMOVIE'
+uci set dhcp.CMOVIE.start='20'
+uci set dhcp.CMOVIE.limit='250'
+uci set dhcp.CMOVIE.leasetime='24h'
+uci set dhcp.CMOVIE.netmask='255.255.255.0'
+uci set dhcp.CMOVIE.domain=$CMOVIE_domain
+uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
+uci set dhcp.CMOVIE.instance='Whitelist'
+uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
+uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
+uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
+uci set dhcp.CMOVIE.server=$SERVER_ip'#'$DNS_Relay_port
+
+uci set dhcp.CONTROL=dhcp
+uci set dhcp.CONTROL.interface='CONTROL'
+uci set dhcp.CONTROL.start='10'
+uci set dhcp.CONTROL.limit='250'
+uci set dhcp.CONTROL.leasetime='24h'
+uci set dhcp.CONTROL.netmask='255.255.255.0'
+uci set dhcp.CONTROL.domain=$CONTROL_domain
+uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
+uci set dhcp.CONTROL.instance='Blacklist'
+uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip 
+uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
+uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
+uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_Relay_port
+
+uci set dhcp.ENTERTAIN=dhcp
+uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
+uci set dhcp.ENTERTAIN.start='10'
+uci set dhcp.ENTERTAIN.limit='250'
+uci set dhcp.ENTERTAIN.leasetime='24h'
+uci set dhcp.ENTERTAIN.netmask='255.255.255.0'
+uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
+uci set dhcp.ENTERTAIN.instance='Whitelist'
+uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
+uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
+uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_Relay_port
+
+uci set dhcp.GUEST=dhcp
+uci set dhcp.GUEST.interface='GUEST'
+uci set dhcp.GUEST.start='10'
+uci set dhcp.GUEST.limit='250'
+uci set dhcp.GUEST.leasetime='24h'
+uci set dhcp.GUEST.netmask='255.255.255.0'
+uci set dhcp.GUEST.domain=$GUEST_domain
+uci set dhcp.GUEST.local='/'$GUEST_domain'/'
+uci set dhcp.GUEST.instance='Whitelist'
+uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
+uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
+uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
+uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_Relay_port
+
+uci set dhcp.HCONTROL=dhcp
+uci set dhcp.HCONTROL.interface='HCONTROL'
+uci set dhcp.HCONTROL.start='10'
+uci set dhcp.HCONTROL.limit='250'
+uci set dhcp.HCONTROL.leasetime='24h'
+uci set dhcp.HCONTROL.netmask='255.255.255.0'
+uci set dhcp.HCONTROL.domain=$HCONTROL_domain
+uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
+uci set dhcp.HCONTROL.instance='Blacklist'
+uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
+uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
+uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
+uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_Relay_port
+
+uci set dhcp.INET=dhcp
+uci set dhcp.INET.interface='INET'
+uci set dhcp.INET.start='10'
+uci set dhcp.INET.limit='250'
+uci set dhcp.INET.leasetime='24h'
+uci set dhcp.INET.netmask='255.255.255.0'
+uci set dhcp.INET.domain=$INET_domain
+uci set dhcp.INET.local='/'$INET_domain'/'
+uci set dhcp.INET.instance='Blacklist'
+uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
+uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
+uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
+uci set dhcp.INET.server=$INET_ip'#'$DNS_Relay_port
+
+uci del dhcp.lan.ra_slaac
+uci set dhcp.lan.start='10'
+uci set dhcp.lan.limit='250'
+uci set dhcp.lan.leasetime='24h'
+uci set dhcp.lan.netmask='255.255.255.0'
+uci set dhcp.lan.domain='lan.local'
+uci set dhcp.lan.local='/lan.local/'
+uci set dhcp.lan.instance='Blacklist'
+
+uci set dhcp.SERVER=dhcp
+uci set dhcp.SERVER.interface='SERVER'
+uci set dhcp.SERVER.start='10'
+uci set dhcp.SERVER.limit='250'
+uci set dhcp.SERVER.leasetime='24h'
+uci set dhcp.SERVER.netmask='255.255.255.0'
+uci set dhcp.SERVER.domain=$SERVER_domain
+uci set dhcp.SERVER.local='/'$SERVER_domain'/'
+uci set dhcp.SERVER.instance='Blacklist'
+uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
+uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
+uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
+uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_Relay_port
+
+
+uci set dhcp.TELEKOM=dhcp
+uci set dhcp.TELEKOM.interface='TELEKOM'
+uci set dhcp.TELEKOM.start='10'
+uci set dhcp.TELEKOM.limit='250'
+uci set dhcp.TELEKOM.leasetime='24h'
+uci set dhcp.TELEKOM.netmask='255.255.255.0'
+uci set dhcp.TELEKOM.domain=$TELEKOM_domain
+uci set dhcp.TELEKOM.local='/'$TELEKOM_domain'/'
+uci set dhcp.TELEKOM.instance='Whitelist'
+uci add_list dhcp.TELEKOM.dhcp_option='6,'$TELEKOM_ip 
+uci add_list dhcp.TELEKOM.dhcp_option='3,'$TELEKOM_ip
+uci add_list dhcp.TELEKOM.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.TELEKOM.dhcp_option='15,'$TELEKOM_domain
+uci set dhcp.TELEKOM.server=$TELEKOM_ip'#'$DNS_Relay_port
+
+uci set dhcp.VOICE=dhcp
+uci set dhcp.VOICE.interface='VOICE'
+uci set dhcp.VOICE.start='10'
+uci set dhcp.VOICE.limit='250'
+uci set dhcp.VOICE.leasetime='24h'
+uci set dhcp.VOICE.netmask='255.255.255.0'
+uci set dhcp.VOICE.domain=$VOICE_domain
+uci set dhcp.VOICE.local='/'$VOICE_domain'/'
+uci set dhcp.VOICE.instance='Whitelist'
+uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
+uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
+uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
+uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_Relay_port
+
+mkdir /etc/dnsmasq.d  >> install.log
+mkdir /etc/dnsmasq.d/Blacklist >> install.log
+mkdir /etc/dnsmasq.d/Whitelist >> install.log
+mkdir /etc/dnsmasq.d/BlockAll >> install.log
+mkdir /etc/dnsmasq.d/AllowAll >> install.log
+
+uci commit dhcp && reload_config >> install.log
+}
+
+
+
+set_dhcp_old() {
+
+#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci commit dhcp >/dev/null
 
 uci set dhcp.Blacklist=dnsmasq
 uci set dhcp.Blacklist.domainneeded='1'
@@ -21693,15 +22109,16 @@ create_hotspot >> install.log
 #create_network_23 >> install.log
 
 create_vlan_bridge
-#create_network_interfaces
+set_dhcp >> install.log
+create_network_interfaces
 #create_bridge_ports
-
 create_wlan >> install.log
+
 create_firewall_zones >> install.log
 #create_MWAN >> install.log
 view_config
 
-set_dhcp >> install.log
+
 #set_firewall_ipset >> install.log
 set_firewall_rules >> install.log
 #set_mountpoints >> install.log
