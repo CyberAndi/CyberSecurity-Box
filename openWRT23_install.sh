@@ -1522,8 +1522,12 @@ echo
 
 create_vlan_bridge() {
 
+uci set network.lan.device='br-lan.1'
+
+uci add network bridge-vlan
 uci set network.@bridge-vlan[-1].device='br-lan'
 uci set network.@bridge-vlan[-1].vlan='1'
+uci set network.@bridge-vlan[-1].vid='1'
 uci add_list network.@bridge-vlan[-1].ports='lan1:u*'
 uci add_list network.@bridge-vlan[-1].ports='lan2:u*'
 uci add_list network.@bridge-vlan[-1].ports='lan3:u*'
@@ -1610,6 +1614,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan2:t'
 uci add_list network.@bridge-vlan[-1].ports='lan3:t'
 uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
+uci commit && reload_config
 }
 
 create_network_23() {
@@ -1625,9 +1630,6 @@ echo '#                                                      #'
 echo '########################################################'
 echo 
 
-#!/bin/sh
-#uci -q delete network
-#uci delete network.lan
 
 uci set network.loopback=interface
 uci set network.loopback.ifname='lo'
@@ -21691,7 +21693,7 @@ create_hotspot >> install.log
 #create_network_23 >> install.log
 
 #create_bridge_ports
-#create_network_interfaces
+create_network_interfaces
 create_vlan_bridge
 
 create_wlan >> install.log
