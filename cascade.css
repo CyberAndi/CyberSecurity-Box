@@ -721,9 +721,9 @@ input[type="checkbox"].cbi-input-invalid,input[type="radio"].cbi-input-invalid {
 	--fg-color: var(--error-color-high)
 }
 
-.item::after,.btn,.cbi-button,.cbi-select,.cbi-dropdown,.cbi-dynlist > .item,input[type="checkbox"]::before,input[type="radio"]::before,input,button,textarea,select {
+.item::after, .btn, .cbi-button, .cbi-select, .cbi-dropdown, .cbi-dynlist > .item, input[type="checkbox"]::before, input[type="radio"]::before, input, button, textarea, select {
 	transition: border linear 0.2s,box-shadow linear 0.2s;
-	box-shadow: inset 0 1px 3px hsla(var(--border-color-low-hsl),.01)
+	box-shadow: rgba(0,0,0,0.8) 1.3px 1.3px 3.25px !important;
 }
 
 .item:hover::after, .btn:hover, .btn:focus, .cbi-button:hover, .cbi-button:focus, .cbi-select.focus, .cbi-dropdown:focus, .cbi-dropdown:hover, .cbi-dropdown[open], .cbi-dynlist > .item:focus, .cbi-dynlist > .item:hover, input[type="checkbox"]:focus::before, input[type="checkbox"]:hover::before, input[type="radio"]:focus::before, input[type="radio"]:hover::before, input:focus, input:hover, button:hover, textarea:focus, textarea:hover, select:focus, select:hover {
