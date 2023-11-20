@@ -2286,13 +2286,16 @@ label[for],header [data-indicator][data-clickable],th[data-sortable-row] {
 
 .cbi-select select option:hover,.cbi-dropdown[open] > ul.dropdown > li.focus {
 	background: var(--primary-color-low);
-	color: var(--on-primary-color)
+	color: var(--on-primary-color);
+	text-shadow: none;
+	font-weight: bold;
 }
 
 .cbi-select select option:checked,.cbi-dropdown[open] > ul.dropdown > li[selected] {
 	background: var(--primary-color-medium);
-	color: var(--on-primary-color)
+	color: var(--on-primary-color);
 	text-shadow: none;
+	font-weight: bold;
 }
 
 ::placeholder,.breadcrumb .active a {
@@ -2374,6 +2377,15 @@ tr.tr.cbi-section-table-descr.anonymous > .th.cbi-section-table-cell[data-widget
 
 .item::after {
 	width: 1.5em;
+}
+
+#view > .cbi-section.fade-in > h3 ~ div div[style*='display:grid'] .ifacebox[style*='max-width:100px'] {
+	margin: .25em auto !important;
+	width: 100px !important;
+}
+
+#view > .cbi-section.fade-in > h3 ~ div div[style*='display:grid'] .ifacebox[style*='max-width:100px'] .ifacebox-body {
+	height:50px;
 }
 
 #mwan3-service-status {
