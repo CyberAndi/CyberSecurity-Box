@@ -17,82 +17,53 @@
 	--background-color-h: 0;
 	--background-color-s: 0%;
 	--background-color-l: 100%;
-	--background-color-high-hsl: var(
-	--background-color-h),var(--background-color-s),var(--background-color-l);
-	--background-color-high: hsl(var(
-	--background-color-high-hsl));
-	--background-color-medium-hsl: var(
-	--background-color-h),var(--background-color-s),calc(var(--background-color-l) + var(--background-color-delta-l-sign) * calc(6 / 255 * 100%));
-	--background-color-medium: hsl(var(
-	--background-color-medium-hsl));
-	--background-color-low-hsl: var(
-	--background-color-h),var(--background-color-s),calc(var(--background-color-l) + var(--background-color-delta-l-sign) * calc(10 / 255 * 100%));
-	--background-color-low: hsl(var(
-	--background-color-low-hsl));
+	--background-color-high-hsl: var(--background-color-h),var(--background-color-s),var(--background-color-l);
+	--background-color-high: hsl(var(--background-color-high-hsl));
+	--background-color-medium-hsl: var(--background-color-h),var(--background-color-s),calc(var(--background-color-l) + var(--background-color-delta-l-sign) * calc(6 / 255 * 100%));
+	--background-color-medium: hsl(var(--background-color-medium-hsl));
+	--background-color-low-hsl: var(--background-color-h),var(--background-color-s),calc(var(--background-color-l) + var(--background-color-delta-l-sign) * calc(10 / 255 * 100%));
+	--background-color-low: hsl(var(--background-color-low-hsl));
 	--text-color-delta-l-sign: 1;
 	--text-color-h: 0;
 	--text-color-s: 0%;
 	--text-color-l: 0%;
-	--text-color-highest-hsl: var(
-	--text-color-h),var(--text-color-s),var(--text-color-l);
-	--text-color-highest: hsl(var(
-	--text-color-highest-hsl));
-	--text-color-high-hsl: var(
-	--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(64 / 255 * 100%));
-	--text-color-high: hsl(var(
-	--text-color-high-hsl));
-	--text-color-medium-hsl: var(
-	--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(128 / 255 * 100%));
-	--text-color-medium: hsl(var(
-	--text-color-medium-hsl));
-	--text-color-low-hsl: var(
-	--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(191 / 255 * 100%));
-	--text-color-low: hsl(var(
-	--text-color-low-hsl));
+	--text-color-highest-hsl: var(--text-color-h),var(--text-color-s),var(--text-color-l);
+	--text-color-highest: hsl(var(--text-color-highest-hsl));
+	--text-color-high-hsl: var(--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(64 / 255 * 100%));
+	--text-color-high: hsl(var(--text-color-high-hsl));
+	--text-color-medium-hsl: var(--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(128 / 255 * 100%));
+	--text-color-medium: hsl(var(--text-color-medium-hsl));
+	--text-color-low-hsl: var(--text-color-h),var(--text-color-s),calc(var(--text-color-l) + var(--text-color-delta-l-sign) * calc(191 / 255 * 100%));
+	--text-color-low: hsl(var(--text-color-low-hsl));
 	--border-color-delta-l-sign: -1;
-	--border-color-h: var(
-	--background-color-h);
-	--border-color-s: var(
-	--background-color-s);
-	--border-color-l: var(
-	--background-color-l);
-	--border-color-high-hsl: var(
-	--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(51 / 255 * 100%));
-	--border-color-high: hsl(var(
-	--border-color-high-hsl));
-	--border-color-medium-hsl: var(
-	--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(34 / 255 * 100%));
-	--border-color-medium: hsl(var(
-	--border-color-medium-hsl));
-	--border-color-low-hsl: var(
-	--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(17 / 255 * 100%));
-	--border-color-low: hsl(var(
-	--border-color-low-hsl));
+	--border-color-h: var(--background-color-h);
+	--border-color-s: var(--background-color-s);
+	--border-color-l: var(--background-color-l);
+	--border-color-high-hsl: var(--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(51 / 255 * 100%));
+	--border-color-high: hsl(var(--border-color-high-hsl));
+	--border-color-medium-hsl: var(--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(34 / 255 * 100%));
+	--border-color-medium: hsl(var(--border-color-medium-hsl));
+	--border-color-low-hsl: var(--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(17 / 255 * 100%));
+	--border-color-low: hsl(var(--border-color-low-hsl));
 	--decofont: "OCR A Std", "OCR-A","OCR-A Std",Terminal,Monaco,Andale Mono,Courier New,Courier,monospace;
 	--primary-color-high: #197600;
 	--primary-color-medium: #156400
 	--primary-color-low: #0d4600;
-	--on-primary-color: var(
-	--background-color-high);
+	--on-primary-color: var(--background-color-high);
 	--error-color-high-rgb: 246,43,18;
-	--error-color-high: rgb(var(
-	--error-color-high-rgb));
+	--error-color-high: rgb(var(--error-color-high-rgb));
 	--error-color-medium: #e8210d;
 	--error-color-low: #d00000;
-	--on-error-color: var(
-	--background-color-high);
+	--on-error-color: var(--background-color-high);
 	--success-color-high-rgb: 0,172,89;
-	--success-color-high: rgb(var(
-	--success-color-high-rgb));
+	--success-color-high: rgb(var(--success-color-high-rgb));
 	--success-color-medium: #009a4c;
 	--success-color-low: #007936;
-	--on-success-color: var(
-	--background-color-high);
+	--on-success-color: var(--background-color-high);
 	--warn-color-high: #efbd0b;
 	--warn-color-medium: #f0c629;
 	--warn-color-low: #f2d24f;
-	--on-warn-color: var(
-	--text-color-highest);
+	--on-warn-color: var(--text-color-highest);
 	--disabled-opacity: .7;
 	color-scheme: light
 }
@@ -121,8 +92,7 @@
 	--warn-color-high: #a69461;
 	--warn-color-medium: #a68d45;
 	--warn-color-low: #a68732;
-	--on-warn-color: var(
-	--background-color-high);
+	--on-warn-color: var(--background-color-high);
 	--disabled-opacity: .4;
 	color-scheme: dark
 }
