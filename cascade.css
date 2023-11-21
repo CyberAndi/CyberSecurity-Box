@@ -1,9 +1,15 @@
 @font-face {
 	font-family: 'OCR A Std';
-	src: local('OCR A Std'), url('OCRAStd.woff') format('woff');
-	src: url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.eot");
-	src: url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.woff") format("woff"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/bdc32e3567beb611cbb485b42ba29160.svg#OCR A Std") format("svg");
+	src: local('OCR A Std'), url('/OCRAStd.woff') format('woff');
+	src: local('OCR A Std'), url('/luci-static/bootstrap/OCRAStd.woff') format('woff');
+	src: url('/OCRAStd.woff') format('woff');
+	src: url('/luci-static/bootstrap/OCRAStd.woff') format('woff');
+	src: local('OCR-A'), url('/OCR-A.ttf') format('ttf');
+	src: local('OCR-A'), url('/luci-static/bootstrap/OCR-A.ttf') format('ttf');
+	src: url('/OCR-A.ttf') format('ttf');
+	src: url('/luci-static/bootstrap/OCR-A.ttf') format('ttf');
 }
+
 :root {
 	--focus-color-rgb: 82,168,0;
 	--background-image: url(CyberSecurity-Box.png);
@@ -62,6 +68,7 @@
 	--border-color-h),var(--border-color-s),calc(var(--border-color-l) + var(--border-color-delta-l-sign) * calc(17 / 255 * 100%));
 	--border-color-low: hsl(var(
 	--border-color-low-hsl));
+	--decofont: "OCR A Std", "OCR-A","OCR-A Std",Terminal,Monaco,Andale Mono,Courier New,Courier,monospace;
 	--primary-color-high: #197600;
 	--primary-color-medium: #156400
 	--primary-color-low: #0d4600;
@@ -346,7 +353,7 @@ h1 small,h2 small,h3 small,h4 small,h5 small,h6 small {
 }
 
 h1, h2, h3, .brand {
-	font-family: "OCR-A";
+	font-family: var(--decofont);
 }
 
 h1 {
@@ -1181,7 +1188,7 @@ footer {
 	bottom: 0px;
 	padding-top: 17px;
 	margin: 1.5em -0.5em -5px !important;
-	background-color: rgba(32,32,32,0.5);
+	background-image: linear-gradient(to bottom,rgba(32,32,32,0.9),rgba(16,16,16,0.9));
 	backdrop-filter: blur(3.5px);
  	border-top: 1px solid var(--border-color-low);
 	display: flex;
