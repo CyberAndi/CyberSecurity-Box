@@ -3295,6 +3295,7 @@ DataDirectory /var/lib/tor
 User tor
 
 EOF
+}
 
 set_tor_old() {
 /etc/init.d/tor stop >> install.log
