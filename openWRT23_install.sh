@@ -223,6 +223,7 @@ if [ "$TOR_ACTIVE" = "" ]
  	else
   		TOR_ONION='0'
 fi
+
 echo
 DNS_PORT='y'
 echo
@@ -234,7 +235,7 @@ if [ "$DNS_PORT" = "" ]
         elif [ "$DNS_PORT" = "y" ] 
 		then 
 			DNS_Relay_port='5353'
-	elif [ "$TOR_ONION" = '1' ]
+	elif [ "$TOR_ONION" = "1" ]
                	then
 	       		DNS_Relay_port='9053'
 	else
@@ -22533,7 +22534,7 @@ install_update >> install.log
 
 service log restart
 
-if [ "$TOR_ONION" = '1' ]
+if [ "$TOR_ONION" = "1" ]
                	then
 			set_tor >> install.log
 fi
