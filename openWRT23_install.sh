@@ -217,7 +217,7 @@ read -p 'Use TOR Network? [Y/n] ' -s  -n 1 TOR_ACTIVE
 if [ "$TOR_ACTIVE" = "" ]
 	then 
  		TOR_ONION='1'
-	elif [ "$TOR_ACTIVE" = "y"]
+	elif [ "$TOR_ACTIVE" = "y" ]
  		then
 			TOR_ONION='1'
  	else
