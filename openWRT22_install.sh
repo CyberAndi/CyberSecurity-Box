@@ -211,18 +211,35 @@ if [ $SUBNET_sep -lt 125 ]
 
 fi
 
+
+TOR_ONION='0'
+echo
+read -p 'Use TOR Network? [Y/n] ' -s  -n 1 TOR_ACTIVE
+if [ "$TOR_ACTIVE" = "" ]
+	then 
+ 		TOR_ONION='1'
+	elif [ "$TOR_ACTIVE" = "y"]
+ 		then
+			TOR_ONION='1'
+ 	else
+  		TOR_ONION='0'
+fi
+echo
 DNS_PORT='y'
 echo
 
 read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
 if [ "$DNS_PORT" = "" ]
         then
-               DNS_Relay_port='5353'
+	       		DNS_Relay_port='5353'
         elif [ "$DNS_PORT" = "y" ] 
 		then 
-		DNS_Relay_port='5353'
+			DNS_Relay_port='5353'
+	elif [ "$TOR_ONION" = '1' ]
+               	then
+	       		DNS_Relay_port='9053'
 	else
-               DNS_Relay_port='9053'
+ 			DNS_Relay_port='5453'
 fi
 
 if [ "$6" != "" ]  
@@ -21320,7 +21337,10 @@ install_update >> install.log
 
 service log restart
 
-set_tor >> install.log
+if [ "$TOR_ONION" = '1' ]
+               	then
+			set_tor >> install.log
+fi
 set_stubby >> install.log
 set_unbound >> install.log
 create_unbound_url_filter >> install.log
