@@ -23338,7 +23338,11 @@ install_update >> install.log
 
 service log restart
 
-set_tor >> install.log
+if [ "$TOR_ONION" = '1' ]
+               	then
+			set_tor >> install.log
+fi
+
 set_stubby >> install.log
 set_unbound >> install.log
 create_unbound_url_filter >> install.log
