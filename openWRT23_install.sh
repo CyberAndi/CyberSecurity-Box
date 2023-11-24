@@ -211,18 +211,34 @@ if [ $SUBNET_sep -lt 125 ]
 
 fi
 
+TOR_ONION='0'
+echo
+read -p 'Use TOR Network? [Y/n] ' -s  -n 1 TOR_ACTIVE
+if [ "$TOR_ACTIVE" == "" ]
+	then 
+ 		TOR_ONION='1'
+	elif [ "$TOR_ACTIVE" = "y"]
+ 		then
+			TOR_ONION='1'
+ 	else
+  		TOR_ONION='0'
+fi
+
 DNS_PORT='y'
 echo
 
 read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
 if [ "$DNS_PORT" = "" ]
         then
-               DNS_Relay_port='5353'
+	       	DNS_Relay_port='5353'
         elif [ "$DNS_PORT" = "y" ] 
 		then 
 		DNS_Relay_port='5353'
+	elif [ "$TOR_ONION" = '1' ]
+               	then
+	       		DNS_Relay_port='9053'
 	else
-               DNS_Relay_port='9053'
+ 		DNS_Relay_port='53'
 fi
 
 if [ "$6" != "" ]  
