@@ -214,7 +214,7 @@ fi
 TOR_ONION='0'
 echo
 read -p 'Use TOR Network? [Y/n] ' -s  -n 1 TOR_ACTIVE
-if [ "$TOR_ACTIVE" == "" ]
+if [ "$TOR_ACTIVE" = "" ]
 	then 
  		TOR_ONION='1'
 	elif [ "$TOR_ACTIVE" = "y"]
@@ -223,7 +223,7 @@ if [ "$TOR_ACTIVE" == "" ]
  	else
   		TOR_ONION='0'
 fi
-
+echo
 DNS_PORT='y'
 echo
 
