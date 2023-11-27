@@ -3568,6 +3568,178 @@ EOF
 
 uci set unbound.ub_main=unbound
 uci set unbound.ub_main.enabled='1'
+
+uci set unbound.ub_main.tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
+uci set unbound.ub_main.auto_trust_anchor_file='/var/lib/unbound/root.key'
+uci set unbound.ub_main.root_hints='/var/lib/unbound/root.hints'
+uci set unbound.ub_main.add_extra_dns='0'
+uci set unbound.ub_main.add_local_fqdn='1'
+uci set unbound.ub_main.add_wan_fqdn='0'
+uci set unbound.ub_main.cache_min_ttl='120'
+uci set unbound.ub_main.cache_max_ttl='86400'
+uci set unbound.ub_main.cache_size='10000'
+uci set unbound.ub_main.dhcp_link='dnsmasq'
+uci set unbound.ub_main.dhcp4_slaac6='0'
+uci set unbound.ub_main.dns64='0'
+uci set unbound.ub_main.dns64_prefix='64:ff9b::/96'
+uci set unbound.ub_main.do_ip4='yes'
+uci set unbound.ub_main.do_ip6='yes'
+uci set unbound.ub_main.do_tcp='yes'
+uci set unbound.ub_main.do_udp='yes'
+uci set unbound.ub_main.do_not_query_localhost='no'
+
+#uci set unbound.ub_main.domain='lan'
+uci set unbound.ub_main.domain=$LOCAL_DOMAIN
+#uci set unbound.ub_main.domain='server.stawinedia.local'
+#uci set unbound.ub_main.domain='dmz.stawimedia.local'
+#uci set unbound.ub_main.domain='inet.stawimedia.local'
+#uci set unbound.ub_main.domain='control.stawimedia.local'
+#uci set unbound.ub_main.domain='hcontrol.stawimedia.local'
+#uci set unbound.ub_main.domain='guest.local'
+#uci set unbound.ub_main.domain='entertain.local'
+#uci set unbound.ub_main.domain='voice.local'
+#uci set unbound.ub_main.domain='cmovie.local'
+#uci set unbound.ub_main.domain='telekom.local'
+uci set unbound.ub_main.domain_type='static'
+uci set unbound.ub_main.edns_size='1232'
+uci set unbound.ub_main.edns_buffer_size='1472'
+uci set unbound.ub_main.enabled='1'
+uci set unbound.ub_main.extended_stats='0'
+uci set unbound.ub_main.harden_glue='yes'
+uci set unbound.ub_main.harden_dnssec_stripped='yes'
+uci set unbound.ub_main.harden_large_queries='yes'
+uci set unbound.ub_main.harden_short_bufsize='yes'
+uci set unbound.ub_main.harden_below_nxdomain='yes'
+uci set unbound.ub_main.hide_binddata='1'
+uci set unbound.ub_main.hide_identity='yes'
+uci set unbound.ub_main.hide_version='yes'
+uci set unbound.ub_main.interface_auto='1'
+uci set unbound.ub_main.listen_port=$DNS_UNBOUND_port
+uci set unbound.ub_main.localservice='1'
+uci set unbound.ub_main.manual_conf='0'
+uci set unbound.ub_main.msg_cache_slabs='2'
+uci set unbound.ub_main.rrset_cache_slabs='2'
+uci set unbound.ub_main.infra_cache_slabs='2'
+uci set unbound.ub_main.key_cache_slabs='2'
+uci set unbound.ub_main.num_threads='1'
+
+uci add_list unbound.ub_main.outgoing_port_permit=$SDNS_port
+uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS_port
+uci add_list unbound.ub_main.outgoing_port_permit=$$DNS_STUBBY_port
+uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
+#uci add_list unbound.ub_main.outgoing_port_permit='9153'
+#uci add_list unbound.ub_main.outgoing_port_permit='10240-65335'
+
+uci set unbound.ub_main.prefetch='yes'
+uci set unbound.ub_main.prefetch_key='yes'
+uci add_list unbound.ub_main.private_address='192.168.0.0/16'
+uci add_list unbound.ub_main.private_address='169.254.0.0/16'
+uci add_list unbound.ub_main.private_address='172.16.0.0/12'
+uci add_list unbound.ub_main.private_address='10.0.0.0/8'
+uci add_list unbound.ub_main.private_address='fd00::/8'
+uci add_list unbound.ub_main.private_address='fe80::/10'
+
+uci set unbound.ub_main.protocol='ip4_only'
+uci set unbound.ub_main.qname_minimisation='yes'
+uci set unbound.ub_main.qname_minimisation_strict='yes'
+uci set unbound.ub_main.query_minimize='1'
+uci set unbound.ub_main.query_min_strict='1'
+uci set unbound.ub_main.rate_limit='0'
+uci set unbound.ub_main.rebind_localhost='0'
+uci set unbound.ub_main.rebind_protection='1'
+uci set unbound.ub_main.recursion='passiv'
+uci set unbound.ub_main.resource='medium'
+uci set unbound.ub_main.root_age='9'
+uci set unbound.ub_main.rrset_roundrobin='yes'
+uci set unbound.ub_main.serve_expired='yes'
+uci set unbound.ub_main.so_reuseport='yes'
+uci set unbound.ub_main.so_rcvbuf='1m'
+uci set unbound.ub_main.ttl_min='120'
+uci set unbound.ub_main.ttl_neg_max='86400'
+uci set unbound.ub_main.unbound_control='0'
+uci set unbound.ub_main.use_caps_for_id='yes'
+uci set unbound.ub_main.validator='1'
+uci set unbound.ub_main.validator_ntp='1'
+uci set unbound.ub_main.verbosity='0'
+uci add_list unbound.ub_main.iface_trig='lan'
+uci add_list unbound.ub_main.iface_trig='SERVER'
+uci add_list unbound.ub_main.iface_trig='CONTROL'
+uci add_list unbound.ub_main.iface_trig='HCONTROL'
+uci add_list unbound.ub_main.iface_trig='INET'
+uci add_list unbound.ub_main.iface_trig='VOICE'
+uci add_list unbound.ub_main.iface_trig='ENTERTAIN'
+uci add_list unbound.ub_main.iface_trig='GUEST'
+uci add_list unbound.ub_main.iface_trig='CMOVIE'
+uci add_list unbound.ub_main.iface_trig='TELEKOM'
+uci add_list unbound.ub_main.iface_trig='lo'
+uci add_list unbound.ub_main.iface_trig='wan'
+uci add_list unbound.ub_main.iface_wan='wan'
+uci add_list unbound.ub_main.domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
+uci add_list unbound.ub_main.domain_insecure='lan'
+uci add_list unbound.ub_main.domain_insecure=$INET_domain
+uci add_list unbound.ub_main.domain_insecure=$SERVER_domain
+uci add_list unbound.ub_main.domain_insecure=$HCONTROL_domain
+uci add_list unbound.ub_main.domain_insecure=$CONTROL_domain
+uci add_list unbound.ub_main.domain_insecure=$VOICE_domain
+uci add_list unbound.ub_main.domain_insecure=$GUEST_domain
+uci add_list unbound.ub_main.domain_insecure=$ENTERTAIN_domain
+uci add_list unbound.ub_main.domain_insecure=$CMOVIE_domain
+uci add_list unbound.ub_main.domain_insecure=$TELEKOM_domain
+uci add_list unbound.ub_main.domain_insecure='onion'
+uci add_list unbound.ub_main.domain_insecure='exit'
+
+uci commit unbound && reload_config  >> install.log
+/etc/init.d/unbound start  >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
+
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+
+/etc/init.d/unbound restart  >> install.log
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                AD- and Porn-Filter installed         #'
+echo '#                                                      #'
+echo '########################################################'
+
+}
+
+set_unbound_23() {
+mkdir /etc/unbound/unbound.conf.d >> install.log
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
+curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
+
+cat << EOF > /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+
+::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+
+uci set unbound.ub_main=unbound
+uci set unbound.ub_main.enabled='1'
 #uci set unbound.ub_main.include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
 uci set unbound.ub_main.tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
 uci set unbound.ub_main.auto_trust_anchor_file='/var/lib/unbound/root.key'
