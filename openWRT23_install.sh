@@ -55,12 +55,15 @@ echo
 }
 
 ask_parameter() {
+
 release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=')
 revision=$(cat /etc/openwrt_release | grep "DISTRIB_REVISION" | cut -f2 -d '=')
 revision=${revision::-1}
 release=${release::-1}
 revision=${revision:1}
 release=${release:1}
+main_release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=' | cut -f1 -d"." | cut -c 2-)
+
 echo '--------------------------------------------------------'
 echo '       Current Version ' $release, $revision
 echo '--------------------------------------------------------'
@@ -126,8 +129,16 @@ if [ "$2" != "" ]
 	then
 		LAN=$2
 	else
-		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
+		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep 'inet ' | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
 fi
+
+#IPv6=""
+#IPv6=$(echo $(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' ) | cut -c 5-6)
+
+#if [ "$IPv6" = "::" ]
+#	then
+#		LAN=''
+#fi
 
 if [ "$LAN" = "" ]
         then
