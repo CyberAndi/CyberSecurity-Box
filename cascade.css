@@ -1708,12 +1708,11 @@ form.inline {
 
 #syslog {
 	width: 100%;
-	color: var(--text-color-highest);
 	margin-bottom: 18px
 }
 
 #syslog, textarea {
-	color: var(--success-color-high) !important;
+	color: rgb(var(--focus-color-rgb)) !important;
 	background-color: #000 !important;
 	margin-bottom: 18px !important;
 	border-radius: 0.5em;
@@ -2398,6 +2397,36 @@ tr.tr.cbi-section-table-descr.anonymous > .th.cbi-section-table-cell[data-widget
 	margin: 4em auto !important;
 }
 
+::scrollbar:horizontal {
+	color: rgba(var(--focus-color-rgb),1);
+	height: 5px;
+}
+
+::scrollbar {
+	color: rgba(var(--focus-color-rgb),1);
+	width: 5px;
+}
+	
+::-webkit-scrollbar:horizontal {
+	color: rgba(var(--focus-color-rgb),1);
+	height: 5px;
+}
+
+::-webkit-scrollbar {
+	color: rgba(var(--focus-color-rgb),1);
+	width: 5px;
+}
+
+::-moz-scrollbar:horizontal {
+	color: rgba(var(--focus-color-rgb),1);
+	height: 5px;
+}
+
+::-moz-scrollbar {
+	color: rgba(var(--focus-color-rgb),1);
+	width: 5px;
+}
+	
 @keyframes flash {
 	50% {
 		opacity: .5
