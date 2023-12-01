@@ -260,26 +260,23 @@ body {
 	padding: 5px;
 }
 /*
+
 body::before {
 	position: fixed;
-	content: '101010111110000100101010010101010100101010101111100000100101010100101010010101010101\A \A \A \A
-	111110000100101010010101010100101010101111100000100101010100101010010101010101101010\A \A \A \A \A \A \A \A \A
-        0000100101010010101010100101010101111100000100101010100101010010101010101101010\A \A
-	101010111110000100101010010101010100101010101111100000100101010100101010010101010101\A';
-	
-	top: 240px;
-	
-	left: -189px;
-	-webkit-user-modify: read-write-plaintext-only;
+	content: 'function popupmenue() {\A   var popup = document.getElementById(\000027mainmenue_mini\000027).style.visibility;\A\A               if (popup == \000027\000027) {\A         document.getElementById(\000027mainmenue_mini\000027).style.visibility = \000027visible\000027;\A         popup = \000027visible\000027;\A         return;\A        } ;\A        if (popup == \000027visible\000027){\     document.getElementById(\000027mainmenue_mini\000027).style.visibility = \000027hidden\000027;\A     popup = \000027visible\000027;\A     return;\A     }; \A      if (popup == \000027hidden\000027) {\A          document.getElementById(\000027mainmenue_mini\000027).style.visibility = \000027visible\000027;\A          popup = \000027hidden\000027;\A       return;\A  };\A              \A     popup = \000027\000027;\A     return;\A\A     };\A';
+	top: 37%;
+	left: 370px;
+	white-space: pre !important;
 	display: block;
 	width: 100vw !important;
 	color: rgb(var(--focus-color-rgb));
-	text-shadow: 0em 0em 0.175em;
-	transform: perspective(100px) rotateY(327.5deg);
+	text-shadow: 0em 0em 0.25em rgb(var(--focus-color-rgb)), 0.5em 0em 0.55em rgba(var(--focus-color-rgb),0.8), 1em 0em 0.765em rgba(var(--focus-color-rgb),0.6);
+	transform: perspective(800px) rotateY(47.5deg);
 	font-size: 16pt;
-	font-family: ui-monospace;
+	font-family: ui-monospace, monospace;
 	z-index: -11800;
 }
+
 */
 
 #maincontent {
