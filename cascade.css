@@ -910,6 +910,7 @@ header p {
 	display: block;
 	float: left;
 	border: solid 1px transparent;
+	backdrop-filter: blur(2.5px);
 }
 
 .nav a {
@@ -1048,7 +1049,8 @@ a.menu:after {
 	float: none;
 	display: block;
 	background-color: transparent;
-	position: relative
+	backdrop-filter: blur(2.5px);
+	position: relative;
 }
 
 .dropdown-menu a {
