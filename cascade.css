@@ -1773,6 +1773,7 @@ form.inline {
 	background-color: #000 !important;
 	margin-bottom: 18px !important;
 	border-radius: 0.5em;
+	max-width: calc(100% - 2em) !important;
 }
 
 
