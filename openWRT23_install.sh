@@ -14,7 +14,11 @@ view_config()  {
 echo
 echo 'Your Config is:'
 echo
-echo 'ClienWiFi SSID:       '$INET_ssid
+echo 'DNS-Relay Port:       '$DNS_Relay_port
+echo 'Tor/Onion:            '$TOR_ONION
+echo 'Firewall:             '$FW_HSactive
+echo
+echo 'ClientWiFi SSID:      '$INET_ssid
 echo 'Key:                  '$WIFI_PASS
 echo 'IP:                   '$INET_net
 echo
@@ -42,7 +46,7 @@ echo 'Guests SSID is:       '$GUEST_ssid
 echo 'Key:                  '$WIFI_PASS
 echo 'IP:                   '$GUEST_net
 echo
-echo 'IP-Address:           '$ACCESS_SERVER
+echo 'IP-Address:           '$LAN
 echo 'Gateway:              '$INET_GW
 echo 'Domain:               '$LOCAL_DOMAIN
 echo
