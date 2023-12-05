@@ -904,7 +904,7 @@ header p {
 	float: left;
 	position: relative;
 	left: 0;
-	margin: 4px 10px 0 0
+	margin: 0.2em 10px 0 0;
 }
 
 .nav > li {
