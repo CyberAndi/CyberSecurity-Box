@@ -912,6 +912,7 @@ header p {
 	float: left;
 	border: solid 1px transparent;
 	backdrop-filter: blur(2.5px);
+	margin-top: 0.2rm;
 }
 
 .nav a {
