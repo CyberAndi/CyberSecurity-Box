@@ -867,7 +867,8 @@ header .brand:hover,header ul .active > a {
 	outline: 0;
 	box-shadow: 0.25em 0em 0.5em rgba(0,0,0,0.8) ,inset 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 -3px 8px rgba(var(--focus-color-rgb),0.6);
 	text-decoration: none;
-	border-radius: 0.35em;
+	border-radius: 0.25em;
+	margin-top: 0.2em;
 	color: var(--primary-color-medium);
 }
 
