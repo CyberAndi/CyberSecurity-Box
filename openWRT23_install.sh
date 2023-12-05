@@ -407,7 +407,7 @@ rm AdGuardHome_linux_armv5.tar.gz
 define_variables() {
 #----------------------------------------------------------------------------
 echo
-echo "define variables"
+echo 'define variables'
 echo
 #
 _port="67"
@@ -1091,7 +1091,7 @@ NETFLIX_SRV="54.204.25.0/28 23.23.189.144/28 34.195.253.0/25 35.163.200.168/28"
 VIDEO_SRV="52.192.0.0/11 99.86.3.59/24 18.236.7.30/11 217.148.99.11/28 46.137.171.215/11 34.241.244.104/24 207.45.72.215/11 "$NETFLIX_SRV
 
 echo
-echo "variables defineds"
+echo 'variables defineds'
 echo
 }
 
@@ -3929,7 +3929,7 @@ uci add_list unbound.@zone[-1].server=zone_name='arpa.'
 uci add_list unbound.@zone[-1].server=zone_name='in-addr.arpa.'
 uci add_list unbound.@zone[-1].server=zone_name='ip6.arpa.'
 
-echo "Tor: "$TOR_ONION
+echo 'Tor: '$TOR_ONION
 if [ "$TOR_ONION" = "0" ]
 	then
 		uci add unbound zone
@@ -3945,7 +3945,7 @@ if [ "$TOR_ONION" = "0" ]
 		uci add_list unbound.@zone[-1].server '2606:4700:4700::1001'
 		uci add_list unbound.@zone[-1].zone_name '.'
 
-		echo "Zone Cloudflair"
+		echo 'Zone Cloudflair'
 
 elif [ "$DNS_Relay_port" = "5453"]
 	then	
@@ -3959,7 +3959,7 @@ elif [ "$DNS_Relay_port" = "5453"]
 		uci set unbound.@zone[-1].forward_tls_upstream='yes'
 		uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_STUBBY_port
 		
-		echo "Zone Cloudflair over Stubby"
+		echo 'Zone Cloudflair over Stubby'
 
 else 
 
@@ -3985,7 +3985,7 @@ else
 		uci set unbound.@zone[-1].forward_tls_upstream='yes'
 		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
 
-		echo "Zone Cloudflair over TOR"
+		echo 'Zone Cloudflair over TOR'
 fi
 
 echo
