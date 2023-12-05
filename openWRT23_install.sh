@@ -23427,8 +23427,6 @@ echo '#                                                      #'
 echo '########################################################'
 echo
 echo 'Firewall-Rules activated and it will reboot now.'
-echo
-echo 'Your Config is:'
 view_config
 echo 'On Error enter logread'
 echo
