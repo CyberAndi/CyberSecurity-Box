@@ -46,7 +46,7 @@ echo 'Guests SSID is:       '$GUEST_ssid
 echo 'Key:                  '$WIFI_PASS
 echo 'IP:                   '$GUEST_net
 echo
-echo 'IP-Address:           '$LAN
+echo 'WAN IP-Address:       '$WAN_ip
 echo 'Gateway:              '$INET_GW
 echo 'Domain:               '$LOCAL_DOMAIN
 echo
@@ -23429,43 +23429,7 @@ echo
 echo 'Firewall-Rules activated and it will reboot now.'
 echo
 echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
+view_config
 echo 'On Error enter logread'
 echo
 echo 'Please wait until Reboot ....'
