@@ -1210,6 +1210,8 @@ wait $processes
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
 wait $processes
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.svg -P /www/luci-static/bootstrap/)
+wait $processes
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberAndi.svg -P /www/luci-static/bootstrap/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/cascade.css -P /www/luci-static/bootstrap/)
 wait $processes1
