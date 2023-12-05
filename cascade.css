@@ -1771,7 +1771,7 @@ form.inline {
 #syslog, textarea {
 	color: rgb(var(--focus-color-rgb)) !important;
 	background-color: #000 !important;
-	margin-bottom: 18px !important;
+	margin: 0 1em 1em 1em !important;
 	border-radius: 0.5em;
 	max-width: calc(100% - 2em) !important;
 }
