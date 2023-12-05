@@ -278,6 +278,22 @@ body::before {
 	z-index: -11800;
 }
 
+body::after {
+	content: '';
+	display:block;
+	background-repeat: no-repeat;
+	background-image: var(--background-head);
+	background-size: 40vw;
+	top:22vh;
+	left:65vw;
+	width: 40vw;
+	height: 40vw;
+	visiblity:visible;
+	position:fixed;
+	overflow:overlay;
+	
+}
+
 */
 
 #maincontent {
