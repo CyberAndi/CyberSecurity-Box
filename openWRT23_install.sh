@@ -23519,6 +23519,6 @@ echo $(logread | grep 'dhcp')
 echo
 view_config
 echo
-echo 'I will reboot now.'
+echo 'I will reboot now. Wait 5 Minutes.'
 echo 'Restart at: '$(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 reboot 
