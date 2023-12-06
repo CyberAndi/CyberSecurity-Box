@@ -23482,13 +23482,24 @@ echo '########################################################'
 echo
 echo 'Firewall-Rules activated and it will reboot now.'
 echo
-view_config
-echo
 echo 'On Error enter logread'
 echo 'logfile'
-logread | grep 'unbound'
-logread | grep 'tor'
-logread | grep 'subby'
+echo 
+echo 'Tor:	'$(service tor status)
+echo $(logread | grep 'tor')
+echo
+echo 'Stubby:	' $(service stubby status)
+echo $(logread | grep 'stubby')
+echo
+echo 'Unbound:	' $(service unbound status)
+echo $(logread | grep 'unbound')
+echo
+echo 'DNSMASQ:	' $(service dnsmasq status)
+echo $(logread | grep 'dnsmasq')
+echo
+echo $(logread | grep 'dhcp')
+echo
+view_config
 echo
 echo 'Please wait until Reboot ....'
 echo
