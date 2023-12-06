@@ -53,7 +53,7 @@ echo 'GUI-Access:           https://'$INET_ip':8443'
 echo 'User:                 '$USERNAME
 echo 'Password:             password'
 echo
-echo 'Please wait until ca. 10 Minutes and then Reboot ...'
+echo 'Please wait for at least 10 minutes and then it will reboot ...'
 echo
 }
 
