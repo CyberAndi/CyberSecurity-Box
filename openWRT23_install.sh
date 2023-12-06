@@ -54,7 +54,7 @@ echo 'GUI-Access:           https://'$INET_ip':8443'
 echo 'User:                 '$USERNAME
 echo 'Password:             password'
 echo
-echo 'Please wait until Reboot ...'
+echo 'Please wait until ca. 10 Minutes and then Reboot ...'
 echo
 }
 
@@ -23497,9 +23497,10 @@ echo '#                 CyberSecurity-Box                    #'
 echo '#                                                      #'
 echo '########################################################'
 echo
-echo 'Firewall-Rules activated and it will reboot now.'
+echo 'Firewall-Rules activated '
 echo
-echo 'On Error enter logread'
+echo 'Please wait until Reboot ....'
+echo
 echo 'logfile'
 echo 
 echo 'Tor:	'$(service tor status)
@@ -23518,7 +23519,6 @@ echo $(logread | grep 'dhcp')
 echo
 view_config
 echo
-echo 'Please wait until Reboot ....'
-echo
+echo 'I will reboot now.'
 echo 'Restart at: '$(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 reboot 
