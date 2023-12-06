@@ -377,7 +377,7 @@ GUEST_ssid='Guest-'$WIFI_SSID
 CMOVIE_ssid='Free_CMovie_Portal'
 Adversisment_ssid='Telekom'
 TELEKOM_ssid='Telekom'
-LAN_ssid="$WIFI_SSID
+LAN_ssid=$WIFI_SSID
 
 clear
 view_config
