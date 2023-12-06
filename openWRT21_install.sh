@@ -9,10 +9,13 @@ echo '#                                                      #'
 echo '########################################################'
 
 #Firewall Pihole Unbound Tor Transparentproxy
-
 view_config()  {
 echo
 echo 'Your Config is:'
+echo
+echo 'DNS-Relay Port:       '$DNSMASQ_Relay_port
+echo 'Tor/Onion:            '$TOR_ONION
+echo 'Firewall:             '$FW_HSactive
 echo
 echo 'ClienWiFi SSID:       '$INET_ssid
 echo 'Key:                  '$WIFI_PASS
@@ -42,7 +45,7 @@ echo 'Guests SSID is:       '$GUEST_ssid
 echo 'Key:                  '$WIFI_PASS
 echo 'IP:                   '$GUEST_net
 echo
-echo 'IP-Address:           '$ACCESS_SERVER
+echo 'IP-Address:           '$WAN_ip
 echo 'Gateway:              '$INET_GW
 echo 'Domain:               '$LOCAL_DOMAIN
 echo
@@ -50,17 +53,20 @@ echo 'GUI-Access:           https://'$INET_ip':8443'
 echo 'User:                 '$USERNAME
 echo 'Password:             password'
 echo
-echo 'Please wait until Reboot ...'
+echo 'Please wait until ca. 10 Minutes and then Reboot ...'
 echo
 }
 
 ask_parameter() {
+
 release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=')
 revision=$(cat /etc/openwrt_release | grep "DISTRIB_REVISION" | cut -f2 -d '=')
 revision=${revision::-1}
 release=${release::-1}
 revision=${revision:1}
 release=${release:1}
+main_release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=' | cut -f1 -d"." | cut -c 2-)
+
 echo '--------------------------------------------------------'
 echo '       Current Version ' $release, $revision
 echo '--------------------------------------------------------'
@@ -126,8 +132,16 @@ if [ "$2" != "" ]
 	then
 		LAN=$2
 	else
-		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
+		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep 'inet ' | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
 fi
+
+#IPv6=""
+#IPv6=$(echo $(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' ) | cut -c 5-6)
+
+#if [ "$IPv6" = "::" ]
+#	then
+#		LAN=''
+#fi
 
 if [ "$LAN" = "" ]
         then
@@ -217,12 +231,13 @@ read -p 'Use TOR Network? [Y/n] ' -s  -n 1 TOR_ACTIVE
 if [ "$TOR_ACTIVE" = "" ]
 	then 
  		TOR_ONION='1'
-	elif [ "$TOR_ACTIVE" = "y"]
+	elif [ "$TOR_ACTIVE" = "y" ]
  		then
 			TOR_ONION='1'
  	else
   		TOR_ONION='0'
 fi
+
 echo
 DNS_PORT='y'
 echo
@@ -230,15 +245,32 @@ echo
 read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
 if [ "$DNS_PORT" = "" ]
         then
-	       		DNS_Relay_port='5353'
+	       		DNSMASQ_Relay_port='5353'
+	  		if [ "$TOR_ONION" = "1" ]
+     				then
+					UNBOUND_Relay_port='9053'
+     			else
+				
+    					UNBOUND_Relay_port='5453'
+    			fi
         elif [ "$DNS_PORT" = "y" ] 
 		then 
-			DNS_Relay_port='5353'
-	elif [ "$TOR_ONION" = '1' ]
+			DNSMASQ_Relay_port='5353'
+	  		if [ "$TOR_ONION" = "1" ]
+     				then
+					UNBOUND_Relay_port='9053'
+     			else
+				
+    					UNBOUND_Relay_port='5453'
+    			fi
+	elif [ "$TOR_ONION" = "1" ]
                	then
-	       		DNS_Relay_port='9053'
-	else
- 			DNS_Relay_port='5453'
+	       		DNSMASQ_Relay_port='9053'
+	  		UNBOUND_Relay_port='9053'
+     			
+    		else
+ 			DNSMASQ_Relay_port='5453'
+			UNBOUND_Relay_port='5453'
 fi
 
 if [ "$6" != "" ]  
@@ -255,24 +287,26 @@ read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 SECURE_RULES
 if [ "$SECURE_RULES" = "" ]
         then
              FW_HSactive='1'
-             set_HS_Firewall
+           #  set_HS_Firewall
         elif [ "$SECURE_RULES" = "y" ]
                 then
 		FW_HSactive='1'
-                set_HS_Firewall
+            #    set_HS_Firewall
         else
               FW_HSactive='0'
-              set_HS_Firewall_disable
+            #  set_HS_Firewall_disable
 fi
 
-SERVER_range='192.168.'$(($SUBNET_sep - 123))'.2,192.168.'$(($SUBNET_sep - 123))'.200,24h'
-CONTROL_range='192.168.'$(($SUBNET_sep - 119))'.2,192.168.'$(($SUBNET_sep - 119))'.200,24h'
-HCONTROL_range='192.168.'$(($SUBNET_sep - 118))'.2,192.168.'$(($SUBNET_sep - 118))'.200,24h'
+SERVER_range='192.168.'$(($SUBNET_sep - 123))'.10,192.168.'$(($SUBNET_sep - 123))'.200,24h'
+CONTROL_range='192.168.'$(($SUBNET_sep - 119))'.10,192.168.'$(($SUBNET_sep - 119))'.200,24h'
+HCONTROL_range='192.168.'$(($SUBNET_sep - 118))'.10,192.168.'$(($SUBNET_sep - 118))'.200,24h'
 INET_range='192.168.'$SUBNET_sep'.2,192.168.'$SUBNET_sep'.200,24h'
-VOICE_range='192.168.'$(($SUBNET_sep + 1))'.2,192.168.'$(($SUBNET_sep + 1))'.200,24h'
-ENTERTAIN_range='192.168.'$(($SUBNET_sep - 1))'.2,192.168.'$(($SUBNET_sep - 1))'.200,24h'
-GUEST_range='192.168.'$(($SUBNET_sep + 10))'.2,192.168.'$(($SUBNET_sep + 10))'.200,24h'
-CMOVIE_range='192.168.'$(($SUBNET_sep + 9))'.2,192.168.'$(($SUBNET_sep + 9))'.200,24h'
+VOICE_range='192.168.'$(($SUBNET_sep + 1))'.10,192.168.'$(($SUBNET_sep + 1))'.200,24h'
+ENTERTAIN_range='192.168.'$(($SUBNET_sep - 1))'.10,192.168.'$(($SUBNET_sep - 1))'.200,24h'
+GUEST_range='192.168.'$(($SUBNET_sep + 10))'.10,192.168.'$(($SUBNET_sep + 10))'.200,24h'
+CMOVIE_range='192.168.'$(($SUBNET_sep + 9))'.10,192.168.'$(($SUBNET_sep + 9))'.200,24h'
+TELEKOM_range='192.168.'$(($SUBNET_sep + 8))'.10,192.168.'$(($SUBNET_sep + 8))'.200,24h'
+LAN_range='192.168.1.10,192.168.1.200,24h'
 
 SERVER_ip='192.168.'$(($SUBNET_sep - 123))'.254'
 CONTROL_ip='192.168.'$(($SUBNET_sep - 119))'.254'
@@ -282,6 +316,8 @@ VOICE_ip='192.168.'$(($SUBNET_sep + 1))'.1'
 ENTERTAIN_ip='192.168.'$(($SUBNET_sep - 1))'.1'
 GUEST_ip='192.168.'$(($SUBNET_sep + 10))'.1'
 CMOVIE_ip='192.168.'$(($SUBNET_sep + 9))'.1'
+TELEKOM_ip='192.168.'$(($SUBNET_sep + 8))'.1'
+LAN_ip='192.168.1.1'
 
 SERVER_broadcast='192.168.'$(($SUBNET_sep - 123))'.255'
 CONTROL_broadcast='192.168.'$(($SUBNET_sep - 119))'.255'
@@ -291,6 +327,8 @@ VOICE_broadcast='192.168.'$(($SUBNET_sep + 1))'.255'
 ENTERTAIN_broadcast='192.168.'$(($SUBNET_sep - 1))'.255'
 GUEST_broadcast='192.168.'$(($SUBNET_sep + 10))'.255'
 CMOVIE_broadcast='192.168.'$(($SUBNET_sep + 9))'.255'
+TELEKOM_broadcast='192.168.'$(($SUBNET_sep + 8))'.255'
+LAN_broadcast='192.168.1.255'
 
 SERVER_lan='192.168.'$(($SUBNET_sep - 123))'.0'
 CONTROL_lan='192.168.'$(($SUBNET_sep - 119))'.0'
@@ -300,6 +338,8 @@ VOICE_lan='192.168.'$(($SUBNET_sep + 1))'.0'
 ENTERTAIN_lan='192.168.'$(($SUBNET_sep - 1))'.0'
 GUEST_lan='192.168.'$(($SUBNET_sep + 10))'.0'
 CMOVIE_lan='192.168.'$(($SUBNET_sep + 9))'.0'
+TELEKOM_lan='192.168.'$(($SUBNET_sep + 8))'.0'
+LAN_lan='192.168.1.9'
 
 SERVER_net=$SERVER_ip'/24'
 CONTROL_net=$CONTROL_ip'/24'
@@ -309,8 +349,10 @@ VOICE_net=$VOICE_ip'/24'
 ENTERTAIN_net=$ENTERTAIN_ip'/24'
 GUEST_net=$GUEST_ip'/24'
 CMOVIE_net=$CMOVIE_ip'/24'
+TELEKOM_net=$TELEKOM_ip'/24'
 WAN_net=$WAN_ip'/24'
 WAN_MOBILE_net=$WAN_MOBILE_ip'/24'
+LAN_net='192.168.1.1/24'
 
 SERVER_domain='server.'$LOCAL_DOMAIN
 CONTROL_domain='control.'$LOCAL_DOMAIN
@@ -321,6 +363,7 @@ ENTERTAIN_domain='entertain.local'
 GUEST_domain='guest.local'
 CMOVIE_domain='cmovie.local'
 TELEKOM_domain='telekom.local'
+LAN_domain='.local'
 
 
 SERVER_ssid='DMZ-'$WIFI_SSID
@@ -333,6 +376,7 @@ GUEST_ssid='Guest-'$WIFI_SSID
 CMOVIE_ssid='Free_CMovie_Portal'
 Adversisment_ssid='Telekom'
 TELEKOM_ssid='Telekom'
+LAN_ssid=$WIFI_SSID
 
 clear
 view_config
@@ -23331,38 +23375,56 @@ uci commit fstab
 }
 
 #-------------------------start---------------------------------------
-define_variables > install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+define_variables >> install.log
 ask_parameter $1 $2 $3 $4 $5 $6
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 install_update >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 #install_adguard >> install.log
 
 service log restart
 
-if [ "$TOR_ONION" = '1' ]
+if [ "$TOR_ONION" = "1" ]
                	then
-			set_tor >> install.log
+			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+   			set_tor >> install.log
 fi
 
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 set_stubby >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 set_unbound >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_unbound_url_filter >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_dnsmasq_url_filter >> install.log
 view_config
 
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 customize_firmware >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_hotspot >> install.log
 #create_websites >> install.log
-
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_network >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_switch >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_wlan >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_firewall_zones >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 #create_MWAN >> install.log
 view_config
 
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 set_dhcp >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 set_firewall_ipset >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 set_firewall_rules >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 #set_mountpoints >> install.log
 echo >> install.log
 logread >> install.log
@@ -23374,49 +23436,28 @@ echo '#                 CyberSecurity-Box                    #'
 echo '#                                                      #'
 echo '########################################################'
 echo
-echo 'Firewall-Rules activated and it will reboot now.'
-echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
-echo 'On Error enter logread'
+echo 'Firewall-Rules activated '
 echo
 echo 'Please wait until Reboot ....'
 echo
-
+echo 'logfile'
+echo 
+echo 'Tor:	'$(service tor status)
+echo $(logread | grep 'tor')
+echo
+echo 'Stubby:	' $(service stubby status)
+echo $(logread | grep 'stubby')
+echo
+echo 'Unbound:	' $(service unbound status)
+echo $(logread | grep 'unbound')
+echo
+echo 'DNSMASQ:	' $(service dnsmasq status)
+echo $(logread | grep 'dnsmasq')
+echo
+echo $(logread | grep 'dhcp')
+echo
+view_config
+echo
+echo 'I will reboot now. Wait 5 Minutes.'
+echo 'Restart at: '$(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 reboot 
