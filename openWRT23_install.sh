@@ -23504,15 +23504,22 @@ echo
 echo 'logfile'
 echo 
 echo 'Tor:	'$(service tor status)
+echo $(dig www.test.de -p'$DNS_port' @127.0.0.1)
+echo
 echo $(logread | grep 'tor')
 echo
 echo 'Stubby:	' $(service stubby status)
+echo $(dig www.test.de -p'$DNS_STUBBY_port' @127.0.0.1)
+echo
 echo $(logread | grep 'stubby')
 echo
 echo 'Unbound:	' $(service unbound status)
+echo $(dig www.test.de -p'$DNS_UNBOUND_port' @127.0.0.1)
+echo
 echo $(logread | grep 'unbound')
 echo
 echo 'DNSMASQ:	' $(service dnsmasq status)
+echo $(dig www.test.de -p53 @127.0.0.1)
 echo $(logread | grep 'dnsmasq')
 echo
 echo $(logread | grep 'dhcp')
