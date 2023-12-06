@@ -251,7 +251,7 @@ if [ "$DNS_PORT" = "" ]
      				then
 					UNBOUND_Relay_port='9053'
      			else
-				then
+				
     					UNBOUND_Relay_port='5453'
     			fi
         elif [ "$DNS_PORT" = "y" ] 
@@ -261,7 +261,7 @@ if [ "$DNS_PORT" = "" ]
      				then
 					UNBOUND_Relay_port='9053'
      			else
-				then
+				
     					UNBOUND_Relay_port='5453'
     			fi
 	elif [ "$TOR_ONION" = "1" ]
