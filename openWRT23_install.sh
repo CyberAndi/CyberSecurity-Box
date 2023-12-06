@@ -23469,6 +23469,10 @@ echo
 view_config
 echo
 echo 'On Error enter logread'
+echo 'logfile'
+logread | grep 'unbound'
+logread | grep 'tor'
+logread | grep 'subby'
 echo
 echo 'Please wait until Reboot ....'
 echo
