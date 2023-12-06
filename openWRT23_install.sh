@@ -23432,45 +23432,62 @@ uci commit fstab
 }
 
 #-------------------------start---------------------------------------
-define_variables > install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+define_variables >> install.log
 ask_parameter $1 $2 $3 $4 $5 $6
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 install_update >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 #install_adguard >> install.log
 
 service log restart
 
 if [ "$TOR_ONION" = "1" ]
                	then
-			set_tor >> install.log
+			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+   			set_tor >> install.log
 fi
-
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 set_stubby >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 set_unbound >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_unbound_url_filter >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_dnsmasq_url_filter >> install.log
 view_config
 
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 customize_firmware >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_hotspot >> install.log
-
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 #create_switch_23 >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 #create_network_23 >> install.log
-
-create_vlan_bridge
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+create_vlan_bridge >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 set_dhcp >> install.log
-create_network_interfaces
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+create_network_interfaces >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 #create_bridge_ports
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_wlan >> install.log
 
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 create_firewall_zones >> install.log
 #create_MWAN >> install.log
 view_config
 
-
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 #set_firewall_ipset >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 set_firewall_rules >> install.log
 #set_mountpoints >> install.log
 echo >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 logread >> install.log
 
 clear
@@ -23503,5 +23520,5 @@ view_config
 echo
 echo 'Please wait until Reboot ....'
 echo
-
+echo 'Restart at: '$(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 reboot 
