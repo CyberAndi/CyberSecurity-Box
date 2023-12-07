@@ -275,7 +275,7 @@ if [ "$DNS_PORT" = "" ]
 fi
 
 if [ "$6" != "" ]  
-	then
+	then 
 		SECURE_RULESW=$6
 	else
 		SECURE_RULES='y'
@@ -409,19 +409,23 @@ opkg remove dnsmasq >> install.log
 opkg update >/dev/null
 opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
 install_check
-if [ "$unbound_inst" = "" ] then
-	#opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >> install.log
-	#opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full
-	opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill dnsmasq-full
-	opkg update >> install.log
+
+if [ "$unbound_inst" = "" ]
+	then
+		#opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >> install.log
+		#opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full
+		opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill dnsmasq-full
+		opkg update >> install.log
 fi
 
-if [ "$iptables_inst" != "" ] then
-	opkg remove iptable* --force-removal-of-dependent-packages >> install.log
+if [ "$iptables_inst" != "" ] 
+	then
+		opkg remove iptable* --force-removal-of-dependent-packages >> install.log
 fi
 
-if [ "$odhcpd_inst" != "" ] then
-	opkg remove odhcp --force-removal-of-dependent-packages >> install.log
+if [ "$odhcpd_inst" != "" ] 
+	then
+		opkg remove odhcp --force-removal-of-dependent-packages >> install.log
 fi
 echo 'install opkg'
 
