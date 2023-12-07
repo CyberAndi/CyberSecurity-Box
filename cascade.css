@@ -320,6 +320,10 @@ body::after {
 	zoom: 1;
 }
 
+#maincontent > :is(#view, #tabmenu, h2[name="content"], form) {
+	margin: 0.5rem 1rem;
+}
+
 a {
 	color: var(--primary-color-high);
 	text-decoration: none;
@@ -2506,30 +2510,65 @@ body.modal-overlay-active #modal_overlay > div {
 
 
 ::scrollbar:horizontal {
-	height: 6px;
+	height: 4px;
 	background-color: transparent;
 }
 
 ::scrollbar {
-	width: 6px;
+	width: 4px;
+	background-color: transparent;
+}
+
+::scrollbar:horizontal:hover {
+	height: 10px;
+	background-color: transparent;
+}
+
+::scrollbar:hover {
+	width: 10px;
 	background-color: transparent;
 }
 
 ::scrollbar-thumb {
 	background-color: rgba(var(--focus-color-rgb),0.6);
+	border-radius: 2px;
 }
+
+::scrollbar-thumb:hover {
+	background-color: rgba(var(--focus-color-rgb),0.6);
+	border-radius: 5px;
+}
+
 
 ::scrollbar-button {
 	background-color: transparent;
 	color: transparent;
-	height: 2px;
+	height: 10px;
+	border-radius: 2px;
 }
 
 ::scrollbar-button:horizontal {
 	background-color:  transparent;
 	color: transparent;
-	width: 2px;
+	width: 10px;
+	border-radius: 2px;
 }
+
+
+::scrollbar-button:hover {
+	background-color: #888888;
+	color: #888888;
+	height: 10px;
+	border-radius: 5px;
+}
+
+::scrollbar-button:horizontal:hover {
+	background-color: #888888;
+	color: #888888;
+	width: 10px;
+	border-radius: 5px;
+}
+
 
 ::scrollbar-corner {
 	background-color: rgba(230,230,230,0.5);
@@ -2538,30 +2577,65 @@ body.modal-overlay-active #modal_overlay > div {
 }
 
 ::-webkit-scrollbar:horizontal {
-	height: 6px;
+	height: 4px;
 	background-color: transparent;
 }
 
 ::-webkit-scrollbar {
-	width: 6px;
+	width: 4px;
+	background-color: transparent;
+}
+
+::-webkit-scrollbar:horizontal:hover {
+	height: 10px;
+	background-color: transparent;
+}
+
+::-webkit-scrollbar:hover {
+	width: 10px;
 	background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
 	background-color: rgba(var(--focus-color-rgb),0.6);
+	border-radius: 2px;
 }
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(var(--focus-color-rgb),0.6);
+	border-radius: 5px;
+}
+
 
 ::-webkit-scrollbar-button {
 	background-color:  transparent;
 	color: transparent;
-	height: 2px;
+	height: 10px;
+	border-radius: 2px;
 }
 
 ::-webkit-scrollbar-button:horizontal {
 	background-color:  transparent;
 	color: transparent;
-	width: 2px;
+	width: 10px;
+	border-radius: 2px;
 }
+
+
+::-webkit-scrollbar-button:hover {
+	background-color: #888888;
+	color: #888888;
+	height: 10px;
+	border-radius: 5px;
+}
+
+::-webkit-scrollbar-button:horizontal:hover {
+	background-color: #888888;
+	color: #888888;
+	width: 10px;
+	border-radius: 5px;
+}
+
 
 ::-webkit-scrollbar-corner {
 	background-color: rgba(230,230,230,0.5);
@@ -2571,29 +2645,62 @@ body.modal-overlay-active #modal_overlay > div {
 
 
 ::-moz-scrollbar:horizontal {
-	height: 6px;
+	height: 4px;
 	background-color: transparent;
 }
 
 ::-moz-scrollbar {
-	width: 6px;
+	width: 4px;
+	background-color: transparent;
+}
+
+::-moz-scrollbar:horizontal:hover {
+	height: 10px;
+	background-color: transparent;
+}
+
+::-moz-scrollbar:hover {
+	width: 10px;
 	background-color: transparent;
 }
 
 ::-moz-scrollbar-thumb {
 	background-color: rgba(var(--focus-color-rgb),0.6);
+	border-radius: 2px;
 }
+
+::-moz-scrollbar-thumb:hover {
+	background-color: rgba(var(--focus-color-rgb),0.6);
+	border-radius: 5px;
+}
+
 
 ::-moz-scrollbar-button {
 	background-color: transparent;
 	color: transparent;
-	height: 2px;
+	height: 10px;
+	border-radius: 2px;
 }
 
 ::-moz-scrollbar-button:horizontal {
 	background-color:  transparent;
 	color: transparent;
-	width: 2px;
+	width: 10px;
+	border-radius: 2px;
+}
+
+::-moz-scrollbar-button:hover {
+	background-color: #888888;
+	color: #888888;
+	height: 10px;
+	border-radius: 5px;
+}
+
+::-moz-scrollbar-button:horizontal:hover {
+	background-color: #888888;
+	color: #888888;
+	width: 10px;
+	border-radius: 5px;
 }
 
 ::-moz-scrollbar-corner {
