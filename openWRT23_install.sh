@@ -407,7 +407,10 @@ echo
 opkg update >> install.log
 opkg remove dnsmasq >> install.log
 opkg update >/dev/null
-opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
+if [ "$(opkg list-upgradable)" != "" ]
+	then
+		opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
+fi 
 install_check
 
 if [ "$unbound_inst" = "" ]
