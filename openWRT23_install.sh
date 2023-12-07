@@ -3593,8 +3593,222 @@ echo
 
 }
 
-
 set_unbound() {
+mkdir /etc/unbound/unbound.conf.d >> install.log
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
+curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
+
+cat << EOF > /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+
+::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+
+uci set unbound.ub_main=unbound
+uci set unbound.ub_main.enabled='1'
+#uci set unbound.ub_main.include='/etc/unbound/unbound.conf.d/unbound_ad_servers'
+uci set unbound.ub_main.tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
+uci set unbound.ub_main.auto_trust_anchor_file='/var/lib/unbound/root.key'
+uci set unbound.ub_main.root_hints='/var/lib/unbound/root.hints'
+uci set unbound.ub_main.add_extra_dns='0'
+uci set unbound.ub_main.add_local_fqdn='1'
+uci set unbound.ub_main.add_wan_fqdn='0'
+uci set unbound.ub_main.dhcp_link='dnsmasq'
+uci set unbound.ub_main.dhcp4_slaac6='0'
+uci set unbound.ub_main.do_ip4='yes'
+uci set unbound.ub_main.do_ip6='yes'
+uci set unbound.ub_main.do_tcp='yes'
+uci set unbound.ub_main.do_udp='yes'
+uci set unbound.ub_main.dns64='0'
+uci set unbound.ub_main.do_not_query_localhost='no'
+uci set unbound.ub_main.domain=$LOCAL_DOMAIN
+uci set unbound.ub_main.domain_type='static'
+uci set unbound.ub_main.edns_size='1280'
+uci set unbound.ub_main.edns_buffer_size='1472'
+uci set unbound.ub_main.extended_stats='0'
+uci set unbound.ub_main.hide_binddata='1'
+uci set unbound.ub_main.interface_auto='1'
+uci set unbound.ub_main.listen_port=$DNS_UNBOUND_port
+uci set unbound.ub_main.localservice='1'
+uci set unbound.ub_main.manual_conf='0'
+uci set unbound.ub_main.num_threads='1'
+uci set unbound.ub_main.protocol='default'
+#uci set unbound.ub_main.query_minimize='0'
+uci set unbound.ub_main.query_minimize='1'
+uci set unbound.ub_main.query_min_strict='1'
+uci set unbound.ub_main.rate_limit='0'
+uci set unbound.ub_main.rebind_localhost='0'
+uci set unbound.ub_main.rebind_protection='1'
+#uci set unbound.ub_main.recursion='default'
+#uci set unbound.ub_main.resource='default'
+uci set unbound.ub_main.recursion='passiv'
+uci set unbound.ub_main.resource='medium'
+uci set unbound.ub_main.root_age='9'
+uci set unbound.ub_main.ttl_min='300'
+uci set unbound.ub_main.ttl_max='86400'
+uci set unbound.ub_main.cache_min_ttl='300'
+uci set unbound.ub_main.cache_max_ttl='86400'
+uci set unbound.ub_main.cache_size='10000'
+#uci set unbound.ub_main.unbound_control='0'
+uci set unbound.ub_main.unbound_control='2'
+uci set unbound.ub_main.prefetch='yes'
+uci set unbound.ub_main.prefetch_key='yes'
+uci set unbound.ub_main.validator='1'
+uci set unbound.ub_main.validator_ntp='1'
+uci set unbound.ub_main.verbosity='0'
+uci set unbound.ub_main.hide_identity='yes'
+uci set unbound.ub_main.hide_version='yes'
+uci set unbound.ub_main.harden_glue='yes'
+uci set unbound.ub_main.harden_dnssec_stripped='yes'
+uci set unbound.ub_main.harden_large_queries='yes'
+uci set unbound.ub_main.harden_short_bufsize='yes'
+uci set unbound.ub_main.harden_below_nxdomain='yes'
+uci set unbound.ub_main.use_caps_for_id='yes'
+uci set unbound.ub_main.so_reuseport='yes'
+uci set unbound.ub_main.msg_cache_slabs='2'
+uci set unbound.ub_main.rrset_cache_slabs='2'
+uci set unbound.ub_main.infra_cache_slabs='2'
+uci set unbound.ub_main.key_cache_slabs='2'
+uci set unbound.ub_main.qname_minimisation='yes'
+uci set unbound.ub_main.qname_minimisation_strict='yes'
+uci set unbound.ub_main.rrset_roundrobin='yes'
+uci set unbound.ub_main.serve_expired='yes'
+uci set unbound.ub_main.so_rcvbuf='1m'
+uci set unbound.ub_main.protocol='ip4_only'
+uci add_list unbound.ub_main.private_address='127.0.0.1/10'
+uci add_list unbound.ub_main.private_address='192.168.0.0/16'
+uci add_list unbound.ub_main.private_address='169.254.0.0/16'
+uci add_list unbound.ub_main.private_address='172.16.0.0/12'
+uci add_list unbound.ub_main.private_address='10.0.0.0/8'
+uci add_list unbound.ub_main.private_address='fd00::/8'
+uci add_list unbound.ub_main.private_address='fe80::/10'
+#uci add_list unbound.ub_main.access_control='0.0.0.0/0 refuse'
+#uci add_list unbound.ub_main.access_control='::0/0 refuse'
+#uci add_list unbound.ub_main.access_control='127.0.0.1 allow'
+#uci add_list unbound.ub_main.access_control='::1 allow'
+#uci add_list unbound.ub_main.access_control=$LAN_net' allow'
+#uci add_list unbound.ub_main.access_control=$SERVER_net' allow'
+#uci add_list unbound.ub_main.access_control=$CONTROL_net' allow'
+#uci add_list unbound.ub_main.access_control=$HCONTROL_net' allow'
+#uci add_list unbound.ub_main.access_control=$INET_net' allow'
+#uci add_list unbound.ub_main.access_control=$VOICE_net' allow'
+#uci add_list unbound.ub_main.access_control=$ENTERTAIN_net' allow'
+#uci add_list unbound.ub_main.access_control=$CMOVIE_net' allow'
+#uci add_list unbound.ub_main.access_control=$TELEKOM_net' allow'
+#uci add_list unbound.ub_main.iface_trig='CONTROL'
+#uci add_list unbound.ub_main.iface_trig='HCONTROL'
+#uci add_list unbound.ub_main.iface_trig='INET'
+#uci add_list unbound.ub_main.iface_trig='SERVER'
+#uci add_list unbound.ub_main.iface_trig='VOICE'
+#uci add_list unbound.ub_main.iface_trig='ENTERTAIN'
+#uci add_list unbound.ub_main.iface_trig='CMOVIE'
+#uci add_list unbound.ub_main.iface_trig='TELEKOM'
+#uci add_list unbound.ub_main.iface_trig='GUEST'
+#uci add_list unbound.ub_main.iface_trig='wan6'
+#uci add_list unbound.ub_main..iface_trig='lo'
+#uci del_list unbound.ub_main.iface_trig='lan'
+#uci set unbound.ub_main.domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
+#uci add_list unbound.ub_main.domain_insecure=$INET_domain
+#uci add_list unbound.ub_main.domain_insecure=$SERVER_domain
+#uci add_list unbound.ub_main.domain_insecure=$HCONTROL_domain
+#uci add_list unbound.ub_main.domain_insecure=$CONTROL_domain
+#uci add_list unbound.ub_main.domain_insecure=$VOICE_domain
+#uci add_list unbound.ub_main.domain_insecure=$GUEST_domain
+#uci add_list unbound.ub_main.domain_insecure=$ENTERTAIN_domain
+#uci add_list unbound.ub_main.domain_insecure=$CMOVIE_domain
+#uci add_list unbound.ub_main.domain_insecure=$TELEKOM_domain
+#uci add_list unbound.ub_main.domain_insecure=$LAN_domain
+#uci add_list unbound.ub_main.domain_insecure='onion'
+#uci add_list unbound.ub_main.domain_insecure='exit'
+###
+#uci add_list unbound.ub_main.private_domain=$INET_domain
+#uci add_list unbound.ub_main.private_domain=$SERVER_domain
+#uci add_list unbound.ub_main.private_domain=$HCONTROL_domain
+#uci add_list unbound.ub_main.private_domain=$CONTROL_domain
+#uci add_list unbound.ub_main.private_domain=$VOICE_domain
+#uci add_list unbound.ub_main.private_domain=$GUEST_domain
+#uci add_list unbound.ub_main.private_domain=$ENTERTAIN_domain
+#uci add_list unbound.ub_main.private_domain=$CMOVIE_domain
+#uci add_list unbound.ub_main.private_domain=$TELEKOM_domain
+#uci add_list unbound.ub_main.private_domain=$LAN_domain
+#uci add_list unbound.ub_main.private_domain='onion'
+#uci add_list unbound.ub_main.private_domain='exit'
+
+uci add_list unbound.ub_main.outgoing_port_permit=$SDNS_port
+uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS_port
+uci add_list unbound.ub_main.outgoing_port_permit=$UNBOUND_Relay_port
+
+uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
+#uci add_list unbound.ub_main.outgoing_port_permit='9153'
+#uci add_list unbound.ub_main.outgoing_port_permit='10240-65335'
+if  [ "$UNBOUND_Relay_port" = "5353" ] 
+	then
+		uci add unbound zone
+		uci set unbound.@zone[-1].name='onion'
+		uci set unbound.@zone[-1].zone_type='forward_zone'
+		uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+		uci add unbound zone
+		uci set unbound.@zone[-1].name='exit'
+		uci set unbound.@zone[-1].zone_type='forward_zone'
+		uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+		uci add unbound zone
+		uci set unbound.@zone[-1].name='.'
+		uci set unbound.@zone[-1].zone_type='forward_zone'
+		uci set unbound.@zone[-1].fallback='0'	
+		uci set unbound.@zone[-1].tls_upstream='1'
+		uci set unbound.@zone[-1].tls_index='dns.cloudflair'
+		uci set unbound.@zone[-1].forward_tls_upstream='yes'
+		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
+	else
+ 		uci add unbound zone
+		uci set unbound.@zone[-1].name='.'
+		uci set unbound.@zone[-1].zone_type='forward_zone'
+		uci set unbound.@zone[-1].fallback='0'	
+		uci set unbound.@zone[-1].tls_upstream='1'
+		uci set unbound.@zone[-1].tls_index='dns.cloudflair'
+		uci set unbound.@zone[-1].forward_tls_upstream='yes'
+		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$UNBOUND_Relay_port
+ fi
+uci commit unbound && reload_config  >> install.log
+/etc/init.d/unbound start  >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
+
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+
+/etc/init.d/unbound restart  >> install.log
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#                AD- and Porn-Filter installed         #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+}
+
+set_unbound_fastok() {
 mkdir /etc/unbound/unbound.conf.d >> install.log
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
