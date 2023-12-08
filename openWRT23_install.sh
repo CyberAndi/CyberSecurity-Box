@@ -1,5 +1,6 @@
 #!/bin/sh
 clear
+
 echo '########################################################'
 echo '#                                                      #'
 echo '#                 CyberSecurity-Box                    #'
