@@ -23708,8 +23708,6 @@ echo $(dig www.test.de -p'$DNS_UNBOUND_port' @127.0.0.1) >> install.log
 echo 'DNSMASQ:	' $(service dnsmasq status) >> install.log
 echo $(dig www.test.de -p53 @127.0.0.1) >> install.log
 echo
-logread >> install.log
-
 
 clear
 echo '########################################################'
