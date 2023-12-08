@@ -1251,7 +1251,7 @@ DEVICE_REVISION='v0.75'
 
 EOF
 
-cp openWRT22_install.sh /etc/openWRT_install.sh
+cp openWRT*.sh /etc/openWRT_install.sh
 chmod 0755 /etc/openWRT_install.sh
 
 cat << EOF > /etc/sysupgrade.conf
