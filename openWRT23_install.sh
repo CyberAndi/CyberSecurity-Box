@@ -3637,7 +3637,172 @@ echo
 
 }
 
+
 set_unbound() {
+mkdir -p /etc/unbound/unbound.conf.d >> install.log
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
+curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
+
+cat << EOF > /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+
+::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+
+#uci set unbound.ub_main=unbound
+uci set unbound.ub_main.dhcp_link='dnsmasq'
+uci set unbound.ub_main.dns64='0'
+uci set unbound.ub_main.domain='lan'
+uci set unbound.ub_main.edns_size='1232'
+uci set unbound.ub_main.extended_stats='0'
+uci set unbound.ub_main.hide_binddata='1'
+uci set unbound.ub_main.interface_auto='1'
+uci set unbound.ub_main.listen_port=$DNS_UNBOUND_port
+uci set unbound.ub_main.localservice='1'
+uci set unbound.ub_main.manual_conf='0'
+uci set unbound.ub_main.num_threads='1'
+uci set unbound.ub_main.protocol='ip4_only'
+uci set unbound.ub_main.rate_limit='0'
+uci set unbound.ub_main.rebind_localhost='0'
+uci set unbound.ub_main.rebind_protection='1'
+uci set unbound.ub_main.recursion='passive'
+uci set unbound.ub_main.resource='small'
+uci set unbound.ub_main.root_age='9'
+uci set unbound.ub_main.ttl_min='120'
+uci set unbound.ub_main.ttl_neg_max='1000'
+uci set unbound.ub_main.unbound_control='0'
+uci set unbound.ub_main.validator='1'
+uci set unbound.ub_main.verbosity='1'
+uci set unbound.ub_main.iface_wan='wan'
+uci set unbound.ub_main.enabled='1'
+uci set unbound.ub_main.query_minimize='1'
+uci set unbound.ub_main.query_min_strict='1'
+uci set unbound.ub_main.validator_ntp='1'
+uci add_list unbound.ub_main.domain_insecure='onion'
+uci add_list unbound.ub_main.domain_insecure='exit'
+uci add_list unbound.ub_main.domain_insecure=$LOCAL_DOMAIN
+uci add_list unbound.ub_main.domain_insecure=$INET_domain
+uci add_list unbound.ub_main.domain_insecure=$SERVER_domain
+uci add_list unbound.ub_main.domain_insecure=$HCONTROL_domain
+uci add_list unbound.ub_main.domain_insecure=$CONTROL_domain
+uci add_list unbound.ub_main.domain_insecure=$VOICE_domain
+uci add_list unbound.ub_main.domain_insecure=$GUEST_domain
+uci add_list unbound.ub_main.domain_insecure=$ENTERTAIN_domain
+uci add_list unbound.ub_main.domain_insecure=$CMOVIE_domain
+uci add_list unbound.ub_main.domain_insecure=$TELEKOM_domain
+uci add_list unbound.ub_main.domain_insecure=$LAN_domain
+uci add_list unbound.ub_main.iface_lan='CMOVIE'
+uci add_list unbound.ub_main.iface_lan='CONTROL'
+uci add_list unbound.ub_main.iface_lan='ENTERTAIN'
+uci add_list unbound.ub_main.iface_lan='GUEST'
+uci add_list unbound.ub_main.iface_lan='HCONTROL'
+uci add_list unbound.ub_main.iface_lan='INET'
+uci add_list unbound.ub_main.iface_lan='SERVER'
+uci add_list unbound.ub_main.iface_lan='TELEKOM'
+uci add_list unbound.ub_main.iface_lan='VOICE'
+uci add_list unbound.ub_main.iface_trig='CMOVIE'
+uci add_list unbound.ub_main.iface_trig='CONTROL'
+uci add_list unbound.ub_main.iface_trig='ENTERTAIN'
+uci add_list unbound.ub_main.iface_trig='GUEST'
+uci add_list unbound.ub_main.iface_trig='HCONTROL'
+uci add_list unbound.ub_main.iface_trig='INET'
+uci add_list unbound.ub_main.iface_trig='SERVER'
+uci add_list unbound.ub_main.iface_trig='TELEKOM'
+uci add_list unbound.ub_main.iface_trig='VOICE'
+uci delete unbound.auth_icann
+uci del unbound.auth_icann
+#uci set unbound.auth_icann=zone
+#uci set unbound.auth_icann.enabled='0'
+#uci set unbound.auth_icann.fallback='1'
+#uci set unbound.auth_icann.url_dir='https://www.internic.net/domain/'
+#uci set unbound.auth_icann.zone_type='auth_zone'
+#uci set unbound.auth_icann.server='lax.xfr.dns.icann.org' 'iad.xfr.dns.icann.org'
+#uci set unbound.auth_icann.zone_name='.' 'arpa.' 'in-addr.arpa.' 'ip6.arpa.'
+uci delete unbound.fwd_isp
+uci del unbound.fwd_isp
+#uci set unbound.fwd_isp=zone
+#uci set unbound.fwd_isp.enabled='0'
+#uci set unbound.fwd_isp.fallback='1'
+#uci set unbound.fwd_isp.resolv_conf='1'
+#uci set unbound.fwd_isp.zone_type='forward_zone'
+#uci set unbound.fwd_isp.zone_name='isp-bill.example.com.' 'isp-mail.example.net.'
+uci delete unbound.fwd_google
+uci del unbound.fwd_google
+#uci set unbound.fwd_google.enabled='0'
+#uci set unbound.fwd_google.fallback='1'
+#uci set unbound.fwd_google.tls_index='dns.google'
+#uci set unbound.fwd_google.tls_upstream='1'
+#uci set unbound.fwd_google.zone_type='forward_zone'
+#uci set unbound.fwd_google.server='8.8.4.4' '8.8.8.8' '2001:4860:4860::8844' '2001:4860:4860::8888'
+#uci set unbound.fwd_google.zone_name='.'
+#uci set unbound.fwd_cloudflare=zone
+uci set unbound.fwd_cloudflare.enabled='1'
+#uci set unbound.fwd_cloudflare.fallback='1'
+#uci set unbound.fwd_cloudflare.tls_index='cloudflare-dns.com'
+#uci set unbound.fwd_cloudflare.tls_upstream='1'
+#uci set unbound.fwd_cloudflare.zone_type='forward_zone'
+#uci set unbound.fwd_cloudflare.server='1.1.1.1' '1.0.0.1' '2606:4700:4700::1111' '2606:4700:4700::1001'
+#uci set unbound.fwd_cloudflare.zone_name='.'
+uci set unbound.fwd_cloudflare.dns_assist='dnsmasq'
+
+uci commit && reload_config
+
+
+if  [ "$UNBOUND_Relay_port" = "5353" ] 
+	then
+		uci add unbound zone
+		uci set unbound.@zone[-1].name='onion'
+		uci set unbound.@zone[-1].zone_type='forward_zone'
+		uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+		uci add unbound zone
+		uci set unbound.@zone[-1].name='exit'
+		uci set unbound.@zone[-1].zone_type='forward_zone'
+		uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
+		uci add unbound zone
+		uci set unbound.@zone[-1].name='.'
+		uci set unbound.@zone[-1].zone_type='forward_zone'
+		uci set unbound.@zone[-1].fallback='0'	
+		uci set unbound.@zone[-1].tls_upstream='1'
+		uci set unbound.@zone[-1].tls_index='dns.cloudflair'
+		uci set unbound.@zone[-1].forward_tls_upstream='yes'
+		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
+	else
+ 		uci add unbound zone
+		uci set unbound.@zone[-1].name='.'
+		uci set unbound.@zone[-1].zone_type='forward_zone'
+		uci set unbound.@zone[-1].fallback='0'	
+		uci set unbound.@zone[-1].tls_upstream='1'
+		uci set unbound.@zone[-1].tls_index='dns.cloudflair'
+		uci set unbound.@zone[-1].forward_tls_upstream='yes'
+		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$UNBOUND_Relay_port
+ fi
+uci commit unbound && reload_config  >> install.log
+/etc/init.d/unbound restart  >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
+
+clear
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
+echo '#                                                      #'
+echo '########################################################'
+view_config
+
+/etc/init.d/unbound restart  >> install.log
+}
+
+set_unbound_0612() {
 mkdir -p /etc/unbound/unbound.conf.d >> install.log
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
@@ -3752,8 +3917,8 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
 		uci set unbound.@zone[-1].forward_tls_upstream='yes'
 		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$UNBOUND_Relay_port
  fi
-uci commit unbound && reload_config  >> install.log
-/etc/init.d/unbound start  >> install.log
+uci commit && reload_config  >> install.log
+/etc/init.d/unbound restart  >> install.log
 
 echo
 echo 'On Error enter logread'
