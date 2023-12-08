@@ -66,13 +66,14 @@ revision=${revision::-1}
 release=${release::-1}
 revision=${revision:1}
 release=${release:1}
-main_release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=' | cut -f1 -d"." | cut -c 2-)
+main_release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=' | cut -f1 -d '.' | cut -c 2-)
 
 echo '--------------------------------------------------------'
 echo '       Current Version ' $release, $revision
 echo '--------------------------------------------------------'
 echo 
 
+echo 'Release: '$main_release >> install.log
 #Localaddresen
 LOCALADDRESS="127.192.0.1/10"
 
@@ -409,32 +410,38 @@ opkg remove dnsmasq >> install.log
 opkg update >/dev/null
 if [ "$(opkg list-upgradable)" != "" ]
 	then
-		opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
+		echo 'upgrade installed Packages' >> install.log
+  		opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
 fi 
 install_check
 
 if [ "$unbound_inst" = "" ]
 	then
-		if [ "$main_release" = "22" ] 
+		if [ "$main_release" = "23" ] 
   			then
-  				opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill dnsmasq-full
-			elif [ "$main_release" = "21" ]
+  				echo $main_release
+      				opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill dnsmasq-full
+			elif [ "$main_release" = "22" ]
    				then
-				opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full
+       					echo $main_release
+					opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full
 			else 
-   				opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >> install.log
+   					echo $main_release
+   					opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >> install.log
 		fi
    			opkg update >> install.log
 fi
 
 if [ "$iptables_inst" != "" ] 
 	then
-		opkg remove iptable* --force-removal-of-dependent-packages >> install.log
+		echo 'remove iptable-Packages' >> install.log
+  		opkg remove iptable* --force-removal-of-dependent-packages >> install.log
 fi
 
 if [ "$odhcpd_inst" != "" ] 
 	then
-		opkg remove odhcp --force-removal-of-dependent-packages >> install.log
+		echo 'remove odhcpd-Packages' >> install.log
+  		opkg remove odhcp* --force-removal-of-dependent-packages >> install.log
 fi
 echo 'install opkg'
 
@@ -23614,58 +23621,72 @@ uci commit fstab
 }
 
 #-------------------------start---------------------------------------
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...' >> install.log
+echo >> install.log
+echo $main_release
+echo >> install.log
 define_variables >> install.log
 ask_parameter $1 $2 $3 $4 $5 $6
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+if [ $1 != ""]
+	then
+ 		echo 'Automation Install' >> install.log
+   		echo >> install.log
+   		echo $1 >> install.log
+   		echo $2 >> install.log
+     		echo $3 >> install.log
+       		echo $4 >> install.log
+	 	echo $5 >> install.log
+   		echo $6 >> install.log
+ fi
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Install Updates' >> install.log
 install_update >> install.log
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Install Adguard' >> install.log
 #install_adguard >> install.log
 
 service log restart
 
 if [ "$TOR_ONION" = "1" ]
                	then
-			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Install Tor' >> install.log
    			set_tor >> install.log
 fi
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Stubby' >> install.log
 set_stubby >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' UNBOUND' >> install.log
 set_unbound >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' UNBOUND URL-Filter' >> install.log
 create_unbound_url_filter >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' DNSMASQ URL-Filter' >> install.log
 create_dnsmasq_url_filter >> install.log
 view_config
 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Customizie Firmware' >> install.log
 customize_firmware >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Hotspot' >> install.log
 create_hotspot >> install.log
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Create Switch'>> install.log
 #create_switch_23 >> install.log
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Network' >> install.log
 #create_network_23 >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create VLAN' >> install.log
 create_vlan_bridge >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' SetDHCP' >> install.log
 set_dhcp >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Networkinterfaces' >> install.log
 create_network_interfaces >> install.log
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Bridge-Ports' >> install.log
 #create_bridge_ports
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create WLAM' >> install.log
 create_wlan >> install.log
 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Firewall-Zones' >> install.log
 create_firewall_zones >> install.log
 #create_MWAN >> install.log
 view_config
 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Firewall-ipset' >> install.log
 #set_firewall_ipset >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Set Firewall-Rules' >> install.log
 set_firewall_rules >> install.log
 #set_mountpoints >> install.log
 echo >> install.log
