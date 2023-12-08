@@ -23820,62 +23820,62 @@ if [ $1 != ""]
 	 	echo $5 >> install.log
    		echo $6 >> install.log
  fi
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Install Updates' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' >> install.log
 install_update >> install.log
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Install Adguard' >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard' >> install.log
 #install_adguard >> install.log
 
 service log restart
 
 if [ "$TOR_ONION" = "1" ]
                	then
-			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' set Tor' >> install.log
+			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Tor' >> install.log
    			set_tor >> install.log
 fi
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' set Stubby' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' set Stubby' >> install.log
 set_stubby >> install.log
 if [ "$UNBOUND" = "1" ]
                	then
-			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' set UNBOUND' >> install.log
+			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' set UNBOUND' >> install.log
 			set_unbound >> install.log
 fi
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' create UNBOUND URL-Filter' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create UNBOUND URL-Filter' >> install.log
 create_unbound_url_filter >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' create DNSMASQ URL-Filter' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create DNSMASQ URL-Filter' >> install.log
 create_dnsmasq_url_filter >> install.log
 view_config
 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Customize Firmware' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> install.log
 customize_firmware >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Hotspot' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
 create_hotspot >> install.log
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Create Switch'>> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Create Switch'>> install.log
 #create_switch_23 >> install.log
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Network' >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Network' >> install.log
 #create_network_23 >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create VLAN' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create VLAN' >> install.log
 create_vlan_bridge >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' SetDHCP' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' SetDHCP' >> install.log
 set_dhcp >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Networkinterfaces' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Networkinterfaces' >> install.log
 create_network_interfaces >> install.log
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Bridge-Ports' >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Bridge-Ports' >> install.log
 #create_bridge_ports
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create WLAM' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create WLAM' >> install.log
 create_wlan >> install.log
 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Firewall-Zones' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-Zones' >> install.log
 create_firewall_zones >> install.log
 #create_MWAN >> install.log
 view_config
 
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Firewall-ipset' >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-ipset' >> install.log
 #set_firewall_ipset >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Set Firewall-Rules' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Rules' >> install.log
 set_firewall_rules >> install.log
 #set_mountpoints >> install.log
 echo >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) >> install.log
 echo >> install.log
 echo 'Tor:	'$(service tor status) >> install.log
 echo $(dig www.test.de -p $DNS_TOR_port @127.0.0.1) >> install.log
@@ -23900,12 +23900,12 @@ echo 'Please wait until Reboot ....'
 echo
 echo 'logfile'
 echo 
-echo 'Tor:	'$(service tor status)
+echo 'Tor:		' $(service tor status)
 echo $(dig www.test.de -p $DNS_TOR_port @127.0.0.1)
 echo
 echo $(logread | grep 'tor')
 echo
-echo 'Stubby:	' $(service stubby status)
+echo 'Stubby:		' $(service stubby status)
 echo $(dig www.test.de -p $DNS_STUBBY_port @127.0.0.1)
 echo
 echo $(logread | grep 'stubby')
@@ -23924,5 +23924,5 @@ echo
 view_config
 echo
 echo 'I will reboot now. Wait 5 Minutes.'
-echo 'Restart at: '$(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo 'Restart at: '$(date +%d'.'%m'.'%y' '%H':'%M':'%S) >> install.log
 reboot 
