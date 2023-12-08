@@ -3040,7 +3040,10 @@ uci set wireless.radio0.country='DE'
 uci set wireless.radio0.channel='auto'
 uci set wireless.radio0.hwmode='11n'
 
-uci delete wireless.default_radio0
+if [ "echo $(uci show wireless | grep default_radio0)" != "" ] 
+	then
+		uci delete wireless.default_radio0
+fi
 uci set wireless.default_radio0=wifi-iface
 uci set wireless.default_radio0.device='radio0'
 uci set wireless.default_radio0.mode='ap'
@@ -3049,77 +3052,101 @@ uci set wireless.default_radio0.ssid=$TELEKOM_ssid
 uci set wireless.default_radio0.encryption='psk2'
 uci set wireless.default_radio0.network='TELEKOM'
 
-uci delete wireless.wifinet1
-uci set wireless.wifinet1=wifi-iface
-uci set wireless.wifinet1.device='radio0'
-uci set wireless.wifinet1.mode='ap'
-uci set wireless.wifinet1.key=$WIFI_PASS
-uci set wireless.wifinet1.ssid=$SERVER_ssid
-uci set wireless.wifinet1.encryption='psk2'
-uci set wireless.wifinet1.network='SERVER'
+if [ "echo $(uci show wireless | grep wifinet01)" != "" ] 
+	then
+		uci delete wireless.wifinet01
+fi
+uci set wireless.wifinet01=wifi-iface
+uci set wireless.wifinet01.device='radio0'
+uci set wireless.wifinet01.mode='ap'
+uci set wireless.wifinet01.key=$WIFI_PASS
+uci set wireless.wifinet01.ssid=$SERVER_ssid
+uci set wireless.wifinet01.encryption='psk2'
+uci set wireless.wifinet01.network='SERVER'
 
-uci delete wireless.wifinet2
-uci set wireless.wifinet2=wifi-iface
-uci set wireless.wifinet2.device='radio0'
-uci set wireless.wifinet2.mode='ap'
-uci set wireless.wifinet2.key=$WIFI_PASS
-uci set wireless.wifinet2.ssid=$HCONTROL_ssid
-uci set wireless.wifinet2.encryption='psk2'
-uci set wireless.wifinet2.network='HCONTROL'
+if [ "echo $(uci show wireless | grep wifinet02)" != "" ] 
+	then
+		uci delete wireless.wifinet02
+fi
+uci set wireless.wifinet02=wifi-iface
+uci set wireless.wifinet02.device='radio0'
+uci set wireless.wifinet02.mode='ap'
+uci set wireless.wifinet02.key=$WIFI_PASS
+uci set wireless.wifinet02.ssid=$HCONTROL_ssid
+uci set wireless.wifinet02.encryption='psk2'
+uci set wireless.wifinet02.network='HCONTROL'
 
-uci delete wireless.wifinet3
-uci set wireless.wifinet3=wifi-iface
-uci set wireless.wifinet3.device='radio0'
-uci set wireless.wifinet3.mode='ap'
-uci set wireless.wifinet3.key=$WIFI_PASS
-uci set wireless.wifinet3.ssid=$CONTROL_ssid
-uci set wireless.wifinet3.encryption='psk2'
-uci set wireless.wifinet3.network='CONTROL'
+if [ "echo $(uci show wireless | grep wifinet03)" != "" ] 
+	then
+		uci delete wireless.wifinet03
+fi
+uci set wireless.wifinet03=wifi-iface
+uci set wireless.wifinet03.device='radio0'
+uci set wireless.wifinet03.mode='ap'
+uci set wireless.wifinet03.key=$WIFI_PASS
+uci set wireless.wifinet03.ssid=$CONTROL_ssid
+uci set wireless.wifinet03.encryption='psk2'
+uci set wireless.wifinet03.network='CONTROL'
 
-uci delete wireless.wifinet4
-uci set wireless.wifinet4=wifi-iface
-uci set wireless.wifinet4.device='radio0'
-uci set wireless.wifinet4.mode='ap'
-uci set wireless.wifinet4.key=$WIFI_PASS
-uci set wireless.wifinet4.ssid=$INET_ssid
-uci set wireless.wifinet4.encryption='psk2'
-uci set wireless.wifinet4.network='INET'
+if [ "echo $(uci show wireless | grep wifinet04)" != "" ] 
+	then
+		uci delete wireless.wifinet04
+fi
+uci set wireless.wifinet04=wifi-iface
+uci set wireless.wifinet04.device='radio0'
+uci set wireless.wifinet04.mode='ap'
+uci set wireless.wifinet04.key=$WIFI_PASS
+uci set wireless.wifinet04.ssid=$INET_ssid
+uci set wireless.wifinet04.encryption='psk2'
+uci set wireless.wifinet04.network='INET'
 
-uci delete wireless.wifinet5
-uci set wireless.wifinet5=wifi-iface
-uci set wireless.wifinet5.device='radio0'
-uci set wireless.wifinet5.mode='ap'
-uci set wireless.wifinet5.key=$WIFI_PASS
-uci set wireless.wifinet5.ssid=$VOICE_ssid
-uci set wireless.wifinet5.encryption='psk2'
-uci set wireless.wifinet5.network='VOICE'
+if [ "echo $(uci show wireless | grep wifinet05)" != "" ] 
+	then
+		uci delete wireless.wifinet05
+fi
+uci set wireless.wifinet05=wifi-iface
+uci set wireless.wifinet05.device='radio0'
+uci set wireless.wifinet05.mode='ap'
+uci set wireless.wifinet05.key=$WIFI_PASS
+uci set wireless.wifinet05.ssid=$VOICE_ssid
+uci set wireless.wifinet05.encryption='psk2'
+uci set wireless.wifinet05.network='VOICE'
 
-uci delete wireless.wifinet6
-uci set wireless.wifinet6=wifi-iface
-uci set wireless.wifinet6.device='radio0'
-uci set wireless.wifinet6.mode='ap'
-uci set wireless.wifinet6.key=$WIFI_PASS
-uci set wireless.wifinet6.ssid=$ENTERTAIN_ssid
-uci set wireless.wifinet6.encryption='psk2'
-uci set wireless.wifinet6.network='ENTERTAIN'
+if [ "echo $(uci show wireless | grep wifinet06)" != "" ] 
+	then
+		uci delete wireless.wifinet06
+fi
+uci set wireless.wifinet06=wifi-iface
+uci set wireless.wifinet06.device='radio0'
+uci set wireless.wifinet06.mode='ap'
+uci set wireless.wifinet06.key=$WIFI_PASS
+uci set wireless.wifinet06.ssid=$ENTERTAIN_ssid
+uci set wireless.wifinet06.encryption='psk2'
+uci set wireless.wifinet06.network='ENTERTAIN'
 
-uci delete wireless.wifinet7
-uci set wireless.wifinet7=wifi-iface
-uci set wireless.wifinet7.device='radio0'
-uci set wireless.wifinet7.mode='ap'
-uci set wireless.wifinet7.key=$WIFI_PASS
-uci set wireless.wifinet7.ssid=$GUEST_ssid
-uci set wireless.wifinet7.encryption='psk2'
-uci set wireless.wifinet7.network='GUEST'
+if [ "echo $(uci show wireless | grep wifinet07)" != "" ] 
+	then
+		uci delete wireless.wifinet07
+fi
+uci set wireless.wifinet07=wifi-iface
+uci set wireless.wifinet07.device='radio0'
+uci set wireless.wifinet07.mode='ap'
+uci set wireless.wifinet07.key=$WIFI_PASS
+uci set wireless.wifinet07.ssid=$GUEST_ssid
+uci set wireless.wifinet07.encryption='psk2'
+uci set wireless.wifinet07.network='GUEST'
 
-uci delete wireless.wifinet8
-uci set wireless.wifinet8=wifi-iface
-uci set wireless.wifinet8.device='radio0'
-uci set wireless.wifinet8.mode='ap'
-uci set wireless.wifinet8.key=$WIFI_PASS
-uci set wireless.wifinet8.ssid=$CMOVIE_ssid
-uci set wireless.wifinet8.encryption='psk2'
-uci set wireless.wifinet8.network='CMOVIE'
+if [ "echo $(uci show wireless | grep wifinet08)" != "" ] 
+	then
+		uci delete wireless.wifinet08
+fi
+uci set wireless.wifinet08=wifi-iface
+uci set wireless.wifinet08.device='radio0'
+uci set wireless.wifinet08.mode='ap'
+uci set wireless.wifinet08.key=$WIFI_PASS
+uci set wireless.wifinet08.ssid=$CMOVIE_ssid
+uci set wireless.wifinet08.encryption='psk2'
+uci set wireless.wifinet08.network='CMOVIE'
 
 uci set wireless.radio1=wifi-device
 uci set wireless.radio1.type='mac80211'
@@ -3129,17 +3156,27 @@ uci set wireless.radio1.path='platform/soc/a800000.wifi'
 uci set wireless.radio1.htmode='VHT80'
 uci set wireless.radio1.country='DE'
 
-uci delete wireless.default_radio1
-uci delete wireless.wifinet9
-uci set wireless.wifinet9=wifi-iface
-uci set wireless.wifinet9.device='radio1'
-uci set wireless.wifinet9.mode='ap'
-uci set wireless.wifinet9.key=$WIFI_PASS
-uci set wireless.wifinet9.ssid=$SERVER_ssid
-uci set wireless.wifinet9.encryption='psk2'
-uci set wireless.wifinet9.network='SERVER'
+if [ "echo $(uci show wireless | grep default_radio1)" != "" ] 
+	then
+		uci delete wireless.default_radio1
+fi
 
-uci delete wireless.wifinet10
+if [ "echo $(uci show wireless | grep wifinet09)" != "" ] 
+	then
+		uci delete wireless.wifinet09
+fi
+uci set wireless.wifinet09=wifi-iface
+uci set wireless.wifinet09.device='radio1'
+uci set wireless.wifinet09.mode='ap'
+uci set wireless.wifinet09.key=$WIFI_PASS
+uci set wireless.wifinet09.ssid=$SERVER_ssid
+uci set wireless.wifinet09.encryption='psk2'
+uci set wireless.wifinet09.network='SERVER'
+
+if [ "echo $(uci show wireless | grep wifinet10)" != "" ] 
+	then
+		uci delete wireless.wifinet10
+fi
 uci set wireless.wifinet10=wifi-iface
 uci set wireless.wifinet10.ssid=$HCONTROL_ssid
 uci set wireless.wifinet10.encryption='psk2'
@@ -3148,7 +3185,10 @@ uci set wireless.wifinet10.mode='ap'
 uci set wireless.wifinet10.network='HCONTROL'
 uci set wireless.wifinet10.key=$WIFI_PASS
 
-uci delete wireless.wifinet11
+if [ "echo $(uci show wireless | grep wifinet11)" != "" ] 
+	then
+		uci delete wireless.wifinet1
+fi
 uci set wireless.wifinet11=wifi-iface
 uci set wireless.wifinet11.ssid=$CONTROL_ssid
 uci set wireless.wifinet11.encryption='psk2'
@@ -3157,7 +3197,10 @@ uci set wireless.wifinet11.mode='ap'
 uci set wireless.wifinet11.network='CONTROL'
 uci set wireless.wifinet11.key=$WIFI_PASS
 
-uci delete wireless.wifinet12
+if [ "echo $(uci show wireless | grep wifinet12)" != "" ] 
+	then
+		uci delete wireless.wifinet12
+fi
 uci set wireless.wifinet12=wifi-iface
 uci set wireless.wifinet12.device='radio1'
 uci set wireless.wifinet12.mode='ap'
@@ -3166,7 +3209,10 @@ uci set wireless.wifinet12.encryption='psk2'
 uci set wireless.wifinet12.key=$WIFI_PASS
 uci set wireless.wifinet12.network='INET'
 
-uci delete wireless.wifinet13
+if [ "echo $(uci show wireless | grep wifinet13)" != "" ] 
+	then
+		uci delete wireless.wifinet13
+fi
 uci set wireless.wifinet13=wifi-iface
 uci set wireless.wifinet13.encryption='psk2'
 uci set wireless.wifinet13.device='radio1'
@@ -3175,7 +3221,10 @@ uci set wireless.wifinet13.key=$WIFI_PASS
 uci set wireless.wifinet13.network='VOICE'
 uci set wireless.wifinet13.ssid=$VOICE_ssid
 
-uci delete wireless.wifinet14
+if [ "echo $(uci show wireless | grep wifinet14)" != "" ] 
+	then
+		uci delete wireless.wifinet14
+fi
 uci set wireless.wifinet14=wifi-iface
 uci set wireless.wifinet14.encryption='psk2'
 uci set wireless.wifinet14.device='radio1'
@@ -3184,7 +3233,10 @@ uci set wireless.wifinet14.key=$WIFI_PASS
 uci set wireless.wifinet14.network='ENTERTAIN'
 uci set wireless.wifinet14.ssid=$ENTERTAIN_ssid
 
-uci delete wireless.wifinet15
+if [ "echo $(uci show wireless | grep wifinet15)" != "" ] 
+	then
+		uci delete wireless.wifinet15
+fi
 uci set wireless.wifinet15=wifi-iface
 uci set wireless.wifinet15.encryption='psk2'
 uci set wireless.wifinet15.device='radio1'
@@ -3193,7 +3245,10 @@ uci set wireless.wifinet15.key=$WIFI_PASS
 uci set wireless.wifinet15.network='GUEST'
 uci set wireless.wifinet15.ssid=$GUEST_ssid
 
-uci delete wireless.wifinet16
+if [ "echo $(uci show wireless | grep wifinet16)" != "" ] 
+	then
+		uci delete wireless.wifinet16
+fi
 uci set wireless.wifinet16=wifi-iface
 uci set wireless.wifinet16.encryption='psk2'
 uci set wireless.wifinet16.device='radio1'
@@ -3202,41 +3257,41 @@ uci set wireless.wifinet16.key=$WIFI_PASS
 uci set wireless.wifinet16.network='CMOVIE'
 uci set wireless.wifinet16.ssid=$CMOVIE_ssid
 
-uci delete wireless.wifinet17
+if [ "echo $(uci show wireless | grep wifinet17)" != "" ] 
+	then
+		uci delete wireless.wifinet17
+fi
 uci set wireless.wifinet17=wifi-iface
 uci set wireless.wifinet17.encryption='psk2'
-uci set wireless.wifinet17.device='radio0'
+uci set wireless.wifinet17.device='radio1'
 uci set wireless.wifinet17.mode='ap'
 uci set wireless.wifinet17.key=$WIFI_PASS
 uci set wireless.wifinet17.network='TELEKOM'
 uci set wireless.wifinet17.ssid=$TELEKOM_ssid
 
-uci delete wireless.wifinet18
+if [ "echo $(uci show wireless | grep wifinet18)" != "" ] 
+	then
+		uci delete wireless.wifinet18
+fi
 uci set wireless.wifinet18=wifi-iface
 uci set wireless.wifinet18.encryption='psk2'
-uci set wireless.wifinet18.device='radio1'
+uci set wireless.wifinet18.device='radio0'
 uci set wireless.wifinet18.mode='ap'
 uci set wireless.wifinet18.key=$WIFI_PASS
 uci set wireless.wifinet18.network='TELEKOM'
-uci set wireless.wifinet18.ssid=$TELEKOM_ssid
+uci set wireless.wifinet18.ssid='Vodafon-Hotspot'
 
-uci delete wireless.wifinet19
+if [ "echo $(uci show wireless | grep wifinet19)" != "" ] 
+	then
+		uci delete wireless.wifinet19
+fi
 uci set wireless.wifinet19=wifi-iface
 uci set wireless.wifinet19.encryption='psk2'
-uci set wireless.wifinet19.device='radio0'
+uci set wireless.wifinet19.device='radio1'
 uci set wireless.wifinet19.mode='ap'
 uci set wireless.wifinet19.key=$WIFI_PASS
 uci set wireless.wifinet19.network='TELEKOM'
-uci set wireless.wifinet19.ssid='Vodafon-Hotspot'
-
-uci delete wireless.wifinet20
-uci set wireless.wifinet20=wifi-iface
-uci set wireless.wifinet20.encryption='psk2'
-uci set wireless.wifinet20.device='radio1'
-uci set wireless.wifinet20.mode='ap'
-uci set wireless.wifinet20.key=$WIFI_PASS
-uci set wireless.wifinet20.network='TELEKOM'
-uci set wireless.wifinet20.ssid='Vodadon-Hotspot'
+uci set wireless.wifinet19.ssid='Vodadon-Hotspot'
 
 uci delete wireless.radio0.disabled >> install.log
 uci delete wireless.radio1.disabled >> install.log
