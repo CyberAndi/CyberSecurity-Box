@@ -369,7 +369,9 @@ ENTERTAIN_domain='entertain.local'
 GUEST_domain='guest.local'
 CMOVIE_domain='cmovie.local'
 TELEKOM_domain='telekom.local'
-LAN_domain='.local'
+LAN_domain='local'
+ONION_domain='onion'
+EXIT_domain='exit'
 
 
 SERVER_ssid='DMZ-'$WIFI_SSID
@@ -3682,8 +3684,8 @@ uci set unbound.ub_main.enabled='1'
 uci set unbound.ub_main.query_minimize='1'
 uci set unbound.ub_main.query_min_strict='1'
 uci set unbound.ub_main.validator_ntp='1'
-uci add_list unbound.ub_main.domain_insecure='onion'
-uci add_list unbound.ub_main.domain_insecure='exit'
+uci add_list unbound.ub_main.domain_insecure=$ONION_domain
+uci add_list unbound.ub_main.domain_insecure=$EXIT_domain
 uci add_list unbound.ub_main.domain_insecure=$LOCAL_DOMAIN
 uci add_list unbound.ub_main.domain_insecure=$INET_domain
 uci add_list unbound.ub_main.domain_insecure=$SERVER_domain
@@ -3756,11 +3758,11 @@ uci commit && reload_config
 if  [ "$UNBOUND_Relay_port" = "5353" ] 
 	then
 		uci add unbound zone
-		uci set unbound.@zone[-1].name='onion'
+		uci set unbound.@zone[-1].name=$EXIT_domain
 		uci set unbound.@zone[-1].zone_type='forward_zone'
 		uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
 		uci add unbound zone
-		uci set unbound.@zone[-1].name='exit'
+		uci set unbound.@zone[-1].name=$ONION_domain
 		uci set unbound.@zone[-1].zone_type='forward_zone'
 		uci set unbound.@zone[-1].forward_addr='127.0.0.1 @'$DNS_TOR_port
 		uci add unbound zone
