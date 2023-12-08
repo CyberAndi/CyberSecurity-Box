@@ -245,9 +245,11 @@ DNS_PORT='y'
 echo
 
 read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
+UNBOUND='1'
 if [ "$DNS_PORT" = "" ]
         then
-	       		DNSMASQ_Relay_port='5353'
+	       		UNBOUND='1'
+	  		DNSMASQ_Relay_port='5353'
 	  		if [ "$TOR_ONION" = "1" ]
      				then
 					UNBOUND_Relay_port='9053'
@@ -257,7 +259,8 @@ if [ "$DNS_PORT" = "" ]
     			fi
         elif [ "$DNS_PORT" = "y" ] 
 		then 
-			DNSMASQ_Relay_port='5353'
+			UNBOUND='1'
+   			DNSMASQ_Relay_port='5353'
 	  		if [ "$TOR_ONION" = "1" ]
      				then
 					UNBOUND_Relay_port='9053'
@@ -269,10 +272,11 @@ if [ "$DNS_PORT" = "" ]
                	then
 	       		DNSMASQ_Relay_port='9053'
 	  		UNBOUND_Relay_port='9053'
-     			
+     			UNBOUND='0'
     		else
  			DNSMASQ_Relay_port='5453'
 			UNBOUND_Relay_port='5453'
+   			UNBOUND='0'
 fi
 
 if [ "$6" != "" ]  
@@ -461,8 +465,8 @@ view_config
 }
 
 install_adguard() {
-opkg update && opkg install wget
-mkdir /opt/ && cd /opt
+#opkg update && opkg install wget
+mkdir -p /opt/ && cd /opt
 wget -c https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.105.2/AdGuardHome_linux_armv5.tar.gz
 tar xfvz AdGuardHome_linux_armv5.tar.gz
 rm AdGuardHome_linux_armv5.tar.gz
@@ -478,7 +482,7 @@ echo
 echo 'define variables'
 echo
 #
-_port="67"
+DHCP_port="67"
 all_other_DHCP_port="1-66 68-65535"
 
 
@@ -1306,11 +1310,11 @@ echo
 
 create_hotspot() {
 
-mkdir /www/router
-mkdir /www/redirect
-mkdir /www/CaptivePortal
-mkdir /www/generate_204
-mkdir /www/CaptivePortal/pic
+mkdir -p /www/router
+mkdir -p /www/redirect
+mkdir -p /www/CaptivePortal
+mkdir -p /www/generate_204
+mkdir -p  /www/CaptivePortal/pic
 
 
 wait $processes
@@ -3634,7 +3638,7 @@ echo
 }
 
 set_unbound() {
-mkdir /etc/unbound/unbound.conf.d >> install.log
+mkdir -p /etc/unbound/unbound.conf.d >> install.log
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
@@ -3784,7 +3788,7 @@ view_config
 }
 
 set_unbound_fastok() {
-mkdir /etc/unbound/unbound.conf.d >> install.log
+mkdir -p /etc/unbound/unbound.conf.d >> install.log
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
@@ -4000,7 +4004,7 @@ view_config
 
 set_unbound_nov23() {
 
-mkdir /etc/unbound/unbound.conf.d >> install.log
+mkdir -p /etc/unbound/unbound.conf.d >> install.log
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
@@ -4258,7 +4262,7 @@ echo '########################################################'
 }
 
 set_unbound_test() {
-mkdir /etc/unbound/unbound.conf.d >> install.log
+mkdir -p /etc/unbound/unbound.conf.d >> install.log
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
@@ -4431,7 +4435,7 @@ echo '########################################################'
 }
 
 set_unbound_23() {
-mkdir /etc/unbound/unbound.conf.d >> install.log
+mkdir -p /etc/unbound/unbound.conf.d >> install.log
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
@@ -4625,7 +4629,7 @@ view_config
 
 
 set_unbound_22() {
-mkdir /etc/unbound/unbound.conf.d >> install.log
+mkdir -p /etc/unbound/unbound.conf.d >> install.log
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache  >> install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
@@ -4972,11 +4976,11 @@ echo '########################################################'
 view_config
 
 
-mkdir /etc/dnsmasq.d  >> install.log
-mkdir /etc/dnsmasq.d/Blacklist >> install.log
-mkdir /etc/dnsmasq.d/Whitelist >> install.log
-mkdir /etc/dnsmasq.d/BlockAll >> install.log
-mkdir /etc/dnsmasq.d/AllowAll >> install.log
+mkdir -p /etc/dnsmasq.d  >> install.log
+mkdir -p /etc/dnsmasq.d/Blacklist >> install.log
+mkdir -p /etc/dnsmasq.d/Whitelist >> install.log
+mkdir -p /etc/dnsmasq.d/BlockAll >> install.log
+mkdir -p /etc/dnsmasq.d/AllowAll >> install.log
 
 uci commit dhcp && reload_config >> install.log
 
@@ -20546,11 +20550,11 @@ uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW
 uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
 uci set dhcp.VOICE.server=$VOICE_ip'#'$DNSMASQ_Relay_port
 
-mkdir /etc/dnsmasq.d  >> install.log
-mkdir /etc/dnsmasq.d/Blacklist >> install.log
-mkdir /etc/dnsmasq.d/Whitelist >> install.log
-mkdir /etc/dnsmasq.d/BlockAll >> install.log
-mkdir /etc/dnsmasq.d/AllowAll >> install.log
+mkdir -p /etc/dnsmasq.d  >> install.log
+mkdir -p /etc/dnsmasq.d/Blacklist >> install.log
+mkdir -p /etc/dnsmasq.d/Whitelist >> install.log
+mkdir -p /etc/dnsmasq.d/BlockAll >> install.log
+mkdir -p /etc/dnsmasq.d/AllowAll >> install.log
 
 uci commit dhcp && reload_config >> install.log
 }
@@ -20769,11 +20773,11 @@ uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW
 uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
 uci set dhcp.VOICE.server=$VOICE_ip'#'$DNSMASQ_Relay_port
 
-mkdir /etc/dnsmasq.d  >> install.log
-mkdir /etc/dnsmasq.d/Blacklist >> install.log
-mkdir /etc/dnsmasq.d/Whitelist >> install.log
-mkdir /etc/dnsmasq.d/BlockAll >> install.log
-mkdir /etc/dnsmasq.d/AllowAll >> install.log
+mkdir -p /etc/dnsmasq.d  >> install.log
+mkdir -p /etc/dnsmasq.d/Blacklist >> install.log
+mkdir -p /etc/dnsmasq.d/Whitelist >> install.log
+mkdir -p /etc/dnsmasq.d/BlockAll >> install.log
+mkdir -p /etc/dnsmasq.d/AllowAll >> install.log
 
 uci commit dhcp && reload_config >> install.log
 }
@@ -20994,11 +20998,11 @@ uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW
 uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
 uci set dhcp.VOICE.server=$VOICE_ip'#'$DNSMASQ_Relay_port
 
-mkdir /etc/dnsmasq.d  >> install.log
-mkdir /etc/dnsmasq.d/Blacklist >> install.log
-mkdir /etc/dnsmasq.d/Whitelist >> install.log
-mkdir /etc/dnsmasq.d/BlockAll >> install.log
-mkdir /etc/dnsmasq.d/AllowAll >> install.log
+mkdir -p /etc/dnsmasq.d  >> install.log
+mkdir -p /etc/dnsmasq.d/Blacklist >> install.log
+mkdir -p /etc/dnsmasq.d/Whitelist >> install.log
+mkdir -p /etc/dnsmasq.d/BlockAll >> install.log
+mkdir -p /etc/dnsmasq.d/AllowAll >> install.log
 
 uci commit dhcp && reload_config >> install.log
 }
@@ -23647,20 +23651,23 @@ service log restart
 
 if [ "$TOR_ONION" = "1" ]
                	then
-			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Install Tor' >> install.log
+			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' set Tor' >> install.log
    			set_tor >> install.log
 fi
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Stubby' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' set Stubby' >> install.log
 set_stubby >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' UNBOUND' >> install.log
-set_unbound >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' UNBOUND URL-Filter' >> install.log
+if [ "$UNBOUND" = "1" ]
+               	then
+			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' set UNBOUND' >> install.log
+			set_unbound >> install.log
+fi
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' create UNBOUND URL-Filter' >> install.log
 create_unbound_url_filter >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' DNSMASQ URL-Filter' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' create DNSMASQ URL-Filter' >> install.log
 create_dnsmasq_url_filter >> install.log
 view_config
 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Customizie Firmware' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Customize Firmware' >> install.log
 customize_firmware >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Hotspot' >> install.log
 create_hotspot >> install.log
@@ -23684,14 +23691,25 @@ create_firewall_zones >> install.log
 #create_MWAN >> install.log
 view_config
 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Firewall-ipset' >> install.log
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Create Firewall-ipset' >> install.log
 #set_firewall_ipset >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N)' Set Firewall-Rules' >> install.log
 set_firewall_rules >> install.log
 #set_mountpoints >> install.log
 echo >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
+echo >> install.log
+echo 'Tor:	'$(service tor status) >> install.log
+echo $(dig www.test.de -p'$DNS_TOR_port' @127.0.0.1) >> install.log
+echo 'Stubby:	' $(service stubby status) >> install.log
+echo $(dig www.test.de -p'$DNS_STUBBY_port' @127.0.0.1) >> install.log
+echo 'Unbound:	' $(service unbound status) >> install.log
+echo $(dig www.test.de -p'$DNS_UNBOUND_port' @127.0.0.1) >> install.log
+echo 'DNSMASQ:	' $(service dnsmasq status) >> install.log
+echo $(dig www.test.de -p53 @127.0.0.1) >> install.log
+echo
 logread >> install.log
+
 
 clear
 echo '########################################################'
@@ -23707,7 +23725,7 @@ echo
 echo 'logfile'
 echo 
 echo 'Tor:	'$(service tor status)
-echo $(dig www.test.de -p'$DNS_port' @127.0.0.1)
+echo $(dig www.test.de -p'$DNS_TOR_port' @127.0.0.1)
 echo
 echo $(logread | grep 'tor')
 echo
