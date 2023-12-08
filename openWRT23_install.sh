@@ -3170,6 +3170,13 @@ if [ "echo $(uci show wireless | grep default_radio1)" != "" ]
 	then
 		uci delete wireless.default_radio1
 fi
+uci set wireless.default_radio1=wifi-iface
+uci set wireless.default_radio1.device='radio1'
+uci set wireless.default_radio1.mode='ap'
+uci set wireless.default_radio1.key=$WIFI_PASS
+uci set wireless.default_radio1.ssid=$TELEKOM_ssid
+uci set wireless.default_radio1.encryption='psk2'
+uci set wireless.default_radio1.network='TELEKOM'
 
 if [ "echo $(uci show wireless | grep wifinet09)" != "" ] 
 	then
@@ -3273,11 +3280,11 @@ if [ "echo $(uci show wireless | grep wifinet17)" != "" ]
 fi
 uci set wireless.wifinet17=wifi-iface
 uci set wireless.wifinet17.encryption='psk2'
-uci set wireless.wifinet17.device='radio1'
+uci set wireless.wifinet17.device='radio0'
 uci set wireless.wifinet17.mode='ap'
 uci set wireless.wifinet17.key=$WIFI_PASS
 uci set wireless.wifinet17.network='TELEKOM'
-uci set wireless.wifinet17.ssid=$TELEKOM_ssid
+uci set wireless.wifinet17.ssid='Vodafon-Hotspot'
 
 if [ "echo $(uci show wireless | grep wifinet18)" != "" ] 
 	then
@@ -3285,23 +3292,11 @@ if [ "echo $(uci show wireless | grep wifinet18)" != "" ]
 fi
 uci set wireless.wifinet18=wifi-iface
 uci set wireless.wifinet18.encryption='psk2'
-uci set wireless.wifinet18.device='radio0'
+uci set wireless.wifinet18.device='radio1'
 uci set wireless.wifinet18.mode='ap'
 uci set wireless.wifinet18.key=$WIFI_PASS
 uci set wireless.wifinet18.network='TELEKOM'
 uci set wireless.wifinet18.ssid='Vodafon-Hotspot'
-
-if [ "echo $(uci show wireless | grep wifinet19)" != "" ] 
-	then
-		uci delete wireless.wifinet19
-fi
-uci set wireless.wifinet19=wifi-iface
-uci set wireless.wifinet19.encryption='psk2'
-uci set wireless.wifinet19.device='radio1'
-uci set wireless.wifinet19.mode='ap'
-uci set wireless.wifinet19.key=$WIFI_PASS
-uci set wireless.wifinet19.network='TELEKOM'
-uci set wireless.wifinet19.ssid='Vodadon-Hotspot'
 
 uci delete wireless.radio0.disabled >> install.log
 uci delete wireless.radio1.disabled >> install.log
@@ -3309,60 +3304,10 @@ uci delete wireless.radio1.disabled >> install.log
 uci commit  && reload_config >> install.log
 
 echo
-echo 'Networks Settings defined'
-echo
+echo 'WiFi-Networks Settings defined'
 echo
 echo 'On Error enter logread'
 echo
-
-clear
-echo '########################################################'
-echo '#                                                      #'
-echo '#                 CyberSecurity-Box                    #'
-echo '#                                                      #'
-echo '########################################################'
-echo
-echo 'Your Config is:'
-echo
-echo 'Client-WiFi SSID:     '$INET_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$INET_net
-echo
-echo 'Smarthome-WiFi SSID:  '$HCONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$HCONTROL_net
-echo
-echo 'Voice-Assistent SSID: '$VOICE_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$VOICE_net
-echo
-echo 'Smart-TV/-DVD SSID:   '$ENTERTAIN_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$ENTERTAIN_net
-echo
-echo 'Server-WiFi SSID:     '$SERVER_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$SERVER_net
-echo
-echo 'IR/BT-Control SSID:   '$CONTROL_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$CONTROL_net
-echo
-echo 'Guests SSID is:       '$GUEST_ssid
-echo 'Key:                  '$WIFI_PASS
-echo 'IP:                   '$GUEST_net
-echo
-echo
-echo
-echo 'IP-Address:           '$ACCESS_SERVER
-echo 'Gateway:              '$INET_GW
-echo 'Domain:               '$LOCAL_DOMAIN
-echo
-echo 'GUI-Access:           https://'$INET_ip':8443'
-echo 'User:                 '$USERNAME
-echo 'Password:             password'
-echo
-
 }
 
 set_tor() {
