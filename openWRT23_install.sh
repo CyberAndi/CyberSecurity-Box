@@ -23933,11 +23933,11 @@ echo >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) >> install.log
 echo >> install.log
 echo 'Tor:	'$(service tor status) >> install.log
-echo $(dig www.test.de -p'$DNS_TOR_port' @127.0.0.1) >> install.log
+echo $(dig www.test.de -p $DNS_TOR_port @127.0.0.1) >> install.log
 echo 'Stubby:	' $(service stubby status) >> install.log
-echo $(dig www.test.de -p'$DNS_STUBBY_port' @127.0.0.1) >> install.log
+echo $(dig www.test.de -p $DNS_STUBBY_port @127.0.0.1) >> install.log
 echo 'Unbound:	' $(service unbound status) >> install.log
-echo $(dig www.test.de -p'$DNS_UNBOUND_port' @127.0.0.1) >> install.log
+echo $(dig www.test.de -p $DNS_UNBOUND_port @127.0.0.1) >> install.log
 echo 'DNSMASQ:	' $(service dnsmasq status) >> install.log
 echo $(dig www.test.de -p53 @127.0.0.1) >> install.log
 echo
@@ -23956,17 +23956,17 @@ echo
 echo 'logfile'
 echo 
 echo 'Tor:	'$(service tor status)
-echo $(dig www.test.de -p'$DNS_TOR_port' @127.0.0.1)
+echo $(dig www.test.de -p $DNS_TOR_port @127.0.0.1)
 echo
 echo $(logread | grep 'tor')
 echo
 echo 'Stubby:	' $(service stubby status)
-echo $(dig www.test.de -p'$DNS_STUBBY_port' @127.0.0.1)
+echo $(dig www.test.de -p $DNS_STUBBY_port @127.0.0.1)
 echo
 echo $(logread | grep 'stubby')
 echo
 echo 'Unbound:	' $(service unbound status)
-echo $(dig www.test.de -p'$DNS_UNBOUND_port' @127.0.0.1)
+echo $(dig www.test.de -p $DNS_UNBOUND_port @127.0.0.1)
 echo
 echo $(logread | grep 'unbound')
 echo
