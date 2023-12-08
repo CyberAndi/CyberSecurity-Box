@@ -69,7 +69,7 @@ release=${release:1}
 main_release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=' | cut -f1 -d '.' | cut -c 2-)
 
 echo '--------------------------------------------------------'
-echo '       Current Version ' $release, $revision
+echo '       Current Version ' $release','  $revision
 echo '--------------------------------------------------------'
 echo 
 
@@ -99,24 +99,24 @@ if [ "$INET_GW" = "" ]
 fi
 
 WAN_ip=$(echo $INET_GW | cut -f1 -d '.')
-WAN_ip=$WAN_ip"."$(echo $INET_GW | cut -f2 -d '.')
-WAN_ip=$WAN_ip"."$(echo $INET_GW | cut -f3 -d '.')".250"
+WAN_ip=$WAN_ip'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_ip=$WAN_ip'.'$(echo $INET_GW | cut -f3 -d '.')'.250'
 
 WAN_broadcast=$(echo $INET_GW | cut -f1 -d '.')
-WAN_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f2 -d '.')
-WAN_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f3 -d '.')".255"
+WAN_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f3 -d '.')'.255'
 
 WAN_MOBILE_ip=$(echo $INET_GW | cut -f1 -d '.')
-WAN_MOBILE_ip=$WAN_ip"."$(echo $INET_GW | cut -f2 -d '.')
-WAN_MOBILE_ip=$WAN_ip"."$(echo $INET_GW | cut -f3 -d '.')".251"
+WAN_MOBILE_ip=$WAN_ip'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_ip=$WAN_ip'.'$(echo $INET_GW | cut -f3 -d '.')'.251'
 
 WAN_MOBILE_broadcast=$(echo $INET_GW | cut -f1 -d '.')
-WAN_MOBILE_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f2 -d '.')
-WAN_MOBILE_broadcast=$WAN_broadcast"."$(echo $INET_GW | cut -f3 -d '.')".255"
+WAN_MOBILE_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f3 -d '.')'.255'
 
 WAN_MOBILE_GW=$(echo $INET_GW | cut -f1 -d '.')
-WAN_MOBILE_GW=$WAN_ip"."$(echo $INET_GW | cut -f2 -d '.')
-WAN_MOBILE_GW=$WAN_ip"."$(echo $INET_GW | cut -f3 -d '.')".253"
+WAN_MOBILE_GW=$WAN_ip'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_GW=$WAN_ip'.'$(echo $INET_GW | cut -f3 -d '.')'.253'
 
 
 #complet Internet
@@ -1251,7 +1251,10 @@ DEVICE_REVISION='v0.75'
 
 EOF
 
-cp openWRT*.sh /etc/openWRT_install.sh
+if [ "$(ls openWRT*.sh)" != "" ]
+	then
+		cp openWRT*.sh /etc/openWRT_install.sh
+fi
 chmod 0755 /etc/openWRT_install.sh
 
 cat << EOF > /etc/sysupgrade.conf
@@ -1274,12 +1277,18 @@ datum=$(date +"%y%d%m%H%M")
 echo
 
 #sichere alte Konfiguration
-echo Sichere alte Konfiguration
+echo 'Sichere alte Konfiguration'
 iptables-save > rules.v4_old_$datum.bkp
+if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
+	then
+		processes=$(rm /www/luci-static/bootstrap/c*.css)
+fi
 
-processes=$(rm /www/luci-static/bootstrap/c*.css)
 wait $processes
-processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
+if [ "$(ls /www/luci-static/resources/view/dashboard/css/c*.css)" != "" ]
+	then
+		processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
+fi
 wait $processes
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
 wait $processes
@@ -3710,7 +3719,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
 
-#uci set unbound.ub_main=unbound
+uci set unbound.ub_main=unbound
 uci set unbound.ub_main.dhcp_link='dnsmasq'
 uci set unbound.ub_main.dns64='0'
 uci set unbound.ub_main.domain='lan'
