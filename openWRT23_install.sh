@@ -83,7 +83,7 @@ actEth=$(ifconfig | grep '^e\w*' -m 1 | cut -f1 -d ' ')
 actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
 
 #Internet Gateway
-if [ "$1" != "" ]  
+if [ ! -z "$1" ]  
 	then
 		INET_GW=$1
 	else
@@ -131,7 +131,7 @@ all_IP6="[::]"
 ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' )
 
 #Lokal LAN
-if [ "$2" != "" ] 
+if [ ! -z "$2" ] 
 	then
 		LAN=$2
 	else
@@ -159,7 +159,7 @@ if [ "$LAN" = "" ]
                 LAN=$LAN_org
 fi
 
-if [ "$3" != "" ] 
+if [ ! -z "$3"  ] 
 	then
 		LOCAL_DOMAIN_org=$3
 	else
@@ -172,7 +172,7 @@ if [ "$LOCAL_DOMAIN" = "" ]
 		LOCAL_DOMAIN=$LOCAL_DOMAIN_org
 fi
 
-if [ "$4" != "" ]  
+if [ ! -z "$4" ]  
 	then
 		WIFI_SSID=$4
 	else
@@ -186,7 +186,7 @@ if [ "$WIFI_SSID" = "" ]
                 WIFI_SSID=$WIFI_SSID_org
 fi
 
-if [ "$5" != "" ]  
+if [ ! -z "$5" ]  
 	then
 		WIFI_PASS=$5
 	else
@@ -280,7 +280,7 @@ if [ "$DNS_PORT" = "" ]
    			UNBOUND='0'
 fi
 
-if [ "$6" != "" ]  
+if [ ! -z "$6" ]  
 	then 
 		SECURE_RULESW=$6
 	else
@@ -23809,7 +23809,7 @@ echo $main_release
 echo >> install.log
 define_variables >> install.log
 ask_parameter $1 $2 $3 $4 $5 $6
-if [ $1 != ""]
+if [ ! -z $1 ]
 	then
  		echo 'Automation Install' >> install.log
    		echo >> install.log
