@@ -1279,7 +1279,7 @@ echo
 
 #sichere alte Konfiguration
 echo 'Sichere alte Konfiguration'
-iptables-save > rules.v4_old_$datum.bkp
+#iptables-save > rules.v4_old_$datum.bkp
 if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 	then
 		processes=$(rm /www/luci-static/bootstrap/c*.css)
