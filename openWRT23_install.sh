@@ -448,7 +448,7 @@ fi
 if [ "$odhcpd_inst" != "" ] 
 	then
 		echo 'remove odhcpd-Packages' >> install.log
-  		opkg remove odhcp* --force-removal-of-dependent-packages >> install.log
+  		opkg remove odhc* --force-removal-of-dependent-packages >> install.log
 fi
 echo 'install opkg'
 
