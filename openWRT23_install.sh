@@ -1200,7 +1200,8 @@ uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
 uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
 uci set uhttpd.main.redirect_https='1'
-uci commit  && reload_config  >> install.log
+processes=$(uci commit && reload_config)
+wait $processes  >> install.log
 /etc/init.d/uhttpd restart  >> install.log
 
 echo
@@ -1487,7 +1488,8 @@ create_network_interfaces() {
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='TELEKOM'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.TELEKOM.proto='static'
 uci set network.TELEKOM.ipaddr=$CMOVIE_ip
 uci set network.TELEKOM.netmask='255.255.255.0'
@@ -1497,11 +1499,13 @@ uci set network.TELEKOM.gateway=$INET_GW
 #uci set network.TELEKOM.dns=$CMOVIE_ip
 uci set network.TELEKOM.dns=$INET_GW
 uci set network.TELEKOM.device='br-lan.110'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='CMOVIE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.CMOVIE.proto='static'
 uci set network.CMOVIE.ipaddr=$CMOVIE_ip
 uci set network.CMOVIE.netmask='255.255.255.0'
@@ -1511,11 +1515,13 @@ uci set network.CMOVIE.gateway=$INET_GW
 #uci set network.CMOVIE.dns=$CMOVIE_ip
 uci set network.CMOVIE.dns=$INET_GW
 uci set network.CMOVIE.device='br-lan.108'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='GUEST'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.GUEST.proto='static'
 uci set network.GUEST.ipaddr=$GUEST_ip
 uci set network.GUEST.netmask='255.255.255.0'
@@ -1525,11 +1531,13 @@ uci set network.GUEST.gateway=$INET_GW
 #uci set network.GUEST.dns=$GUEST_ip
 uci set network.GUEST.dns=$INET_GW
 uci set network.GUEST.device='br-lan.107'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.ENTERTAIN.proto='static'
 uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
 uci set network.ENTERTAIN.netmask='255.255.255.0'
@@ -1539,11 +1547,13 @@ uci set network.ENTERTAIN.gateway=$INET_GW
 #uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
 uci set network.ENTERTAIN.dns=$INET_GW
 uci set network.ENTERTAIN.device='br-lan.106'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='VOICE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.VOICE.proto='static'
 uci set network.VOICE.ipaddr=$VOICE_ip
 uci set network.VOICE.netmask='255.255.255.0'
@@ -1553,11 +1563,13 @@ uci set network.VOICE.gateway=$INET_GW
 #uci set network.VOICE.dns=$VOICE_ip
 uci set network.VOICE.dns=$INET_GW
 uci set network.VOICE.device='br-lan.105'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='INET'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.INET.proto='static'
 uci set network.INET.ipaddr=$INET_ip
 uci set network.INET.netmask='255.255.255.0'
@@ -1567,11 +1579,13 @@ uci set network.INET.gateway=$INET_GW
 #uci set network.INET.dns=$INET_ip
 uci set network.INET.dns=$INET_GW
 uci set network.INET.device='br-lan.104'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='CONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.CONTROL.proto='static'
 uci set network.CONTROL.ipaddr=$CONTROL_ip
 uci set network.CONTROL.netmask='255.255.255.0'
@@ -1581,11 +1595,13 @@ uci set network.CONTROL.gateway=$INET_GW
 #uci set network.CONTROL.dns=$CONTROL_ip
 uci set network.CONTROL.dns=$INET_GW
 uci set network.CONTROL.device='br-lan.103'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='HCONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.HCONTROL.proto='static'
 uci set network.HCONTROL.ipaddr=$HCONTROL_ip
 uci set network.HCONTROL.netmask='255.255.255.0'
@@ -1595,11 +1611,13 @@ uci set network.HCONTROL.gateway=$INET_GW
 #uci set network.HCONTROL.dns=$HCONTROL_ip
 uci set network.HCONTROL.dns=$INET_GW
 uci set network.HCONTROL.device='br-lan.102'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SERVER'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SERVER.proto='static'
 uci set network.SERVER.ipaddr=$SERVER_ip
 uci set network.SERVER.netmask='255.255.255.0'
@@ -1609,7 +1627,8 @@ uci set network.SERVER.gateway=$INET_GW
 #uci set network.SERVER.dns=$SERVER_ip
 uci set network.SERVER.dns=$INET_GW
 uci set network.SERVER.device='br-lan.101'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci set network.wan=interface >> install.log
 uci set network.wan.proto='static'
@@ -1620,7 +1639,8 @@ uci add_list network.wan.dns="127.0.0.1"
 uci set network.wan.ifname='eth1'
 uci set network.wan.ipaddr=$WAN_ip
 uci set network.wan.peerdns="0"
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci set network.wan6.proto='dhcpv6'
 uci set network.wan6.reqaddress='try'
@@ -1630,7 +1650,8 @@ uci set network.wan6.ifname='eth1'
 #uci add_list network.wan6.dns="2606:4700:4700::1003"
 uci add_list network.wan6.dns="0::1"
 uci set network.wan6.peerdns="0"
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 echo
 echo 'On Error enter logread'
@@ -1652,7 +1673,8 @@ uci add_list network.@bridge-vlan[-1].ports='lan3'
 uci add_list network.@bridge-vlan[-1].ports='lan4'
 uci set network.lan.device='br-lan.1'
 
-uci commit
+processes=$(uci commit && reload_config)
+wait $processes
 
 uci add network bridge-vlan
 uci set network.@bridge-vlan[-1].device='br-lan'
@@ -1842,7 +1864,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan2:t'
 uci add_list network.@bridge-vlan[-1].ports='lan3:t'
 uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
-uci commit && reload_config
+processes=$(uci commit && reload_config) wait $processes
 }
 
 create_network() {
@@ -1867,7 +1889,8 @@ uci set network.loopback.dns='127.0.0.1'
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='TELEKOM'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.TELEKOM.proto='static'
 uci set network.TELEKOM.ipaddr=$CMOVIE_ip
 uci set network.TELEKOM.netmask='255.255.255.0'
@@ -1877,11 +1900,13 @@ uci set network.TELEKOM.gateway=$INET_GW
 #uci set network.TELEKOM.dns=$CMOVIE_ip
 uci set network.TELEKOM.dns=$INET_GW
 uci set network.TELEKOM.device='br-TELEKOM.110'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='CMOVIE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.CMOVIE.proto='static'
 uci set network.CMOVIE.ipaddr=$CMOVIE_ip
 uci set network.CMOVIE.netmask='255.255.255.0'
@@ -1891,11 +1916,13 @@ uci set network.CMOVIE.gateway=$INET_GW
 #uci set network.CMOVIE.dns=$CMOVIE_ip
 uci set network.CMOVIE.dns=$INET_GW
 uci set network.CMOVIE.device='br-CMOVIE.108'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='GUEST'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.GUEST.proto='static'
 uci set network.GUEST.ipaddr=$GUEST_ip
 uci set network.GUEST.netmask='255.255.255.0'
@@ -1905,11 +1932,13 @@ uci set network.GUEST.gateway=$INET_GW
 #uci set network.GUEST.dns=$GUEST_ip
 uci set network.GUEST.dns=$INET_GW
 uci set network.GUEST.device='br-GUEST.107'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.ENTERTAIN.proto='static'
 uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
 uci set network.ENTERTAIN.netmask='255.255.255.0'
@@ -1919,11 +1948,13 @@ uci set network.ENTERTAIN.gateway=$INET_GW
 #uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
 uci set network.ENTERTAIN.dns=$INET_GW
 uci set network.ENTERTAIN.device='br-ENTERTAIN.106'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='VOICE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.VOICE.proto='static'
 uci set network.VOICE.ipaddr=$VOICE_ip
 uci set network.VOICE.netmask='255.255.255.0'
@@ -1933,11 +1964,13 @@ uci set network.VOICE.gateway=$INET_GW
 #uci set network.VOICE.dns=$VOICE_ip
 uci set network.VOICE.dns=$INET_GW
 uci set network.VOICE.device='br-VOICE.105'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes network >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='INET'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.INET.proto='static'
 uci set network.INET.ipaddr=$INET_ip
 uci set network.INET.netmask='255.255.255.0'
@@ -1947,11 +1980,13 @@ uci set network.INET.gateway=$INET_GW
 #uci set network.INET.dns=$INET_ip
 uci set network.INET.dns=$INET_GW
 uci set network.INET.device='br-INET.104'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='CONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.CONTROL.proto='static'
 uci set network.CONTROL.ipaddr=$CONTROL_ip
 uci set network.CONTROL.netmask='255.255.255.0'
@@ -1961,11 +1996,13 @@ uci set network.CONTROL.gateway=$INET_GW
 #uci set network.CONTROL.dns=$CONTROL_ip
 uci set network.CONTROL.dns=$INET_GW
 uci set network.CONTROL.device='br-CONTROL.103'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='HCONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.HCONTROL.proto='static'
 uci set network.HCONTROL.ipaddr=$HCONTROL_ip
 uci set network.HCONTROL.netmask='255.255.255.0'
@@ -1975,11 +2012,13 @@ uci set network.HCONTROL.gateway=$INET_GW
 #uci set network.HCONTROL.dns=$HCONTROL_ip
 uci set network.HCONTROL.dns=$INET_GW
 uci set network.HCONTROL.device='br-HCONTROL.102'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SERVER'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SERVER.proto='static'
 uci set network.SERVER.ipaddr=$SERVER_ip
 uci set network.SERVER.netmask='255.255.255.0'
@@ -1989,7 +2028,8 @@ uci set network.SERVER.gateway=$INET_GW
 #uci set network.SERVER.dns=$SERVER_ip
 uci set network.SERVER.dns=$INET_GW
 uci set network.SERVER.device='br-SERVER.101'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci set network.wan=interface >> install.log
 uci set network.wan.proto='static'
@@ -2000,7 +2040,8 @@ uci add_list network.wan.dns="127.0.0.1"
 uci set network.wan.ifname='eth1'
 uci set network.wan.ipaddr=$WAN_ip
 uci set network.wan.peerdns="0"
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci set network.wan6.proto='dhcpv6'
 uci set network.wan6.reqaddress='try'
@@ -2010,7 +2051,8 @@ uci set network.wan6.ifname='eth1'
 #uci add_list network.wan6.dns="2606:4700:4700::1003"
 uci add_list network.wan6.dns="0::1"
 uci set network.wan6.peerdns="0"
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 echo
 echo 'On Error enter logread'
@@ -2123,7 +2165,8 @@ uci set network.@device[-1].bridge_empty='1'
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='TELEKOM'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.TELEKOM.proto='static'
 uci set network.TELEKOM.ipaddr=$CMOVIE_ip
 uci set network.TELEKOM.netmask='255.255.255.0'
@@ -2133,11 +2176,13 @@ uci set network.TELEKOM.gateway=$INET_GW
 #uci set network.TELEKOM.dns=$CMOVIE_ip
 uci set network.TELEKOM.dns=$INET_GW
 uci set network.TELEKOM.device='br-TELEKOM.110'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='CMOVIE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.CMOVIE.proto='static'
 uci set network.CMOVIE.ipaddr=$CMOVIE_ip
 uci set network.CMOVIE.netmask='255.255.255.0'
@@ -2147,11 +2192,13 @@ uci set network.CMOVIE.gateway=$INET_GW
 #uci set network.CMOVIE.dns=$CMOVIE_ip
 uci set network.CMOVIE.dns=$INET_GW
 uci set network.CMOVIE.device='br-CMOVIE.108'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='GUEST'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.GUEST.proto='static'
 uci set network.GUEST.ipaddr=$GUEST_ip
 uci set network.GUEST.netmask='255.255.255.0'
@@ -2161,11 +2208,13 @@ uci set network.GUEST.gateway=$INET_GW
 #uci set network.GUEST.dns=$GUEST_ip
 uci set network.GUEST.dns=$INET_GW
 uci set network.GUEST.device='br-GUEST.107'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.ENTERTAIN.proto='static'
 uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
 uci set network.ENTERTAIN.netmask='255.255.255.0'
@@ -2175,11 +2224,13 @@ uci set network.ENTERTAIN.gateway=$INET_GW
 #uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
 uci set network.ENTERTAIN.dns=$INET_GW
 uci set network.ENTERTAIN.device='br-ENTERTAIN.106'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='VOICE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.VOICE.proto='static'
 uci set network.VOICE.ipaddr=$VOICE_ip
 uci set network.VOICE.netmask='255.255.255.0'
@@ -2189,11 +2240,13 @@ uci set network.VOICE.gateway=$INET_GW
 #uci set network.VOICE.dns=$VOICE_ip
 uci set network.VOICE.dns=$INET_GW
 uci set network.VOICE.device='br-VOICE.105'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='INET'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.INET.proto='static'
 uci set network.INET.ipaddr=$INET_ip
 uci set network.INET.netmask='255.255.255.0'
@@ -2203,11 +2256,13 @@ uci set network.INET.gateway=$INET_GW
 #uci set network.INET.dns=$INET_ip
 uci set network.INET.dns=$INET_GW
 uci set network.INET.device='br-INET.104'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='CONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.CONTROL.proto='static'
 uci set network.CONTROL.ipaddr=$CONTROL_ip
 uci set network.CONTROL.netmask='255.255.255.0'
@@ -2217,11 +2272,13 @@ uci set network.CONTROL.gateway=$INET_GW
 #uci set network.CONTROL.dns=$CONTROL_ip
 uci set network.CONTROL.dns=$INET_GW
 uci set network.CONTROL.device='br-CONTROL.103'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='HCONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.HCONTROL.proto='static'
 uci set network.HCONTROL.ipaddr=$HCONTROL_ip
 uci set network.HCONTROL.netmask='255.255.255.0'
@@ -2231,11 +2288,13 @@ uci set network.HCONTROL.gateway=$INET_GW
 #uci set network.HCONTROL.dns=$HCONTROL_ip
 uci set network.HCONTROL.dns=$INET_GW
 uci set network.HCONTROL.device='br-HCONTROL.102'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SERVER'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SERVER.proto='static'
 uci set network.SERVER.ipaddr=$SERVER_ip
 uci set network.SERVER.netmask='255.255.255.0'
@@ -2245,7 +2304,8 @@ uci set network.SERVER.gateway=$INET_GW
 #uci set network.SERVER.dns=$SERVER_ip
 uci set network.SERVER.dns=$INET_GW
 uci set network.SERVER.device='br-SERVER.101'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci set network.wan=interface >> install.log
 uci set network.wan.proto='static'
@@ -2256,7 +2316,8 @@ uci add_list network.wan.dns="127.0.0.1"
 uci set network.wan.ifname='eth1'
 uci set network.wan.ipaddr=$WAN_ip
 uci set network.wan.peerdns="0"
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci set network.wan6.proto='dhcpv6'
 uci set network.wan6.reqaddress='try'
@@ -2266,7 +2327,8 @@ uci set network.wan6.ifname='eth1'
 #uci add_list network.wan6.dns="2606:4700:4700::1003"
 uci add_list network.wan6.dns="0::1"
 uci set network.wan6.peerdns="0"
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 echo
 echo 'On Error enter logread'
@@ -2360,7 +2422,8 @@ uci set network.@device[-1].ports='eth0.110'
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='TELEKOM'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.TELEKOM.proto='static'
 uci set network.TELEKOM.ipaddr=$CMOVIE_ip
 uci set network.TELEKOM.netmask='255.255.255.0'
@@ -2370,11 +2433,13 @@ uci set network.TELEKOM.gateway=$INET_GW
 #uci set network.TELEKOM.dns=$CMOVIE_ip
 uci set network.TELEKOM.dns=$INET_GW
 uci set network.TELEKOM.device='br-TELEKOM'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='CMOVIE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.CMOVIE.proto='static'
 uci set network.CMOVIE.ipaddr=$CMOVIE_ip
 uci set network.CMOVIE.netmask='255.255.255.0'
@@ -2384,11 +2449,13 @@ uci set network.CMOVIE.gateway=$INET_GW
 #uci set network.CMOVIE.dns=$CMOVIE_ip
 uci set network.CMOVIE.dns=$INET_GW
 uci set network.CMOVIE.device='br-CMOVIE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='GUEST'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.GUEST.proto='static'
 uci set network.GUEST.ipaddr=$GUEST_ip
 uci set network.GUEST.netmask='255.255.255.0'
@@ -2398,11 +2465,13 @@ uci set network.GUEST.gateway=$INET_GW
 #uci set network.GUEST.dns=$GUEST_ip
 uci set network.GUEST.dns=$INET_GW
 uci set network.GUEST.device='br-GUEST'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='ENTERTAIN'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.ENTERTAIN.proto='static'
 uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
 uci set network.ENTERTAIN.netmask='255.255.255.0'
@@ -2412,11 +2481,13 @@ uci set network.ENTERTAIN.gateway=$INET_GW
 #uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
 uci set network.ENTERTAIN.dns=$INET_GW
 uci set network.ENTERTAIN.device='br-ENTERTAIN'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='VOICE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.VOICE.proto='static'
 uci set network.VOICE.ipaddr=$VOICE_ip
 uci set network.VOICE.netmask='255.255.255.0'
@@ -2426,11 +2497,13 @@ uci set network.VOICE.gateway=$INET_GW
 #uci set network.VOICE.dns=$VOICE_ip
 uci set network.VOICE.dns=$INET_GW
 uci set network.VOICE.device='br-VOICE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='INET'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.INET.proto='static'
 uci set network.INET.ipaddr=$INET_ip
 uci set network.INET.netmask='255.255.255.0'
@@ -2440,11 +2513,13 @@ uci set network.INET.gateway=$INET_GW
 #uci set network.INET.dns=$INET_ip
 uci set network.INET.dns=$INET_GW
 uci set network.INET.device='br-INET'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='CONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.CONTROL.proto='static'
 uci set network.CONTROL.ipaddr=$CONTROL_ip
 uci set network.CONTROL.netmask='255.255.255.0'
@@ -2454,11 +2529,13 @@ uci set network.CONTROL.gateway=$INET_GW
 #uci set network.CONTROL.dns=$CONTROL_ip
 uci set network.CONTROL.dns=$INET_GW
 uci set network.CONTROL.device='br-CONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='HCONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.HCONTROL.proto='static'
 uci set network.HCONTROL.ipaddr=$HCONTROL_ip
 uci set network.HCONTROL.netmask='255.255.255.0'
@@ -2468,11 +2545,13 @@ uci set network.HCONTROL.gateway=$INET_GW
 #uci set network.HCONTROL.dns=$HCONTROL_ip
 uci set network.HCONTROL.dns=$INET_GW
 uci set network.HCONTROL.device='br-HCONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SERVER'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SERVER.proto='static'
 uci set network.SERVER.ipaddr=$SERVER_ip
 uci set network.SERVER.netmask='255.255.255.0'
@@ -2482,7 +2561,8 @@ uci set network.SERVER.gateway=$INET_GW
 #uci set network.SERVER.dns=$SERVER_ip
 uci set network.SERVER.dns=$INET_GW
 uci set network.SERVER.device='br-SERVER'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci set network.wan=interface >> install.log
 uci set network.wan.proto='static'
@@ -2493,7 +2573,8 @@ uci add_list network.wan.dns="127.0.0.1"
 uci set network.wan.ifname='eth1'
 uci set network.wan.ipaddr=$WAN_ip
 uci set network.wan.peerdns="0"
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci set network.wan6.proto='dhcpv6'
 uci set network.wan6.reqaddress='try'
@@ -2503,7 +2584,8 @@ uci set network.wan6.ifname='eth1'
 #uci add_list network.wan6.dns="2606:4700:4700::1003"
 uci add_list network.wan6.dns="0::1"
 uci set network.wan6.peerdns="0"
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 echo
 echo 'On Error enter logread'
@@ -2663,7 +2745,8 @@ uci set mwan3.wan_mobile6.enabled='1'
 uci set mwan3.wan_mobile6.family='ipv6'
 uci set mwan3.wan_mobile6.track_ip='2606:4700:4700::1113'
 uci set mwan3.wan_mobile6.reliability='2'
-uci commit mwan3 && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 echo
 echo 'On Error enter logread'
@@ -2858,7 +2941,8 @@ uci set network.@switch[0]=switch
 uci set network.@switch[0].name='switch0'
 uci set network.@switch[0].reset='1'
 uci set network.@switch[0].enable_vlan='1'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci set network.@switch_vlan[0]=switch_vlan
 uci set network.@switch_vlan[0].device='switch0'
@@ -2866,7 +2950,8 @@ uci set network.@switch_vlan[0].vlan='1'
 uci set network.@switch_vlan[0].vid='1'
 uci set network.@switch_vlan[0].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[0].description='LAN'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
@@ -2875,7 +2960,8 @@ uci set network.@switch_vlan[-1].vid='101'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1t 2 3t 4t 5t'
 uci set network.@switch_vlan[-1].description='SERVER'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
@@ -2884,7 +2970,8 @@ uci set network.@switch_vlan[-1].vid='102'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1 2t 3 4t 5t'
 uci set network.@switch_vlan[-1].description='HCONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
@@ -2893,7 +2980,8 @@ uci set network.@switch_vlan[-1].vid='103'
 #uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].description='CONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
@@ -2902,7 +2990,8 @@ uci set network.@switch_vlan[-1].vlan='104'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4 5t'
 uci set network.@switch_vlan[-1].vid='104'
 uci set network.@switch_vlan[-1].description='INET'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
@@ -2911,7 +3000,8 @@ uci set network.@switch_vlan[-1].vlan='105'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='105'
 uci set network.@switch_vlan[-1].description='VOICE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
@@ -2920,7 +3010,8 @@ uci set network.@switch_vlan[-1].vlan='106'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='106'
 uci set network.@switch_vlan[-1].description='ENTERTAIN'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
@@ -2929,7 +3020,8 @@ uci set network.@switch_vlan[-1].vlan='107'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='107'
 uci set network.@switch_vlan[-1].description='GUEST'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
@@ -2938,7 +3030,8 @@ uci set network.@switch_vlan[-1].vlan='108'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='108'
 uci set network.@switch_vlan[-1].description='CMOVIE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network switch_vlan
 uci set network.@switch_vlan[-1].device='switch0'
@@ -2947,89 +3040,111 @@ uci set network.@switch_vlan[-1].vlan='110'
 uci set network.@switch_vlan[-1].ports='0t 1t 2t 3t 4t 5t'
 uci set network.@switch_vlan[-1].vid='110'
 uci set network.@switch_vlan[-1].description='TELEKOM'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface
 uci rename network.@interface[-1]='SWITCH_Port'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SWITCH_Port.device='eth0'
 uci set network.SWITCH_Port.proto='none'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P101'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SWITCH_P101.device='eth0.101'
 uci set network.SWITCH_P101.proto='none'
 uci set network.SWITCH_P101.description='SERVER'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P102'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SWITCH_P102.device='eth0.102'
 uci set network.SWITCH_P102.proto='none'
 uci set network.SWITCH_P102.description='HCONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P103'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SWITCH_P103.device='eth0.103'
 uci set network.SWITCH_P103.proto='none'
 uci set network.SWITCH_P103.description='CONTROL'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P104'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SWITCH_P104.device='eth0.104'
 uci set network.SWITCH_P104.proto='none'
 uci set network.SWITCH_P104.description='INET'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P105'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SWITCH_P105.device='eth0.105'
 uci set network.SWITCH_P105.proto='none'
 uci set network.SWITCH_P105.description='VOICE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P106'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SWITCH_P106.device='eth0.106'
 uci set network.SWITCH_P106.proto='none'
 uci set network.SWITCH_P106.description='ENTERTAIN'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P107'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SWITCH_P107.device='eth0.107'
 uci set network.SWITCH_P107.proto='none'
 uci set network.SWITCH_P107.description='GUEST'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P108'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SWITCH_P108.device='eth0.108'
 uci set network.SWITCH_P108.proto='none'
 uci set network.SWITCH_P108.description='CMOVIE'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add network interface >> install.log
 uci rename network.@interface[-1]='SWITCH_P110'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci set network.SWITCH_P110.device='eth0.110'
 uci set network.SWITCH_P110.proto='none'
 uci set network.SWITCH_P110.description='TELEKOM'
-uci commit network >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 # Save and apply
-uci commit network && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 #/etc/init.d/network restart
 
 echo
@@ -3301,7 +3416,8 @@ uci set wireless.wifinet18.ssid='Vodafon-Hotspot'
 uci delete wireless.radio0.disabled >> install.log
 uci delete wireless.radio1.disabled >> install.log
 
-uci commit  && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 echo
 echo 'WiFi-Networks Settings defined'
@@ -3557,7 +3673,8 @@ EOF
 
 uci del_list tor.conf.tail_include="/etc/tor/main" >> install.log
 uci add_list tor.conf.tail_include="/etc/tor/main" >> install.log
-uci commit tor && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processesg >> install.log
 
 /etc/init.d/tor start  >> install.log
 
@@ -3629,7 +3746,8 @@ config resolver
 
 EOF
 
-uci commit stubby && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 /etc/init.d/stubby restart  >> install.log
 # Configure unbound client
@@ -3762,7 +3880,7 @@ uci set unbound.fwd_cloudflare.enabled='1'
 #uci set unbound.fwd_cloudflare.zone_name='.'
 uci set unbound.fwd_cloudflare.dns_assist='dnsmasq'
 
-uci commit && reload_config
+processes=$(uci commit && reload_config) wait $processes
 
 
 if  [ "$UNBOUND_Relay_port" = "5353" ] 
@@ -3793,7 +3911,8 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
 		uci set unbound.@zone[-1].forward_tls_upstream='yes'
 		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$UNBOUND_Relay_port
  fi
-uci commit unbound && reload_config  >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 /etc/init.d/unbound restart  >> install.log
 
 echo
@@ -3930,7 +4049,7 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
 		uci set unbound.@zone[-1].forward_tls_upstream='yes'
 		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$UNBOUND_Relay_port
  fi
-uci commit && reload_config  >> install.log
+processes=$(uci commit && reload_config) wait $processes  >> install.log
 /etc/init.d/unbound restart  >> install.log
 
 echo
@@ -4144,7 +4263,8 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
 		uci set unbound.@zone[-1].forward_tls_upstream='yes'
 		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$UNBOUND_Relay_port
  fi
-uci commit unbound && reload_config  >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 /etc/init.d/unbound start  >> install.log
 
 echo
@@ -4404,7 +4524,8 @@ fi
 
 echo
 
-uci commit unbound && reload_config  >> install.log
+processes=$(uci commit && reload_config)
+wait $processes  >> install.log
 /etc/init.d/unbound start  >> install.log
 
 echo
@@ -4577,7 +4698,8 @@ uci add_list unbound.ub_main.domain_insecure=$TELEKOM_domain
 uci add_list unbound.ub_main.domain_insecure='onion'
 uci add_list unbound.ub_main.domain_insecure='exit'
 
-uci commit unbound && reload_config  >> install.log
+processes=$(uci commit && reload_config)
+wait $processes  >> install.log
 /etc/init.d/unbound start  >> install.log
 
 echo
@@ -4770,7 +4892,8 @@ uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
 #uci set unbound.@zone[-1].forward_tls_upstream='yes'
 #uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
 
-uci commit unbound && reload_config  >> install.log
+processes=$(uci commit && reload_config)
+wait $processes  >> install.log
 /etc/init.d/unbound start  >> install.log
 
 echo
@@ -5107,7 +5230,8 @@ uci set unbound.@zone[-1].tls_index='dns.cloudflair'
 uci set unbound.@zone[-1].forward_tls_upstream='yes'
 uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$DNS_TOR_port
 
-uci commit unbound && reload_config  >> install.log
+processes=$(uci commit && reload_config)
+wait $processes  >> install.log
 /etc/init.d/unbound start  >> install.log
 
 echo
@@ -5160,7 +5284,8 @@ mkdir -p /etc/dnsmasq.d/Whitelist >> install.log
 mkdir -p /etc/dnsmasq.d/BlockAll >> install.log
 mkdir -p /etc/dnsmasq.d/AllowAll >> install.log
 
-uci commit dhcp && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 #DNSMASQ_Relay_port=9053
 
@@ -20501,7 +20626,8 @@ view_config
 set_dhcp() {
 
 uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci commit dhcp >/dev/null
+processes=$(uci commit && reload_config)
+wait $processes >/dev/null
 
 
 
@@ -20734,13 +20860,15 @@ mkdir -p /etc/dnsmasq.d/Whitelist >> install.log
 mkdir -p /etc/dnsmasq.d/BlockAll >> install.log
 mkdir -p /etc/dnsmasq.d/AllowAll >> install.log
 
-uci commit dhcp && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 }
 
 set_dhcp_() {
 
 #uci delete dhcp.@dnsmasq[-1] >/dev/null
-#uci commit dhcp >/dev/null
+#processes=$(uci commit && reload_config)
+#wait $processes >/dev/null
 
 uci set dhcp.Blacklist=dnsmasq
 uci set dhcp.Blacklist.domainneeded='1'
@@ -20957,7 +21085,8 @@ mkdir -p /etc/dnsmasq.d/Whitelist >> install.log
 mkdir -p /etc/dnsmasq.d/BlockAll >> install.log
 mkdir -p /etc/dnsmasq.d/AllowAll >> install.log
 
-uci commit dhcp && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 }
 
 
@@ -21182,7 +21311,8 @@ mkdir -p /etc/dnsmasq.d/Whitelist >> install.log
 mkdir -p /etc/dnsmasq.d/BlockAll >> install.log
 mkdir -p /etc/dnsmasq.d/AllowAll >> install.log
 
-uci commit dhcp && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 }
 
 create_firewall_zones() {
@@ -21194,12 +21324,14 @@ uci set firewall.@zone[-1].network="REPEATER"
 uci set firewall.@zone[-1].output="ACCEPT"
 uci set firewall.@zone[-1].forward="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="REPEATER"
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
@@ -21209,12 +21341,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="CONTROL"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="CONTROL"
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
@@ -21224,12 +21358,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="HCONTROL"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="HCONTROL"
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
@@ -21239,12 +21375,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="SERVER"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="SERVER"
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
@@ -21254,12 +21392,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="INET"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="INET"
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
@@ -21269,12 +21409,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="GUEST"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="GUEST"
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
@@ -21284,12 +21426,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="VOICE"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="VOICE"
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
@@ -21299,12 +21443,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="ENTERTAIN"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="ENTERTAIN"
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
@@ -21314,12 +21460,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="CMOVIE"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="CMOVIE"
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 uci add firewall zone >> install.log
 uci set firewall.@zone[-1]=zone
@@ -21329,12 +21477,14 @@ uci set firewall.@zone[-1].forward="ACCEPT"
 uci set firewall.@zone[-1].network="TELEKOM"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 uci add firewall forwarding >> install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="TELEKOM"
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 echo
 echo 'On Error enter logread'
@@ -21360,7 +21510,8 @@ uci set firewall.Allow_Only_WebClient7.enabled='1'
 uci set firewall.Allow_Only_WebClient8.enabled='1'
 uci set firewall.otherProt.enabled='1'
 uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 /etc/init.d/firewall restart >> install.log
 }
 
@@ -21383,7 +21534,8 @@ uci set firewall.Allow_Only_WebClient7.enabled='0'
 uci set firewall.Allow_Only_WebClient8.enabled='0'
 uci set firewall.otherProt.enabled='1'
 uci set firewall.blockIncoming.enabled='1'
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 /etc/init.d/firewall restart >> install.log
 }
 
@@ -21426,7 +21578,8 @@ uci set firewall.filter6_fwd.proto="all"
 uci set firewall.filter6_fwd.target="ACCEPT"
 
 
-uci commit firewall && reload_config >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 /etc/init.d/firewall restart >> install.log
 if [ "$SECURE_RULES" = "" ]
         then
@@ -21456,13 +21609,15 @@ uci set firewall.nat6.reload="1" >> install.log
 # Disable LAN to WAN forwarding
 uci rename firewall.@forwarding[0]="INET_INTERNET" >> install.log
 uci set firewall.INET_INTERNET.enabled="0" >> install.log
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 /etc/init.d/firewall restart >> install.log
  
 # Configure ipset-dns
 uci set ipset-dns.@ipset-dns[0].ipset="filter" >> install.log
 uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >> install.log
-uci commit ipset-dns >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 /etc/init.d/ipset-dns restart >> install.log
  
 # Resolve race conditions for ipset-dns
@@ -21476,7 +21631,8 @@ uci -q delete firewall.ipsetdns >> install.log
 uci set firewall.ipsetdns="include" >> install.log
 uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >> install.log
 uci set firewall.ipsetdns.reload="1" >> install.log
-uci commit firewall >> install.log
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
 
 /etc/init.d/firewall restart >> install.log
 /etc/init.d/dnsmasq restart >> install.log
@@ -21511,7 +21667,8 @@ uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
 uci set firewall.https_int.proto="tcp"
 uci set firewall.https_int.target="DNAT"
 
-uci commit firewall && reload_config >/dev/null
+processes=$(uci commit && reload_config)
+wait $processes >/dev/null
 
 # Intercept DNS and TCP traffic
 
@@ -21647,7 +21804,7 @@ uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR"
 uci set firewall.DNS_Cloudflare.enabled="0" 
 uci set firewall.DNS_Cloudflare.proto="tcp udp"
 uci set firewall.DNS_Cloudflare.target="ACCEPT"
-uci commit && reload_config >/dev/null
+processes=$(uci commit && reload_config) wait $processes >/dev/null
 
 
 #WebClient (Port)
@@ -22323,7 +22480,7 @@ uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR"
 uci set firewall.Block_DNS_Cloudflare.enabled="0" 
 uci set firewall.Block_DNS_Cloudflare.proto="tcp udp"
 uci set firewall.Block_DNS_Cloudflare.target="REJECT"
-uci commit && reload_config >/dev/null
+processes=$(uci commit && reload_config) wait $processes >/dev/null
 
 
 
@@ -23001,7 +23158,7 @@ uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare23_SVR"
 uci set firewall.Allow_only_DNS_Cloudflare.enabled="0" 
 uci set firewall.Allow_only_DNS_Cloudflare.proto="tcp udp"
 uci set firewall.Allow_only_DNS_Cloudflare.target="REJECT"
-uci commit && reload_config >/dev/null
+processes=$(uci commit && reload_config) wait $processes >/dev/null
 
 
 
@@ -23768,7 +23925,8 @@ if [ "$SECURE_RULES" = "" ]
               set_HS_Firewall_disable
 fi
 
-uci commit firewall && reload_config >/dev/null
+processes=$(uci commit && reload_config)
+wait $processes >/dev/null
 /etc/init.d/firewall restart >/dev/null
 }
 
@@ -23798,7 +23956,8 @@ uci set fstab.@mount[1].target='/home'
 uci set fstab.@mount[0].target='/'
 uci set fstab.@mount[0].is_rootfs='1'
 
-uci commit fstab
+processes=$(uci commit && reload_config)
+wait $processes
 /etc/init.d/fstab boot
 }
 
