@@ -23840,8 +23840,7 @@ uci commit fstab
 
 #-------------------------start---------------------------------------
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...'
-echo
-echo $main_release
+echo 'Release:' $main_release
 echo
 define_variables
 ask_parameter $1 $2 $3 $4 $5 $6
@@ -23856,62 +23855,89 @@ if [ ! -z $1 ]
 	 	echo $5
    		echo $6
  fi
+echo
+echo
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates'
 install_update
+echo
+echo
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard'
 #install_adguard
 
-service log restart
+progress=$(service log restart)
+wait $progress
 
 if [ "$TOR_ONION" = "1" ]
                	then
 			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Tor'
    			set_tor
+      			echo
+			echo
 fi
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' set Stubby'
 set_stubby
+echo
+echo
 if [ "$UNBOUND" = "1" ]
                	then
 			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' set UNBOUND'
 			set_unbound
+   			echo
+			echo
 fi
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create UNBOUND URL-Filter'
 create_unbound_url_filter
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create DNSMASQ URL-Filter'
 create_dnsmasq_url_filter
 view_config
-
+echo
+echo
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware'
 customize_firmware
+echo
+echo
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot'
 create_hotspot
+echo
+echo
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Create Switch'>> install.log
 #create_switch_23
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Network'
 #create_network_23
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create VLAN'
 create_vlan_bridge
+echo
+echo
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' SetDHCP'
 set_dhcp
+echo
+echo
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Networkinterfaces'
 create_network_interfaces
+echo
+echo
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Bridge-Ports'
 #create_bridge_ports
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create WLAM'
 create_wlan
+echo
+echo
 
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-Zones'
 create_firewall_zones
 #create_MWAN
 view_config
-
+echo
+echo
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-ipset'
 #set_firewall_ipset
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Rules'
 set_firewall_rules
 #set_mountpoints
 echo
+echo
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)
+echo
 echo
 echo 'Tor:	'$(service tor status)
 echo $(dig www.test.de -p $DNS_TOR_port @127.0.0.1)
