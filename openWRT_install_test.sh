@@ -402,6 +402,68 @@ odhcpd_inst=$(opkg list-installed | grep odhcpd)
 iptables_inst=$(opkg list-installed | grep iptable)
 }
 
+function service_State () {
+
+if [ ! -z $2 ] 
+	then 
+	#echo $1' ' $2': '
+		if [ ! -z $1 ]
+			then 
+				serviceInst=$(opkg list-installed | grep $1)
+				if [ "$serviceInst" != "" ] 
+					then
+						if [ -z $(echo $(service "$1"  status) | grep 'not found') ]
+							then
+								echo $(service "$1" status)
+						fi
+
+						case $2 in
+							"restart")
+								if [ $2 != $(service $1 status) ]
+									then
+										erg=$(service $1 restart)
+								fi;;
+							"start")
+								if [ $2 != $(service $1 status) ]
+									then
+										erg=$(service $1 start)
+									fi;;	
+							"stop")
+								if [ $2 != $(service $1 status) ]
+									then
+										erg=$(service $1 stop)
+								fi;;
+							"enable")
+								if [ $2 != $(service $1 status) ]
+									then
+										erg=$(service $1 enable)
+										erg=$(service $1 start)
+								fi;;
+							"disable")
+								if [ $2 != $(service $1 status) ]
+									then
+										erg=$(service $1 stop)
+										erg=$(service $1 disable)
+								fi;;
+							*)
+								#echo 'false state!'
+						esac
+					fi
+			fi
+	elif [ ! -z $1 ]
+                then
+			#echo 'Service: '$1
+			serviceInst=$(opkg list-installed | grep $1 )
+                	if [ "$serviceInst" != "" ]
+                                then
+                        	        if [ -z $(echo $(service "$1" status) | grep 'mot found') ]
+                                	        then
+                                        	       echo $(service $1 status)
+                                                fi
+                                 fi
+fi
+}
+
 install_update() {
 echo
 echo 'Install Software'
