@@ -1212,7 +1212,7 @@ uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
 uci set uhttpd.main.redirect_https='1'
 processes=$(uci commit && reload_config) 
 wait $processes 
-processes=$(/etc/init.d/uhttpd restart]
+processes=$(/etc/init.d/uhttpd restart)
 wait $processes
 
 echo
@@ -1295,12 +1295,14 @@ echo 'Sichere alte Konfiguration'
 if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 	then
 		processes=$(rm /www/luci-static/bootstrap/c*.css)
+  		wait $processes
 fi
 
-wait $processes
+
 if [ "$(ls /www/luci-static/resources/view/dashboard/css/c*.css)" != "" ]
 	then
 		processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
+  		wait $processes
 fi
 wait $processes
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
