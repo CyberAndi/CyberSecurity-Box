@@ -3844,6 +3844,12 @@ uci add_list unbound.ub_main.iface_trig='INET'
 uci add_list unbound.ub_main.iface_trig='SERVER'
 uci add_list unbound.ub_main.iface_trig='TELEKOM'
 uci add_list unbound.ub_main.iface_trig='VOICE'
+uci add_list unbound.ub_main.outgoing_port_permit=$SDNS_port
+uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS_port
+#uci add_list unbound.ub_main.outgoing_port_permit='9150'
+uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
+#uci add_list unbound.ub_main.outgoing_port_permit='9153'
+#uci add_list unbound.ub_main.outgoing_port_permit='10240-65335'
 uci delete unbound.auth_icann
 uci del unbound.auth_icann
 #uci set unbound.auth_icann=zone
