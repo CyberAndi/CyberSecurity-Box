@@ -588,10 +588,8 @@ echo 'Please wait ....'
 echo
 echo 'On Error enter logread'
 echo
-processes=$(/etc/init.d/dnsmasq stop)
-wait $processes 
-processes=$(/etc/init.d/dnsmasq disable)
-wait $processes 
+service_State dnsmasq stop
+service_State dnsmasq disable
 processes=$(opkg update)
 wait $processes 
 echo
@@ -638,10 +636,8 @@ if [ "$odhcpd_inst" != "" ]
   		opkg remove odhcp* --force-removal-of-dependent-packages
 fi
 echo 'install opkg'
-process=$(/etc/init.d/dnsmasq enable)
-wait $process
-process=$(/etc/init.d/dnsmasq start)
-wait $process
+service_State dnsmasq enable
+service_State dnsmasq start
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -1390,8 +1386,7 @@ uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
 uci set uhttpd.main.redirect_https='1'
 processes=$(uci commit && reload_config) 
 wait $processes 
-processes=$(/etc/init.d/uhttpd restart)
-wait $processes
+service_State uhttpd restart
 
 echo
 echo 'Default Country-Settings'
@@ -3223,8 +3218,7 @@ processes=$(uci commit && reload_config) wait $processes
 
 # Save and apply
 processes=$(uci commit && reload_config) wait $processes
-processes=$(/etc/init.d/network restart)
-wait $processes
+service_State network restart
 
 echo
 echo 'On Error enter logread'
@@ -3506,10 +3500,9 @@ echo
 }
 
 set_tor() {
-processes=$( /etc/init.d/tor stop)
-wait $processes 
-processes=$(/etc/init.d/log restart)
-wait $processes 
+service_State tor stop
+service_State log restart
+
 
 # Configure Tor client
 cat << EOF > /etc/tor/main
@@ -3611,10 +3604,8 @@ EOF
 }
 
 set_tor_old() {
-processes=$(/etc/init.d/tor stop)
-wait $processes 
-processes=$( /etc/init.d/log restart)
-wait $processes 
+service_State tor stop
+service_State log restart
 
 # Configure Tor client
 cat << EOF > /etc/tor/main
@@ -3759,8 +3750,7 @@ uci add_list tor.conf.tail_include="/etc/tor/main"
 processes=$(uci commit && reload_config)
 wait $processes 
 
-processes=$( /etc/init.d/tor start )
-wait $processes 
+service_State tor start
 
 echo 
 echo 'Tor-Onion-Services activated'
@@ -3833,8 +3823,8 @@ EOF
 processes=$(uci commit && reload_config)
 wait $processes 
 
-processes=$( /etc/init.d/stubby restart )
-wait $processes 
+service_State stubby restart
+
 # Configure unbound client
 
 echo
@@ -3845,11 +3835,8 @@ echo
 echo 'On Error enter logread'
 echo
 
-processes=$(/etc/init.d/unbound stop )
-wait $processes 
-processes=$(/etc/init.d/log restart )
-wait $processes 
-
+service_State unbound stop 
+service_State log restart 
 #Configure stubby
 
 }
@@ -4001,8 +3988,7 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
  fi
 processes=$(uci commit && reload_config)
 wait $processes 
-processes=$( /etc/init.d/unbound restart )
-wait $processes 
+service_State unbound restart
 
 echo
 echo 'On Error enter logread'
@@ -4019,7 +4005,7 @@ echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
 echo '#                                                      #'
 echo '########################################################'
 view_config
-processes=$(/etc/init.d/unbound restart )
+service_State unbound restart )
 wait $processes 
 }
 
@@ -4140,7 +4126,7 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
  fi
 processes=$(uci commit && reload_config) 
 wait $processes  
-processes=$( /etc/init.d/unbound restart )
+service_State unbound restart )
 wait $processes 
 
 echo
@@ -4159,8 +4145,7 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-processes=$(/etc/init.d/unbound restart)
-wait $processes 
+service_State unbound restart
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
 clear
@@ -4357,7 +4342,7 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
  fi
  processes=$(uci commit && reload_config)
 wait $processes 
-processes=$(/etc/init.d/unbound start )
+service_State unbound start )
 wait $processes 
 
 echo
@@ -4375,8 +4360,7 @@ echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
 echo '#                                                      #'
 echo '########################################################'
 view_config
-processes=$( /etc/init.d/unbound restart)
-wait $processes 
+service_State unbound restart 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
 clear
@@ -4619,8 +4603,7 @@ echo
 
 processes=$(uci commit && reload_config)
 wait $processes 
-processes=$(/etc/init.d/unbound start)
-wait $processes 
+service_State unbound start
 echo
 echo 'On Error enter logread'
 echo
@@ -4636,8 +4619,7 @@ echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
 echo '#                                                      #'
 echo '########################################################'
 view_config
-processes=$(/etc/init.d/unbound restart)
-wait $processes 
+service_State unbound restart
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
 clear
@@ -4793,7 +4775,7 @@ uci add_list unbound.ub_main.domain_insecure='exit'
 
 processes=$(uci commit && reload_config)
 wait $processes 
-processes=$(/etc/init.d/unbound start )
+service_State unbound start )
 wait $processes 
 
 echo
@@ -4812,7 +4794,7 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-processes=$( /etc/init.d/unbound restart )
+service_State unbound restart )
 wait $processes 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
@@ -4989,8 +4971,7 @@ uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
 
 processes=$(uci commit && reload_config)
 wait $processes 
-processes=$(/etc/init.d/unbound start)
-wait $processes 
+service_State unbound start
 
 echo
 echo 'On Error enter logread'
@@ -5008,8 +4989,7 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-processes=$(/etc/init.d/unbound restart)
-wait $processes 
+service_State unbound restart
 #---------------------------------------------------------------------------------------------------------------------------------------------
 clear
 echo '########################################################'
@@ -5328,8 +5308,7 @@ uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75eu
 
 processes=$(uci commit && reload_config)
 wait $processes 
-processes=$( /etc/init.d/unbound start)
-wait $processes 
+service_State unbound start
 
 echo
 echo 'On Error enter logread'
@@ -5347,7 +5326,7 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-processes=$( /etc/init.d/unbound restart )
+service_State unbound restart )
 wait $processes 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
@@ -10471,8 +10450,7 @@ cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys
 cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn
 cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white
 
-processes=$( /etc/init.d/dnsmasq restart)
-wait $processes 
+service_State dnsmasq restart
 
 echo
 echo
@@ -10502,10 +10480,8 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-processes=$(/etc/init.d/unbound stop)
-wait $processes 
-processes=$(/etc/init.d/log restart)
-wait $processes 
+service_State unbound stop
+service_State log restart
 #Configure stubby
 
 cat << EOF > /etc/unbound/unbound_srv.conf
@@ -21609,8 +21585,7 @@ uci set firewall.otherProt.enabled='1'
 uci set firewall.blockIncoming.enabled='1'
 processes=$(uci commit && reload_config)
 wait $processes 
-processes=$(/etc/init.d/firewall restart)
-wait $processes
+service_State firewall restart
 }
 
 set_HS_Firewall_disable() {
@@ -21634,8 +21609,7 @@ uci set firewall.otherProt.enabled='1'
 uci set firewall.blockIncoming.enabled='1'
 processes=$(uci commit && reload_config)
 wait $processes 
-processes=$( /etc/init.d/firewall restart)
-wait $processes 
+service_State firewall restart
 }
 
 
@@ -21679,8 +21653,7 @@ uci set firewall.filter6_fwd.target="ACCEPT"
 
 processes=$(uci commit && reload_config)
 wait $processes 
-processes=$(/etc/init.d/firewall restart)
-wait $processes 
+service_State firewall restart
 
 if [ "$SECURE_RULES" = "" ]
         then
@@ -21721,7 +21694,7 @@ uci commit ipset-dns
  
 # Resolve race conditions for ipset-dns
 cat << "EOF" > /etc/firewall.ipsetdns 
-processes=$( /etc/init.d/ipset-dns restart )
+service_State ipset-dns restart )
 wait $processes 
 EOF 
 cat << "EOF" >> /etc/sysupgrade.conf
@@ -21734,12 +21707,9 @@ uci set firewall.ipsetdns.reload="1"
 processes=$(uci commit && reload_config)
 wait $processes 
 
-processes=$(/etc/init.d/firewall restart)
-wait $processes 
-processes=$(/etc/init.d/dnsmasq restart)
-wait $processes 
-processes=$(/etc/init.d/network restart)
-wait $processes
+service_State firewall restart
+service_State dnsmasq restart
+service_State network restart
 
 clear
 
@@ -24030,8 +24000,7 @@ fi
 
 processes=$(uci commit && reload_config)
 wait $processes  >/dev/null
-processes=$(/etc/init.d/firewall restart)
-wait $processs >/dev/null
+service_State firewall restart
 }
 
 set_mountpoints() {
@@ -24062,7 +24031,7 @@ uci set fstab.@mount[0].is_rootfs='1'
 
 processes=$(uci commit fstab)
 wait $processes 
-processes=$(/etc/init.d/fstab boot)
+service_State fstab boot)
 wait $processes 
 }
 
