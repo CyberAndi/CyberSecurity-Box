@@ -3855,8 +3855,8 @@ uci add_list unbound.ub_main.iface_trig='INET'
 uci add_list unbound.ub_main.iface_trig='SERVER'
 uci add_list unbound.ub_main.iface_trig='TELEKOM'
 uci add_list unbound.ub_main.iface_trig='VOICE'
-uci delete unbound.auth_icann
-uci del unbound.auth_icann
+uci delete unbound.auth_icann 2>/dev/null
+uci del unbound.auth_icann 2>/dev/null
 #uci set unbound.auth_icann=zone
 #uci set unbound.auth_icann.enabled='0'
 #uci set unbound.auth_icann.fallback='1'
@@ -3870,16 +3870,16 @@ uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS_port
 uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
 #uci add_list unbound.ub_main.outgoing_port_permit='9153'
 #uci add_list unbound.ub_main.outgoing_port_permit='10240-65335'
-uci delete unbound.fwd_isp
-uci del unbound.fwd_isp
+uci delete unbound.fwd_isp 2>/dev/null
+uci del unbound.fwd_isp 2>/dev/null
 #uci set unbound.fwd_isp=zone
 #uci set unbound.fwd_isp.enabled='0'
 #uci set unbound.fwd_isp.fallback='1'
 #uci set unbound.fwd_isp.resolv_conf='1'
 #uci set unbound.fwd_isp.zone_type='forward_zone'
 #uci set unbound.fwd_isp.zone_name='isp-bill.example.com.' 'isp-mail.example.net.'
-uci delete unbound.fwd_google
-uci del unbound.fwd_google
+uci delete unbound.fwd_google 2>/dev/null
+uci del unbound.fwd_google 2>/dev/null
 #uci set unbound.fwd_google.enabled='0'
 #uci set unbound.fwd_google.fallback='1'
 #uci set unbound.fwd_google.tls_index='dns.google'
