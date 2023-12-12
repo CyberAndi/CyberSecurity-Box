@@ -4005,7 +4005,7 @@ echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
 echo '#                                                      #'
 echo '########################################################'
 view_config
-service_State unbound restart )
+service_State unbound restart
 wait $processes 
 }
 
@@ -4126,8 +4126,8 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
  fi
 processes=$(uci commit && reload_config) 
 wait $processes  
-service_State unbound restart )
-wait $processes 
+service_State unbound restart
+
 
 echo
 echo 'On Error enter logread'
@@ -4342,8 +4342,7 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
  fi
  processes=$(uci commit && reload_config)
 wait $processes 
-service_State unbound start )
-wait $processes 
+service_State unbound start 
 
 echo
 echo 'On Error enter logread'
@@ -4775,8 +4774,7 @@ uci add_list unbound.ub_main.domain_insecure='exit'
 
 processes=$(uci commit && reload_config)
 wait $processes 
-service_State unbound start )
-wait $processes 
+service_State unbound start 
 
 echo
 echo 'On Error enter logread'
@@ -4794,8 +4792,7 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-service_State unbound restart )
-wait $processes 
+service_State unbound restart 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
 clear
@@ -5326,8 +5323,7 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-service_State unbound restart )
-wait $processes 
+service_State unbound restart
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
 clear
@@ -21694,8 +21690,7 @@ uci commit ipset-dns
  
 # Resolve race conditions for ipset-dns
 cat << "EOF" > /etc/firewall.ipsetdns 
-service_State ipset-dns restart )
-wait $processes 
+service_State ipset-dns restart 
 EOF 
 cat << "EOF" >> /etc/sysupgrade.conf
 /etc/firewall.ipsetdns
