@@ -24092,8 +24092,7 @@ echo
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard'
 #install_adguard
 
-processes=$((service log restart) 
-wait $processes 
+service_State log restart 
 
 if [ "$TOR_ONION" = "1" ]
                	then
