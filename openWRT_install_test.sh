@@ -24026,8 +24026,7 @@ uci set fstab.@mount[0].is_rootfs='1'
 
 processes=$(uci commit fstab)
 wait $processes 
-service_State fstab boot)
-wait $processes 
+service_State fstab boot
 }
 
 #-------------------------start---------------------------------------
