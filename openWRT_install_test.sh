@@ -397,6 +397,7 @@ opkg update >/dev/null
 unbound_inst=$(opkg list-installed | grep unbound)
 stubby_inst=$(opkg list-installed | grep stubby)
 tor_inst=$(opkg list-installed | grep tor)
+dnsmasqOld_inst=$(opkg list-installed | grep "dnsmasq ")
 dnsmasq_inst=$(opkg list-installed | grep dnsmasq-full)
 odhcpd_inst=$(opkg list-installed | grep odhcpd)
 iptables_inst=$(opkg list-installed | grep iptable)
@@ -540,16 +541,15 @@ echo 'On Error enter logread'
 echo
 service_State dnsmasq stop
 service_State dnsmasq disable
-processes=""
-processes=$(opkg update)
-wait $processes 
-echo
-processes=""
-processes=$(opkg remove dnsmasq)
-wait $processes 
-processes=""
-processes=$(opkg update)
-wait $processes >/dev/null
+
+if [ "$dnsmasqOld_inst" != "" ] 
+	then
+		echo 'remove dnsmasq-Packages'
+  		processes=""
+  		processes=$(opkg remove dnsmasq --force-removal-of-dependent-packages)
+    		wait $processes 
+fi
+
 if [ "$(opkg list-upgradable)" != "" ]
 	then
 		echo 'upgrade installed Packages'
