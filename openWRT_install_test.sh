@@ -552,9 +552,7 @@ service_State dnsmasq disable
 if [ "$dnsmasqOld_inst" != "" ] 
 	then
 		echo 'remove dnsmasq-Packages'
-  		processes=""
-  		processes=$(opkg remove dnsmasq --force-removal-of-dependent-packages)
-    		wait $processes 
+  		opkg remove dnsmasq --force-removal-of-dependent-packages
 fi
 
 if [ "$(opkg list-upgradable)" != "" ]
@@ -586,10 +584,7 @@ echo
 if [ "$iptables_inst" != "" ] 
 	then
 		echo 'remove iptable-Packages'
-  		processes=""
-  		processes=$(opkg remove iptab* --force-removal-of-dependent-packages)
-    		wait $processes 
-    
+  		opkg remove iptab* --force-removal-of-dependent-packages   
 fi
 
 if [ "$odhcpd_inst" != "" ] 
