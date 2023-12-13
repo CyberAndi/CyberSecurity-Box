@@ -260,11 +260,12 @@ body {
 	flex-direction: column;
 	padding: 5px;
 }
-/*
+/* */
 
 body::before {
 	position: fixed;
 	content: 'function popupmenue() {\A   var popup = document.getElementById(\000027mainmenue_mini\000027).style.visibility;\A\A               if (popup == \000027\000027) {\A         document.getElementById(\000027mainmenue_mini\000027).style.visibility = \000027visible\000027;\A         popup = \000027visible\000027;\A         return;\A        } ;\A        if (popup == \000027visible\000027){\     document.getElementById(\000027mainmenue_mini\000027).style.visibility = \000027hidden\000027;\A     popup = \000027visible\000027;\A     return;\A     }; \A      if (popup == \000027hidden\000027) {\A          document.getElementById(\000027mainmenue_mini\000027).style.visibility = \000027visible\000027;\A          popup = \000027hidden\000027;\A       return;\A  };\A              \A     popup = \000027\000027;\A     return;\A\A     };\A';
+	content: '<!DOCTYPE html>\A<html lang=\000027de\000027>\A	\A	<base href=\000027https://192.168.189.1:8443/CaptivePortal/\000027 />\A	<meta http-equiv=\000027content-type\000027 content=\000027text/html; charset=utf-8\000027>\A	<meta charset=\000027utf-8\000027>\A	<meta name=\000027viewport\000027 content=\000027width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, viewport-fit=cover\000027>\A	<meta http-equiv=\000027Cache-Control\000027 content=\000027no-cache, no-store, must-revalidate\000027>\A	<meta http-equiv=\000027Pragma\000027 content=\000027no-cache\000027>\A	<meta http-equiv=\000027Expires\000027 content=\0000271\000027>\A	<meta http-equiv=\000027cleartype\000027 content=\000027on\000027>\A	<meta name=\000027Description\000027 content=\000027C&grave;Movie das Hoffnungsportal mit Videostreaming. Als den Gegenpol zu Panik und Chaos seitens der Medien und Politik\000027>\A	<link rel=\000027icon\000027 type=\000027image/x-icon\000027 href=\000027pic/favicon.ico\000027>\A	<link href=\000027theme_variable.css\000027 rel=\000027stylesheet\000027 type=\000027text/css\000027 />\A		<link href=\000027theme.css\000027 rel=\000027stylesheet\000027 type=\000027text/css\000027 />\A	<link href=\000027mobile.css\000027 rel=\000027stylesheet\000027 type=\000027text/css\000027 />\A	<meta name=\000027viewport\000027 content=\000027width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, viewport-fit=cover\000027>\A	<head>\A		<title>C&grave;Movie das Hoffnungsportal</title>\A	</head>\A	function popupmenue() {\A	   var popup = document.getElementById(\000027mainmenue_mini\000027).style.visibility;\A	\A	               if (popup == \000027\000027) {\A			         document.getElementById(\000027mainmenue_mini\000027).style.visibility = \000027visible\000027;\A			         popup = \000027visible\000027;\A			         return;\A		        } ;\A        		if (popup == \000027visible\000027){\A				 document.getElementById(\000027mainmenue_mini\000027).style.visibility = \000027hidden\000027;\A				 popup = \000027visible\000027;\A				 return;\A			     }; \A			if (popup == \000027hidden\000027) {\A			          document.getElementById(\000027mainmenue_mini\000027).style.visibility = \000027visible\000027;\A			          popup = \000027hidden\000027;\A				  return;\A			};\A		        \A			popup = \000027\000027;\A			return;\A			\A	};\A';
 	top: 37%;
 	left: 370px;
 	white-space: pre !important;
@@ -277,7 +278,7 @@ body::before {
 	font-family: ui-monospace, monospace;
 	z-index: -11800;
 }
-
+/*
 body::after {
 	content: '';
 	display:block;
