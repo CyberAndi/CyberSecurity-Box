@@ -392,7 +392,13 @@ view_config
 }
 
 install_check() {
-
+unbound_inst=""
+stubby_inst=""
+tor_inst=""
+dnsmasqOld_inst=""
+dnsmasq_inst=""
+odhcpd_inst=""
+iptables_inst=""
 opkg update >/dev/null
 unbound_inst=$(opkg list-installed | grep unbound)
 stubby_inst=$(opkg list-installed | grep stubby)
@@ -539,6 +545,7 @@ echo 'Please wait ....'
 echo
 echo 'On Error enter logread'
 echo
+install_check
 service_State dnsmasq stop
 service_State dnsmasq disable
 
@@ -555,7 +562,7 @@ if [ "$(opkg list-upgradable)" != "" ]
 		echo 'upgrade installed Packages'
   		opkg upgrade $(opkg list-upgradable | awk '{print $1}') 
 fi 
-install_check
+
 
 if [ "$unbound_inst" = "" ]
 	then
@@ -573,13 +580,14 @@ if [ "$unbound_inst" = "" ]
 		fi
    			opkg update
 fi
+install_check
 echo
 echo
 if [ "$iptables_inst" != "" ] 
 	then
 		echo 'remove iptable-Packages'
   		processes=""
-  		processes=$(opkg remove iptable* --force-removal-of-dependent-packages)
+  		processes=$(opkg remove iptab* --force-removal-of-dependent-packages)
     		wait $processes 
     
 fi
