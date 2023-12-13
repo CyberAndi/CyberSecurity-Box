@@ -1303,7 +1303,7 @@ uci set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
 uci set system.@system[0].zonename='Europe/Berlin'
 uci set system.@system[0].hostname='CyberSecurity-Box'
 uci set system.@system[0].description='CyberSecurity-Box with Tor-Onion-Services'
-uci delete system.ntp.server
+uci delete system.ntp.server 2>/dev/null
 uci add_list system.ntp.server=$INET_GW 
 uci add_list system.ntp.server='0.openwrt.pool.ntp.org'
 uci add_list system.ntp.server='1.pool.ntp.org'
@@ -1313,10 +1313,10 @@ uci set uhttpd.defaults.country='DE'
 uci set uhttpd.defaults.state=''
 uci set uhttpd.defaults.location='DMZ'
 uci set uhttpd.defaults.commonname=$LAN
-uci -q delete uhttpd.main.listen_http
+uci -q delete uhttpd.main.listen_http 2>/dev/null
 uci add_list uhttpd.main.listen_http="0.0.0.0:80"
 uci add_list uhttpd.main.listen_http="[::]:80"
-uci -q delete uhttpd.main.listen_https
+uci -q delete uhttpd.main.listen_https 2>/dev/null
 uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
 uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
@@ -1765,7 +1765,7 @@ echo
 create_vlan_bridge() {
 
 
-uci del dhcp.lan.ra_slaac
+uci del dhcp.lan.ra_slaac 2>/dev/null
 
 uci add network bridge-vlan
 uci set network.@bridge-vlan[-1].device='br-lan'
@@ -2414,8 +2414,8 @@ echo '########################################################'
 echo 
 
 #!/bin/sh
-#uci -q delete network
-#uci delete network.lan
+#uci -q delete network 2>/dev/null
+#uci delete network.lan 2>/dev/null
 
 uci set network.loopback=interface
 uci set network.loopback.ifname='lo'
@@ -2637,12 +2637,12 @@ echo
 
 
 create_MWAN() {
-uci delete mwan3.wanb6
-uci delete mwan3.wanb
-uci delete mwan3.wanb_m1_w2
-uci delete mwan3.wanb_m2_w2
-uci delete mwan3.wanb6_m1_w2
-uci delete mwan3.wanb6_m2_w2
+uci delete mwan3.wanb6 2>/dev/null
+uci delete mwan3.wanb 2>/dev/null
+uci delete mwan3.wanb_m1_w2 2>/dev/null
+uci delete mwan3.wanb_m2_w2 2>/dev/null
+uci delete mwan3.wanb6_m1_w2 2>/dev/null
+uci delete mwan3.wanb6_m2_w2 2>/dev/null
 
 uci set mwan3.http=rule
 uci set mwan3.http.dest_port='80'
@@ -2893,7 +2893,7 @@ uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
 create_switch_test() {
 
-uci del dhcp.lan.ra_slaac
+uci del dhcp.lan.ra_slaac 2>/dev/null
 uci set network.lan.device='br-lan.1'
 
 uci add network device
@@ -3165,7 +3165,7 @@ dig www.internic.net @1.1.1.1
 }
 
 create_wlan() {
-uci -q delete wireless 
+uci -q delete wireless 2>/dev/null
 
 uci set wireless.radio0=wifi-device
 uci set wireless.radio0.type='mac80211'
@@ -3177,7 +3177,7 @@ uci set wireless.radio0.hwmode='11n'
 
 if [ "echo $(uci show wireless | grep default_radio0)" != "" ] 
 	then
-		uci delete wireless.default_radio0
+		uci delete wireless.default_radio0 2>/dev/null
 fi
 uci set wireless.default_radio0=wifi-iface
 uci set wireless.default_radio0.device='radio0'
@@ -3189,7 +3189,7 @@ uci set wireless.default_radio0.network='TELEKOM'
 
 if [ "echo $(uci show wireless | grep wifinet01)" != "" ] 
 	then
-		uci delete wireless.wifinet01
+		uci delete wireless.wifinet01 2>/dev/null
 fi
 uci set wireless.wifinet01=wifi-iface
 uci set wireless.wifinet01.device='radio0'
@@ -3201,7 +3201,7 @@ uci set wireless.wifinet01.network='SERVER'
 
 if [ "echo $(uci show wireless | grep wifinet02)" != "" ] 
 	then
-		uci delete wireless.wifinet02
+		uci delete wireless.wifinet02 2>/dev/null
 fi
 uci set wireless.wifinet02=wifi-iface
 uci set wireless.wifinet02.device='radio0'
@@ -3213,7 +3213,7 @@ uci set wireless.wifinet02.network='HCONTROL'
 
 if [ "echo $(uci show wireless | grep wifinet03)" != "" ] 
 	then
-		uci delete wireless.wifinet03
+		uci delete wireless.wifinet03 2>/dev/null
 fi
 uci set wireless.wifinet03=wifi-iface
 uci set wireless.wifinet03.device='radio0'
@@ -3225,7 +3225,7 @@ uci set wireless.wifinet03.network='CONTROL'
 
 if [ "echo $(uci show wireless | grep wifinet04)" != "" ] 
 	then
-		uci delete wireless.wifinet04
+		uci delete wireless.wifinet04 2>/dev/null
 fi
 uci set wireless.wifinet04=wifi-iface
 uci set wireless.wifinet04.device='radio0'
@@ -3237,7 +3237,7 @@ uci set wireless.wifinet04.network='INET'
 
 if [ "echo $(uci show wireless | grep wifinet05)" != "" ] 
 	then
-		uci delete wireless.wifinet05
+		uci delete wireless.wifinet05 2>/dev/null
 fi
 uci set wireless.wifinet05=wifi-iface
 uci set wireless.wifinet05.device='radio0'
@@ -3249,7 +3249,7 @@ uci set wireless.wifinet05.network='VOICE'
 
 if [ "echo $(uci show wireless | grep wifinet06)" != "" ] 
 	then
-		uci delete wireless.wifinet06
+		uci delete wireless.wifinet06 2>/dev/null
 fi
 uci set wireless.wifinet06=wifi-iface
 uci set wireless.wifinet06.device='radio0'
@@ -3261,7 +3261,7 @@ uci set wireless.wifinet06.network='ENTERTAIN'
 
 if [ "echo $(uci show wireless | grep wifinet07)" != "" ] 
 	then
-		uci delete wireless.wifinet07
+		uci delete wireless.wifinet07 2>/dev/null
 fi
 uci set wireless.wifinet07=wifi-iface
 uci set wireless.wifinet07.device='radio0'
@@ -3273,7 +3273,7 @@ uci set wireless.wifinet07.network='GUEST'
 
 if [ "echo $(uci show wireless | grep wifinet08)" != "" ] 
 	then
-		uci delete wireless.wifinet08
+		uci delete wireless.wifinet08 2>/dev/null
 fi
 uci set wireless.wifinet08=wifi-iface
 uci set wireless.wifinet08.device='radio0'
@@ -3293,7 +3293,7 @@ uci set wireless.radio1.country='DE'
 
 if [ "echo $(uci show wireless | grep default_radio1)" != "" ] 
 	then
-		uci delete wireless.default_radio1
+		uci delete wireless.default_radio1 2>/dev/null
 fi
 uci set wireless.default_radio1=wifi-iface
 uci set wireless.default_radio1.device='radio1'
@@ -3305,7 +3305,7 @@ uci set wireless.default_radio1.network='TELEKOM'
 
 if [ "echo $(uci show wireless | grep wifinet09)" != "" ] 
 	then
-		uci delete wireless.wifinet09
+		uci delete wireless.wifinet09 2>/dev/null
 fi
 uci set wireless.wifinet09=wifi-iface
 uci set wireless.wifinet09.device='radio1'
@@ -3317,7 +3317,7 @@ uci set wireless.wifinet09.network='SERVER'
 
 if [ "echo $(uci show wireless | grep wifinet10)" != "" ] 
 	then
-		uci delete wireless.wifinet10
+		uci delete wireless.wifinet10 2>/dev/null
 fi
 uci set wireless.wifinet10=wifi-iface
 uci set wireless.wifinet10.ssid=$HCONTROL_ssid
@@ -3329,7 +3329,7 @@ uci set wireless.wifinet10.key=$WIFI_PASS
 
 if [ "echo $(uci show wireless | grep wifinet11)" != "" ] 
 	then
-		uci delete wireless.wifinet1
+		uci delete wireless.wifinet1 2>/dev/null
 fi
 uci set wireless.wifinet11=wifi-iface
 uci set wireless.wifinet11.ssid=$CONTROL_ssid
@@ -3341,7 +3341,7 @@ uci set wireless.wifinet11.key=$WIFI_PASS
 
 if [ "echo $(uci show wireless | grep wifinet12)" != "" ] 
 	then
-		uci delete wireless.wifinet12
+		uci delete wireless.wifinet12 2>/dev/null
 fi
 uci set wireless.wifinet12=wifi-iface
 uci set wireless.wifinet12.device='radio1'
@@ -3353,7 +3353,7 @@ uci set wireless.wifinet12.network='INET'
 
 if [ "echo $(uci show wireless | grep wifinet13)" != "" ] 
 	then
-		uci delete wireless.wifinet13
+		uci delete wireless.wifinet13 2>/dev/null
 fi
 uci set wireless.wifinet13=wifi-iface
 uci set wireless.wifinet13.encryption='psk2'
@@ -3365,7 +3365,7 @@ uci set wireless.wifinet13.ssid=$VOICE_ssid
 
 if [ "echo $(uci show wireless | grep wifinet14)" != "" ] 
 	then
-		uci delete wireless.wifinet14
+		uci delete wireless.wifinet14 2>/dev/null
 fi
 uci set wireless.wifinet14=wifi-iface
 uci set wireless.wifinet14.encryption='psk2'
@@ -3377,7 +3377,7 @@ uci set wireless.wifinet14.ssid=$ENTERTAIN_ssid
 
 if [ "echo $(uci show wireless | grep wifinet15)" != "" ] 
 	then
-		uci delete wireless.wifinet15
+		uci delete wireless.wifinet15 2>/dev/null
 fi
 uci set wireless.wifinet15=wifi-iface
 uci set wireless.wifinet15.encryption='psk2'
@@ -3389,7 +3389,7 @@ uci set wireless.wifinet15.ssid=$GUEST_ssid
 
 if [ "echo $(uci show wireless | grep wifinet16)" != "" ] 
 	then
-		uci delete wireless.wifinet16
+		uci delete wireless.wifinet16 2>/dev/null
 fi
 uci set wireless.wifinet16=wifi-iface
 uci set wireless.wifinet16.encryption='psk2'
@@ -3401,7 +3401,7 @@ uci set wireless.wifinet16.ssid=$CMOVIE_ssid
 
 if [ "echo $(uci show wireless | grep wifinet17)" != "" ] 
 	then
-		uci delete wireless.wifinet17
+		uci delete wireless.wifinet17 2>/dev/null
 fi
 uci set wireless.wifinet17=wifi-iface
 uci set wireless.wifinet17.encryption='psk2'
@@ -3413,7 +3413,7 @@ uci set wireless.wifinet17.ssid='Vodafon-Hotspot'
 
 if [ "echo $(uci show wireless | grep wifinet18)" != "" ] 
 	then
-		uci delete wireless.wifinet18
+		uci delete wireless.wifinet18 2>/dev/null
 fi
 uci set wireless.wifinet18=wifi-iface
 uci set wireless.wifinet18.encryption='psk2'
@@ -3423,8 +3423,8 @@ uci set wireless.wifinet18.key=$WIFI_PASS
 uci set wireless.wifinet18.network='TELEKOM'
 uci set wireless.wifinet18.ssid='Vodafon-Hotspot'
 
-uci delete wireless.radio0.disabled
-uci delete wireless.radio1.disabled
+uci delete wireless.radio0.disabled 2>/dev/null
+uci delete wireless.radio1.disabled 2>/dev/null
 
 processes=$(uci commit && reload_config)
 wait $processes 
@@ -3682,8 +3682,8 @@ User tor
 EOF
 
 
-uci del_list tor.conf.tail_include="/etc/tor/main"
-uci add_list tor.conf.tail_include="/etc/tor/main"
+uci del_list tor.conf.tail_include="/etc/tor/main" 2>/dev/null
+uci add_list tor.conf.tail_include="/etc/tor/main" 2>/dev/null
 processes=$(uci commit && reload_config)
 wait $processes 
 
@@ -4221,7 +4221,7 @@ uci add_list unbound.ub_main.iface_trig='TELEKOM'
 uci add_list unbound.ub_main.iface_trig='GUEST'
 uci add_list unbound.ub_main.iface_trig='wan6'
 uci add_list unbound.ub_main..iface_trig='lo'
-uci del_list unbound.ub_main.iface_trig='lan'
+uci del_list unbound.ub_main.iface_trig='lan' 2>/dev/null
 uci set unbound.ub_main.domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
 uci add_list unbound.ub_main.domain_insecure=$INET_domain
 uci add_list unbound.ub_main.domain_insecure=$SERVER_domain
@@ -4464,8 +4464,8 @@ uci set unbound.ub_main.validator='1'
 uci set unbound.ub_main.validator_ntp='1'
 uci set unbound.ub_main.verbosity='0'
 
-uci del unbound.fwd_google
-uci del unbound.fwd_isp
+uci del unbound.fwd_google 2>/dev/null
+uci del unbound.fwd_isp 2>/dev/null
 
 
 #uci add unbound zone
@@ -4862,7 +4862,7 @@ uci add_list unbound.ub_main.iface_trig='TELEKOM'
 uci add_list unbound.ub_main.iface_trig='GUEST'
 uci add_list unbound.ub_main.iface_trig='wan6'
 uci add_list unbound.ub_main..iface_trig='lo'
-uci del_list unbound.ub_main.iface_trig='lan'
+uci del_list unbound.ub_main.iface_trig='lan' 2>/dev/null
 uci set unbound.ub_main.domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
 uci add_list unbound.ub_main.domain_insecure=$INET_domain
 uci add_list unbound.ub_main.domain_insecure=$SERVER_domain
@@ -5056,7 +5056,7 @@ uci add_list unbound.ub_main.iface_trig='TELEKOM'
 uci add_list unbound.ub_main.iface_trig='GUEST'
 uci add_list unbound.ub_main.iface_trig='wan6'
 uci add_list unbound.ub_main..iface_trig='lo'
-uci del_list unbound.ub_main.iface_trig='lan'
+uci del_list unbound.ub_main.iface_trig='lan' 2>/dev/null
 uci set unbound.ub_main.domain_insecure='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion'
 uci add_list unbound.ub_main.domain_insecure=$INET_domain
 uci add_list unbound.ub_main.domain_insecure=$SERVER_domain
@@ -20640,7 +20640,7 @@ view_config
 
 set_dhcp() {
 
-uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci delete dhcp.@dnsmasq[-1] 2>/dev/null
 processes=$(uci commit && reload_config)
 wait $processes  >/dev/null
 
@@ -20806,7 +20806,7 @@ uci add_list dhcp.INET.dhcp_option='42,'$INET_GW
 uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
 uci set dhcp.INET.server=$INET_ip'#'$DNSMASQ_Relay_port
 
-uci del dhcp.lan.ra_slaac
+uci del dhcp.lan.ra_slaac 2>/dev/null
 uci set dhcp.lan.start='10'
 uci set dhcp.lan.limit='250'
 uci set dhcp.lan.leasetime='24h'
@@ -20881,7 +20881,7 @@ wait $processes
 
 set_dhcp_() {
 
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] 2>/dev/null
 #processes=$(uci commit && reload_config)
 #wait $processes  >/dev/null
 
@@ -21039,7 +21039,7 @@ uci add_list dhcp.INET.dhcp_option='42,'$INET_GW
 uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
 uci set dhcp.INET.server=$INET_ip'#'$DNSMASQ_Relay_port
 
-uci del dhcp.lan.ra_slaac
+uci del dhcp.lan.ra_slaac 2>/dev/null
 uci set dhcp.lan.start='10'
 uci set dhcp.lan.limit='250'
 uci set dhcp.lan.leasetime='24h'
@@ -21108,7 +21108,7 @@ wait $processes
 
 set_dhcp_old() {
 
-#uci delete dhcp.@dnsmasq[-1] >/dev/null
+#uci delete dhcp.@dnsmasq[-1] 2>/dev/null
 #processes=$(uci commit && reload_config)
 wait $processes  >/dev/null
 
@@ -21266,7 +21266,7 @@ uci add_list dhcp.INET.dhcp_option='42,'$INET_GW
 uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
 uci set dhcp.INET.server=$INET_ip'#'$DNSMASQ_Relay_port
 
-uci del dhcp.lan.ra_slaac
+uci del dhcp.lan.ra_slaac 2>/dev/null
 uci set dhcp.lan.start='10'
 uci set dhcp.lan.limit='250'
 uci set dhcp.lan.leasetime='24h'
@@ -21554,14 +21554,14 @@ service_State firewall restart
 
 set_firewall_ipset() {
 # Configure IP sets
-uci -q delete firewall.filter
+uci -q delete firewall.filter 2>/dev/null
 uci set firewall.filter="ipset"
 uci set firewall.filter.name="filter"
 uci set firewall.filter.family="ipv4"
 uci set firewall.filter.storage="hash"
 uci set firewall.filter.match="ip"
 
-uci -q delete firewall.filter6
+uci -q delete firewall.filter6 2>/dev/null
 uci set firewall.filter6="ipset"
 uci set firewall.filter6.name="filter6"
 uci set firewall.filter6.family="ipv6"
@@ -21569,7 +21569,7 @@ uci set firewall.filter6.storage="hash"
 uci set firewall.filter6.match="ip"
  
 # Filter LAN client traffic with IP sets
-uci -q delete firewall.filter_fwd
+uci -q delete firewall.filter_fwd 2>/dev/null
 uci set firewall.filter_fwd="rule"
 uci set firewall.filter_fwd.name="Filter_IPset_DNS_Forward"
 uci set firewall.filter_fwd.src="INET"
@@ -21579,7 +21579,7 @@ uci set firewall.filter_fwd.family="ipv4"
 uci set firewall.filter_fwd.proto="all"
 uci set firewall.filter_fwd.target="ACCEPT"
 
-uci -q delete firewall.filter6_fwd
+uci -q delete firewall.filter6_fwd 2>/dev/null
 uci set firewall.filter6_fwd="rule"
 uci set firewall.filter6_fwd.name="Filter_IPset_DNS_Forward"
 uci set firewall.filter6_fwd.src="INET"
@@ -21614,7 +21614,7 @@ iptables-save -t nat \
 | sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
 | ip6tables-restore -T nat
 EOF
-uci -q delete firewall.nat6
+uci -q delete firewall.nat6 2>/dev/null
 uci set firewall.nat6="include"
 uci set firewall.nat6.path="/etc/firewall.nat6"
 uci set firewall.nat6.reload="1"
@@ -21638,7 +21638,7 @@ EOF
 cat << "EOF" >> /etc/sysupgrade.conf
 /etc/firewall.ipsetdns
 EOF
-uci -q delete firewall.ipsetdns
+uci -q delete firewall.ipsetdns 2>/dev/null
 uci set firewall.ipsetdns="include"
 uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns"
 uci set firewall.ipsetdns.reload="1"
@@ -21655,7 +21655,7 @@ clear
 
 set_firewall_rules() {
 # Intercept SSH, HTTP and HTTPS traffic
-uci -q delete firewall.ssh_int >/dev/null
+uci -q delete firewall.ssh_int 2>/dev/null
 uci set firewall.ssh_int="redirect"
 uci set firewall.ssh_int.name="Intercept_SSH"
 uci set firewall.ssh_int.src="INET"
@@ -21663,7 +21663,7 @@ uci set firewall.ssh_int.src_dport="$SSH_port"
 uci set firewall.ssh_int.proto="tcp"
 uci set firewall.ssh_int.target="DNAT"
 
-uci -q delete firewall.http_int >/dev/null
+uci -q delete firewall.http_int 2>/dev/null
 uci set firewall.http_int="redirect"
 uci set firewall.http_int.name="Intercept_HTTP"
 uci set firewall.http_int.src="INET"
@@ -21671,7 +21671,7 @@ uci set firewall.http_int.src_dport="$ACCESS_HTTP_port"
 uci set firewall.http_int.proto="tcp"
 uci set firewall.http_int.target="DNAT"
 
-uci -q delete firewall.https_int
+uci -q delete firewall.https_int 2>/dev/null
 uci set firewall.https_int="redirect"
 uci set firewall.https_int.name="Intercept_HTTPS"
 uci set firewall.https_int.src="INET"
@@ -21679,11 +21679,12 @@ uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
 uci set firewall.https_int.proto="tcp"
 uci set firewall.https_int.target="DNAT"
 
-processes=$(uci commit && reload_config) wait $processes  >/dev/null
+processes=$(uci commit && reload_config) wait $processes  2>/dev/null
 
 # Intercept DNS and TCP traffic
 
-uci -q delete firewall.tcp_onion_int > /dev/null uci set firewall.tcp_onion_int="redirect"
+uci -q delete firewall.tcp_onion_int 2>/dev/null
+uci set firewall.tcp_onion_int="redirect"
 uci set firewall.tcp_onion_int.name="Intercept_Onion_Domain"
 uci set firewall.tcp_onion_int.src_dport=$TOR_TRANS_port
 uci set firewall.tcp_onion_int.dest_port=$TOR_TRANS_port
@@ -21694,7 +21695,7 @@ uci set firewall.tcp_onion_int.src_dip="10.192.0.0./10"
 uci set firewall.tcp_onion_int.extra="--syn"
 uci set firewall.tcp_onion_int.enabled='0'
 
-uci -q delete firewall.tcp_onionSocks_int > /dev/null 
+uci -q delete firewall.tcp_onionSocks_int 2>/dev/null 
 uci set firewall.tcp_onionSocks_int="redirect"
 uci set firewall.tcp_onionSocks_int.name='Intercept_Onion_Domain'
 uci set firewall.tcp_onionSocks_int.src='INET'
@@ -21706,7 +21707,7 @@ uci set firewall.tcp_onionSocks_int.target='DNAT'
 uci set firewall.tcp_onionSocks_int.extra='--syn'
 uci set firewall.tcp_onionSocks_int.enabled='0'
 
-uci -q delete firewall.tcp_onionSocks1_int > /dev/null 
+uci -q delete firewall.tcp_onionSocks1_int 2>/dev/null 
 uci set firewall.tcp_onionSocks1_int=redirect
 uci set firewall.tcp_onionSocks1_int.name='Intercept_Onion1_Domain'
 uci set firewall.tcp_onionSocks1_int.src='INET'
@@ -21717,7 +21718,7 @@ uci set firewall.tcp_onionSocks1_int.target='DNAT'
 uci set firewall.tcp_onionSocks1_int.extra='--syn'
 uci set firewall.tcp_onionSocks1_int.enabled='0'
 
-uci -q delete firewall.tcp_tor2_int > /dev/null 
+uci -q delete firewall.tcp_tor2_int 2>/dev/null 
 uci set firewall.tcp_tor2_int=redirect
 uci set firewall.tcp_tor2_int.src_dip='!192.168.0.0/16'
 uci set firewall.tcp_tor2_int.proto='tcp'
@@ -21729,7 +21730,7 @@ uci set firewall.tcp_tor2_int.extra='--syn'
 uci set firewall.tcp_tor2_int.name='Intercept https tor'
 uci set firewall.tcp_tor2_int.enabled='0'
 
-uci -q delete firewall.tcp_tor3_int > /dev/null 
+uci -q delete firewall.tcp_tor3_int 2>/dev/null 
 uci set firewall.tcp_tor3_int=redirect
 uci set firewall.tcp_tor3_int.src_dip='!192.168.0.0/16'
 uci set firewall.tcp_tor3_int.proto='tcp'
@@ -21741,7 +21742,7 @@ uci set firewall.tcp_tor3_int.src_dport=$HTTP_port
 uci set firewall.tcp_tor3_int.extra='--syn'
 uci set firewall.tcp_tor3_int.enabled='0'
 
-uci -q delete firewall.omada > /dev/null
+uci -q delete firewall.omada 2>/dev/null
 uci set firewall.omada=redirect
 uci set firewall.omada.dest_port=$CONTROLER_port
 uci set firewall.omada.name='Network_omada'
@@ -21753,7 +21754,7 @@ uci set firewall.omada.src='INET'
 uci set firewall.omada.extra='--syn'
 uci set firewall.omada.enabled='0'
 
-uci -q delete firewall.homematic > /dev/null
+uci -q delete firewall.homematic 2>/dev/null
 uci set firewall.homematic=redirect
 uci set firewall.homematic.dest_port='80'
 uci set firewall.homematic.target='DNAT'
@@ -21767,7 +21768,7 @@ uci set firewall.homematic.src_dport='8080'
 uci set firewall.homematic.extra='--syn'
 uci set firewall.homematic.enabled='0'
 
-uci -q delete firewall.homematic1 > /dev/null
+uci -q delete firewall.homematic1 2>/dev/null
 uci set firewall.homematic1=redirect
 uci set firewall.homematic1.dest_port='443'
 uci set firewall.homematic1.target='DNAT'
