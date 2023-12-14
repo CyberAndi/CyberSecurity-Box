@@ -59,6 +59,16 @@ echo 'Please wait for at least 10 minutes and then it will reboot ...'
 echo
 }
 
+function checkFile () {
+if [ -e $1 ] | [ $(ls $1 2>/dev/null) ]
+	then
+      		true
+		
+	else
+		false
+fi
+}
+
 ask_parameter() {
 
 release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=')
