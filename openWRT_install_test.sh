@@ -4227,7 +4227,7 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
 		uci set unbound.@zone[-1].forward_tls_upstream='yes'
 		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion @'$UNBOUND_Relay_port
  fi
- processes=""
+processes=""
 processes=$(uci commit && reload_config)
 wait $processes 
 service_State unbound restart
