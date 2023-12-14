@@ -1405,11 +1405,13 @@ DEVICE_REVISION='v0.75'
 
 EOF
 
-if [ "$(ls openWRT*.sh)" != "" ]
+if [ -e "openWRT*.sh" ]
 	then
-		cp openWRT*.sh /etc/openWRT_install.sh
+      		processes=""
+  		processes=$(cp openWRT*.sh /etc/openWRT_install.sh)
+		wait $processes
+		chmod 0755 /etc/openWRT_install.sh
 fi
-chmod 0755 /etc/openWRT_install.sh
 
 cat << EOF > /etc/sysupgrade.conf
 ## This file contains files and directories that should
@@ -1433,15 +1435,14 @@ echo
 #sichere alte Konfiguration
 echo 'Sichere alte Konfiguration'
 #iptables-save > rules.v4_old_$datum.bkp
-if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
+if [ -e "/www/luci-static/bootstrap/c*.css" ]
 	then
 		processes=""
   		processes=$(rm /www/luci-static/bootstrap/c*.css)
   		wait $processes
 fi
 
-
-if [ "$(ls /www/luci-static/resources/view/dashboard/css/c*.css)" != "" ]
+if [ -e "/www/luci-static/resources/view/dashboard/css/c*.css" ]
 	then
 		processes=""
   		processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
