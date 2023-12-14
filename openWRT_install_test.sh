@@ -1587,11 +1587,8 @@ cat << EOF > /etc/hosts
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
-
 processes1=""
-wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
-processes1=""
 wait $processes1
 processes1=""
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.svg -P /www/luci-static/bootstrap/)
