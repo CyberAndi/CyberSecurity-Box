@@ -1543,8 +1543,7 @@ DEVICE_PRODUCT='CyberSecurity-Box'
 DEVICE_REVISION='v0.75'
 
 EOF
-
-if [ -e "openWRT*.sh" ]
+if checkFile openWRT*.sh
 	then
       		processes=""
   		processes=$(cp openWRT*.sh /etc/openWRT_install.sh)
@@ -1574,14 +1573,14 @@ echo
 #sichere alte Konfiguration
 echo 'Sichere alte Konfiguration'
 #iptables-save > rules.v4_old_$datum.bkp
-if [ -e "/www/luci-static/bootstrap/c*.css" ]
+if checkFile /www/luci-static/bootstrap/c*.css
 	then
 		processes=""
   		processes=$(rm /www/luci-static/bootstrap/c*.css)
   		wait $processes
 fi
 
-if [ -e "/www/luci-static/resources/view/dashboard/css/c*.css" ]
+if checkFile /www/luci-static/resources/view/dashboard/css/c*.css
 	then
 		processes=""
   		processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
