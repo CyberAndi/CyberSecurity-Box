@@ -413,7 +413,7 @@ function service_State() {
 
 if [ ! -z $2 ] 
 	then 
-	#echo $1' ' $2': '
+	echo $1' ' $2': '
 		if [ ! -z $1 ]
 			then 
 				serviceInst=$(opkg list-installed | grep $1)
