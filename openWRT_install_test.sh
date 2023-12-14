@@ -422,6 +422,135 @@ if [ ! -z $2 ]
 						if [ -z $(echo $(/etc/init.d/"$1"  status) | grep 'not found') ]
 							then
 								echo $(/etc/init.d/"$1" status) 2>/dev/null
+								if [ $(/etc/init.d/"$1" status) != "inactive" ] ; then
+								
+									case $2 in
+										"restart")
+											if [ $2 != $(/etc/init.d/"$1" status) ]
+												then
+													erg=""
+	   												erg=$(/etc/init.d/"$1" restart)
+													wait $erg 2>/dev/null
+											fi;;
+										"start")
+											if [ $2 != $(/etc/init.d/"$1" status) ]
+												then
+													erg=""
+	   												erg=$(/etc/init.d/"$1" start)
+													wait $erg 2>/dev/null
+											fi;;	
+										"stop")
+											if [ $2 != $(/etc/init.d/"$1" status) ]
+												then
+													erg=""
+	   												erg=$(/etc/init.d/"$1" stop)
+													wait $erg 2>/dev/null
+											fi;;
+										"enable")
+                                                                       			if [ $2 != $(/etc/init.d/"$1" status) ]
+                                                                              			then
+                                                                          		        	erg=""
+													erg=$(/etc/init.d/"$1" enable)
+                                                                                	        	wait $erg 2>/dev/null
+                                                                        		fi;;
+                                                               			"disable")
+                                                                        		if [ $2 != $(/etc/init.d/"$1" status) ]
+                                                                                		then
+                                                                                        		erg=""
+													erg=$(/etc/init.d/"$1" disable)
+                                                                       		                	wait $erg 2>/dev/null
+                                                                       		 	fi;;
+										"inactive")
+                                                                        		if [ $2 != $(/etc/init.d/"$1" status) ]
+                                                                                		then
+                                                                                			erg=""
+													erg=$(/etc/init.d/"$1" stop)
+                                                                                      			wait $erg 2>/dev/null
+                                                                                       			erg=""
+										      			erg=$(/etc/init.d/"$1" disable)
+                                                                                			wait $erg 2>/dev/null
+                                                                        		fi;;
+										*)
+											echo "false state!"
+									esac
+								
+								else
+									case $2 in
+										"restart")
+											if [ $2 != $(/etc/init.d/"$1" status) ]
+												then
+													erg=""
+	   												erg=$(/etc/init.d/"$1" restart)
+													wait $erg 2>/dev/null
+											fi;;
+										"start")
+											if [ $2 != $(/etc/init.d/"$1" status) ]
+												then
+													erg=""
+	   												erg=$(/etc/init.d/"$1" start)
+													wait $erg 2>/dev/null
+											fi;;
+										"enable")
+                                                        	                	if [ $2 != $(/etc/init.d/"$1" status) ]
+                                                                	                	then
+                                                                        	                	erg=""
+													erg=$(/etc/init.d/"$1" enable)
+                                                                                        		wait $erg 2>/dev/null
+                                                                        		fi;;
+                                                                		"disable")
+                                                                        		if [ $2 != $(/etc/init.d/"$1" status) ]
+                                                                                		then
+                                                                                   			erg=""
+													erg=$(/etc/init.d/"$1" disable)
+                                                                                        		wait $erg 2>/dev/null
+                                                                       		 	fi;;
+                                                                		"inactive")
+                                                                        		if [ $2 != $(/etc/init.d/"$1" status) ]
+                                                                                		then
+                                                                                        		erg=""
+													erg=$(/etc/init.d/"$1" stop)
+                                                                                        		wait $erg 2>/dev/null
+                                                                                        		erg=""
+													erg=$(/etc/init.d/"$1" disable)
+                                                                                        		wait $erg 2>/dev/null
+                                                                        		fi;;
+                                                                		*)
+                                                                        		echo "false state!"
+                                                                	esac	
+							fi
+       						
+						fi
+      
+					fi
+			fi
+	elif [ ! -z $1 ]
+                then
+			serviceInst=$(opkg list-installed | grep $1 )
+                	if [ "$serviceInst" != "" ]
+                                then
+                        	        if [ -z $(echo $(/etc/init.d/"$1" status) | grep 'not found') ]
+                                	        then
+                                        	       echo $(/etc/init.d/"$1" status) 2>/dev/null
+
+                                                fi
+                                 fi
+fi
+}
+
+
+function service_State_old() {
+
+if [ ! -z $2 ] 
+	then 
+	#echo $1' ' $2': '
+		if [ ! -z $1 ]
+			then 
+				serviceInst=$(opkg list-installed | grep $1)
+				if [ "$serviceInst" != "" ] 
+					then
+						if [ -z $(echo $(/etc/init.d/"$1"  status) | grep 'not found') ]
+							then
+								echo $(/etc/init.d/"$1" status) 2>/dev/null
 
 						fi
 						
