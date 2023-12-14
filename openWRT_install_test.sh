@@ -595,6 +595,16 @@ fi
 echo 'install opkg'
 service_State dnsmasq enable
 service_State dnsmasq start
+
+mkdir -p /etc/unbound/unbound.conf.d
+
+processes1=""
+processes1=$(curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache )
+wait $processes1
+processes1=""
+processes1=$(curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers)
+wait $processes1
+
 clear
 echo '########################################################'
 echo '#                                                      #'
@@ -1437,15 +1447,6 @@ if [ "$(ls /www/luci-static/resources/view/dashboard/css/c*.css)" != "" ]
   		processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
   		wait $processes
 fi
-
-mkdir -p /etc/unbound/unbound.conf.d
-
-processes1=""
-processes1=$(curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache )
-wait $processes1
-processes1=""
-processes1=$(curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers)
-wait $processes1
 
 cat << EOF > /etc/hosts
 127.0.0.1 localhost
