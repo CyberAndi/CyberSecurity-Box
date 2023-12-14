@@ -429,46 +429,46 @@ if [ ! -z $2 ]
 											if [ $2 != $(/etc/init.d/"$1" status) ]
 												then
 													erg=""
-	   												erg=$(/etc/init.d/"$1" restart)
-													wait $erg 2>/dev/null
+	   												erg=$(/etc/init.d/"$1" restart 2>/dev/null)
+													wait $erg 
 											fi;;
 										"start")
 											if [ $2 != $(/etc/init.d/"$1" status) ]
 												then
 													erg=""
-	   												erg=$(/etc/init.d/"$1" start)
-													wait $erg 2>/dev/null
+	   												erg=$(/etc/init.d/"$1" start 2>/dev/null)
+													wait $erg
 											fi;;	
 										"stop")
 											if [ $2 != $(/etc/init.d/"$1" status) ]
 												then
 													erg=""
-	   												erg=$(/etc/init.d/"$1" stop)
-													wait $erg 2>/dev/null
+	   												erg=$(/etc/init.d/"$1" stop 2>/dev/null)
+													wait $erg
 											fi;;
 										"enable")
                                                                        			if [ $2 != $(/etc/init.d/"$1" status) ]
                                                                               			then
                                                                           		        	erg=""
-													erg=$(/etc/init.d/"$1" enable)
-                                                                                	        	wait $erg 2>/dev/null
+													erg=$(/etc/init.d/"$1" enable 2>/dev/null)
+                                                                                	        	wait $erg 
                                                                         		fi;;
                                                                			"disable")
                                                                         		if [ $2 != $(/etc/init.d/"$1" status) ]
                                                                                 		then
                                                                                         		erg=""
-													erg=$(/etc/init.d/"$1" disable)
-                                                                       		                	wait $erg 2>/dev/null
+													erg=$(/etc/init.d/"$1" disable 2>/dev/null)
+                                                                       		                	wait $erg
                                                                        		 	fi;;
 										"inactive")
                                                                         		if [ $2 != $(/etc/init.d/"$1" status) ]
                                                                                 		then
                                                                                 			erg=""
-													erg=$(/etc/init.d/"$1" stop)
-                                                                                      			wait $erg 2>/dev/null
+													erg=$(/etc/init.d/"$1" stop 2>/dev/null)
+                                                                                      			wait $erg
                                                                                        			erg=""
-										      			erg=$(/etc/init.d/"$1" disable)
-                                                                                			wait $erg 2>/dev/null
+										      			erg=$(/etc/init.d/"$1" disable 2>/dev/null)
+                                                                                			wait $erg 
                                                                         		fi;;
 										*)
 											echo "false state!"
@@ -480,39 +480,39 @@ if [ ! -z $2 ]
 											if [ $2 != $(/etc/init.d/"$1" status) ]
 												then
 													erg=""
-	   												erg=$(/etc/init.d/"$1" restart)
-													wait $erg 2>/dev/null
+	   												erg=$(/etc/init.d/"$1" restart 2>/dev/null)
+													wait $erg
 											fi;;
 										"start")
 											if [ $2 != $(/etc/init.d/"$1" status) ]
 												then
 													erg=""
-	   												erg=$(/etc/init.d/"$1" start)
-													wait $erg 2>/dev/null
+	   												erg=$(/etc/init.d/"$1" start 2>/dev/null)
+													wait $erg
 											fi;;
 										"enable")
                                                         	                	if [ $2 != $(/etc/init.d/"$1" status) ]
                                                                 	                	then
                                                                         	                	erg=""
-													erg=$(/etc/init.d/"$1" enable)
-                                                                                        		wait $erg 2>/dev/null
+													erg=$(/etc/init.d/"$1" enable 2>/dev/null)
+                                                                                        		wait $erg
                                                                         		fi;;
                                                                 		"disable")
                                                                         		if [ $2 != $(/etc/init.d/"$1" status) ]
                                                                                 		then
                                                                                    			erg=""
-													erg=$(/etc/init.d/"$1" disable)
-                                                                                        		wait $erg 2>/dev/null
+													erg=$(/etc/init.d/"$1" disable 2>/dev/null)
+                                                                                        		wait $erg
                                                                        		 	fi;;
                                                                 		"inactive")
                                                                         		if [ $2 != $(/etc/init.d/"$1" status) ]
                                                                                 		then
                                                                                         		erg=""
-													erg=$(/etc/init.d/"$1" stop)
-                                                                                        		wait $erg 2>/dev/null
+													erg=$(/etc/init.d/"$1" stop 2>/dev/null)
+                                                                                        		wait $erg
                                                                                         		erg=""
-													erg=$(/etc/init.d/"$1" disable)
-                                                                                        		wait $erg 2>/dev/null
+													erg=$(/etc/init.d/"$1" disable 2>/dev/null)
+                                                                                        		wait $erg
                                                                         		fi;;
                                                                 		*)
                                                                         		echo "false state!"
@@ -530,7 +530,7 @@ if [ ! -z $2 ]
                                 then
                         	        if [ -z $(echo $(/etc/init.d/"$1" status) | grep 'not found') ]
                                 	        then
-                                        	       echo $(/etc/init.d/"$1" status) 2>/dev/null
+                                        	       echo $(/etc/init.d/"$1" status 2>/dev/null)
 
                                                 fi
                                  fi
