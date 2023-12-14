@@ -1437,24 +1437,44 @@ if [ "$(ls /www/luci-static/resources/view/dashboard/css/c*.css)" != "" ]
   		processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
   		wait $processes
 fi
-processes=""
-wait $processes
+
+mkdir -p /etc/unbound/unbound.conf.d
+
+processes1=""
+processes1=$(curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache )
+wait $processes1
+processes1=""
+processes1=$(curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers)
+wait $processes1
+
+cat << EOF > /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+
+::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+
+processes1=""
+wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
-processes=""
-wait $processes
-processes=""
+processes1=""
+wait $processes1
+processes1=""
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberSecurity-Box.svg -P /www/luci-static/bootstrap/)
-wait $processes
-processes=""
+wait $processes1
+processes1=""
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/CyberAndi.svg -P /www/luci-static/bootstrap/)
 wait $processes1
-processes=""
+processes1=""
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/cascade.css -P /www/luci-static/bootstrap/)
 wait $processes1
-processes=""
+processes1=""
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/luci-static/bootstrap/)
 wait $processes1
-processes=""
+processes1=""
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCRAStd.woff -P /www/luci-static/bootstrap/)
 wait $processes1
 wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/custom.css -P /www/luci-static/resources/view/dashboard/css/
@@ -4069,19 +4089,6 @@ service_State log restart
 
 
 set_unbound() {
-mkdir -p /etc/unbound/unbound.conf.d
-curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache 
-curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
-
-cat << EOF > /etc/hosts
-127.0.0.1 localhost
-127.0.0.1 dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
-
-::1     dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion
-::1     localhost ip6-localhost ip6-loopback
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-EOF
 
 uci set unbound.ub_main=unbound
 uci set unbound.ub_main.dhcp_link='dnsmasq'
