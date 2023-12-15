@@ -4297,12 +4297,14 @@ uci del unbound.auth_icann 2>/dev/null
 #uci set unbound.auth_icann.zone_type='auth_zone'
 #uci set unbound.auth_icann.server='lax.xfr.dns.icann.org' 'iad.xfr.dns.icann.org'
 #uci set unbound.auth_icann.zone_name='.' 'arpa.' 'in-addr.arpa.' 'ip6.arpa.'
-uci add_list unbound.ub_main.outgoing_port_permit=$SDNS_port
-uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS_port
+#uci add_list unbound.ub_main.outgoing_port_permit=$SDNS_port
+#uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS_port
 #uci add_list unbound.ub_main.outgoing_port_permit='9150'
-uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
+#uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
 #uci add_list unbound.ub_main.outgoing_port_permit='9153'
 #uci add_list unbound.ub_main.outgoing_port_permit='10240-65335'
+
+uci set unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
 uci delete unbound.fwd_isp 2>/dev/null
 uci del unbound.fwd_isp 2>/dev/null
 #uci set unbound.fwd_isp=zone
