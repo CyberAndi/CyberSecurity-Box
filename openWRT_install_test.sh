@@ -22122,7 +22122,11 @@ clear
 
 set_firewall_rules() {
 # Intercept SSH, HTTP and HTTPS traffic
-uci -q delete firewall.ssh_int >/dev/null
+
+processes=""
+processes=$(uci -q delete firewall.ssh_int >/dev/null)
+wait $processes 
+
 uci set firewall.ssh_int="redirect"
 uci set firewall.ssh_int.name="Intercept_SSH"
 uci set firewall.ssh_int.src="INET"
@@ -22130,7 +22134,9 @@ uci set firewall.ssh_int.src_dport="$SSH_port"
 uci set firewall.ssh_int.proto="tcp"
 uci set firewall.ssh_int.target="DNAT"
 
-uci -q delete firewall.http_int >/dev/null
+processes=""
+processes=$(uci -q delete firewall.http_int >/dev/null)
+wait $processes 
 uci set firewall.http_int="redirect"
 uci set firewall.http_int.name="Intercept_HTTP"
 uci set firewall.http_int.src="INET"
@@ -22138,7 +22144,9 @@ uci set firewall.http_int.src_dport="$ACCESS_HTTP_port"
 uci set firewall.http_int.proto="tcp"
 uci set firewall.http_int.target="DNAT"
 
-uci -q delete firewall.https_int
+processes=""
+processes=$(uci -q delete firewall.https_int)
+wait $processes
 uci set firewall.https_int="redirect"
 uci set firewall.https_int.name="Intercept_HTTPS"
 uci set firewall.https_int.src="INET"
@@ -22146,11 +22154,15 @@ uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
 uci set firewall.https_int.proto="tcp"
 uci set firewall.https_int.target="DNAT"
 
-uci commit firewall && reload_config >/dev/null
-
+processes=""
+processes=$(uci commit && reload_config >/dev/null)
+wait $processes 
 # Intercept DNS and TCP traffic
 
-uci -q delete firewall.tcp_onion_int > /dev/null uci set firewall.tcp_onion_int="redirect"
+processes=""
+processes=$(uci -q delete firewall.tcp_onion_int > /dev/null)
+wait $processes 
+uci set firewall.tcp_onion_int="redirect"
 uci set firewall.tcp_onion_int.name="Intercept_Onion_Domain"
 uci set firewall.tcp_onion_int.src_dport=$TOR_TRANS_port
 uci set firewall.tcp_onion_int.dest_port=$TOR_TRANS_port
@@ -22161,7 +22173,9 @@ uci set firewall.tcp_onion_int.src_dip="10.192.0.0./10"
 uci set firewall.tcp_onion_int.extra="--syn"
 uci set firewall.tcp_onion_int.enabled='0'
 
-uci -q delete firewall.tcp_onionSocks_int > /dev/null 
+processes=""
+processes=$(uci -q delete firewall.tcp_onionSocks_int > /dev/null)
+wait $processes 
 uci set firewall.tcp_onionSocks_int="redirect"
 uci set firewall.tcp_onionSocks_int.name='Intercept_Onion_Domain'
 uci set firewall.tcp_onionSocks_int.src='INET'
@@ -22173,7 +22187,9 @@ uci set firewall.tcp_onionSocks_int.target='DNAT'
 uci set firewall.tcp_onionSocks_int.extra='--syn'
 uci set firewall.tcp_onionSocks_int.enabled='0'
 
-uci -q delete firewall.tcp_onionSocks1_int > /dev/null 
+processes=""
+processes=$(uci -q delete firewall.tcp_onionSocks1_int > /dev/null)
+wait $processes 
 uci set firewall.tcp_onionSocks1_int=redirect
 uci set firewall.tcp_onionSocks1_int.name='Intercept_Onion1_Domain'
 uci set firewall.tcp_onionSocks1_int.src='INET'
@@ -22184,7 +22200,9 @@ uci set firewall.tcp_onionSocks1_int.target='DNAT'
 uci set firewall.tcp_onionSocks1_int.extra='--syn'
 uci set firewall.tcp_onionSocks1_int.enabled='0'
 
-uci -q delete firewall.tcp_tor2_int > /dev/null 
+processes=""
+processes=$(uci -q delete firewall.tcp_tor2_int > /dev/null)
+wait $processes 
 uci set firewall.tcp_tor2_int=redirect
 uci set firewall.tcp_tor2_int.src_dip='!192.168.0.0/16'
 uci set firewall.tcp_tor2_int.proto='tcp'
@@ -22196,7 +22214,9 @@ uci set firewall.tcp_tor2_int.extra='--syn'
 uci set firewall.tcp_tor2_int.name='Intercept https tor'
 uci set firewall.tcp_tor2_int.enabled='0'
 
-uci -q delete firewall.tcp_tor3_int > /dev/null 
+processes=""
+processes=$(uci -q delete firewall.tcp_tor3_int > /dev/null)
+wait $processes 
 uci set firewall.tcp_tor3_int=redirect
 uci set firewall.tcp_tor3_int.src_dip='!192.168.0.0/16'
 uci set firewall.tcp_tor3_int.proto='tcp'
@@ -22208,7 +22228,9 @@ uci set firewall.tcp_tor3_int.src_dport=$HTTP_port
 uci set firewall.tcp_tor3_int.extra='--syn'
 uci set firewall.tcp_tor3_int.enabled='0'
 
-uci -q delete firewall.omada > /dev/null
+processes=""
+processes=$(uci -q delete firewall.omada > /dev/null)
+wait $processes 
 uci set firewall.omada=redirect
 uci set firewall.omada.dest_port=$CONTROLER_port
 uci set firewall.omada.name='Network_omada'
@@ -22220,7 +22242,9 @@ uci set firewall.omada.src='INET'
 uci set firewall.omada.extra='--syn'
 uci set firewall.omada.enabled='0'
 
-uci -q delete firewall.homematic > /dev/null
+processes=""
+processes=$(uci -q delete firewall.homematic > /dev/null)
+wait $processes 
 uci set firewall.homematic=redirect
 uci set firewall.homematic.dest_port='80'
 uci set firewall.homematic.target='DNAT'
@@ -22234,7 +22258,9 @@ uci set firewall.homematic.src_dport='8080'
 uci set firewall.homematic.extra='--syn'
 uci set firewall.homematic.enabled='0'
 
-uci -q delete firewall.homematic1 > /dev/null
+processes=""
+processes=$(uci -q delete firewall.homematic1 > /dev/null)
+wait $processes 
 uci set firewall.homematic1=redirect
 uci set firewall.homematic1.dest_port='443'
 uci set firewall.homematic1.target='DNAT'
@@ -22282,7 +22308,9 @@ uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR"
 uci set firewall.DNS_Cloudflare.enabled="0" 
 uci set firewall.DNS_Cloudflare.proto="tcp udp"
 uci set firewall.DNS_Cloudflare.target="ACCEPT"
-uci commit && reload_config >/dev/null
+processes=""
+processes=$(uci commit && reload_config)
+wait $processes 
 
 
 #WebClient (Port)
@@ -22958,7 +22986,9 @@ uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR"
 uci set firewall.Block_DNS_Cloudflare.enabled="0" 
 uci set firewall.Block_DNS_Cloudflare.proto="tcp udp"
 uci set firewall.Block_DNS_Cloudflare.target="REJECT"
-uci commit && reload_config >/dev/null
+processes=""
+processes=$(uci commit && reload_config)
+wait $processes 
 
 
 
@@ -23636,9 +23666,9 @@ uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare23_SVR"
 uci set firewall.Allow_only_DNS_Cloudflare.enabled="0" 
 uci set firewall.Allow_only_DNS_Cloudflare.proto="tcp udp"
 uci set firewall.Allow_only_DNS_Cloudflare.target="REJECT"
-uci commit && reload_config >/dev/null
-
-
+processes=""
+processes=$(uci commit && reload_config)
+wait $processes 
 
 #WebClient (Port)
 #21, 22, 25, 53, 80, 110, 123, 443, 853, 5353, 9030, 9040, 9049, 9050, 9053, 9060, 50275, 54715, 54789, 51465, 56343, 56534, 57687, 60870
@@ -24402,24 +24432,42 @@ if [ "$SECURE_RULES" = "" ]
               FW_HSactive='0'
               set_HS_Firewall_disable
 fi
-
-uci commit firewall && reload_config >/dev/null
-/etc/init.d/firewall restart >/dev/null
+processes=""
+processes=$(uci commit && reload_config >/dev/null)
+wait $processes 
+service_State firewall restart 
 }
 
 set_mountpoints() {
+processes=""
+processes=$(opkg update)
+wait $processes 
+processes=""
+processes=$(opkg install kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1)
+wait $processes 
+processes=""
+processes=$(mkdir -p /mnt/sda1)
+wait $processes 
+processes=""
+processes=$(mount /dev/sda1 /mnt/sda1)
+wait $processes 
+processes=""
+processes=$(mkdir -p /tmp/cproot)
+wait $processes 
+processes=""
+processes=$(mount --bind / /tmp/cproot)
+wait $processes 
+processes=""
+processes=$(tar -C /tmp/cproot -cvf - . | tar -C /mnt/sda1 -x)
+wait $processes 
+processes=""
+processes=$(umount /tmp/cproot)
+wait $processes 
 
-opkg update
-opkg install kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1
+processes=""
+processes=$(block detect | uci import fstab)
+wait $processes 
 
-mkdir -p /mnt/sda1
-mount /dev/sda1 /mnt/sda1
-mkdir -p /tmp/cproot
-mount --bind / /tmp/cproot
-tar -C /tmp/cproot -cvf - . | tar -C /mnt/sda1 -x
-umount /tmp/cproot
-
-block detect | uci import fstab
 uci set fstab.@swap[0].enabled='1'
 uci set fstab.@global[0].anon_mount='1'
 
@@ -24433,8 +24481,14 @@ uci set fstab.@mount[1].target='/home'
 uci set fstab.@mount[0].target='/'
 uci set fstab.@mount[0].is_rootfs='1'
 
-uci commit fstab
-/etc/init.d/fstab boot
+processes=""
+processes=$(uci commit && reload_config >/dev/null)
+wait $processes 
+
+processes=""
+processes=$(/etc/init.d/fstab boot)
+wait $processes 
+
 }
 
 
