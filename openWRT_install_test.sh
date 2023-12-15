@@ -22122,38 +22122,35 @@ clear
 
 set_firewall_rules() {
 # Intercept SSH, HTTP and HTTPS traffic
-
-uci -q delete firewall.ssh_int 2>/dev/null
+uci -q delete firewall.ssh_int >/dev/null
 uci set firewall.ssh_int="redirect"
 uci set firewall.ssh_int.name="Intercept_SSH"
 uci set firewall.ssh_int.src="INET"
-uci set firewall.ssh_int.src_dport=$SSH_port
+uci set firewall.ssh_int.src_dport="$SSH_port"
 uci set firewall.ssh_int.proto="tcp"
 uci set firewall.ssh_int.target="DNAT"
 
-uci -q delete firewall.http_int 2>/dev/null
+uci -q delete firewall.http_int >/dev/null
 uci set firewall.http_int="redirect"
 uci set firewall.http_int.name="Intercept_HTTP"
 uci set firewall.http_int.src="INET"
-uci set firewall.http_int.src_dport=$ACCESS_HTTP_port
+uci set firewall.http_int.src_dport="$ACCESS_HTTP_port"
 uci set firewall.http_int.proto="tcp"
 uci set firewall.http_int.target="DNAT"
 
-uci -q delete firewall.https_int 2>/dev/null
+uci -q delete firewall.https_int
 uci set firewall.https_int="redirect"
 uci set firewall.https_int.name="Intercept_HTTPS"
 uci set firewall.https_int.src="INET"
-uci set firewall.https_int.src_dport=$ACCESS_HTTPS_port
+uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
 uci set firewall.https_int.proto="tcp"
 uci set firewall.https_int.target="DNAT"
-processes=""
-processes=$(uci commit && reload_config) 
-wait $processes
 
-## Intercept DNS and TCP traffic
+uci commit firewall && reload_config >/dev/null
 
-uci -q delete firewall.tcp_onion_int 2>/dev/null
-uci set firewall.tcp_onion_int="redirect"
+# Intercept DNS and TCP traffic
+
+uci -q delete firewall.tcp_onion_int > /dev/null uci set firewall.tcp_onion_int="redirect"
 uci set firewall.tcp_onion_int.name="Intercept_Onion_Domain"
 uci set firewall.tcp_onion_int.src_dport=$TOR_TRANS_port
 uci set firewall.tcp_onion_int.dest_port=$TOR_TRANS_port
@@ -22164,7 +22161,7 @@ uci set firewall.tcp_onion_int.src_dip="10.192.0.0./10"
 uci set firewall.tcp_onion_int.extra="--syn"
 uci set firewall.tcp_onion_int.enabled='0'
 
-uci -q delete firewall.tcp_onionSocks_int 2>/dev/null 
+uci -q delete firewall.tcp_onionSocks_int > /dev/null 
 uci set firewall.tcp_onionSocks_int="redirect"
 uci set firewall.tcp_onionSocks_int.name='Intercept_Onion_Domain'
 uci set firewall.tcp_onionSocks_int.src='INET'
@@ -22176,7 +22173,7 @@ uci set firewall.tcp_onionSocks_int.target='DNAT'
 uci set firewall.tcp_onionSocks_int.extra='--syn'
 uci set firewall.tcp_onionSocks_int.enabled='0'
 
-uci -q delete firewall.tcp_onionSocks1_int 2>/dev/null 
+uci -q delete firewall.tcp_onionSocks1_int > /dev/null 
 uci set firewall.tcp_onionSocks1_int=redirect
 uci set firewall.tcp_onionSocks1_int.name='Intercept_Onion1_Domain'
 uci set firewall.tcp_onionSocks1_int.src='INET'
@@ -22187,7 +22184,7 @@ uci set firewall.tcp_onionSocks1_int.target='DNAT'
 uci set firewall.tcp_onionSocks1_int.extra='--syn'
 uci set firewall.tcp_onionSocks1_int.enabled='0'
 
-uci -q delete firewall.tcp_tor2_int 2>/dev/null 
+uci -q delete firewall.tcp_tor2_int > /dev/null 
 uci set firewall.tcp_tor2_int=redirect
 uci set firewall.tcp_tor2_int.src_dip='!192.168.0.0/16'
 uci set firewall.tcp_tor2_int.proto='tcp'
@@ -22199,7 +22196,7 @@ uci set firewall.tcp_tor2_int.extra='--syn'
 uci set firewall.tcp_tor2_int.name='Intercept https tor'
 uci set firewall.tcp_tor2_int.enabled='0'
 
-uci -q delete firewall.tcp_tor3_int 2>/dev/null 
+uci -q delete firewall.tcp_tor3_int > /dev/null 
 uci set firewall.tcp_tor3_int=redirect
 uci set firewall.tcp_tor3_int.src_dip='!192.168.0.0/16'
 uci set firewall.tcp_tor3_int.proto='tcp'
@@ -22211,7 +22208,7 @@ uci set firewall.tcp_tor3_int.src_dport=$HTTP_port
 uci set firewall.tcp_tor3_int.extra='--syn'
 uci set firewall.tcp_tor3_int.enabled='0'
 
-uci -q delete firewall.omada 2>/dev/null
+uci -q delete firewall.omada > /dev/null
 uci set firewall.omada=redirect
 uci set firewall.omada.dest_port=$CONTROLER_port
 uci set firewall.omada.name='Network_omada'
@@ -22223,7 +22220,7 @@ uci set firewall.omada.src='INET'
 uci set firewall.omada.extra='--syn'
 uci set firewall.omada.enabled='0'
 
-uci -q delete firewall.homematic 2>/dev/null
+uci -q delete firewall.homematic > /dev/null
 uci set firewall.homematic=redirect
 uci set firewall.homematic.dest_port='80'
 uci set firewall.homematic.target='DNAT'
@@ -22237,7 +22234,7 @@ uci set firewall.homematic.src_dport='8080'
 uci set firewall.homematic.extra='--syn'
 uci set firewall.homematic.enabled='0'
 
-uci -q delete firewall.homematic1 2>/dev/null
+uci -q delete firewall.homematic1 > /dev/null
 uci set firewall.homematic1=redirect
 uci set firewall.homematic1.dest_port='443'
 uci set firewall.homematic1.target='DNAT'
@@ -22285,9 +22282,7 @@ uci add_list firewall.DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR"
 uci set firewall.DNS_Cloudflare.enabled="0" 
 uci set firewall.DNS_Cloudflare.proto="tcp udp"
 uci set firewall.DNS_Cloudflare.target="ACCEPT"
-processes=""
-processes=$(uci commit && reload_config) 
-wait $processes
+uci commit && reload_config >/dev/null
 
 
 #WebClient (Port)
@@ -22963,8 +22958,7 @@ uci add_list firewall.Block_DNS_Cloudflare.dest_ip="$DNS_Cloudflare23_SVR"
 uci set firewall.Block_DNS_Cloudflare.enabled="0" 
 uci set firewall.Block_DNS_Cloudflare.proto="tcp udp"
 uci set firewall.Block_DNS_Cloudflare.target="REJECT"
-processes=""
-processes=$(uci commit && reload_config) wait $processes  >/dev/null
+uci commit && reload_config >/dev/null
 
 
 
@@ -23642,8 +23636,7 @@ uci add_list firewall.Allow_only_DNS_Cloudflare.dest_ip="!$DNS_Cloudflare23_SVR"
 uci set firewall.Allow_only_DNS_Cloudflare.enabled="0" 
 uci set firewall.Allow_only_DNS_Cloudflare.proto="tcp udp"
 uci set firewall.Allow_only_DNS_Cloudflare.target="REJECT"
-processes=""
-processes=$(uci commit && reload_config) wait $processes  >/dev/null
+uci commit && reload_config >/dev/null
 
 
 
@@ -24409,10 +24402,9 @@ if [ "$SECURE_RULES" = "" ]
               FW_HSactive='0'
               set_HS_Firewall_disable
 fi
-processes=""
-processes=$(uci commit && reload_config)
-wait $processes  >/dev/null
-service_State firewall restart
+
+uci commit firewall && reload_config >/dev/null
+/etc/init.d/firewall restart >/dev/null
 }
 
 set_mountpoints() {
@@ -24440,11 +24432,11 @@ uci set fstab.@mount[1].target='/home'
 
 uci set fstab.@mount[0].target='/'
 uci set fstab.@mount[0].is_rootfs='1'
-processes=""
-processes=$(uci commit fstab)
-wait $processes 
-service_State fstab boot
+
+uci commit fstab
+/etc/init.d/fstab boot
 }
+
 
 #-------------------------start---------------------------------------
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...'
