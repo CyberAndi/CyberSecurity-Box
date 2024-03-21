@@ -2074,7 +2074,7 @@ th[data-sort-direction="desc"]::after {
 
 div.cbi-value var,.td.cbi-value-field var {
 	font-style: italic;
-	color: #006900
+	color: #00a900
 }
 
 div.cbi-value var[data-tooltip],.td.cbi-value-field var[data-tooltip],div.cbi-value var.cbi-tooltip-container,.td.cbi-value-field var.cbi-tooltip-container {
