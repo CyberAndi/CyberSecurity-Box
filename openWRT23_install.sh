@@ -1302,7 +1302,7 @@ processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-P
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.ttf -P /www/luci-static/bootstrap/)
 wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCRAStd.woff -P /www/luci-static/bootstrap/)
+processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/OCR-A.woff -P /www/luci-static/bootstrap/)
 wait $processes1
 wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/custom.css -P /www/luci-static/resources/view/dashboard/css/
 
