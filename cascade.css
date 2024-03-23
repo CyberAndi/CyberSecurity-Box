@@ -7,7 +7,7 @@
 
 
 :root {
-	--focus-color-rgb: 82,168,0;
+	--focus-color-rgb: 82,196,0;
 	--background-image: url(CyberSecurity-Box.png);
 	--background-image: url(CyberSecurity-Box.svg);
 	--background-head: url(CyberAndi.svg);
@@ -78,8 +78,8 @@
 	--text-color-s: 0%;
 	--text-color-l: 100%;
 	--border-color-delta-l-sign: 1;
-	--primary-color-high: #4da100;
-	--primary-color-medium: #448d00;
+	--primary-color-high: #4dc100;
+	--primary-color-medium: #44ad00;
 	--primary-color-low: #3c7a00;
 	--error-color-high-rgb: 209,86,83;
 	--error-color-medium: #bf4e4c;
@@ -92,7 +92,7 @@
 	--warn-color-low: #a68732;
 	--on-warn-color: var(--background-color-high);
 	--disabled-opacity: .4;
-	color-scheme: dark
+	color-scheme: dark;
 }
 
 *,::before,::after {
