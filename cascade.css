@@ -942,10 +942,6 @@ header p {
 	border: solid 1px transparent;
 }
 
-.nav a:hover {
-	color: var(--focus-color-rgb);
-}
-
 .nav li:is(:hover,:active,:focus,:target,:focus-visible,:focus-within),.nav .dropdown:is(:hover,:active,:focus,:target,:focus-visible,:focus-within),.nav .cbi-dropdown[open]:is(:hover,:active,:focus,:target,:focus-visible,:focus-within) {
 	background: rgba(48,48,48,0.8);
 	backdrop-filter: blur(2.5px);
@@ -985,7 +981,7 @@ header p {
 }
 
 .nav a.menu:is(:hover,:active,:focus.:focus-within,:focus-visible):after{
-	--focus-color-rgb: 82,168,0;
+	--focus-color-rgb: 82,198,0;
 	border-top: 4px solid rgba(var(--focus-color-rgb),0.6);
 	text-shadow: 0 1px 3px hsla(var(--border-color-low-hsl),.01),0 0 8px rgba(var(--focus-color-rgb),0.6);
 	
