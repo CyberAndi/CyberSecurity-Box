@@ -961,7 +961,7 @@ header p {
 }
 
 .nav > .dropdown:is(:hover,:active,:focus,:target,:focus-visible,:focus-within) > .dropdown-menu {
-	background: rgba(48,48,48,0.8);
+	background: rgba(48,48,48,0.875);
 	backdrop-filter: blur(2.5px);
 	border: solid 1px rgba(var(--focus-color-rgb),0.6)!important;
 	outline: 0;
@@ -1054,7 +1054,6 @@ a.menu:after {
 	display: block;
 	background-color: transparent;
 	position: relative;
-	backdrop-filter: blur(2.5px);
 }
 
 .dropdown-menu a {
