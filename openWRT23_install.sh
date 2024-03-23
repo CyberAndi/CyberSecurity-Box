@@ -243,6 +243,7 @@ fi
 
 echo
 DNS_PORT='y'
+DNSMASQ_Relay_port='53'
 echo
 
 read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
