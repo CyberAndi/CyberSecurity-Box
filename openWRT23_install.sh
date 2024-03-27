@@ -95,8 +95,7 @@ read -p 'Please give me the WAN-IP (Gateway/Router): ['$INET_GW'] ' INET_GW
 echo
 if [ "$INET_GW" = "" ]
 	then
-		INET_GW=$INET_GW_org	 
-		
+		INET_GW=$INET_GW_org
 fi
 
 WAN_ip=$(echo $INET_GW | cut -f1 -d '.')
@@ -131,20 +130,20 @@ all_IP6="[::]"
 ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' )
 
 #Lokal LAN
-if [ ! -z "$2" ] 
+if [ ! -z "$2" ]
 	then
 		LAN=$2
 	else
-		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep 'inet ' | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' ) 
+		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep 'inet ' | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' )
 fi
 
-#IPv6=""
-#IPv6=$(echo $(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' ) | cut -c 5-6)
+IPv6=""
+IPv6=$(echo $(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' ) | cut -c 5-6)
 
-#if [ "$IPv6" = "::" ]
-#	then
-#		LAN=''
-#fi
+if [ "$IPv6" = "::" ]
+	then
+		LAN=''
+fi
 
 if [ "$LAN" = "" ]
         then
@@ -159,12 +158,13 @@ if [ "$LAN" = "" ]
                 LAN=$LAN_org
 fi
 
-if [ ! -z "$3"  ] 
+if [ ! -z "$3"  ]
 	then
 		LOCAL_DOMAIN_org=$3
 	else
 		LOCAL_DOMAIN_org='CyberSecBox.local'
 fi
+
 echo
 read -p  'Your local Domain of your LAN? [CyberSecBox.local] ' LOCAL_DOMAIN
 if [ "$LOCAL_DOMAIN" = "" ]
@@ -172,12 +172,13 @@ if [ "$LOCAL_DOMAIN" = "" ]
 		LOCAL_DOMAIN=$LOCAL_DOMAIN_org
 fi
 
-if [ ! -z "$4" ]  
+if [ ! -z "$4" ]
 	then
 		WIFI_SSID=$4
 	else
 		WIFI_SSID='CyberSecBox'
 fi
+
 WIFI_SSID_org=$WIFI_SSID
 echo
 read -p 'The Main-WiFi-SSID? ['$(echo $WIFI_SSID)'] ' WIFI_SSID
@@ -186,7 +187,7 @@ if [ "$WIFI_SSID" = "" ]
                 WIFI_SSID=$WIFI_SSID_org
 fi
 
-if [ ! -z "$5" ]  
+if [ ! -z "$5" ]
 	then
 		WIFI_PASS=$5
 	else
@@ -232,7 +233,7 @@ TOR_ONION='0'
 echo
 read -p 'Use TOR Network? [Y/n] ' -s  -n 1 TOR_ACTIVE
 if [ "$TOR_ACTIVE" = "" ]
-	then 
+	then
  		TOR_ONION='1'
 	elif [ "$TOR_ACTIVE" = "y" ]
  		then
@@ -242,10 +243,30 @@ if [ "$TOR_ACTIVE" = "" ]
 fi
 
 echo
-DNS_PORT='y'
+
+SDNS_PORT='y'
 DNSMASQ_Relay_port='53'
 echo
 
+STUBBY='1'
+DNS_IP='127.0.0.1'
+read -p 'DNS-Relay to STUBBY [Y/n] ' -s -n 1 SDNS_PORT
+
+
+if [ "$SDNS_PORT" = "" ]
+	then
+		STUBBY='1'
+	elif [ "$SNDS_PORT" = "y" ]
+		then
+			STUBBY='1'
+	else
+		STUBBY='0'
+		DNSMASQ_relay_port='53'
+		DNS_IP=$INET_GW
+fi
+echo $DNS_IP
+echo
+DNS_PORT='y'
 read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
 UNBOUND='1'
 if [ "$DNS_PORT" = "" ]
@@ -255,19 +276,22 @@ if [ "$DNS_PORT" = "" ]
 	  		if [ "$TOR_ONION" = "1" ]
      				then
 					UNBOUND_Relay_port='9053'
+			elif [ "$STUBBY" = "0" ] then
+     					UNBOUND_Relay_port='53'
      			else
-				
-    					UNBOUND_Relay_port='5453'
+   					UNBOUND_Relay_port='5453'
     			fi
-        elif [ "$DNS_PORT" = "y" ] 
-		then 
+        elif [ "$DNS_PORT" = "y" ]
+		then
 			UNBOUND='1'
    			DNSMASQ_Relay_port='5353'
 	  		if [ "$TOR_ONION" = "1" ]
      				then
 					UNBOUND_Relay_port='9053'
+     			
+     			elif [ "$STUBBY" = "0" ] then
+     					UNBOUND_Relay_port='53'
      			else
-				
     					UNBOUND_Relay_port='5453'
     			fi
 	elif [ "$TOR_ONION" = "1" ]
@@ -275,14 +299,18 @@ if [ "$DNS_PORT" = "" ]
 	       		DNSMASQ_Relay_port='9053'
 	  		UNBOUND_Relay_port='9053'
      			UNBOUND='0'
+     		elif [ "$STUBBY" = "0" ] then
+     			DNSMASQ_Relay_port='53'
+			UNBOUND_Relay_port='53'
+   			UNBOUND='0'
     		else
  			DNSMASQ_Relay_port='5453'
 			UNBOUND_Relay_port='5453'
    			UNBOUND='0'
 fi
 
-if [ ! -z "$6" ]  
-	then 
+if [ ! -z "$6" ]
+	then
 		SECURE_RULESW=$6
 	else
 		SECURE_RULES='y'
@@ -23988,9 +24016,10 @@ if [ ! -z $1 ]
  fi
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' >> install.log
 install_update >> install.log
+#################################################################################################
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard' >> install.log
 #install_adguard >> install.log
-
+#################################################################################################
 service log restart
 
 if [ "$TOR_ONION" = "1" ]
@@ -23998,13 +24027,19 @@ if [ "$TOR_ONION" = "1" ]
 			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Tor' >> install.log
    			set_tor >> install.log
 fi
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' set Stubby' >> install.log
-set_stubby >> install.log
+
+if [ "$STUBBY" = "1" ]
+               	then
+			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' set Stubby' >> install.log
+			set_stubby >> install.log
+fi
+
 if [ "$UNBOUND" = "1" ]
                	then
 			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' set UNBOUND' >> install.log
 			set_unbound >> install.log
 fi
+
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create UNBOUND URL-Filter' >> install.log
 create_unbound_url_filter >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create DNSMASQ URL-Filter' >> install.log
@@ -24015,32 +24050,46 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> install.log
 customize_firmware >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
 create_hotspot >> install.log
+
+###################################################################################################
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Create Switch'>> install.log
 #create_switch_23 >> install.log
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Network' >> install.log
 #create_network_23 >> install.log
+###################################################################################################
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create VLAN' >> install.log
 create_vlan_bridge >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' SetDHCP' >> install.log
 set_dhcp >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Networkinterfaces' >> install.log
 create_network_interfaces >> install.log
+###################################################################################################
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Bridge-Ports' >> install.log
 #create_bridge_ports
+###################################################################################################
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create WLAM' >> install.log
 create_wlan >> install.log
 
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-Zones' >> install.log
 create_firewall_zones >> install.log
+####################################################################################################
 #create_MWAN >> install.log
+####################################################################################################
 view_config
 
+####################################################################################################
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-ipset' >> install.log
 #set_firewall_ipset >> install.log
+####################################################################################################
+
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Rules' >> install.log
 set_firewall_rules >> install.log
+####################################################################################################
 #set_mountpoints >> install.log
+####################################################################################################
+
 echo >> install.log
+
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) >> install.log
 echo >> install.log
 echo 'Tor:	'$(service tor status) >> install.log
