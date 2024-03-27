@@ -942,6 +942,10 @@ header p {
 	border: solid 1px transparent;
 }
 
+.nav a:hover {
+	color: var(--focus-color-rgb);
+}
+
 .nav li:is(:hover,:active,:focus,:target,:focus-visible,:focus-within),.nav .dropdown:is(:hover,:active,:focus,:target,:focus-visible,:focus-within),.nav .cbi-dropdown[open]:is(:hover,:active,:focus,:target,:focus-visible,:focus-within) {
 	background: rgba(48,48,48,0.8);
 	backdrop-filter: blur(2.5px);
