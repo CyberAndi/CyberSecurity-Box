@@ -229,9 +229,24 @@ if [ $SUBNET_sep -lt 125 ]
 
 fi
 
+AD_GUARD='0'
+read -p 'Install AdGuard-Blocker? Need external USB-Device [y/N] ' -s  -n 1 ADGUARD_ACTIVE
+
+if [ "$ADGUARD_ACTIVE" = "" ]
+        then
+             AD_GUARD='0'
+           
+        elif [ "$ADGUARD_ACTIVE" = "y" ]
+                then
+		AD_GUARD='1'
+        else
+              AD_GUARD='0'
+fi
+
+
 TOR_ONION='0'
 echo
-read -p 'Use TOR Network? [Y/n] ' -s  -n 1 TOR_ACTIVE
+read -p 'Use TOR(Onion)-Network? [Y/n] ' -s  -n 1 TOR_ACTIVE
 if [ "$TOR_ACTIVE" = "" ]
 	then
  		TOR_ONION='1'
@@ -24016,10 +24031,6 @@ if [ ! -z $1 ]
  fi
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' >> install.log
 install_update >> install.log
-#################################################################################################
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard' >> install.log
-#install_adguard >> install.log
-#################################################################################################
 service log restart
 
 if [ "$TOR_ONION" = "1" ]
@@ -24063,10 +24074,6 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' SetDHCP' >> install.log
 set_dhcp >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Networkinterfaces' >> install.log
 create_network_interfaces >> install.log
-###################################################################################################
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Bridge-Ports' >> install.log
-#create_bridge_ports
-###################################################################################################
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create WLAM' >> install.log
 create_wlan >> install.log
 
@@ -24077,16 +24084,16 @@ create_firewall_zones >> install.log
 ####################################################################################################
 view_config
 
-####################################################################################################
-#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-ipset' >> install.log
-#set_firewall_ipset >> install.log
-####################################################################################################
-
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Rules' >> install.log
 set_firewall_rules >> install.log
-####################################################################################################
-#set_mountpoints >> install.log
-####################################################################################################
+
+if [ "$AD_GUARD" = "1" ]
+        then
+         	echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Set_Mountpoints' >> install.log
+         	set_mountpoints >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard' >> install.log
+		install_adguard >> install.log
+fi
 
 echo >> install.log
 
