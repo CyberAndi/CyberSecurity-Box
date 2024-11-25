@@ -15,8 +15,7 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>
   into the field <code>Installed Packages</code>.<br><br>
   <img src="/Firmware_Config.png" alt="select_packages" width="50%"> </img><br><br>
   And in the field <code>Script to run on first boot (uci-defaults)</code> insert.<br><br>
-  <pre><code>
-cat << EOF > /etc/rc.local
+  <pre><code>cat << EOF > /etc/rc.local
 if [ ! -f /root/openWRT23_install.sh ]
 then
                         uci set network.wan6.disabled='1'
