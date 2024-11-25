@@ -1663,6 +1663,37 @@ echo 'On Error enter logread'
 echo
 }
 
+set_uhttpd {
+uci set uhttpd.main=uhttpd
+uci set uhttpd.main.redirect_https='1'
+uci set uhttpd.main.home='/www'
+uci set uhttpd.main.rfc1918_filter='1'
+uci set uhttpd.main.max_requests='3'
+uci set uhttpd.main.max_connections='100'
+uci set uhttpd.main.cert='/etc/uhttpd.crt'
+uci set uhttpd.main.key='/etc/uhttpd.key'
+uci set uhttpd.main.cgi_prefix='/cgi-bin'
+uci set uhttpd.main.lua_prefix='/cgi-bin/luci=/usr/lib/lua/luci/sgi/uhttpd.lua'
+uci set uhttpd.main.script_timeout='60'
+uci set uhttpd.main.network_timeout='30'
+uci set uhttpd.main.http_keepalive='20'
+uci set uhttpd.main.tcp_keepalive='1'
+uci set uhttpd.main.ubus_prefix='/ubus'
+uci set uhttpd.main.listen_http='0.0.0.0:80' '[::]:80'
+uci set uhttpd.main.listen_https='0.0.0.0:8443' '[::]:8443'
+uci set uhttpd.main.index_page='index.php'
+uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
+uci set uhttpd.defaults=cert
+uci set uhttpd.defaults.days='730'
+uci set uhttpd.defaults.key_type='ec'
+uci set uhttpd.defaults.bits='2048'
+uci set uhttpd.defaults.ec_curve='P-256'
+uci set uhttpd.defaults.country='DE'
+uci set uhttpd.defaults.location='DMZ'
+uci set uhttpd.defaults.commonname='192.168.1.1'
+uci set uhttpd.defaults.state='Unknown'
+}
+
 create_bridge_ports() {
 
 uci add network device
