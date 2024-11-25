@@ -1436,7 +1436,7 @@ uci add_list uhttpd.main.listen_http="[::]:80"
 uci -q delete uhttpd.main.listen_https
 uci add_list uhttpd.main.listen_https="0.0.0.0:8443"
 uci add_list uhttpd.main.listen_https="[::]:8443"
-uci set uhttpd.main.index_page='index.php'
+uci set uhttpd.main.index_page='index.html'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 uci set luci.main.mediaurlbase='/luci-static/bootstrap-dark'
 uci set uhttpd.main.redirect_https='1'
