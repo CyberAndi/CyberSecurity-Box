@@ -551,6 +551,8 @@ if [ "$unbound_inst" = "" ]
 				opkg install ca-certificates acme luci-app-acme acme-dnsapi --force-overwrite >> install.log
 				opkg update >> install.log
 				opkg install stubby tor tor-geoip dnsmasq-full --force-overwrite >> install.log
+    				opkg update >> install.log
+				opkg install php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd --force-overwrite >> install.log
 			elif [ "$main_release" = "22" ]
    				then
        					echo $main_release
