@@ -17,26 +17,25 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>
   <img src="/Firmware_Config.png" alt="select_packages" width="50%"> </img><br><br>
   And in the field <code>Script to run on first boot (uci-defaults)</code> insert.<br><br>
   <pre><code>cat << EOF > /etc/rc.local
-if [ ! -f /root/openWRT23_install.sh ]
-then
-                        uci set network.wan6.disabled='1'
-                        uci commit && reload_config
-                        service network restart
-                        rm /www/index.html
-wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/ && sh /root/openWRT23_install.sh
-else
-rm /root/*.sh
-                        wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/hello.htm -O /www/index.html
-fi
-if [ ! -f /root/run ] 
-then
-                        echo $(date) > /root/run
-                        exit 0
-fi
-rm /etc/rc.local
-echo "<?php phpinfo(); ?>" > /www/phpinfo.php
-echo "exit 0" > /etc/rc.local
-	  
+	if [ ! -f /root/openWRT23_install.sh ]
+		then
+                	uci set network.wan6.disabled='1'
+	                uci commit && reload_config
+       		        service network restart
+        		rm /www/index.html
+	  		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/ && sh /root/openWRT23_install.sh
+		else
+			rm /root/*.sh
+        		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/hello.htm -O /www/index.html
+	fi
+	if [ ! -f /root/run ] 
+		then
+                	echo $(date) > /root/run
+                	exit 0
+	fi
+	rm /etc/rc.local
+	echo "<?php phpinfo(); ?>" > /www/phpinfo.php
+	echo "exit 0" > /etc/rc.local
 EOF
 exit 0
 </code></pre>
