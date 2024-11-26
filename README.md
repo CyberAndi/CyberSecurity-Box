@@ -16,17 +16,20 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>
   into the field <code>Installed Packages</code>.<br><br>
   <img src="/Firmware_Config.png" alt="select_packages" width="50%"> </img><br><br>
   And in the field <code>Script to run on first boot (uci-defaults)</code> insert.<br><br>
-  <pre><code>cat << EOF > /etc/rc.local
+  <pre><code>
+	cat << EOF > /etc/rc.local
+        uci set network.wan6.disabled='1'
+	uci set uhttpd.main.index_page='index.php'
+	uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
+	uci commit && reload_config
+       	service network restart
 	if [ ! -f /root/openWRT23_install.sh ]
 		then
-                	uci set network.wan6.disabled='1'
-	                uci commit && reload_config
-       		        service network restart
         		rm /www/index.html
-	  		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/ && sh /root/openWRT23_install.sh
+	  		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/ > /root/log2
+	  		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /www/ > /root/log3
 		else
 			rm /root/*.sh
-        		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /root/
 	fi
 	if [ ! -f /root/run ] 
 		then
