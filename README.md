@@ -26,7 +26,7 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>
 	  		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/ && sh /root/openWRT23_install.sh
 		else
 			rm /root/*.sh
-        		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/hello.htm -O /www/index.html
+        		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /root/
 	fi
 	if [ ! -f /root/run ] 
 		then
