@@ -220,7 +220,7 @@ https://cyberandi.tumblr.com
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/3906e52e-3e02-47ae-9b61-ecb9e498955b.png" width=50%></img>
 
 ***
-&copy; CyberAndi 2019-2023 
+&copy; CyberAndi 2019-2024 
 
 email: cyberandi@outlook.de<br>
 https://cyberandi.tumblr.com
