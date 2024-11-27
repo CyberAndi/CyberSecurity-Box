@@ -178,4 +178,3 @@ echo
 }
 
 customize_firmware();
-
