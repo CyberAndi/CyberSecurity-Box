@@ -80,7 +80,7 @@ Else skip this Part and go to <a href="#afterreboot">Network-Overview </a>.<br><
   </details>
 </li>
 <h3><li id="afterreboot">
-   After the reboot you will have following Networks:</h3>
+   After the reboot you will have following Networks: </h3>
     <ul>
     <li><b>REPEATER</b> for internal Communication between Router and Repeater for all of this Networks</li>
       <li><b>VOICE</b> for Amazon Alexa, Google Assistent or other Voice Assistent-Systems</li>
