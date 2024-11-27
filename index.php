@@ -2,7 +2,7 @@
 header("Content-Type: text/html; charset=utf-8");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-			$output = shell_exec("wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/ && sh /root/openWRT23_install.sh");
+			$output = shell_exec("sh /root/openWRT23_install.sh ");
 			echo $output;}
 ?>
 <!DOCTYPE html>
