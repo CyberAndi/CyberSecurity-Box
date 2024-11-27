@@ -21,7 +21,7 @@ uci set system.@system[0].zonename='Europe/Berlin'
 uci set system.@system[0].hostname='CyberSecurity-Box'
 uci set system.@system[0].description='CyberSecurity-Box with Tor-Onion-Services'
 uci delete system.ntp.server
-uci add_list system.ntp.server=$INET_GW 
+uci add_list system.ntp.server=$INET_GW
 uci add_list system.ntp.server='0.openwrt.pool.ntp.org'
 uci add_list system.ntp.server='1.pool.ntp.org'
 uci add_list system.ntp.server='2.openwrt.pool.ntp.org'
@@ -51,7 +51,6 @@ echo
 echo 'Default Country-Settings'
 echo 
 
-
 echo
 echo 'https activated'
 echo
@@ -60,7 +59,7 @@ cat << EOF > /etc/banner
 
   +++         +                  +++               +++++
  +   +        +                 +   +              +    +
-+             +                 +                  +    + 
++             +                 +                  +    +
 +             +                 +                  +    +
 +      +   +  +++    ++   +  ++  +++    ++    ++   +++++    ++   +   +
 +       + +   +  +  +  +  + +       +  +  +  +  +  +    +  +  +   + +
@@ -68,7 +67,7 @@ cat << EOF > /etc/banner
  +   +   +    +  +  +     +     +   +  +     +  +  +    +  +  +   + +
   +++    +    +++    +++  +      +++    +++   ++   +++++    ++   +   +
  
-      local Privacy for Voice-Assistents, Smart-TVs and SmartHome 
+      local Privacy for Voice-Assistents, Smart-TVs and SmartHome
 	   
 --------------------------------------------------------------------------
    powered by OpenWrt $(echo $release), $(echo $revision)
@@ -78,6 +77,7 @@ cat << EOF > /etc/banner
 EOF
 
 cat << EOF > /etc/openwrt_release
+
 DISTRIB_ID='CyberSecurity-Box'
 DISTRIB_RELEASE='$(echo $release)'
 DISTRIB_REVISION='$(echo $revision)'
@@ -126,7 +126,7 @@ echo 'Sichere alte Konfiguration'
 #iptables-save > rules.v4_old_$datum.bkp
 
 FILE=/www/luci-static/bootstrap/OCR-A.ttf
-if [ ! -f "$FILE" ] 
+if [ ! -f "$FILE" ]
 	then
 		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 			then
@@ -157,6 +157,7 @@ fi
 
 
 FILE1=/www/luci-static/resources/view/dashboard/css/c*.css
+
 if [ ! -f "$FILE" ]
 	then
 		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/custom.css -P /www/luci-static/resources/view/dashboard/css/
@@ -170,7 +171,6 @@ if [ ! -f "$FILE" ]
 		mv /www/luci-static/resources/view/status/include/*_dhcp.js /www/luci-static/resources/view/status/include/25_dhcp.js
 		mv /www/luci-static/resources/view/status/include/*_wifi.js /www/luci-static/resources/view/status/include/30_wifi.js
 fi
-
 
 echo
 echo 'On Error enter logread'
