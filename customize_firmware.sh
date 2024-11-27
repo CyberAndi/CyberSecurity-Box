@@ -13,6 +13,7 @@ architecture=${architecture::-1}
 target=${target::-1}
 architecture=${architecture:1}
 target=${target:1}
+
 customize_firmware() {
 FILE=/www/luci-static/resources/view/dashboard/css/c*.css
 if [ ! -f "$FILE" ]
@@ -107,7 +108,7 @@ cat << EOF > /etc/device_info
 DEVICE_MANUFACTURER='@CyberAndi'
 DEVICE_MANUFACTURER_URL='https://cyberandi.tumblr.com/'
 DEVICE_PRODUCT='CyberSecurity-Box'
-DEVICE_REVISION='v0.78'
+DEVICE_REVISION='v0.85'
 
 EOF
 
@@ -131,14 +132,9 @@ cat << EOF > /etc/sysupgrade.conf
 /www/
 EOF
 
-#Datum erstellen
-#actdate(date --utc --date "$1" +%F)
 datum=$(date +"%y%d%m%H%M")
 echo
 
-#sichere alte Konfiguration
-echo 'Sichere alte Konfiguration'
-#iptables-save > rules.v4_old_$datum.bkp
 
 FILE=/www/luci-static/bootstrap/OCR-A.ttf
 if [ ! -f "$FILE" ] 
@@ -211,9 +207,6 @@ mkdir -p /www/CaptivePortal
 mkdir -p /www/generate_204	
 mkdir -p /www/CaptivePortal/pic
 
-
-wait $processes
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.htm -P /www/)
 wait $processes1
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/captiveportal.htm -O /www/CaptivePortal/index.htm)
 wait $processes1
