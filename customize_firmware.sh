@@ -177,4 +177,4 @@ echo 'On Error enter logread'
 echo
 }
 
-customize_firmware();
+customize_firmware
