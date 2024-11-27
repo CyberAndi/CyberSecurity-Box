@@ -222,5 +222,5 @@ https://cyberandi.tumblr.com
 ***
 &copy; CyberAndi 2019-2024 
 
-email: cyberandi@outlook.de<br>
+email: programming@cyberandi.slmail.me<br>
 https://cyberandi.tumblr.com
