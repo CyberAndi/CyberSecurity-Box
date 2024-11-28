@@ -1,10 +1,8 @@
 <?php
 header("Content-Type: text/html; charset=utf-8");
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-			$output = shell_exec("sh /root/openWRT23_install.sh ");
-			echo $output;}
+$IP = $Domain = $SSID = $WKey = "";
 ?>
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -349,7 +347,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			display: none;
 		}
 
-		.Messanger:first-child {
+		#Hello {
 			visibility: visible;
 			display: unset;
 		}
@@ -378,8 +376,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		read('Domain');
 		read('SSID');
 		read('WKey');
-		call_install();
-		call();
 	}
 
 	function next() {
@@ -443,60 +439,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		};
 	}
 
-	function call() {
-		alert ('Script started');
-		exec('sh wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/openWRT23_install.sh', function (error, stdout, stderr) {
-			if (error) {
-				console.error(`Error: ${error}`);
-				return;
-			}
-			console.log(`Output: ${stdout}`);
-		});
+	function submitForm() {
+		document.getElementById('send').submit();
+		document.getElementById('Output').innerHTML='<p>I will use the following settings:<br>' +
+		'<p>You can reach the Router under: <a id="lnk" href="https://' + vIP + ':8443/cgi-bin/luci">https://' + vIP + ':8443' + '/cgi-bin/luci/</a></p>' +
+		'<p>Please wait till 20 Minutes for the Settings. Then you can log in with root and your Password.';
 	}
 
-	function call_script() {
-		const { spawn } = require('child_process');
-		const script = spawn('sh', ['wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberAndi-Pi-Hole-5/openWRT23_install.sh && openWRT23_install.sh']);
-
-		script.stdout.on('data', (data) => {
-			document.getElementById('Output').innerHTML="<p>Output: '$(data)'</p>";
-			console.log(`Output: ${data}`);
-		});
-
-		script.stderr.on('data', (data) => {
-			document.getElementById('Output').innerHTML="<p>Error: '$(data)'</p>";
-			console.error(`Stderr: ${data}`);
-		});
-
-		script.on('close', (code) => {
-			document.getElementById('Output').innerHTML="<p>Exit with: '$(data)'</p>";
-			console.log(`Script exited with code ${code}`);
-		});
-	}
-
-	function call_script1() {
-		const { exec } = require('child_process');
-
-		exec('bash /path/to/your/script.sh', (error, stdout, stderr) => {
-			if (error) {
-				document.getElementById('Output').innerHTML="<p>Errors: '$(data)'</p>";
-				console.error(`Error: ${error.message}`);
-				return;
-			}
-			if (stderr) {
-				document.getElementById('Output').innerHTML="<p>stderr '$(data)'</p>";
-				console.error(`Stderr: ${stderr}`);
-				return;
-			}
-			document.getElementById('Output').innerHTML="<p>Output: '$(data)'</p>";
-			console.log(`Output: ${stdout}`);
-		});
-	}
-			
 	function call_install() {
 		document.getElementById('Output').innerHTML='<p>I will use the following settings:<br>' +
 		'<p>You can reach the Router under: <a id="lnk" href="https://' + vIP + ':8443/cgi-bin/luci">https://' + vIP + ':8443' + '/cgi-bin/luci/</a></p>' +
-		'<p>Please wait till 20 Minutes for the Settings. Then you can log in with ' + vUser + ' and your Password.';
+		'<p>Please wait till 20 Minutes for the Settings. Then you can log in with root and your Password.';
 		}
 	</script>
 </head>
@@ -510,29 +463,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 					<button onclick="next()">Next</button>
 					</p>
 				</div>
-				<div class="Messanger">
-					<p>Type the LAN-IP (Internal Network): <input type="text" id="IP" placeholder="192.168.1.1"></input>.
-					</p>
-				</div>
-				<div class="Messanger">
-					<p>Your local Domain of your LAN? <input type="text" id="Domain" placeholder=".local"></input>.
-					</p>
-				</div>
-				<div class="Messanger">
-					<p>The Main-WiFi-SSID? <input type="text" id="SSID" placeholder="CyberSec-Box"></input>.
-					</p>
-				</div>
-				<div class="Messanger">
-					<p>And the WiFi-Key? <input type="text" id="WKey" placeholder="Cyber,Sec9ox"></input>.
-					</p>
-				</div>
-				<div class="Messanger">
-						<p>At least the user for the login:? <input type="text" id="User" placeholder="root"></input>.
-						<form method="post" action="">
-        						<button type="submit">Submit</button>
-    						</form>
-					</p>
-				</div>
+				<form id="send" method="post" action="output.php">
+					<div class="Messanger">
+						<p>Type the LAN-IP (Internal Network): <input type="text" id="IP" name="IP" placeholder="192.168.1.1"></input>.
+						</p>
+					</div>
+					<div class="Messanger">
+						<p>Your local Domain of your LAN? <input type="text" id="Domain" name="Domain" placeholder=".local"></input>.
+						</p>
+					</div>
+					<div class="Messanger">
+						<p>The Main-WiFi-SSID? <input type="text" id="SSID" name="SSID" placeholder="CyberSec-Box"></input>.
+						</p>
+					</div>
+					<div class="Messanger">
+						<p>And the WiFi-Key? <input type="text" id="WKey" name="WKey" placeholder="Cyber,Sec9ox"></input>.
+						</p>
+					</div>
+					<div class="Messanger">
+						<p>
+							<button type="submit" onclick="submitForm">Submit</button>
+						</p>
+					</div>
+				</form>
 			</center> 
 		</blockquote>
 	</div>
