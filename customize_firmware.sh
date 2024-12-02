@@ -304,7 +304,8 @@ uci set uhttpd.main.listen_http='0.0.0.0:80' '[::]:80'
 uci set uhttpd.main.listen_https='0.0.0.0:8443' '[::]:8443'
 uci set uhttpd.main.index_page='index.php'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
-uci commit && reload_config
+processes=$(uci commit && reload_config)
+wait $processes  >> install.log
 }
 
 #-------------------------start---------------------------------------
