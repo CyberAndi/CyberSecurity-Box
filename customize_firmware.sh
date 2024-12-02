@@ -198,6 +198,7 @@ create_hotspot(){
 	uci set wireless.radio0.channel='auto'
 	uci set wireless.radio0.hwmode='11n'
  	uci delete wireless.radio0.disabled >> install.log
+  	uci commit && reload_config
 	if [ ! -d "$FILE" ]
 		then
 			create_hotspot_sub
@@ -303,15 +304,7 @@ uci set uhttpd.main.listen_http='0.0.0.0:80' '[::]:80'
 uci set uhttpd.main.listen_https='0.0.0.0:8443' '[::]:8443'
 uci set uhttpd.main.index_page='index.php'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
-uci set uhttpd.defaults=cert
-uci set uhttpd.defaults.days='730'
-uci set uhttpd.defaults.key_type='ec'
-uci set uhttpd.defaults.bits='2048'
-uci set uhttpd.defaults.ec_curve='P-256'
-uci set uhttpd.defaults.country='DE'
-uci set uhttpd.defaults.location='DMZ'
-uci set uhttpd.defaults.commonname='192.168.1.1'
-uci set uhttpd.defaults.state='Unknown'
+uci commit && reload_config
 }
 
 #-------------------------start---------------------------------------
@@ -334,4 +327,9 @@ echo >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot'
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
 create_hotspot >> install.log
+
+echo
+echo >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot'
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
 set_uhttpd >> install.log
