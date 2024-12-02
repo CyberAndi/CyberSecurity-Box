@@ -1540,7 +1540,7 @@ if [ ! -f "$FILE" ]
 		fi
 
 		wait $processes
-  		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /www/luci-static/bootstrap/)
+  		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /www/)
 		wait $processes1
   		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/output.php -P /www/)
 		wait $processes1
