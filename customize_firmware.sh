@@ -323,19 +323,6 @@ echo >> install.log
 echo $main_release
 echo
 echo 'Automation Install'
-ask_parameter $1 $2 $3 $4 $5 $6
-if [ ! -z $1 ]
-	then
- 		echo 'Automation Install' >> install.log
-   		echo >> install.log
-   		echo $1 >> install.log
-   		echo $2 >> install.log
-     		echo $3 >> install.log
-       		echo $4 >> install.log
-	 	echo $5 >> install.log
-   		echo $6 >> install.log
- fi
- 
 echo
 echo >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' 
