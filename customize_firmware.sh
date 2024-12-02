@@ -112,14 +112,6 @@ DEVICE_REVISION='v0.85'
 
 EOF
 
-FILE=/root/openWRT*.sh
-if [ "$(ls openWRT*.sh)" != "" ]
-	then
-		cp openWRT*.sh /etc/openWRT_install.sh
-fi
-
-chmod 0755 /etc/openWRT_install.sh
-
 cat << EOF > /etc/sysupgrade.conf
 ## This file contains files and directories that should
 ## be preserved during an upgrade.
@@ -134,7 +126,6 @@ EOF
 
 datum=$(date +"%y%d%m%H%M")
 echo
-
 
 FILE=/www/luci-static/bootstrap/OCR-A.ttf
 if [ ! -f "$FILE" ] 
@@ -198,7 +189,8 @@ create_hotspot(){
 	uci set wireless.radio0.channel='auto'
 	uci set wireless.radio0.hwmode='11n'
  	uci delete wireless.radio0.disabled >> install.log
-  	uci commit && reload_config
+  	processes=$(uci commit && reload_config)
+	wait $processes  >> install.log
 	if [ ! -d "$FILE" ]
 		then
 			create_hotspot_sub
