@@ -190,6 +190,14 @@ echo
 
 create_hotspot(){
 	FILE=/www/CaptivePortal/pic
+ 	uci set wireless.radio0=wifi-device
+	uci set wireless.radio0.type='mac80211'
+	uci set wireless.radio0.path='platform/soc/a000000.wifi'
+	uci set wireless.radio0.htmode='HT20'
+	uci set wireless.radio0.country='DE'
+	uci set wireless.radio0.channel='auto'
+	uci set wireless.radio0.hwmode='11n'
+ 	uci delete wireless.radio0.disabled >> install.log
 	if [ ! -d "$FILE" ]
 		then
 			create_hotspot_sub
