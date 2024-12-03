@@ -2,7 +2,6 @@
 header("Content-Type: text/html; charset=utf-8");
 $IP = $Domain = $SSID = $WKey = "";
 ?>
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -378,37 +377,39 @@ $IP = $Domain = $SSID = $WKey = "";
 						if (empty($IP)) {
 					    		$IP = "192.168.1.1";
  					 	} else {
- 							if (!preg_match("/^[0-9/.']*$/",$IP)) {
-					      			$IPErr = "Only Numbers and Points";
+ 							if (!preg_match("/^[0-9\.']*$/",$IP)) {
+					      			echo"<script> alert('Wrong IP: Only Numbers and Points allowed.');</script>";
+								
 							}
 						}
 						if (empty($Domain)) {
 				    			$Domain = "cybersec.box";
  				 		} else {
 							if (!preg_match("/^[a-zA-Z\.']*$/",$Domain)) {
-      								$DomainErr = "Only Letters and Points";
+      								echo"<script> alert('Wrong Domain: Only Letters and Points allowed.');</script>";
 							}
 						}
 						if (empty($SSID)) {
 				    			$SSID = "CyberSec-Box";
   						} else {
-   	 						if (!preg_match("/^[0-9a-zA-Z']*$/",$SSID)) {
-						      		$SSIDErr = "Only Numbers and Letters";
+   	 						if (!preg_match("/^[0-9a-zA-Z'\@\-]*$/",$SSID)) {
+						      		echo"<script> alert('Wrong SSID: Only Numbers and Letters allowed.');</script>";
+
 							}
 						}
 
 						if (empty($WKey)) {
 				    			$WKey = "Cyber,Sec9ox";
 				  		} else {
-   	 						if (!preg_match("/^[0-9a-zA-Z/.' ]*$/",$WKey)) {
-						      		$WKeyErr = "Only Numbers, Letters and Points";
+   	 						if (!preg_match("/^[0-9a-zA-Z\.'\-\@,]*$/",$WKey)) {
+						      		echo"<script> alert('Wrong Wifi-Key: Only Numbers, Letters and Points allowed.');</script>";
 							}
 						}
 
-						$output = shell_exec("sh /root/openWRT23_install.sh ," . $IP . "," . $Domain . "," . $SSID . "," . $WKey);
-						echo '<p>I will use the following settings:<br>IP: ' . $IP . "<br>Domain: " . $Domain . "<br>WLAN: " . $SSID . "<br>Key: " . $WKey . "<br>" . $output . "</p> <p> </p>";	
+						echo '<p>I will use the following settings:<br>IP: ' . $IP . "<br>Domain: " . $Domain . "<br>WLAN: " . $SSID . "<br>Key: " . $WKey . "</p> <p>" 
+						 . $output = shell_exec("sh /root/openWRT23_install.sh ," . $IP . "," . $Domain . "," . $SSID . "," . $WKey); . $output . "</p>";	
 						echo '<p>You can reach the Router under: <a id="lnk" href="https://' . $IP . ':8443/cgi-bin/luci">https://' . $IP . ':8443' . '/cgi-bin/luci/</a></p>' .
-		'<p>Please wait till 20 Minutes for the Settings. Then you can log in with root and your Password.';
+		'<p>Please wait till 20 Minutes for the Settings. Then you can login with root and your Password.';
 					}
 					?>
 					</div>
