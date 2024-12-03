@@ -406,8 +406,8 @@ $IP = $Domain = $SSID = $WKey = "";
 							}
 						}
 
-						echo '<p>I will use the following settings:<br>IP: ' . $IP . "<br>Domain: " . $Domain . "<br>WLAN: " . $SSID . "<br>Key: " . $WKey . "</p> <p>" 
-						 . $output = shell_exec("sh /root/openWRT23_install.sh ," . $IP . "," . $Domain . "," . $SSID . "," . $WKey); . $output . "</p>";	
+						echo '<p>I will use the following settings:<br>IP: ' . $IP . "<br>Domain: " . $Domain . "<br>WLAN: " . $SSID . "<br>Key: " . $WKey . "</p> <p>"; 
+						$output = shell_exec("sh /root/openWRT23_install.sh ," . $IP . "," . $Domain . "," . $SSID . "," . $WKey); echo substr($output, 0 , 1000)  . "</p>";	
 						echo '<p>You can reach the Router under: <a id="lnk" href="https://' . $IP . ':8443/cgi-bin/luci">https://' . $IP . ':8443' . '/cgi-bin/luci/</a></p>' .
 		'<p>Please wait till 20 Minutes for the Settings. Then you can login with root and your Password.';
 					}
