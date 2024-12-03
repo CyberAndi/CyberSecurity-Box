@@ -2,6 +2,7 @@
 header("Content-Type: text/html; charset=utf-8");
 $IP = $Domain = $SSID = $WKey = "";
 ?>
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -382,6 +383,7 @@ $IP = $Domain = $SSID = $WKey = "";
 								
 							}
 						}
+						$IP = (string)$IP;
 						if (empty($Domain)) {
 				    			$Domain = "cybersec.box";
  				 		} else {
@@ -389,6 +391,7 @@ $IP = $Domain = $SSID = $WKey = "";
       								echo"<script> alert('Wrong Domain: Only Letters and Points allowed.');</script>";
 							}
 						}
+						$Domain = (string)$Domain;
 						if (empty($SSID)) {
 				    			$SSID = "CyberSec-Box";
   						} else {
@@ -397,6 +400,7 @@ $IP = $Domain = $SSID = $WKey = "";
 
 							}
 						}
+						$SSID = (string)$SSID;
 
 						if (empty($WKey)) {
 				    			$WKey = "Cyber,Sec9ox";
@@ -405,11 +409,18 @@ $IP = $Domain = $SSID = $WKey = "";
 						      		echo"<script> alert('Wrong Wifi-Key: Only Numbers, Letters and Points allowed.');</script>";
 							}
 						}
+						$WKey = (string)$WKey;
 
-						echo '<p>I will use the following settings:<br>IP: ' . $IP . "<br>Domain: " . $Domain . "<br>WLAN: " . $SSID . "<br>Key: " . $WKey . "</p> <p>"; 
-						$output = shell_exec("sh /root/openWRT23_install.sh ," . $IP . "," . $Domain . "," . $SSID . "," . $WKey); echo substr($output, 0 , 1000)  . "</p>";	
+						$GW = exec("echo $(ip route | grep default | cut -f3  -d ' ')");
+						$GW = (string)$GW;
+						$output = '';
+						echo '<p>I will use the following settings:<br> GW: ' . $GW . '<br>IP: ' . $IP . "<br>Domain: " . $Domain . "<br>WLAN: " . $SSID . "<br>Key: " . $WKey . "</p> <p>"; 
+						exec("sh /root/openWRT23_install.sh $GW $IP $Domain $SSID $WKey", $output); 
+						foreach ($output as $line) {
+ 							/* echo $line . "\n"; */
+						};	
 						echo '<p>You can reach the Router under: <a id="lnk" href="https://' . $IP . ':8443/cgi-bin/luci">https://' . $IP . ':8443' . '/cgi-bin/luci/</a></p>' .
-		'<p>Please wait till 20 Minutes for the Settings. Then you can login with root and your Password.';
+						'<p>Please wait till 20 Minutes for the Settings. Then you can login with root and your Password.';
 					}
 					?>
 					</div>
