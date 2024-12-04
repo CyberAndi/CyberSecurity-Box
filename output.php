@@ -16,6 +16,7 @@ $IP = $Domain = $SSID = $WKey = "";
     <link rel="preload" href="/luci-static/bootstrap/OCRAStd.woff" as="font">
     <link rel="preload" href="/luci-static/bootstrap/CyberSecurity-Box.svg">
     <link rel="preload" href="/luci-static/bootstrap/CyberAndi.svg">
+    <meta http-equiv="refresh" content="1000; URL=cgi-bin/luci/" />
 
 	<style type="text/css">
 		@font-face {
@@ -415,13 +416,14 @@ $IP = $Domain = $SSID = $WKey = "";
 						$GW = exec("echo $(ip route | grep default | cut -f3  -d ' ')");
 						$GW = (string)$GW;
 						$output = '';
-						echo '<p>I will use the following settings:<br> GW: ' . $GW . '<br>IP: ' . $IP . "<br>Domain: " . $Domain . "<br>WLAN: " . $SSID . "<br>Key: " . $WKey . "</p> <p>"; 
+						echo '<p>I will use the following settings:<br> GW: ' . $GW . '<br>IP: ' . $IP . "<br>Domain: " . $Domain . "<br>WLAN: " . $SSID . "<br>Key: " . $WKey . "</p>"; 
+						echo '<p>Then you can reach the Router under: <a id="lnk" href="https://' . $IP . ':8443/cgi-bin/luci">https://' . $IP . ':8443' . '/cgi-bin/luci/</a></p>' .
+						'<p>Please wait until the configuration is complete. This may take up to 20 minutes. After then you can login with root and your Password. </p><p>';
 						exec("sh /root/openWRT23_install.sh $GW $IP $Domain $SSID $WKey", $output); 
 						foreach ($output as $line) {
  							/* echo $line . "\n"; */
 						};	
-						echo '<p>You can reach the Router under: <a id="lnk" href="https://' . $IP . ':8443/cgi-bin/luci">https://' . $IP . ':8443' . '/cgi-bin/luci/</a></p>' .
-						'<p>Please wait till 20 Minutes for the Settings. Then you can login with root and your Password.';
+						echo '</p>'
 					}
 					?>
 					</div>
