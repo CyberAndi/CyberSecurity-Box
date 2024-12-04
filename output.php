@@ -6,6 +6,7 @@ $IP = $Domain = $SSID = $WKey = "";
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <base href="/">
     <link rel="stylesheet" href="/luci-static/bootstrap-dark/cascade.css">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
