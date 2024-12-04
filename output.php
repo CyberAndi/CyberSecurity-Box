@@ -388,7 +388,7 @@ $IP = $Domain = $SSID = $WKey = "";
 						}
 						$IP = (string)$IP;
 						if (empty($Domain)) {
-				    			$Domain = "cybersec.box";
+				    			$Domain = "CyberSecBox.local";
  				 		} else {
 							if (!preg_match("/^[a-zA-Z\.']*$/",$Domain)) {
       								echo"<script> alert('Wrong Domain: Only Letters and Points allowed.');</script>";
