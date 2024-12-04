@@ -424,7 +424,7 @@ $IP = $Domain = $SSID = $WKey = "";
 						foreach ($output as $line) {
  							/* echo $line . "\n"; */
 						};	
-						echo '</p>'
+						echo '</p>';
 					}
 					?>
 					</div>
