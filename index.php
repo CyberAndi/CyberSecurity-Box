@@ -470,7 +470,7 @@ $IP = $Domain = $SSID = $WKey = "";
 						</p>
 					</div>
 					<div class="Messanger">
-						<p>Your local Domain of your LAN? <input type="text" id="Domain" name="Domain" placeholder=".local"></input>.
+						<p>Your local Domain of your LAN? <input type="text" id="Domain" name="Domain" placeholder="CyberSecBox.local"></input>.
 						</p>
 					</div>
 					<div class="Messanger">
