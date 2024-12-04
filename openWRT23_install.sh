@@ -1526,9 +1526,11 @@ echo 'Sichere alte Konfiguration'
 #iptables-save > rules.v4_old_$datum.bkp
 
 FILE=/www/luci-static/bootstrap/OCR-A.ttf
+/*
 if [ ! -f "$FILE" ] 
 	then
-		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
+*/
+  		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 			then
 				processes=$(rm /www/luci-static/bootstrap/c*.css)
 		fi
@@ -1556,9 +1558,9 @@ if [ ! -f "$FILE" ]
 		wait $processes7
 		processes8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.woff -P /www/luci-static/bootstrap/)
 		wait $processes8
-
+/*
 fi
-
+*/
 
 FILE1=/www/luci-static/resources/view/dashboard/css/c*.css
 if [ ! -f "$FILE" ]
