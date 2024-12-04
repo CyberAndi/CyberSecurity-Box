@@ -1542,20 +1542,20 @@ if [ ! -f "$FILE" ]
 		wait $processes
   		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /www/)
 		wait $processes1
-  		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/output.php -P /www/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberSecurity-Box.svg -P /www/luci-static/bootstrap/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberAndi.svg -P /www/luci-static/bootstrap/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/cascade.css -P /www/luci-static/bootstrap/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.ttf -P /www/luci-static/bootstrap/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.woff -P /www/luci-static/bootstrap/)
-		wait $processes1
+  		processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/output.php -P /www/)
+		wait $processes2
+		processes3=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
+		wait $processes3
+		processes4=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberSecurity-Box.svg -P /www/luci-static/bootstrap/)
+		wait $processes4
+		processes5=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberAndi.svg -P /www/luci-static/bootstrap/)
+		wait $processes5
+		processes6=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/cascade.css -P /www/luci-static/bootstrap/)
+		wait $processes6
+		processes7=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.ttf -P /www/luci-static/bootstrap/)
+		wait $processes7
+		processes8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.woff -P /www/luci-static/bootstrap/)
+		wait $processes8
 
 fi
 
@@ -25121,7 +25121,7 @@ echo
 echo >> install.log
 define_variables >> install.log
 echo 'Automation Install'
-ask_parameter $1 $2 $3 $4 $5 $6
+ask_parameter $1 $2 $3 $4 $5 $6 $7 $8 $9
 if [ ! -z $1 ]
 	then
  		echo 'Automation Install' >> install.log
@@ -25132,6 +25132,9 @@ if [ ! -z $1 ]
        		echo $4 >> install.log
 	 	echo $5 >> install.log
    		echo $6 >> install.log
+   		echo $7 >> install.log
+   		echo $8 >> install.log
+   		echo $9 >> install.log
  fi
  
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' 
