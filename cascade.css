@@ -2073,10 +2073,10 @@ th[data-sort-direction="desc"]::after {
 
 #mwan3-service-status > .alert-message{
 	display:inline-block;
-	width:12rem;
+	width:calc(25% - 2rem) !important;
 	height:6rem;
 	vertical-align:middle;
-	margin:1rem;
+	margin:1rem !important;
 	padding:1rem
 }
 
@@ -2392,10 +2392,10 @@ li.menu,.dropdown,.cbi-dropdown[open] {
 
 #mwan3-service-status > .alert-message {
 	display: inline-block;
-	width: 15rem;
+	width: calc(25% - 2rem) !important;
 	height: 6rem;
 	vertical-align: middle;
-	margin: 0.5em !important;
+	margin: 1rem !important;
 	padding: 1rem;
 	box-shadow: 0.25em 0.25em 0.5em rgba(0,0,0,0.8) !important;
 }
