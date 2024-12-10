@@ -20,8 +20,7 @@ if [ ! -f "$FILE" ]
 
 	then
 		customize_firmware_sub
-	fi
-
+fi
 }
 
 customize_firmware_sub() {
@@ -59,10 +58,13 @@ uci set uhttpd.main.redirect_https='1'
 uci set luci.diag.ping='cmovie.4lima.de'
 uci set luci.diag.route='brave.com'
 uci set luci.diag.dns='bible4u2lvhacg4b3to2e2veqpwmrc2c3tjf2wuuqiz332vlwmr4xbad.onion'
+uci set network.wan6.disabled='1'
+uci set uhttpd.main.index_page='index.php'
+uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 processes=$(uci commit && reload_config)
 wait $processes  >> install.log
 /etc/init.d/uhttpd restart  >> install.log
-
+/etc/init.d/network restart  >> install.log
 echo
 echo 'Default Country-Settings'
 echo 
@@ -108,7 +110,7 @@ cat << EOF > /etc/device_info
 DEVICE_MANUFACTURER='@CyberAndi'
 DEVICE_MANUFACTURER_URL='https://cyberandi.tumblr.com/'
 DEVICE_PRODUCT='CyberSecurity-Box'
-DEVICE_REVISION='v0.85'
+DEVICE_REVISION='v0.95'
 
 EOF
 
@@ -142,20 +144,24 @@ if [ ! -f "$FILE" ]
 		fi
 
 		wait $processes
- 		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/output.php -P /www/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberSecurity-Box.svg -P /www/luci-static/bootstrap/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberAndi.svg -P /www/luci-static/bootstrap/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/cascade.css -P /www/luci-static/bootstrap/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.ttf -P /www/luci-static/bootstrap/)
-		wait $processes1
-		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.woff -P /www/luci-static/bootstrap/)
-		wait $processes1
+  		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/)
+    		wait $processes1
+	  	processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /www/)
+    		wait $processes2
+ 		processes3=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/output.php -P /www/)
+		wait $processes3
+		processes4=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
+		wait $processes4
+		processes5=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberSecurity-Box.svg -P /www/luci-static/bootstrap/)
+		wait $processes5
+		processes6=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/CyberAndi.svg -P /www/luci-static/bootstrap/)
+		wait $processes6
+		processes7=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/cascade.css -P /www/luci-static/bootstrap/)
+		wait $processes7
+		processes8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.ttf -P /www/luci-static/bootstrap/)
+		wait $processes8
+		processes9=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.woff -P /www/luci-static/bootstrap/)
+		wait $processes9
 
 fi
 
@@ -210,68 +216,70 @@ mkdir -p /www/CaptivePortal
 mkdir -p /www/generate_204	
 mkdir -p /www/CaptivePortal/pic
 
-wait $processes1
+processe=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/captiveportal.htm -O /www/index.htm)
+wait $processe
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/captiveportal.htm -O /www/CaptivePortal/index.htm)
 wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/mobile.css -P /www/CaptivePortal/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/theme.css -P /www/CaptivePortal/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/theme_variable.css -P /www/CaptivePortal/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/prophetie.htm -P /www/CaptivePortal/)
-#wait $processes1
-#processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.ttf -P /www/CaptivePortal/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCRAStd.woff -P /www/CaptivePortal/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/Unwetter2.jpg -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/Bibelserver.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/CMovie.svg -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/virus.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/CMovie-Logo.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/CMovie-Play.svg -P /www/CaptivePortal/pic/)
-#wait $processes1
-#processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/Corona_2.svg -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/csb.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/Münzen.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/search.svg -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/search-128.svg -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War.jpg -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_Foreground_Maske.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_Foreground_Maske_o.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_Maske.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeDust.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeDust2.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeFlammen.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeFlammen_o.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeHimmel.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeSchutt.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/WarMaske.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/WarMaskeSky.png -P /www/CaptivePortal/pic/)
-wait $processes1
-processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/WarMaskeSky_.png -P /www/CaptivePortal/pic/)
+processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/mobile.css -P /www/CaptivePortal/)
+wait $processes2
+processes3=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/theme.css -P /www/CaptivePortal/)
+wait $processes3
+processes4=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/theme_variable.css -P /www/CaptivePortal/)
+wait $processes4
+processes5=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/prophetie.htm -P /www/CaptivePortal/)
+#wait $processes5
+#processes6=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCR-A.ttf -P /www/CaptivePortal/)
+wait $processes6
+processes7=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/OCRAStd.woff -P /www/CaptivePortal/)
+wait $processes7
+processes8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/Unwetter2.jpg -P /www/CaptivePortal/pic/)
+wait $processes8
+processes9=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/Bibelserver.png -P /www/CaptivePortal/pic/)
+wait $processes9
+processes10=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/CMovie.svg -P /www/CaptivePortal/pic/)
+wait $processes10
+processes11=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/virus.png -P /www/CaptivePortal/pic/)
+wait $processes11
+processes12=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/CMovie-Logo.png -P /www/CaptivePortal/pic/)
+wait $processes12
+processes13=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/CMovie-Play.svg -P /www/CaptivePortal/pic/)
+#wait $processes13
+#processes14=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/Corona_2.svg -P /www/CaptivePortal/pic/)
+wait $processes14
+processes15=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/csb.png -P /www/CaptivePortal/pic/)
+wait $processes15
+processes16=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/Münzen.png -P /www/CaptivePortal/pic/)
+wait $processes16
+processes17=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/search.svg -P /www/CaptivePortal/pic/)
+wait $processes17
+processes18=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/search-128.svg -P /www/CaptivePortal/pic/)
+wait $processes18
+processes19=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War.jpg -P /www/CaptivePortal/pic/)
+wait $processes19
+processes20=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_Foreground_Maske.png -P /www/CaptivePortal/pic/)
+wait $processes20
+processes21=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_Foreground_Maske_o.png -P /www/CaptivePortal/pic/)
+wait $processes21
+processes22=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_Maske.png -P /www/CaptivePortal/pic/)
+wait $processes22
+processes23=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeDust.png -P /www/CaptivePortal/pic/)
+wait $processes23
+processes24=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeDust2.png -P /www/CaptivePortal/pic/)
+wait $processes24
+processes25=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeFlammen.png -P /www/CaptivePortal/pic/)
+wait $processes25
+processes26=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeFlammen_o.png -P /www/CaptivePortal/pic/)
+wait $processes26
+processes27=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeHimmel.png -P /www/CaptivePortal/pic/)
+wait $processes27
+processes28=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/War_MaskeSchutt.png -P /www/CaptivePortal/pic/)
+wait $processes28
+processes29=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/WarMaske.png -P /www/CaptivePortal/pic/)
+wait $processes29
+processes30=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/WarMaskeSky.png -P /www/CaptivePortal/pic/)
+wait $processes30
+processes31=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/pic_upload/WarMaskeSky_.png -P /www/CaptivePortal/pic/)
+wait $processes31
 
 echo
 echo 'On Error enter logread'
