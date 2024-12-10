@@ -1565,19 +1565,17 @@ fi
 FILE1=/www/luci-static/resources/view/dashboard/css/c*.css
 if [ ! -f "$FILE" ]
 	then
-		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/custom.css -P /www/luci-static/resources/view/dashboard/css/
-
+		mv /www/luci-static/resources/view/status/include/*_dsl.js /www/luci-static/resources/view/status/include/10_dsl.js
+		mv /www/luci-static/resources/view/status/include/*_ports.js /www/luci-static/resources/view/status/include/11_ports.js
+		mv /www/luci-static/resources/view/status/include/*_mwan3.js /www/luci-static/resources/view/status/include/14_mwan3.js
+		mv /www/luci-static/resources/view/status/include/*_network.js /www/luci-static/resources/view/status/include/15_network.js
+		mv /www/luci-static/resources/view/status/include/*_dhcp.js /www/luci-static/resources/view/status/include/30_dhcp.js
+		mv /www/luci-static/resources/view/status/include/*_wifi.js /www/luci-static/resources/view/status/include/20_wifi.js
+		mv /www/luci-static/resources/view/status/include/*_memory.js /www/luci-static/resources/view/status/include/80_memory.js
+		mv /www/luci-static/resources/view/status/include/*_storage.js /www/luci-static/resources/view/status/include/85_storage.js
 		mv /www/luci-static/resources/view/status/include/*_system.js /www/luci-static/resources/view/status/include/90_system.js
-		mv /www/luci-static/resources/view/status/include/*_memory.js /www/luci-static/resources/view/status/include/10_memory.js
-		mv /www/luci-static/resources/view/status/include/*_storage.js /www/luci-static/resources/view/status/include/15_storage.js
-		mv /www/luci-static/resources/view/status/include/*_dsl.js /www/luci-static/resources/view/status/include/20_dsl.js
-		mv /www/luci-static/resources/view/status/include/*_ports.js /www/luci-static/resources/view/status/include/21_ports.js
-		mv /www/luci-static/resources/view/status/include/*_network.js /www/luci-static/resources/view/status/include/22_network.js
-		mv /www/luci-static/resources/view/status/include/*_dhcp.js /www/luci-static/resources/view/status/include/25_dhcp.js
-		mv /www/luci-static/resources/view/status/include/*_wifi.js /www/luci-static/resources/view/status/include/30_wifi.js
+		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/custom.css -P /www/luci-static/resources/view/dashboard/css/
 fi
-
-
 echo
 echo 'On Error enter logread'
 echo
