@@ -216,7 +216,7 @@ mkdir -p /www/CaptivePortal
 mkdir -p /www/generate_204	
 mkdir -p /www/CaptivePortal/pic
 
-processe=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/captiveportal.htm -O /www/index.htm)
+processe=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.htm -P /www/)
 wait $processe
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/captiveportal.htm -O /www/CaptivePortal/index.htm)
 wait $processes1
