@@ -135,16 +135,18 @@ if [ ! -f "$FILE" ]
 		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 			then
 				processes=$(rm /www/luci-static/bootstrap/c*.css)
+    				wait $processes
 		fi
 
-		wait $processes
 		if [ "$(ls /www/luci-static/resources/view/dashboard/css/c*.css)" != "" ]
 			then
 				processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
+    				wait $processes
 		fi
 
-		wait $processes
-  		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/)
+		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/)
+    		wait $processes1
+	  	processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/)
     		wait $processes1
 	  	processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /www/)
     		wait $processes2
