@@ -2071,6 +2071,15 @@ th[data-sort-direction="desc"]::after {
 	font-size: smaller
 }
 
+#mwan3-service-status > .alert-message{
+	display:inline-block;
+	width:12rem;
+	height:6rem;
+	vertical-align:middle;
+	margin:1rem;
+	padding:1rem
+}
+
 div.cbi-value var,.td.cbi-value-field var {
 	font-style: italic;
 	color: #00a900
