@@ -272,6 +272,11 @@ $IP = $Domain = $SSID = $WKey = "";
 		.bubble a {
 			color: rgb(0,164,0) !important;
 		}
+
+		.bubble-container a:is(:hover,:active,:focus) {
+			cursor: wait;
+			text-decoration: none;
+		}
 			
 		.bubble-container .bubble .oval {
 			opacity: 1 !important;
