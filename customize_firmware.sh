@@ -331,8 +331,29 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot'
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
 create_hotspot >> install.log
 
+cat << EOF > /etc/rc.local
+        if [ ! -f /root/openWRT23_install.sh ]
+		then
+        		rm /www/index.html
+			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh & wait
+			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/
+	  		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /www/
+		else
+			rm /root/*.sh
+	fi
+	if [ ! -f /root/run ] 
+		then
+			echo $(date) > /root/run
+                	exit 0
+	fi
+	rm /etc/rc.local
+	echo "" > /www/phpinfo.php
+	echo "exit 0" > /etc/rc.local
+EOF
+
+
 echo
 echo >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd'
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd' >> install.log
 set_uhttpd >> install.log
