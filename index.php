@@ -377,6 +377,7 @@ $IP = $Domain = $SSID = $WKey = "";
 		read('Domain');
 		read('SSID');
 		read('WKey');
+		read('PW');
 	}
 
 	function next() {
@@ -385,6 +386,7 @@ $IP = $Domain = $SSID = $WKey = "";
 		document.getElementsByClassName('Messanger')[3].style.display='unset';
 		document.getElementsByClassName('Messanger')[4].style.display='unset';
 		document.getElementsByClassName('Messanger')[5].style.display='unset';
+		document.getElementsByClassName('Messanger')[6].style.display='unset';
 		document.getElementById('Hello').style.display='none';
 	}
 
@@ -410,6 +412,9 @@ $IP = $Domain = $SSID = $WKey = "";
 			case 'User':
 				vUser = 'root' ;
 				break;
+			case 'PW':
+				vPW = '' ;
+				break;
 			default:
 				alert('Not Found');
 
@@ -432,6 +437,10 @@ $IP = $Domain = $SSID = $WKey = "";
 				break;
 			case 'User':
 				vUser = document.getElementById(field_id).value ;
+				break;
+			
+			case 'PW':
+				vPW = document.getElementById(field_id).value ;
 				break;
 			default:
 				alert('Not Found');
@@ -479,6 +488,10 @@ $IP = $Domain = $SSID = $WKey = "";
 					</div>
 					<div class="Messanger">
 						<p>And the WiFi-Key? <input type="text" id="WKey" name="WKey" placeholder="Cyber,Sec9ox"></input>.
+						</p>
+					</div>
+					<div class="Messanger">
+						<p>User-Password? <input type="text" id="PW" name="PW" placeholder=""></input>.
 						</p>
 					</div>
 					<div class="Messanger">
