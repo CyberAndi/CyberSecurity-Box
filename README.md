@@ -19,29 +19,34 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>
   <img src="/Firmware_Config.png" alt="select_packages" width="50%"> </img><br><br>
   And in the field <code>Script to run on first boot (uci-defaults)</code> insert.<br><br>
   <pre><code>
+uci set network.wan6.disabled='1'
+uci delete wireless.radio0.disabled
+uci delete wireless.radio1.disabled
+uci set uhttpd.main.index_page='index.php'
+uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
+uci commit && reload_config
+service network Restart & wait 
+wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh & wait
+service network restart
 	cat << EOF > /etc/rc.local
-        uci set network.wan6.disabled='1'
-	uci set uhttpd.main.index_page='index.php'
-	uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
-	uci commit && reload_config
-       	service network restart
-	if [ ! -f /root/openWRT23_install.sh ]
-		then
-        		rm /www/index.html
-	  		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/ > /root/log2
-	  		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /www/ > /root/log3
-		else
-			rm /root/*.sh
-	fi
-	if [ ! -f /root/run ] 
-		then
-                	echo $(date) > /root/run
-                	exit 0
-	fi
-	rm /etc/rc.local
-	echo "<?php phpinfo(); ?>" > /www/phpinfo.php
-	echo "exit 0" > /etc/rc.local
-EOF
+		if [ ! -f /root/openWRT23_install.sh ]
+			then
+        			rm /www/index.html
+	  			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh & wait
+				wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/
+	  			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /www/
+			else
+				rm /root/*.sh
+		fi
+		if [ ! -f /root/run ] 
+			then
+                		echo $(date) > /root/run
+                		exit 0
+		fi
+		rm /etc/rc.local
+		echo "<?php phpinfo(); ?>" > /www/phpinfo.php
+		echo "exit 0" > /etc/rc.local
+	EOF
 exit 0
 </code></pre>
   Then press <code>Request Build</code>.<br><br>
