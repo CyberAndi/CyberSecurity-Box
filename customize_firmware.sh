@@ -301,8 +301,6 @@ uci set uhttpd.main.network_timeout='30'
 uci set uhttpd.main.http_keepalive='20'
 uci set uhttpd.main.tcp_keepalive='1'
 uci set uhttpd.main.ubus_prefix='/ubus'
-uci set uhttpd.main.listen_http='0.0.0.0:80' '[::]:80'
-uci set uhttpd.main.listen_https='0.0.0.0:8443' '[::]:8443'
 uci set uhttpd.main.index_page='index.php'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 processes=$(uci commit && reload_config)
