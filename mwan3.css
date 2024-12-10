@@ -1,1 +1,1 @@
-#mwan3-service-status > .alert-message{display:inline-block;width:12rem;height:6rem;vertical-align:middle;margin:1rem;padding:1rem}
+#mwan3-service-status > .alert-message{display:inline-block;width:calc(25% - 2rem);height:6rem;vertical-align:middle;margin:1rem;padding:1rem}
