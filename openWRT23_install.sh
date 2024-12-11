@@ -1562,7 +1562,7 @@ if [ ! -f "$FILE" ]
 fi
 */
 
-FILE1=/www/luci-static/resources/view/dashboard/css/c*.css
+FILE1=/www/luci-static/resources/view/status/include/90_system.js
 if [ ! -f "$FILE" ]
 	then
 		mv /www/luci-static/resources/view/status/include/*_dsl.js /www/luci-static/resources/view/status/include/10_dsl.js
