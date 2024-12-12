@@ -64,32 +64,36 @@ exit 0
 [newpassword]
 [newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>. Now go to the <a href="#afterreboot">Network-Overview </a>.
-<br><br><details>
+<br><br>
+<details>
   <summary>If you didn´t insert the <code>Script to run on first boot (uci-defaults)</code> then download the Installscript.  (For more Informations open here). </summary> It starts automatically.
-Else skip this Part and go to <a href="#afterreboot">Network-Overview </a>.<br><br>
+  Else skip this Part and go to <a href="#afterreboot">Network-Overview </a>.<br><br>
   for OpenWRT Version 23.x.xx<br><br>
-  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/ CyberSecurity-Box/openWRT23_install.sh && sh openWRT23_install.sh</code></pre>
+  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh && sh openWRT23_install.sh
+  </code></pre>
   <br>
   for OpenWRT Version 22.x.xx<br><br>
-  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/ CyberSecurity-Box/openWRT22_install.sh && sh openWRT22_install.sh</code></pre>
+  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT22_install.sh && sh openWRT22_install.sh
+  </code></pre>
   <br>
   for OpenWRT Version 21.x.xx<br><br>
-  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/ CyberSecurity-Box/openWRT21_install.sh && sh openWRT21_install.sh</code></pre>
+  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT21_install.sh && sh openWRT21_install.sh
+  </code></pre>
   <br>
   for OpenWRT Version 19.x.xx<br><br>
-  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/ CyberSecurity-Box/openWRT19_install.sh && sh openWRT19_install.sh</code></pre>
+  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT19_install.sh && sh openWRT19_install.sh
+  </code></pre>
   <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
- <p><p>
+  <p><p>
   <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" width="50%"></img>
-  </code>
-  </details>
+</details>
 </li>
 <h3><li id="afterreboot">
    After the reboot you will have following Networks: </h3>
-    <ul>
+  <ul>
     <li><b>REPEATER</b> for internal Communication between Router and Repeater for all of this Networks</li>
-      <li><b>VOICE</b> for Amazon Alexa, Google Assistent or other Voice Assistent-Systems</li>
-  <li><b>CONTROL</b> for IR/RF-Controlling like Logitech Harmony, Broadlink etc. </li> 
+    <li><b>VOICE</b> for Amazon Alexa, Google Assistent or other Voice Assistent-Systems</li>
+    <li><b>CONTROL</b> for IR/RF-Controlling like Logitech Harmony, Broadlink etc. </li> 
     <li><b>HCONTROL</b> for Homeautomation or Smarthome (Heating, Cooling, Dor-, Window-Contacts, Power-Switches etc.)</li>
     <li><b>ENTERTAIN</b> for TVs, PlayStation, X-Box, Mediaplayer, DVD-Player and BlueRay-Player etc.</li>
     <li><b>DMZ</b> for NAS, Network Storage, PLEX-Server, UPNP/DLNA-Servers, Database-Servers, Mail-Server and Web-Server etc.</li>
