@@ -2974,6 +2974,7 @@ cite::after {
 
 main .containerOverlay .Overlay.Book {
 	margin: var(--calcHeaderHeight) var(--centerMargin) var(--centerMargin) !important;
+        max-width: 1024px;
 	overflow-y: var(--overflowScroll) !important;
 }
 
