@@ -148,7 +148,7 @@ if [ ! -f "$FILE" ]
     		wait $process
 		process_rm=$(rm /root/openWRT23_install.sh)
     		wait $process_rm
-	  	processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh -P /root/)
+	  	processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh -O /root/openWRT23_install.sh)
     		wait $processes1
 	  	processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
     		wait $processes2
