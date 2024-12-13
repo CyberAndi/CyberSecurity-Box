@@ -242,17 +242,23 @@ if [ ! -f "$FILE" ]
 		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 			then
 				processes=$(rm /www/luci-static/bootstrap/c*.css)
-    				wait $processes
+    			wait $processes
 		fi
 
 		if [ "$(ls /www/luci-static/resources/view/dashboard/css/c*.css)" != "" ]
 			then
 				processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
-    				wait $processes
+    			wait $processes
 		fi
 		#process=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
     	#wait $process
-		
+
+		if [ "$(ls /www/luci-static/bootstrap/logo.svg)" != "" ]
+			then
+				processes=$(rm /www/luci-static/bootstrap/logo*.*)
+    			wait $processes
+		fi
+
 		process=$(check_download "https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh" "f9a60bb40fe8cc535e3d1a321b52cb2c76eaa80ffbf4884e43eeb0f7b910a2d2" "openWRT23_install.sh")
 		wait $process
 		process1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/logo.svg -P /www/)
