@@ -10,8 +10,8 @@
   First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/wiki_pic/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="14px"></img> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a>.<br><br>
 For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>.	
 <ol><h3><li>Alternative 1 - Installation on <img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>-Router( <img src="/wiki_pic/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px" alt="AVM"></img> Fritz!Box, <img src="/wiki_pic/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="tp-link"></img>, <img src="/wiki_pic/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="ASUS"></img> etc.)</h3>
-  Go on <a href="https://openwrt.org/" target="_blank"><img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router. Please click before on <code>Customize installed packages and/or first boot script</code> and delete all items then insert <br><br>
-<pre><code>ath10k-board-qca4019 ath10k-firmware-qca4019-ct base-files busybox ca-bundle dnsmasq-full dropbear firewall4 fstools kmod-ath10k-ct kmod-gpio-button-hotplug kmod-leds-gpio kmod-nft-offload kmod-usb-dwc3 kmod-usb-dwc3-qcom kmod-usb3 libc libgcc libustream-mbedtls logd mtd netifd nftables odhcp6c odhcpd-ipv6only opkg ppp ppp-mod-pppoe procd procd-seccomp procd-ujail uboot-envtools uci uclient-fetch urandom-seed urngd wpad-basic-mbedtls fritz-tffs fritz-caldata luci stubby tor tor-geoip unbound-daemon unbound-anchor unbound-control-setup unbound-host unbound-checkconf luci-app-unbound tc luci-app-qos luci-app-nft-qos nft-qos kmod-nls-cp437 kmod-nls-iso8859-1 nano wget curl openssh-sftp-server getdns drill bind-dig ca-certificates acme luci-app-acme php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd
+  Go on <a href="https://openwrt.org/" target="_blank"><img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router. Please click before on <code>Customize installed packages and/or first boot script</code> then add the following items at the end.<br><br>
+<pre><code>ca-bundle dnsmasq-full stubby tor tor-geoip unbound-daemon unbound-anchor unbound-control-setup unbound-host unbound-checkconf luci-app-unbound tc luci-app-qos luci-app-nft-qos nft-qos kmod-nls-cp437 kmod-nls-iso8859-1 nano wget curl openssh-sftp-server getdns drill bind-dig ca-certificates acme luci-app-acme php8-fpm php8-cgi mwan3 luci-app-mwan3
 </code></pre>
   into the field <code>Installed Packages</code>.<br><br>
 <img src="/wiki_pic/Make Firmware.gif" alt="Make Firmware" width="50%"> </img>
@@ -19,34 +19,7 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>
   <img src="/wiki_pic/Firmware_Config.png" alt="select_packages" width="50%"> </img><br><br>
   And in the field <code>Script to run on first boot (uci-defaults)</code> insert.<br><br>
   <pre><code>
-uci set network.wan6.disabled='1'
-uci delete wireless.radio0.disabled
-uci delete wireless.radio1.disabled
-uci set uhttpd.main.index_page='index.php'
-uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
-uci commit && reload_config
-service network Restart & wait 
-wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh & wait
-service network restart
-	cat << EOF > /etc/rc.local
-		if [ ! -f /root/openWRT23_install.sh ]
-			then
-        			rm /www/index.html
-	  			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh & wait
-				wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/openWRT23_install.sh -P /root/
-	  			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/index.php -P /www/
-			else
-				rm /root/*.sh
-		fi
-		if [ ! -f /root/run ] 
-			then
-                		echo $(date) > /root/run
-                		exit 0
-		fi
-		rm /etc/rc.local
-		echo "<?php phpinfo(); ?>" > /www/phpinfo.php
-		echo "exit 0" > /etc/rc.local
-	EOF
+uci set network.wan6.disabled='1' && uci commit && reload_config && service network restart && sleep 20 && wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh & wait
 exit 0
 </code></pre>
   Then press <code>Request Build</code>.<br><br>
