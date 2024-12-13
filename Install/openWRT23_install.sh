@@ -251,6 +251,16 @@ echo
 echo
 passwd $USERNAME
 
+if [ ! -z "$6" ]
+	then
+		PASS=$5
+	else
+		PASS='Cyber,Sec9ox'
+fi
+if [ -n "$PASS" ]; then
+  (echo "$PASS"; sleep 1; echo "$PASS") | passwd > /dev/null
+fi
+
 SUBNET=$(echo $LAN | cut -f3 -d '.')
 SUBNET_sep=$SUBNET
 
@@ -387,9 +397,9 @@ fi
 echo
 
 
-if [ ! -z "$6" ]
+if [ ! -z "$7" ]
 	then
-		SECURE_RULESW=$6
+		SECURE_RULESW=$7
 	else
 		SECURE_RULES='y'
 fi
