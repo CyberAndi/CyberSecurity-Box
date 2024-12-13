@@ -8,9 +8,6 @@ $IP = $Domain = $SSID = $WKey = "";
 <head>
     <base href="/">
     <link rel="stylesheet" href="/luci-static/bootstrap-dark/cascade.css">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
     <meta http-equiv="Expires" content="Thu, 01 Jan 1970 00:00:00 GMT" />
     <link rel="preload" href="/luci-static/bootstrap-dark/cascade.css">
     <link rel="preload" href="/luci-static/bootstrap/OCRAStd.woff" as="font">
@@ -382,7 +379,8 @@ $IP = $Domain = $SSID = $WKey = "";
 						$Domain = $_POST['Domain'];
 						$SSID = $_POST['SSID'];
 						$WKey = $_POST['WKey'];
-	
+						$PASS = $_POST['PASS'];
+
 						if (empty($IP)) {
 					    		$IP = "192.168.1.1";
  					 	} else {
@@ -418,14 +416,22 @@ $IP = $Domain = $SSID = $WKey = "";
 							}
 						}
 						$WKey = (string)$WKey;
-
+						
+						if (empty($PASS)) {
+							$PASS = "Cyber,Sec9ox";
+						} else {
+							if (!preg_match("/^[0-9a-zA-Z\.'\-\@,]*$/",$PASS)) {
+								  echo"<script> alert('Wrong Password: Only Numbers, Letters and Points allowed.');</script>";
+							}
+					    	}
+					    	$PASS = (string)$PASS;
 						$GW = exec("echo $(ip route | grep default | cut -f3  -d ' ')");
 						$GW = (string)$GW;
 						$output = '';
 						echo '<p>I will use the following settings:<br> IP: ' . $IP . '<br>Domain: ' . $Domain . '<br>WLAN: ' . $SSID . '<br>Key: ' . $WKey . '</p>'; 
 						echo '<p>Then you can reach the Router under: <a id="lnk" href="https://' . $IP . ':8443/cgi-bin/luci">https://' . $IP . ':8443' . '/cgi-bin/luci/</a></p>';
 						echo '<p>Please wait until the configuration is complete. This may take up to 20 minutes. After then you can login with root and your Password. </p><p>';
-						exec("sh /root/openWRT23_install.sh $GW $IP $Domain $SSID $WKey", $output); 
+						exec("sh /root/openWRT23_install.sh $GW $IP $Domain $SSID $WKey $PASS", $output); 
 						foreach ($output as $line) {
  							/* echo $line . "\n"; */
 						};	
