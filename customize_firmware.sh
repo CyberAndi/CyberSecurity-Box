@@ -17,7 +17,7 @@ target=${target:1}
 
 check_hash() {
     local file=$1
-    echo "$EXPECTED_HASH  $file" | sha256sum -c --quiet
+    echo "$EXPECTED_HASH  $file" | sha256sum -c
 }
 
 check_download() {
@@ -187,7 +187,7 @@ if [ ! -f "$FILE" ]
     		wait $process
 		process_rm=$(rm /root/openWRT23_install.sh)
     		wait $process_rm
-	  	processes1=$(check_download();)
+	  	processes1=$(check_download())
     		wait $processes1
 	  	processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
     		wait $processes2

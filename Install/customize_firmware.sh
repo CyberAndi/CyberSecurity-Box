@@ -14,6 +14,42 @@ target=${target::-1}
 architecture=${architecture:1}
 target=${target:1}
 
+
+check_hash() {
+    local file=$1
+    echo "$EXPECTED_HASH  $file" | sha256sum -c
+}
+
+check_download() {
+URL="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh"
+EXPECTED_HASH="f9a60bb40fe8cc535e3d1a321b52cb2c76eaa80ffbf4884e43eeb0f7b910a2d2"
+OUTPUT_FILE="openWRT23_install.sh"
+TRIES=5
+WAIT_TIME=10
+
+
+    wget -O "/root/$OUTPUT_FILE" "$URL"
+    
+    if [[ $? -eq 0 ]]; then
+        if check_hash "$OUTPUT_FILE"; then
+            echo "Hash is okay"
+            break
+        else
+            echo "Hash-Error"
+            rm -f "$OUTPUT_FILE"
+        fi
+    else
+        echo "Download error. Wait $WAIT_TIME Sekonds before retrie..."
+    fi
+    
+    sleep $WAIT_TIME
+    
+    if [[ $i -eq $TRIES ]]; then
+        echo "error max tries"
+    fi
+
+}
+
 customize_firmware() {
 FILE=/www/luci-static/resources/view/dashboard/css/c*.css
 if [ ! -f "$FILE" ]
@@ -144,11 +180,14 @@ if [ ! -f "$FILE" ]
     				wait $processes
 		fi
 
+
+
+
 		process=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh -P /root/)
     		wait $process
 		process_rm=$(rm /root/openWRT23_install.sh)
     		wait $process_rm
-	  	processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh -O /root/openWRT23_install.sh)
+	  	processes1=$(check_download())
     		wait $processes1
 	  	processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
     		wait $processes2
