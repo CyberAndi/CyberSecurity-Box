@@ -377,7 +377,7 @@ $IP = $Domain = $SSID = $WKey = "";
 		read('Domain');
 		read('SSID');
 		read('WKey');
-		read('PW');
+		read('PASS');
 	}
 
 	function next() {
@@ -412,7 +412,7 @@ $IP = $Domain = $SSID = $WKey = "";
 			case 'User':
 				vUser = 'root' ;
 				break;
-			case 'PW':
+			case 'PASS':
 				vPW = '' ;
 				break;
 			default:
@@ -439,7 +439,7 @@ $IP = $Domain = $SSID = $WKey = "";
 				vUser = document.getElementById(field_id).value ;
 				break;
 			
-			case 'PW':
+			case 'PASS':
 				vPW = document.getElementById(field_id).value ;
 				break;
 			default:
@@ -491,7 +491,7 @@ $IP = $Domain = $SSID = $WKey = "";
 						</p>
 					</div>
 					<div class="Messanger">
-						<p>User-Password? <input type="text" id="PW" name="PW" placeholder=""></input>.
+						<p>User-Password? <input type="text" id="PASS" name="PASS" placeholder="Cyber,Sec9ox"></input>.
 						</p>
 					</div>
 					<div class="Messanger">
