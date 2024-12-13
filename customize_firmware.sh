@@ -14,10 +14,110 @@ target=${target::-1}
 architecture=${architecture:1}
 target=${target:1}
 
+LOCALADDRESS="127.192.0.1/10"
+
+actLoop=$(ifconfig | grep '^l\w*' -m 1 | cut -f1 -d ' ')
+actEth=$(ifconfig | grep '^e\w*' -m 1 | cut -f1 -d ' ')
+actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
+
+#Internet Gateway
+if [ ! -z "$1" ]  
+	then
+		INET_GW=$1
+	else
+		INET_GW=$(ip route | grep default | cut -f3  -d ' ')
+fi
+INET_GW_org=$INET_GW
+echo
+read -p 'Please give me the WAN-IP (Gateway/Router): ['$INET_GW'] ' INET_GW
+echo
+if [ "$INET_GW" = "" ]
+	then
+		INET_GW=$INET_GW_org
+fi
+
+WAN_ip=$(echo $INET_GW | cut -f1 -d '.')
+WAN_ip=$WAN_ip'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_ip=$WAN_ip'.'$(echo $INET_GW | cut -f3 -d '.')'.250'
+
+WAN_broadcast=$(echo $INET_GW | cut -f1 -d '.')
+WAN_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f3 -d '.')'.255'
+
+WAN_MOBILE_ip=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_ip=$WAN_ip'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_ip=$WAN_ip'.'$(echo $INET_GW | cut -f3 -d '.')'.251'
+
+WAN_MOBILE_broadcast=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f3 -d '.')'.255'
+
+WAN_MOBILE_GW=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_GW=$WAN_ip'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_GW=$WAN_ip'.'$(echo $INET_GW | cut -f3 -d '.')'.253'
+
+
+#complet Internet
+Internet="0.0.0.0/0"
+
+#all Adresses
+all_IP="0.0.0.0"
+all_IP6="[::]"
+
+#Access to Server
+ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' )
+
+#Lokal LAN
+if [ ! -z "$2" ]
+	then
+		LAN=$2
+	else
+		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep 'inet ' | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' )
+fi
+
+IPv6=""
+IPv6=$(echo $(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' ) | cut -c 5-6)
+
+if [ "$IPv6" = "::" ]
+	then
+		LAN=''
+fi
+
+if [ "$LAN" = "" ]
+        then
+                LAN='192.168.1.1'
+fi
+
+LAN_org=$LAN
+
+read -p 'Type the LAN-IP (Internal Network): ['$( echo $LAN )'] ' LAN
+if [ "$LAN" = "" ]
+        then
+                LAN=$LAN_org
+fi
 
 check_hash() {
     local file=$1
     echo "$EXPECTED_HASH  $file" | sha256sum -c
+}
+
+check_download()  {
+local URL=$1
+local EXPECTED_HASH=$2
+local OUTPUT_FILE=$3
+
+wget --waitretry=10 -t 5 -O "/root/$OUTPUT_FILE" "$URL"
+    
+if [[ $? -eq 0 ]]; then
+    if check_hash "$OUTPUT_FILE"; then
+        echo "Hash is okay"
+        break
+    else
+       # echo "Hash-Error"
+        rm -f "$OUTPUT_FILE"
+    fi
+fi
+    
 }
 
 customize_firmware() {
@@ -135,7 +235,7 @@ EOF
 
 datum=$(date +"%y%d%m%H%M")
 echo $datum
-sleep 20
+sleep 30
 FILE=/www/luci-static/bootstrap/OCR-A.ttf
 if [ ! -f "$FILE" ] 
 	then
@@ -150,25 +250,33 @@ if [ ! -f "$FILE" ]
 				processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
     				wait $processes
 		fi
-		process=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
-    		wait $process
-	  	processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
-    		wait $processes2
- 		processes3=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/)
-		wait $processes3
-		processes4=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
-		wait $processes4
-		processes5=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberSecurity-Box.svg -P /www/luci-static/bootstrap/)
-		wait $processes5
-		processes6=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberAndi.svg -P /www/luci-static/bootstrap/)
-		wait $processes6
-		processes7=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/cascade.css -P /www/luci-static/bootstrap/)
-		wait $processes7
-		processes8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/OCR-A.ttf -P /www/luci-static/bootstrap/)
-		wait $processes8
-		processes9=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/OCR-A.woff -P /www/luci-static/bootstrap/)
-		wait $processes9
-
+		#process=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
+    		#wait $process
+		
+		process=$(check_download "https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh" "f9a60bb40fe8cc535e3d1a321b52cb2c76eaa80ffbf4884e43eeb0f7b910a2d2" "openWRT23_install.sh")
+		wait $process
+		process1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/logo.svg -P /www/)
+    		wait $process1
+	  	process2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
+    		wait $process2
+ 		process3=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/)
+		wait $process3
+		process4=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
+		wait $process4
+		process5=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberSecurity-Box.svg -P /www/luci-static/bootstrap/)
+		wait $process5
+		process6=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberAndi.svg -P /www/luci-static/bootstrap/)
+		wait $process6
+		process7=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/cascade.css -P /www/luci-static/bootstrap/)
+		wait $process7
+		process8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/OCR-A.ttf -P /www/luci-static/bootstrap/)
+		wait $process8
+		process9=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/OCR-A.woff -P /www/luci-static/bootstrap/)
+		wait $process9
+		process10=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/logo.svg -P /www/luci-static/bootstrap/)
+		wait $process10
+		process11=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/logo_48.png -P /www/luci-static/bootstrap/)
+		wait $process11
 fi
 
 FILE1=/www/luci-static/resources/view/dashboard/css/c*.css
