@@ -6,8 +6,12 @@ $IP = $Domain = $SSID = $WKey = "";
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <base href="/">
+<base href="/">
     <link rel="stylesheet" href="/luci-static/bootstrap-dark/cascade.css">
+	<link rel="icon" type="image/x-icon" href="logo.svg">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <meta http-equiv="Expires" content="Thu, 01 Jan 1970 00:00:00 GMT" />
     <link rel="preload" href="/luci-static/bootstrap-dark/cascade.css">
     <link rel="preload" href="/luci-static/bootstrap/OCRAStd.woff" as="font">
