@@ -20,36 +20,6 @@ check_hash() {
     echo "$EXPECTED_HASH  $file" | sha256sum -c
 }
 
-check_download() {
-URL="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh"
-EXPECTED_HASH="f9a60bb40fe8cc535e3d1a321b52cb2c76eaa80ffbf4884e43eeb0f7b910a2d2"
-OUTPUT_FILE="openWRT23_install.sh"
-TRIES=5
-WAIT_TIME=10
-
-
-    wget -O "/root/$OUTPUT_FILE" "$URL"
-    
-    if [[ $? -eq 0 ]]; then
-        if check_hash "$OUTPUT_FILE"; then
-            echo "Hash is okay"
-            break
-        else
-            echo "Hash-Error"
-            rm -f "$OUTPUT_FILE"
-        fi
-    else
-        echo "Download error. Wait $WAIT_TIME Sekonds before retrie..."
-    fi
-    
-    sleep $WAIT_TIME
-    
-    if [[ $i -eq $TRIES ]]; then
-        echo "error max tries"
-    fi
-
-}
-
 customize_firmware() {
 FILE=/www/luci-static/resources/view/dashboard/css/c*.css
 if [ ! -f "$FILE" ]
@@ -95,6 +65,7 @@ uci set luci.diag.ping='cmovie.4lima.de'
 uci set luci.diag.route='brave.com'
 uci set luci.diag.dns='bible4u2lvhacg4b3to2e2veqpwmrc2c3tjf2wuuqiz332vlwmr4xbad.onion'
 uci set network.wan6.disabled='1'
+uci set wireless.default_radio0.ssid='CyberSec-Box'
 uci set uhttpd.main.index_page='index.php'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 processes=$(uci commit && reload_config)
