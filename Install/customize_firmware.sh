@@ -343,11 +343,12 @@ set_uhttpd >> install.log
 cat << EOF > /etc/rc.local
         if [ ! -f /root/openWRT23_install.sh ]
 		then
-        		rm /www/index.html
-			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh & wait
-			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh -P /root/
-	  		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/
+        		rm /www/index.html && sleep 20
+			# wget --waitretry=10 -t 5 -O /root/customize_firmware.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh && sh /root/customize_firmware.sh & wait
+			wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh
+			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/
+    		wait $process
 		else
 			rm /root/*.sh
 	fi
