@@ -707,7 +707,11 @@ view_config
 
 uninstall_cleanup() {
 	echo 'uninstall and cleanup at end'
+	echo 'uninstall and cleanup at end' >> install.log
 	rm /www/*.php -rv >> install.log
+	rm /www/*.php.* -rv >> install.log
+	rm /www/*.html -rv >> install.log
+	
 	opkg update >> install.log
 	opkg remove php* --force-removal-of-dependent-packages >> install.log
 	opkg update >> install.log
