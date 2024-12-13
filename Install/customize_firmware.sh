@@ -163,8 +163,8 @@ cat << EOF > /etc/sysupgrade.conf
 EOF
 
 datum=$(date +"%y%d%m%H%M")
-echo
-
+echo $datum
+sleep 20
 FILE=/www/luci-static/bootstrap/OCR-A.ttf
 if [ ! -f "$FILE" ] 
 	then
@@ -179,16 +179,8 @@ if [ ! -f "$FILE" ]
 				processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
     				wait $processes
 		fi
-
-
-
-
-		process=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh -P /root/)
+		process=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
     		wait $process
-		process_rm=$(rm /root/openWRT23_install.sh)
-    		wait $process_rm
-	  	processes1=$(check_download())
-    		wait $processes1
 	  	processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
     		wait $processes2
  		processes3=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/)
