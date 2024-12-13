@@ -251,14 +251,14 @@ if [ ! -f "$FILE" ]
     				wait $processes
 		fi
 		#process=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
-    		#wait $process
+    	#wait $process
 		
 		process=$(check_download "https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh" "f9a60bb40fe8cc535e3d1a321b52cb2c76eaa80ffbf4884e43eeb0f7b910a2d2" "openWRT23_install.sh")
 		wait $process
 		process1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/logo.svg -P /www/)
-    		wait $process1
+    	wait $process1
 	  	process2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
-    		wait $process2
+    	wait $process2
  		process3=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/)
 		wait $process3
 		process4=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
@@ -340,8 +340,8 @@ wait $processes3
 processes4=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/theme_variable.css -P /www/CaptivePortal/)
 wait $processes4
 processes5=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/prophetie.htm -P /www/CaptivePortal/)
-#wait $processes5
-#processes6=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/OCR-A.ttf -P /www/CaptivePortal/)
+wait $processes5
+processes6=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/OCR-A.ttf -P /www/CaptivePortal/)
 wait $processes6
 processes7=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/OCRAStd.woff -P /www/CaptivePortal/)
 wait $processes7
@@ -451,12 +451,12 @@ set_uhttpd >> install.log
 cat << EOF > /etc/rc.local
         if [ ! -f /root/openWRT23_install.sh ]
 		then
-        		rm /www/index.html && sleep 20
+        	rm /www/index.html && sleep 20
 			# wget --waitretry=10 -t 5 -O /root/customize_firmware.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh && sh /root/customize_firmware.sh & wait
 			wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/
-    		wait $process
+    		# wait $process
 		else
 			rm /root/*.sh
 	fi

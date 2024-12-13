@@ -253,7 +253,7 @@ passwd $USERNAME
 
 if [ ! -z "$6" ]
 	then
-		PASS=$5
+		PASS=$6
 	else
 		PASS='Cyber,Sec9ox'
 fi
@@ -549,7 +549,7 @@ if [ "$unbound_inst" = "" ]
 		if [ "$main_release" = "23" ]
   			then
   				echo $main_release
-      				opkg update >> install.log
+      			opkg update >> install.log
 				opkg install nano wget curl openssh-sftp-server getdns drill bind-dig --force-overwrite >> install.log
 				opkg update >> install.log
 				opkg install kmod-nls-cp437 kmod-nls-iso8859-1 --force-overwrite >> install.log
@@ -561,12 +561,12 @@ if [ "$unbound_inst" = "" ]
 				opkg install ca-certificates acme luci-app-acme acme-dnsapi --force-overwrite >> install.log
 				opkg update >> install.log
 				opkg install stubby tor tor-geoip dnsmasq-full --force-overwrite >> install.log
-    				opkg update >> install.log
+    			opkg update >> install.log
 				opkg install php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd --force-overwrite >> install.log
 			elif [ "$main_release" = "22" ]
    				then
-       					echo $main_release
-	    				opkg update >> install.log
+       				echo $main_release
+	    			opkg update >> install.log
 					opkg install nano wget curl openssh-sftp-server getdns drill bind-dig --force-overwrite >> install.log
 					opkg update >> install.log
 					opkg install kmod-nls-cp437 kmod-nls-iso8859-1 --force-overwrite >> install.log
@@ -593,7 +593,8 @@ if [ "$unbound_inst" = "" ]
    					opkg update >> install.log
    					opkg install stubby tor tor-geoip ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns --force-overwrite >> install.log
    					opkg update >> install.log
-   					opkg install mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >> install.log
+   					opkg install php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd --force-overwrite >> install.log
+					
 		fi
    		opkg update >> install.log
 	fi
@@ -684,7 +685,7 @@ fi
 if [ "$odhcpd_inst" != "" ] 
 	then
 		echo 'remove odhcpd-Packages' >> install.log
-  		opkg remove odhc* --force-removal-of-dependent-packages >> install.log
+  		opkg update >> install.log
 fi
 echo 'install opkg'
 
@@ -704,6 +705,22 @@ echo 'Software Packeges installed'
 view_config
 }
 
+uninstall_cleanup() {
+	echo 'uninstall and cleanup at end'
+	rm /www/*.php -rv >> install.log
+	opkg update >> install.log
+	opkg remove php* --force-removal-of-dependent-packages >> install.log
+	opkg update >> install.log
+	
+	uci del uhttpd.main.interpreter
+	uci del uhttpd.main.index_page
+	uci set uhttpd.main.index_page='index.htm'
+	processes=$(uci commit && reload_config)
+	wait $processes  >> install.log
+	/etc/init.d/uhttpd restart  >> install.log
+
+	opkg remove luci-app-uhttpd >> install.log
+}
 
 install_adguard() {
 #opkg update && opkg install wget
@@ -1502,7 +1519,7 @@ cat << EOF > /etc/device_info
 DEVICE_MANUFACTURER='@CyberAndi'
 DEVICE_MANUFACTURER_URL='https://cyberandi.tumblr.com/'
 DEVICE_PRODUCT='CyberSecurity-Box'
-DEVICE_REVISION='v0.78'
+DEVICE_REVISION='v0.90'
 
 EOF
 
@@ -1535,11 +1552,11 @@ echo
 echo 'Sichere alte Konfiguration'
 #iptables-save > rules.v4_old_$datum.bkp
 
+sleep 30
 FILE=/www/luci-static/bootstrap/OCR-A.ttf
-/*
-if [ ! -f "$FILE" ] 
-	then
-*/
+#if [ ! -f "$FILE" ] 
+#	then
+
   		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 			then
 				processes=$(rm /www/luci-static/bootstrap/c*.css)
@@ -1552,6 +1569,8 @@ if [ ! -f "$FILE" ]
 		fi
 
 		wait $processes
+		process1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/logo.svg -P /www/)
+		wait $process1
   		processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
 		wait $processes1
   		processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/)
@@ -1568,9 +1587,7 @@ if [ ! -f "$FILE" ]
 		wait $processes7
 		processes8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/OCR-A.woff -P /www/luci-static/bootstrap/)
 		wait $processes8
-/*
-fi
-*/
+# fi
 
 FILE1=/www/luci-static/resources/view/status/include/90_system.js
 if [ ! -f "$FILE" ]
@@ -1708,8 +1725,30 @@ uci set uhttpd.defaults.bits='2048'
 uci set uhttpd.defaults.ec_curve='P-256'
 uci set uhttpd.defaults.country='DE'
 uci set uhttpd.defaults.location='DMZ'
-uci set uhttpd.defaults.commonname='192.168.1.1'
+uci set uhttpd.defaults.commonname='$LAN_domain'
 uci set uhttpd.defaults.state='Unknown'
+}
+
+set_uhttpd_() {
+uci set uhttpd.main=uhttpd
+uci set uhttpd.main.redirect_https='1'
+uci set uhttpd.main.home='/www'
+uci set uhttpd.main.rfc1918_filter='1'
+uci set uhttpd.main.max_requests='3'
+uci set uhttpd.main.max_connections='100'
+uci set uhttpd.main.cert='/etc/uhttpd.crt'
+uci set uhttpd.main.key='/etc/uhttpd.key'
+uci set uhttpd.main.cgi_prefix='/cgi-bin'
+uci set uhttpd.main.lua_prefix='/cgi-bin/luci=/usr/lib/lua/luci/sgi/uhttpd.lua'
+uci set uhttpd.main.script_timeout='60'
+uci set uhttpd.main.network_timeout='30'
+uci set uhttpd.main.http_keepalive='20'
+uci set uhttpd.main.tcp_keepalive='1'
+uci set uhttpd.main.ubus_prefix='/ubus'
+uci set uhttpd.main.index_page='index.php'
+uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
+processes=$(uci commit && reload_config)
+wait $processes  >> install.log
 }
 
 create_bridge_ports() {
@@ -11094,6 +11133,10 @@ server=/ix.de/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/ix.nflxvideo.net/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/ix.nflxvideo.net/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 
+server=/proton.mail/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
+server=/protonmail.me/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
+server=/proton.me/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
+
 server=/joyn.de/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/api.segment.io/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/seventv.com/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
@@ -11943,6 +11986,9 @@ local-zone: "pionieer.com" transparent
 local-zone: "play.google.com" transparent
 local-zone: "playstation.com" transparent
 local-zone: "prosieben.de" transparent
+local-zone: "proton.mail" transparent
+local-zone: "protonmail.me" transparent
+local-zone: "proton.me" transparent
 local-zone: "ps3.com" transparent
 local-zone: "pubsub.pubnub.com" transparent
 local-zone: "pubnub.com" transparent
@@ -25138,8 +25184,8 @@ if [ ! -z $1 ]
    		echo >> install.log
    		echo $1 >> install.log
    		echo $2 >> install.log
-     		echo $3 >> install.log
-       		echo $4 >> install.log
+   		echo $3 >> install.log
+   		echo $4 >> install.log
 	 	echo $5 >> install.log
    		echo $6 >> install.log
    		echo $7 >> install.log
@@ -25322,6 +25368,8 @@ echo $(dig www.test.de -p53 @127.0.0.1) >> install.log
 echo
 echo 'crash	:' >> install.log
 echo $(logread | grep 'dnsmasq' | grep 'crash') >> install.log
+
+uninstall_cleanup >> install.log
 
 echo
 echo >> install.log
