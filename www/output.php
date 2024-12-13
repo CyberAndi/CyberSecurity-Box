@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: text/html; charset=utf-8");
-$IP = $Domain = $SSID = $WKey = "";
+$IP = $Domain = $SSID = $WKey = $PASS = "";
 ?>
 
 <!DOCTYPE html>
