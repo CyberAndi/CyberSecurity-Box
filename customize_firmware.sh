@@ -308,15 +308,15 @@ echo
 
 create_hotspot(){
 	FILE=/www/CaptivePortal/pic
- 	uci set wireless.radio0=wifi-device
+ uci set wireless.radio0=wifi-device
 	uci set wireless.radio0.type='mac80211'
 	uci set wireless.radio0.path='platform/soc/a000000.wifi'
 	uci set wireless.radio0.htmode='HT20'
 	uci set wireless.radio0.country='DE'
 	uci set wireless.radio0.channel='auto'
 	uci set wireless.radio0.hwmode='11n'
- 	uci delete wireless.radio0.disabled >> install.log
-  	processes=$(uci commit && reload_config)
+ uci delete wireless.radio0.disabled >> install.log
+ processes=$(uci commit && reload_config)
 	wait $processes  >> install.log
 	if [ ! -d "$FILE" ]
 		then
@@ -455,24 +455,24 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd' >> install.log
 set_uhttpd >> install.log
 
 cat << EOF > /etc/rc.local
-    if [ ! -f /root/openWRT23_install.sh ] 
+	if [ ! -f /root/openWRT23_install.sh ] 
 		then
-        		rm /www/index.html && sleep 20
-				if [ ! -f /root/customize_firmware.sh ] 
+			rm /www/index.html && sleep 20
+			if [ ! -f /root/customize_firmware.sh ] 
 					then
 						wget --waitretry=10 -t 5 -O /root/customize_firmware.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh && sh /root/customize_firmware.sh & wait
-				fi
-				wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh
-				wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/
-				wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/
+			fi
+			wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh
+			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/
+			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/
 		else
-				rm /root/*.sh
-				rm /root/*.sh.*
+			rm /root/*.sh
+			rm /root/*.sh.*
 	fi
 	if [ ! -f /root/run ] 
 		then
 			echo $(date) > /root/run
-                	exit 0
+			exit 0
 	fi
 	rm /etc/rc.local
 	echo "" > /www/phpinfo.php
