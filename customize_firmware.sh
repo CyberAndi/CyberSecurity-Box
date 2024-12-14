@@ -455,16 +455,19 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd' >> install.log
 set_uhttpd >> install.log
 
 cat << EOF > /etc/rc.local
-        if [ ! -f /root/openWRT23_install.sh ]
+    if [ ! -f /root/openWRT23_install.sh ] 
 		then
-        	rm /www/index.html && sleep 20
-			# wget --waitretry=10 -t 5 -O /root/customize_firmware.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh && sh /root/customize_firmware.sh & wait
-			wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh
-			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/
-			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/
-    		# wait $process
+        		rm /www/index.html && sleep 20
+				if [ ! -f /root/customize_firmware.sh ] 
+					then
+						wget --waitretry=10 -t 5 -O /root/customize_firmware.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh && sh /root/customize_firmware.sh & wait
+				fi
+				wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh
+				wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/
+				wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/
 		else
-			rm /root/*.sh
+				rm /root/*.sh
+				rm /root/*.sh.*
 	fi
 	if [ ! -f /root/run ] 
 		then
