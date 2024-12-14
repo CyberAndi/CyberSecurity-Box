@@ -166,6 +166,7 @@ uci set luci.diag.route='brave.com'
 uci set luci.diag.dns='bible4u2lvhacg4b3to2e2veqpwmrc2c3tjf2wuuqiz332vlwmr4xbad.onion'
 uci set network.wan6.disabled='1'
 uci set wireless.default_radio0.ssid='CyberSec-Box'
+uci set wireless.default_radio1.ssid='CyberSec-Box'
 uci set uhttpd.main.index_page='index.php'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 processes=$(uci commit && reload_config)
