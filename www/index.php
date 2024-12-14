@@ -11,14 +11,14 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 	<link rel="icon" href="/luci-static/bootstrap/logo_48.png" sizes="48x48">
 	<link rel="icon" href="/luci-static/bootstrap/logo.svg" sizes="any">
 	<link rel="icon" href="logo.svg" sizes="any">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <meta http-equiv="Expires" content="Thu, 01 Jan 1970 00:00:00 GMT" />
-    <link rel="preload" href="/luci-static/bootstrap-dark/cascade.css">
-    <link rel="preload" href="/luci-static/bootstrap/OCRAStd.woff" as="font">
-    <link rel="preload" href="/luci-static/bootstrap/CyberSecurity-Box.svg">
-    <link rel="preload" href="/luci-static/bootstrap/CyberAndi.svg">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<meta http-equiv="Expires" content="Thu, 01 Jan 1970 00:00:00 GMT" />
+	<link rel="preload" href="/luci-static/bootstrap-dark/cascade.css">
+	<link rel="preload" href="/luci-static/bootstrap/OCRAStd.woff" as="font">
+	<link rel="preload" href="/luci-static/bootstrap/CyberSecurity-Box.svg">
+	<link rel="preload" href="/luci-static/bootstrap/CyberAndi.svg">
 
 	<style type="text/css">
 		@font-face {
@@ -374,8 +374,14 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 
     </style>
     <script>
-	
+	document.getElementById('next').ontouchstart = function() {
+		next();
+	};
 
+	document.getElementById('submitForm').ontouchstart = function() {
+		submitForm();
+	};
+    
 	function read_all() {
 		read('User');
 		read('IP');
@@ -475,7 +481,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 			<center id="Output">
 				<div class="Messanger" id="Hello">
 					<p>Hello, my name is @CyberAndi.<br> I will assist you through the router configuration process.
-					<button onclick="next()" ontouchstart="next()">Next</button>
+					<button onclick="next()" id="next">Next</button>
 					</p>
 				</div>
 				<form id="send" method="post" action="output.php">
@@ -501,7 +507,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 					</div>
 					<div class="Messanger">
 						<p>
-							<button type="submit" onclick="submitForm" ontouchstart="submitForm">Submit</button>
+							<button type="submit" onclick="submitForm" id="submitForm">Submit</button>
 						</p>
 					</div>
 				</form>
