@@ -538,31 +538,31 @@ opkg update >> install.log
 if [ "$(opkg list-upgradable)" != "" ]
 	then
 		echo 'upgrade installed Packages'
-  		opkg update --force-overwrite >> install.log
-  		opkg upgrade $(opkg list-upgradable | awk '{print $1}') --force-overwrite >> install.log
+  		opkg update >> install.log
+  		opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
 fi 
 echo 'check if installed'
 install_check #>> install.log
 opkg update >> install.log
 if [ "$unbound_inst" = "" ]
 	then
-		if [ "$main_release" = "23" ]
+		if [ "$main_release" -ge "23" ]
   			then
   				echo $main_release
       			opkg update >> install.log
-				opkg install nano wget curl openssh-sftp-server getdns drill bind-dig --force-overwrite >> install.log
+				opkg install nano wget curl openssh-sftp-server getdns drill bind-dig  >> install.log
 				opkg update >> install.log
-				opkg install kmod-nls-cp437 kmod-nls-iso8859-1 --force-overwrite >> install.log
+				opkg install kmod-nls-cp437 kmod-nls-iso8859-1 >> install.log
 				opkg update >> install.log
-				opkg install tc luci-app-qos luci-app-nft-qos nft-qos --force-overwrite >> install.log
+				opkg install tc luci-app-qos luci-app-nft-qos nft-qos  >> install.log
 				opkg update >> install.log
-				opkg install unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound --force-overwrite >> install.log
+				opkg install unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound  >> install.log
 				opkg update >> install.log
-				opkg install ca-certificates acme luci-app-acme acme-dnsapi --force-overwrite >> install.log
+				opkg install ca-certificates acme luci-app-acme acme-dnsapi >> install.log
 				opkg update >> install.log
-				opkg install stubby tor tor-geoip dnsmasq-full --force-overwrite >> install.log
+				opkg install stubby tor tor-geoip dnsmasq-full  >> install.log
     			opkg update >> install.log
-				opkg install php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd --force-overwrite >> install.log
+				opkg install php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd >> install.log
 			elif [ "$main_release" = "22" ]
    				then
        				echo $main_release
@@ -711,7 +711,9 @@ uninstall_cleanup() {
 	rm /www/*.php -rv >> install.log
 	rm /www/*.php.* -rv >> install.log
 	rm /www/*.html -rv >> install.log
-	
+	rm /root/*.sh -rv >> install.log
+	rm /root/*.sh.* -rv >> install.log
+
 	opkg update >> install.log
 	opkg remove php* --force-removal-of-dependent-packages >> install.log
 	opkg update >> install.log
