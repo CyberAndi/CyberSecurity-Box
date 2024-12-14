@@ -372,15 +372,30 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 			z-index: 900;
 		}
 
-    </style>
-    <script>
-	document.getElementById('next').ontouchstart = function() {
-		next();
-	};
+</style>
+<script>
 
-	document.getElementById('submitForm').ontouchstart = function() {
-		submitForm();
-	};
+var button = document.getElementById('next');
+
+button.addEventListener('touchstart', function(event) {
+    // Verhindert die Standardaktion und das Auslösen eines Mouse-Click
+    event.preventDefault();
+    alert('Button wurde berührt!');
+});
+
+button.addEventListener('click', function(event) {
+    alert('Button wurde geklickt!');
+});
+
+
+//document.getElementById('next').ontouchstart = function() {
+//		next();
+//	};
+
+//	document.getElementById('submitForm').ontouchstart = function() {
+//		submitForm();
+//	};
+
     
 	function read_all() {
 		read('User');
