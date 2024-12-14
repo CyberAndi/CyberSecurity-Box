@@ -6,7 +6,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <base href="/">
+	<base href="/">
 	<link rel="stylesheet" href="/luci-static/bootstrap-dark/cascade.css">
 	<link rel="icon" href="/luci-static/bootstrap/logo_48.png" sizes="48x48">
 	<link rel="icon" href="/luci-static/bootstrap/logo.svg" sizes="any">
@@ -374,6 +374,8 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 
     </style>
     <script>
+	
+
 	function read_all() {
 		read('User');
 		read('IP');
@@ -473,7 +475,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 			<center id="Output">
 				<div class="Messanger" id="Hello">
 					<p>Hello, my name is @CyberAndi.<br> I will assist you through the router configuration process.
-					<button onclick="next()">Next</button>
+					<button onclick="next()" ontouchstart="next()">Next</button>
 					</p>
 				</div>
 				<form id="send" method="post" action="output.php">
@@ -499,7 +501,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 					</div>
 					<div class="Messanger">
 						<p>
-							<button type="submit" onclick="submitForm">Submit</button>
+							<button type="submit" onclick="submitForm" ontouchstart="submitForm">Submit</button>
 						</p>
 					</div>
 				</form>
