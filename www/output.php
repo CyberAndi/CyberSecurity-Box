@@ -454,5 +454,42 @@ $IP = $Domain = $SSID = $WKey = $PASS = "";
 <div id="avatar"></div>
 <div id="modal_overlay"><div class="modal"></div></div>
 </body>
+<script>
+//touchsupport
+var submitbtn = document.getElementById('submit');
+var nextbtn = document.getElementById('next');
+var buttons = document.getElementsByClassName('button');
+
+/*nextbtn.addEventListener('touchstart', function(e) {
+   
+});
+
+nextbtn.addEventListener('touchend', function(e) {
+   
+});
+
+nextbtn.addEventListener('touchmove', function(e) {
+   
+});
+
+nextbtn.addEventListener('mousedown', function(e) {
+   
+});
+
+nextbtn.addEventListener('mouseup', function(e) {
+   
+});
+nextbtn.addEventListener('mousemove', function(e) {
+   
+});*/
+
+nextbtn.addEventListener('touchend', function(e) {
+    
+});
+
+submitbtn.addEventListener('touchend', function(e) {
+    
+});
+</script>
 </html>
 </php>
