@@ -374,28 +374,6 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 
 </style>
 <script>
-
-var button = document.getElementById('next');
-
-button.addEventListener('touchstart', function(event) {
-    // Verhindert die Standardaktion und das Auslösen eines Mouse-Click
-    event.preventDefault();
-    alert('Button wurde berührt!');
-});
-
-button.addEventListener('click', function(event) {
-    alert('Button wurde geklickt!');
-});
-
-
-//document.getElementById('next').ontouchstart = function() {
-//		next();
-//	};
-
-//	document.getElementById('submitForm').ontouchstart = function() {
-//		submitForm();
-//	};
-
     
 	function read_all() {
 		read('User');
@@ -496,7 +474,7 @@ button.addEventListener('click', function(event) {
 			<center id="Output">
 				<div class="Messanger" id="Hello">
 					<p>Hello, my name is @CyberAndi.<br> I will assist you through the router configuration process.
-					<button onclick="next()" id="next">Next</button>
+					<div id="next">Next</div>
 					</p>
 				</div>
 				<form id="send" method="post" action="output.php">
@@ -522,7 +500,7 @@ button.addEventListener('click', function(event) {
 					</div>
 					<div class="Messanger">
 						<p>
-							<button type="submit" onclick="submitForm" id="submitForm">Submit</button>
+							<div type="submit" onclick="submitForm" id="submitForm">Submit</div>
 						</p>
 					</div>
 				</form>
@@ -533,5 +511,42 @@ button.addEventListener('click', function(event) {
 <div id="avatar"></div>
 <div id="modal_overlay"><div class="modal"></div></div>
 </body>
+<script>
+//touchsupport
+var submitbtn = document.getElementById('submit');
+var nextbtn = document.getElementById('next');
+var buttons = document.getElementsByClassName('button');
+
+/*nextbtn.addEventListener('touchstart', function(e) {
+   
+});
+
+nextbtn.addEventListener('touchend', function(e) {
+   
+});
+
+nextbtn.addEventListener('touchmove', function(e) {
+   
+});
+
+nextbtn.addEventListener('mousedown', function(e) {
+   
+});
+
+nextbtn.addEventListener('mouseup', function(e) {
+   
+});
+nextbtn.addEventListener('mousemove', function(e) {
+   
+});*/
+
+nextbtn.addEventListener('touchend', function(e) {
+    
+});
+
+submitbtn.addEventListener('touchend', function(e) {
+    
+});
+</script>
 </html>
 </php>
