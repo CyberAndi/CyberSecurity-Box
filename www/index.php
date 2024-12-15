@@ -458,11 +458,11 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 	}
 
 	function submitForm() {
-		alert('ok');
+		
 		document.getElementById('send').submit();
-		document.getElementById('Output').innerHTML='<p>I will use the following settings:<br>' +
+		/*document.getElementById('Output').innerHTML='<p>I will use the following settings:<br>' +
 		'<p>You can reach the Router under: <a id="lnk" href="https://' + vIP + ':8443/cgi-bin/luci">https://' + vIP + ':8443' + '/cgi-bin/luci/</a></p>' +
-		'<p>Please wait till 20 Minutes for the Settings. Then you can log in with root and your Password.';
+		'<p>Please wait till 20 Minutes for the Settings. Then you can log in with root and your Password.';*/
 	}
 
 	function call_install() {
