@@ -183,7 +183,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 			margin: 0;
 		}
 
-		button, .btn {
+		button, .button, .btn {
 			box-shadow: rgba(0,0,0,0.8) 1.3px 1.3px 3.25px !important;
 		}
 
@@ -208,13 +208,14 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 			z-index: 900;
 		}
 
-    		a { color: #cccccc !important; margin: auto !important; height: 5em !important; align: center !important;
+    	a { color: #cccccc !important; margin: auto !important; height: 5em !important; align: center !important;
 		}
 
 		@media (prefers-color-scheme: dark) {
 			body { background: black; }
 			a { color: #cccccc !important; margin: auto !important; height: 5em !important; align: center !important;}
 		}
+
 		body {
 			background-color: #050505;
 			background-image: var(--background-image);
@@ -330,9 +331,10 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 			background-Color: #ffffff !important;*/
 		}
 
-		.bubble .oval button {	
+		.bubble .oval .button {	
 			font-size: inherit;
 			text-shadow: inherit;
+			width: max-content;
 			line-height: 1.75em !important;
 			background-color: rgba(0,164,0,0.8);
 			color: rgba(255,255,255,0.8) !important;
@@ -342,9 +344,10 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 			font-style: italic;
 		}
 		
-		.bubble .oval button:hover, .bubble .oval button:active {	
+		.bubble .oval .button:hover, .bubble .oval .button:active {	
 			background-color: rgba(0,64,0,0.8);
 			border: solid 1.5px rgba(230,230,230,0.8);
+			cursor:pointer;
 		}
 
 		.Messanger {
@@ -373,8 +376,9 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 		}
 
 </style>
+
 <script>
-    
+
 	function read_all() {
 		read('User');
 		read('IP');
@@ -454,6 +458,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 	}
 
 	function submitForm() {
+		alert('ok');
 		document.getElementById('send').submit();
 		document.getElementById('Output').innerHTML='<p>I will use the following settings:<br>' +
 		'<p>You can reach the Router under: <a id="lnk" href="https://' + vIP + ':8443/cgi-bin/luci">https://' + vIP + ':8443' + '/cgi-bin/luci/</a></p>' +
@@ -474,7 +479,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 			<center id="Output">
 				<div class="Messanger" id="Hello">
 					<p>Hello, my name is @CyberAndi.<br> I will assist you through the router configuration process.
-					<div id="next">Next</div>
+					<div id="next" class="button" onclick="next();">Next</div>
 					</p>
 				</div>
 				<form id="send" method="post" action="output.php">
@@ -500,8 +505,8 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 					</div>
 					<div class="Messanger">
 						<p>
-							<div type="submit" onclick="submitForm" id="submitForm">Submit</div>
-						</p>
+							<div id="submit" class="button" onclick="submitForm();">Submit</div>
+						</p> 
 					</div>
 				</form>
 			</center> 
@@ -512,7 +517,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 <div id="modal_overlay"><div class="modal"></div></div>
 </body>
 <script>
-//touchsupport
+
 var submitbtn = document.getElementById('submit');
 var nextbtn = document.getElementById('next');
 var buttons = document.getElementsByClassName('button');
@@ -543,6 +548,7 @@ nextbtn.addEventListener('mousemove', function(e) {
 nextbtn.addEventListener('touchend', function(e) {
     
 });
+
 
 submitbtn.addEventListener('touchend', function(e) {
     
