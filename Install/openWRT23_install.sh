@@ -25172,6 +25172,13 @@ wait $processes
 /etc/init.d/fstab boot
 }
 
+test_dns_services() {
+	clear && echo 'Stopp all services' && service dnsmasq stop && service unbound stop && service stubby stop && service tor stop && sleep 5 && echo && service tor sta
+rt && service stubby start && service unbound start && service dnsmasq start && sleep 30 && echo 'Tor' && dig www.test.de -p 9053 | grep 'www.test.de' && echo 'Stubby' && d
+ig www.test.de -p 5453 | grep 'www.test.de' && echo 'Unbound' && dig www.test.de -p 5353 | grep 'www.test.de' && echo 'Dnsmasq' && dig www.test.de -p 53 | grep 'www.test.de
+'
+}
+
 #-------------------------start---------------------------------------
 
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...'
@@ -25336,7 +25343,8 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) >> install.log
 echo
 echo >> install.log
 echo 'DNS-Server:' $DNS_IP >> install.log
-
+test_dns_services
+echo
 echo
 echo >> install.log
 echo 'Tor:	' $(service tor status) >> install.log
