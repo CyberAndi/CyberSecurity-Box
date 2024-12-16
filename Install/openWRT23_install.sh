@@ -25201,7 +25201,7 @@ if [ ! -z $1 ]
  
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' 
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' >> install.log
-install_update #>> install.log
+#install_update #>> install.log
 service log restart
 
 if [ "$TOR_ONION" = "1" ]
@@ -25255,7 +25255,7 @@ echo
 echo >> install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' 
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> install.log
-customize_firmware >> install.log
+#customize_firmware >> install.log
 
 echo
 echo >> install.log
@@ -25375,7 +25375,7 @@ echo
 echo 'crash	:' >> install.log
 echo $(logread | grep 'dnsmasq' | grep 'crash') >> install.log
 
-uninstall_cleanup >> install.log
+#uninstall_cleanup >> install.log
 
 echo
 echo >> install.log
@@ -25440,4 +25440,4 @@ view_config
 echo
 echo 'I will reboot now. Wait 5 Minutes.'
 echo 'Restart at: '$(date +%d'.'%m'.'%y' '%H':'%M':'%S) >> install.log
-reboot 
+#reboot 
