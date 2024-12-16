@@ -10,7 +10,6 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 	<link rel="stylesheet" href="/luci-static/bootstrap-dark/cascade.css">
 	<link rel="icon" href="/luci-static/bootstrap/logo_48.png" sizes="48x48">
 	<link rel="icon" href="/luci-static/bootstrap/logo.svg" sizes="any">
-	<link rel="icon" href="logo.svg" sizes="any">
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />

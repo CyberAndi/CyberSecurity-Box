@@ -473,6 +473,7 @@ cat << EOF > /etc/rc.local
 	if [ ! -f /root/run ] 
 		then
 			echo $(date) > /root/run
+			rm /root/customize_firmware.sh
 			exit 0
 	fi
 	rm /etc/rc.local
