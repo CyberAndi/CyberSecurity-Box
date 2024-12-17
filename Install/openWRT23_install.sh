@@ -25204,13 +25204,14 @@ if [ ! -z $1 ]
    		echo $7 >> install.log
    		echo $8 >> install.log
    		echo $9 >> install.log
+		remotestart=$1
 fi
 
-if [ ! -z $remotestart ]
+if [ -z $remotestart ]
 	then 
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' 
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' >> install.log
-		install_update #>> install.log
+		install_update >> install.log
 		service log restart
 fi
 
@@ -25262,7 +25263,7 @@ create_dnsmasq_url_filter >> install.log
 view_config
 
 
-if [ ! -z $remotestart ]
+if [ -z $remotestart ]
 	then
 		echo
 		echo >> install.log
