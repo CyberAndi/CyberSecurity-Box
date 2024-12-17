@@ -63,7 +63,7 @@ echo
 }
 
 ask_parameter() {
-rm *.tar.gz
+rm *.tar.gz 
 rm *.log
 release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=')
 revision=$(cat /etc/openwrt_release | grep "DISTRIB_REVISION" | cut -f2 -d '=')
@@ -99,6 +99,7 @@ actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
 if [ ! -z "$1" ]  
 	then
 		INET_GW=$1
+		remotestart=$1
 	else
 		INET_GW=$(ip route | grep default | cut -f3  -d ' ')
 fi
@@ -25203,26 +25204,29 @@ if [ ! -z $1 ]
    		echo $7 >> install.log
    		echo $8 >> install.log
    		echo $9 >> install.log
- fi
- 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' >> install.log
-#install_update #>> install.log
-service log restart
+fi
+
+if [ ! -z $remotestart ]
+	then 
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' 
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' >> install.log
+		install_update #>> install.log
+		service log restart
+fi
 
 if [ "$TOR_ONION" = "1" ]
-               	then
-			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Tor'
-			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Tor' >> install.log
-   			set_tor 
+   	then
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Tor'
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Tor' >> install.log
+		set_tor 
 fi
 echo
 echo >> install.log
 if [ "$STUBBY" = "1" ]
-               	then
-			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Stubby'
-			echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Stubby' >> install.log
-			set_stubby >> install.log
+	then
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Stubby'
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Stubby' >> install.log
+		set_stubby >> install.log
 fi
 
 echo
@@ -25231,8 +25235,8 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set UNBOUND'
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set UNBOUND' >> install.log
 
 if [ "$UNBOUND" = "1" ]
-               	then
-			set_unbound
+    then
+		set_unbound
 fi
 
 uci set unbound.ub_main.listen_port=$DNS_UNBOUND_port
@@ -25257,17 +25261,20 @@ echo >> install.log
 create_dnsmasq_url_filter >> install.log
 view_config
 
-echo
-echo >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> install.log
-#customize_firmware >> install.log
 
-echo
-echo >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
-create_hotspot >> install.log
+if [ ! -z $remotestart ]
+	then
+		echo
+		echo >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' 
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> install.log
+		customize_firmware >> install.log
+		echo
+		echo >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot'
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
+		create_hotspot >> install.log
+fi
 
 ###################################################################################################
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Create Switch'>> install.log
@@ -25310,7 +25317,7 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-Zones' >> install.log
 create_firewall_zones >> install.log
 
 ####################################################################################################
-#create_MWAN >> install.log
+create_MWAN >> install.log
 ####################################################################################################
 echo >> install.log
 echo
@@ -25321,12 +25328,11 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Rules' >> install.log
 set_firewall_rules >> install.log
 
 if [ "$AD_GUARD" = "1" ]
-        then
+	then
 		echo
   		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Set_Mountpoints' 
-         	echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Set_Mountpoints' >> install.log
-         	set_mountpoints >> install.log
-
+        echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Set_Mountpoints' >> install.log
+        set_mountpoints >> install.log
 		echo
 	  	echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard'
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard' >> install.log
@@ -25342,7 +25348,8 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) >> install.log
 echo
 echo >> install.log
 echo 'DNS-Server:' $DNS_IP >> install.log
-test_dns_services
+test_dns_services >> install.log
+
 echo
 echo
 echo >> install.log
@@ -25382,7 +25389,11 @@ echo
 echo 'crash	:' >> install.log
 echo $(logread | grep 'dnsmasq' | grep 'crash') >> install.log
 
-#uninstall_cleanup >> install.log
+
+if [ ! -z $remotestart ]
+	then
+#		uninstall_cleanup >> install.log
+fi
 
 echo
 echo >> install.log
