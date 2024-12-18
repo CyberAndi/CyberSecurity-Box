@@ -14492,6 +14492,13 @@ address=/pornstargold.pl/
 address=/colegialasreales.pl/	
 address=/maturecams.pl/	
 address=/mature.pl/
+address=/lesbify.com/
+address=/lesbify.nl/
+address=/lesbify.de/
+address=/lesbify.at/
+address=/lesbify.ch/
+address=/lesbify.cz/
+address=/lesbify.pl/
 EOF
 
 cat << EOF > /etc/dnsmasq.d/Blacklist/white
@@ -16012,6 +16019,13 @@ local-zone: "6kea.de" always_null
 local-zone: "7dak.com" always_null
 local-zone: "7dak.de" always_null
 
+local-zone: "lesbify.com" always_null
+local-zone: "lesbify.nl" always_null
+local-zone: "lesbify.de" always_null
+local-zone: "lesbify.at" always_null
+local-zone: "lesbify.ch" always_null
+local-zone: "lesbify.cz" always_null
+local-zone: "lesbify.pl" always_null
 local-zone: "abosgratis.at" always_null
 local-zone: "abosgratis.ch" always_null
 local-zone: "abosgratis.com" always_null
