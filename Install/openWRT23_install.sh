@@ -11516,6 +11516,7 @@ address=/pink/
 address=/sexy/
 address=/tube/
 address=/xyz/
+address=/pornmate.com/
 address=/leslez.nl/
 address=/lesbify.nl/
 address=/tnaflix.nl/
@@ -16019,6 +16020,7 @@ local-zone: "6kea.de" always_null
 local-zone: "7dak.com" always_null
 local-zone: "7dak.de" always_null
 
+local-zone: "pornmate.com" always_null
 local-zone: "lesbify.com" always_null
 local-zone: "lesbify.nl" always_null
 local-zone: "lesbify.de" always_null
