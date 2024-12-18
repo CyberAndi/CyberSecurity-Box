@@ -19212,7 +19212,7 @@ local-zone: "bedpage.de" always_null
 local-zone: "deutschlandescort.de" always_null
 local-zone: "superacompanhantes.de" always_null
 local-zone: "fgirl.de" always_null
-local-zone: "topescort.de
+local-zone: "topescort.de" always_null
 local-zone: "escortempire.de" always_null
 local-zone: "localxlist.de" always_null
 local-zone: "divinematesliverpool.de" always_null
@@ -29689,7 +29689,6 @@ local-zone: "upscore.com" always_null
 local-zone: "cmp.heise.de" always_null
 local-zone: "cdn.permutive.com" always_null
 local-zone: "twin-iq.kickfire.com" always_null
-
 EOF
 
 echo
@@ -33373,6 +33372,7 @@ echo $(logread | grep 'dnsmasq' | grep 'crash') >> install.log
 
 if [ ! -z $remotestart ]
 	then
+		echo
 #		uninstall_cleanup >> install.log
 fi
 
