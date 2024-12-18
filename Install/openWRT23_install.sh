@@ -549,8 +549,8 @@ if [ "$unbound_inst" = "" ]
 	then
 		if [ "$main_release" -ge "23" ]
   			then
-  				echo $main_release
-      			opkg update >> install.log
+				echo $main_release
+				opkg update >> install.log
 				opkg install nano wget curl openssh-sftp-server getdns drill bind-dig  >> install.log
 				opkg update >> install.log
 				opkg install kmod-nls-cp437 kmod-nls-iso8859-1 >> install.log
@@ -665,8 +665,8 @@ if [ "$unbound_inst" = "" ]
 			
    			elif [ "$main_release" = "22" ]
    				then
-       					echo $main_release
-	    				opkg update >> install.log
+       				echo $main_release
+	    			opkg update >> install.log
 					opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full
 			else 
    					echo $main_release
@@ -18445,12 +18445,12 @@ local-zone: ".xyz" always_null
 local-zone: "leslez.nl" always_null
 local-zone: "lesbify.nl" always_null
 local-zone: "tnaflix.nl" always_null
-local-zone: "hdtube.porn
+local-zone: "hdtube.porn" always_null
 local-zone: "twinrdsyte.nl" always_null
 local-zone: "upornia.nl" always_null
 local-zone: "tnaflix.nl" always_null
 local-zone: "pornhits.nl" always_null
-local-zone: "bigfuck.tv
+local-zone: "bigfuck.tv" always_null
 local-zone: "txxx.nl" always_null
 local-zone: "hdzog.nl" always_null
 local-zone: "pornhat.nl" always_null
@@ -18471,7 +18471,7 @@ local-zone: "tnaflix.nl" always_null
 local-zone: "megatube.nl" always_null
 local-zone: "zbporn.nl" always_null
 local-zone: "porntop.nl" always_null
-local-zone: "ok.xxx
+local-zone: "ok.xxx" always_null
 local-zone: "babestube.nl" always_null
 local-zone: "fapcat.nl" always_null
 local-zone: "milffox.nl" always_null
@@ -18492,7 +18492,7 @@ local-zone: "goldtits.nl" always_null
 local-zone: "pornmate.nl" always_null
 local-zone: "tubehall.nl" always_null
 local-zone: "leslez.nl" always_null
-local-zone: "freehdvideos.xxx
+local-zone: "freehdvideos.xxx" always_null
 local-zone: "teenxy.nl" always_null
 local-zone: "freehdporn.nl" always_null
 local-zone: "pornstars.nl" always_null
@@ -18518,17 +18518,17 @@ local-zone: "xvidzz.nl" always_null
 local-zone: "sxyprn.nl" always_null
 local-zone: "porn.nl" always_null
 local-zone: "yespornxxx.nl" always_null
-local-zone: "yesporn.xxx
+local-zone: "yesporn.xxx" always_null
 local-zone: "tubegalore.nl" always_null
 local-zone: "fapmeifyoucan.nl" always_null
 local-zone: "xxxomg.nl" always_null
 local-zone: "tnaflix.nl" always_null
 local-zone: "freefanstv.nl" always_null
-local-zone: "freefans.tv
+local-zone: "freefans.tv" always_null
 local-zone: "hotmovs.nl" always_null
 local-zone: "angelsx.nl" always_null
 local-zone: "pornhd.nl" always_null
-local-zone: "sos.xxx
+local-zone: "sos.xxx" always_null
 local-zone: "sosxxx.nl" always_null
 local-zone: "porntube.nl" always_null
 local-zone: "3movs.nl" always_null
@@ -18552,7 +18552,7 @@ local-zone: "mompornonly.nl" always_null
 local-zone: "upornia.nl" always_null
 local-zone: "hardpornotube.nl" always_null
 local-zone: "hotporn.sex.nl" always_null
-local-zone: "hotporn.sex
+local-zone: "hotporn.sex" always_null
 local-zone: "porntrex.nl" always_null
 local-zone: "sexvid.nl" always_null
 local-zone: "hclips.nl" always_null
@@ -18563,7 +18563,7 @@ local-zone: "putarianocelular.nl" always_null
 local-zone: "hdzog.nl" always_null
 local-zone: "pornhd.nl" always_null
 local-zone: "hornybutt.nl" always_null
-local-zone: "gimmeporn.xyz
+local-zone: "gimmeporn.xyz" always_null
 local-zone: "hornyhill.nl" always_null
 local-zone: "spankandbang.nl" always_null
 local-zone: "xvideoshd.nl" always_null
@@ -18580,7 +18580,7 @@ local-zone: "sexycandidgirls.nl" always_null
 local-zone: "jenporno.cz" always_null
 local-zone: "jenporno.nl" always_null
 local-zone: "burningangles.nl" always_null
-local-zone: "burningangles.tv
+local-zone: "burningangles.tv" always_null
 local-zone: "suicidegirls.nl" always_null
 local-zone: "realitykings.nl" always_null
 local-zone: "inthevip.nl" always_null
@@ -18588,72 +18588,72 @@ local-zone: "faketaxi.nl" always_null
 local-zone: "lesbian.nl" always_null
 local-zone: "squird.nl" always_null
 local-zone: "fap.nl" always_null
-local-zone: "brazzers.nl/	
-local-zone: "digitalplayground.nl/	
+local-zone: "brazzers.nl" always_null
+local-zone: "digitalplayground.nl" always_null
 local-zone: "naughtyamerica.nl" always_null
-local-zone: "realitykings.nl/	
+local-zone: "realitykings.nl" always_null	
 local-zone: "iknowthatgirl.nl" always_null
-local-zone: "fakehub.nl/	
+local-zone: "fakehub.nl" always_null
 local-zone: "bangbros.nl" always_null
-local-zone: "japanhdv.nl/	
-local-zone: "familystrokes.nl/	
+local-zone: "japanhdv.nl" always_null
+local-zone: "familystrokes.nl" always_null
 local-zone: "lovehomeporn.nl" always_null
-local-zone: "mofos.nl/	
-local-zone: "mydirtyhobby.nl/	
+local-zone: "mofos.nl" always_null
+local-zone: "mydirtyhobby.nl" always_null
 local-zone: "blacked.nl" always_null
 local-zone: "aoflix.nl" always_null
-local-zone: "publicagent.nl/	
+local-zone: "publicagent.nl" always_null
 local-zone: "twistys.nl" always_null
 local-zone: "blackedraw.nl" always_null
 local-zone: "faphouse.nl" always_null
-local-zone: "wicked.nl/	
-local-zone: "babes.nl/	
-local-zone: "povd.nl/	
-local-zone: "teensloveblackcocks.nl/	
-local-zone: "holed.nl/	
-local-zone: "propertysex.nl/	
-local-zone: "evilangel.nl/	
-local-zone: "pornpros.nl/	
-local-zone: "21sextury.nl/	
-local-zone: "shoplyfter.nl/	
-local-zone: "perfectgonzo.nl/	
-local-zone: "asstraffic.nl/	
-local-zone: "dogfartnetwork.nl/	
-local-zone: "exxxtrasmall.nl/	
-local-zone: "javhd.nl/	
-local-zone: "hustler.nl/	
-local-zone: "teamskeet.nl/	
+local-zone: "wicked.nl" always_null
+local-zone: "babes.nl" always_null
+local-zone: "povd.nl" always_null
+local-zone: "teensloveblackcocks.nl" always_null	
+local-zone: "holed.nl" always_null
+local-zone: "propertysex.nl" always_null
+local-zone: "evilangel.nl" always_null
+local-zone: "pornpros.nl" always_null
+local-zone: "21sextury.nl" always_null
+local-zone: "shoplyfter.nl" always_null
+local-zone: "perfectgonzo.nl" always_null
+local-zone: "asstraffic.nl" always_null
+local-zone: "dogfartnetwork.nl" always_null
+local-zone: "exxxtrasmall.nl" always_null
+local-zone: "javhd.nl" always_null
+local-zone: "hustler.nl" always_null
+local-zone: "teamskeet.nl" always_null
 local-zone: "vixen.nl" always_null
 local-zone: "tushy.nl" always_null
-local-zone: "fakeagent.nl/	
-local-zone: "faketaxi.nl/	
-local-zone: "fakehostel.nl/	
-local-zone: "danejones.nl/	
-local-zone: "lesbea.nl/	
-local-zone: "massagerooms.nl/	
-local-zone: "momxxx.nl/	
-local-zone: "stasyq.nl/	
-local-zone: "newsensations.nl/	
+local-zone: "fakeagent.nl" always_null
+local-zone: "faketaxi.nl" always_null
+local-zone: "fakehostel.nl" always_null
+local-zone: "danejones.nl" always_null
+local-zone: "lesbea.nl" always_null
+local-zone: "massagerooms.nl" always_null	
+local-zone: "momxxx.nl" always_null
+local-zone: "stasyq.nl" always_null
+local-zone: "newsensations.nl" always_null
 local-zone: "dailyscenes.nl" always_null
 local-zone: "pdcams.nl" always_null
 local-zone: "stripchat.nl" always_null
 local-zone: "camsoda.nl" always_null
 local-zone: "flirt4free.nl" always_null
 local-zone: "imlive.nl" always_null
-local-zone: "babestation.nl/	
+local-zone: "babestation.nl" always_null
 local-zone: "anacams.nl" always_null
 local-zone: "jerkmate.nl" always_null
 local-zone: "amateurtv.nl" always_null
-local-zone: "amateur.tv
+local-zone: "amateur.tv" always_null
 local-zone: "everycamgirl.nl" always_null
 local-zone: "masturbate2gether.nl" always_null
 local-zone: "camfall.nl" always_null
 local-zone: "lemoncams.nl" always_null
-local-zone: "omegle.nl/	
-local-zone: "pornlive.nl/	
+local-zone: "omegle.nl" always_null
+local-zone: "pornlive.nl" always_null
 local-zone: "sexfortokens.nl" always_null
 local-zone: "boinkstream.nl" always_null
-local-zone: "rabbitscams.nl/	
+local-zone: "rabbitscams.nl" always_null
 local-zone: "rampanttv.nl" always_null
 local-zone: "sextingfinder.nl" always_null
 local-zone: "sexchat.nl" always_null
@@ -18682,7 +18682,7 @@ local-zone: "nsfw.tools.nl" always_null
 local-zone: "fantasygf.nl" always_null
 local-zone: "homemoviestube.nl" always_null
 local-zone: "lovehomeporn.nl" always_null
-local-zone: "entensity.nl/	
+local-zone: "entensity.nl" always_null
 local-zone: "warddogs.nl" always_null
 local-zone: "shooshtime.nl" always_null
 local-zone: "amateurporn.nl" always_null
@@ -18695,12 +18695,12 @@ local-zone: "voyeurweb.nl" always_null
 local-zone: "youramateurporn.nl" always_null
 local-zone: "anon-v.nl" always_null
 local-zone: "amateurcool.nl" always_null
-local-zone: "eurogirlsescort.nl/	
+local-zone: "eurogirlsescort.nl" always_null
 local-zone: "topescortbabes.nl" always_null
 local-zone: "escortsaffair.nl" always_null
 local-zone: "honeyaffair.nl" always_null
 local-zone: "incontriamocixxx.nl" always_null
-local-zone: "incontriamoci.xxx
+local-zone: "incontriamoci.xxx" always_null
 local-zone: "amasens.nl" always_null
 local-zone: "lovehub.nl" always_null
 local-zone: "massagerepublic.nl" always_null
@@ -18709,17 +18709,17 @@ local-zone: "lisbonescorts.nl" always_null
 local-zone: "bunnyagent.nl" always_null
 local-zone: "escortamsterdam.nl" always_null
 local-zone: "richobo.nl" always_null
-local-zone: "girls.co.uk
+local-zone: "girls.co.uk" always_null
 local-zone: "lushescorts.nl" always_null
 local-zone: "bedpage.nl" always_null
 local-zone: "deutschlandescort.nl" always_null
 local-zone: "superacompanhantes.nl" always_null
 local-zone: "fgirl.nl" always_null
-local-zone: "topescort.nl/	
+local-zone: "topescort.nl" always_null
 local-zone: "escortempire.nl" always_null
 local-zone: "localxlist.nl" always_null
 local-zone: "divinematesliverpool.nl" always_null
-local-zone: "faphouse.nl/	
+local-zone: "faphouse.nl" always_null
 local-zone: "saveporn.nl" always_null
 local-zone: "pptube.nl" always_null
 local-zone: "inovideoapp.nl" always_null
@@ -18774,7 +18774,7 @@ local-zone: "vdsblog.nl" always_null
 local-zone: "xxxhindi.nl" always_null
 local-zone: "xnxxvideos.nl" always_null
 local-zone: "desiporn.nl" always_null
-local-zone: "hentaistream.nl/	
+local-zone: "hentaistream.nl" always_null
 local-zone: "freehentaistream.nl" always_null
 local-zone: "manytoon.nl" always_null
 local-zone: "hentaivostfr.nl" always_null
@@ -18798,25 +18798,25 @@ local-zone: "hentaipulse.nl" always_null
 local-zone: "hentaiporntube.nl" always_null
 local-zone: "cartoonprn.nl" always_null
 local-zone: "adultcomixxx.nl" always_null
-local-zone: "adultcomi.xxx
+local-zone: "adultcomi.xxx" always_null
 local-zone: "porntotal.nl" always_null
 local-zone: "celebrityporn.nl" always_null
 local-zone: "allnudecelebs.nl" always_null
 local-zone: "celebjihad.nl" always_null
-local-zone: "adultmovies.nl/	
+local-zone: "adultmovies.nl" always_null
 local-zone: "hornyjav.nl" always_null
 local-zone: "analmom.nl" always_null
 local-zone: "onlytight.nl" always_null
 local-zone: "sexycandidgirls.nl" always_null
-local-zone: "extremeporn.nl/	
+local-zone: "extremeporn.nl" always_null
 local-zone: "reflectivedesire.nl" always_null
 local-zone: "milflove.nl" always_null
-local-zone: "bdsmchat.nl/	
+local-zone: "bdsmchat.nl" always_null
 local-zone: "girlswallowed.nl" always_null
 local-zone: "uhairy.nl" always_null
 local-zone: "mybigtitsbabes.nl" always_null
 local-zone: "lovelyfemdom.nl" always_null
-local-zone: "perverttube.nl/	
+local-zone: "perverttube.nl" always_null
 local-zone: "tubepornclassic.nl" always_null
 local-zone: "gaypornotube.nl" always_null
 local-zone: "mencelebrities.nl" always_null
@@ -18829,7 +18829,7 @@ local-zone: "smplace.nl" always_null
 local-zone: "vipergirls.nl" always_null
 local-zone: "kikdirty.nl" always_null
 local-zone: "pornbb.nl" always_null
-local-zone: "rabbitsreviews.nl/	
+local-zone: "rabbitsreviews.nl" always_null
 local-zone: "porndiscounts.nl" always_null
 local-zone: "discountedporn.nl" always_null
 local-zone: "pornmode.nl" always_null
@@ -18859,11 +18859,11 @@ local-zone: "jerkdolls.nl" always_null
 local-zone: "jerkmategames.nl" always_null
 local-zone: "adultgamescollector.nl" always_null
 local-zone: "adultgamesworld.nl" always_null
-local-zone: "stripparadise.nl/	
+local-zone: "stripparadise.nl" always_null
 local-zone: "xxxgames.nl" always_null
 local-zone: "stripselector.nl" always_null
 local-zone: "porngamestv.nl" always_null
-local-zone: "porngames.tv
+local-zone: "porngames.tv" always_null
 local-zone: "stripskunk.nl" always_null
 local-zone: "selectyourgame.nl" always_null
 local-zone: "fetishgames.nl" always_null
@@ -18872,13 +18872,13 @@ local-zone: "lewdflix.nl" always_null
 local-zone: "gamcore.nl" always_null
 local-zone: "sinvr.nl" always_null
 local-zone: "bestporngames.nl" always_null
-local-zone: "porngames.nl/	
-local-zone: "sexgames.nl/	
+local-zone: "porngames.nl" always_null
+local-zone: "sexgames.nl" always_null
 local-zone: "babepedia.nl" always_null
 local-zone: "reddxxx.nl" always_null
 local-zone: "babestare.nl" always_null
 local-zone: "girlstop.nl" always_null
-local-zone: "pornpics.nl/	
+local-zone: "pornpics.nl" always_null
 local-zone: "russiansexygirls.nl" always_null
 local-zone: "miagallery.nl" always_null
 local-zone: "pandesiaworld.nl" always_null
@@ -18901,8 +18901,8 @@ local-zone: "hqbabes.nl" always_null
 local-zone: "javgg.nl" always_null
 local-zone: "javwine.nl" always_null
 local-zone: "fc2hub.nl" always_null
-local-zone: "javdragon.nl/	
-local-zone: "asiancams.nl/	
+local-zone: "javdragon.nl" always_null
+local-zone: "asiancams.nl" always_null
 local-zone: "avgle.nl" always_null
 local-zone: "javcv.nl" always_null
 local-zone: "jav.sb.nl" always_null
@@ -18925,29 +18925,29 @@ local-zone: "alllesbiantube.nl" always_null
 local-zone: "lesbianpornvideos.nl" always_null
 local-zone: "milfslesbian.nl" always_null
 local-zone: "gfrevenge.nl" always_null
-local-zone: "daredorm.nl/	
+local-zone: "daredorm.nl" always_null
 local-zone: "crazycollegegfs.nl" always_null
-local-zone: "gfleaks.nl/	
-local-zone: "gifporntube.nl/	
-local-zone: "literotica.nl/	
-local-zone: "sexstories.nl/	
-local-zone: "frolicme.nl/	
-local-zone: "juicysexstories.nl/	
+local-zone: "gfleaks.nl" always_null
+local-zone: "gifporntube.nl" always_null
+local-zone: "literotica.nl" always_null
+local-zone: "sexstories.nl" always_null
+local-zone: "frolicme.nl" always_null	
+local-zone: "juicysexstories.nl" always_null
 local-zone: "randomsites.nl" always_null
 local-zone: "pornstargold.nl" always_null
-local-zone: "colegialasreales.nl/	
-local-zone: "maturecams.nl/	
+local-zone: "colegialasreales.nl" always_null
+local-zone: "maturecams.nl" always_null
 local-zone: "mature.nl" always_null
-local-zone: "mature.nl/	
+local-zone: "mature.nl" always_null
 local-zone: "leslez.de" always_null
 local-zone: "lesbify.de" always_null
 local-zone: "tnaflix.de" always_null
-local-zone: "hdtube.porn
+local-zone: "hdtube.porn" always_null
 local-zone: "twinrdsyte.de" always_null
 local-zone: "upornia.de" always_null
 local-zone: "tnaflix.de" always_null
 local-zone: "pornhits.de" always_null
-local-zone: "bigfuck.tv
+local-zone: "bigfuck.tv" always_null
 local-zone: "txxx.de" always_null
 local-zone: "hdzog.de" always_null
 local-zone: "pornhat.de" always_null
@@ -18968,7 +18968,7 @@ local-zone: "tnaflix.de" always_null
 local-zone: "megatube.de" always_null
 local-zone: "zbporn.de" always_null
 local-zone: "porntop.de" always_null
-local-zone: "ok.xxx
+local-zone: "ok.xxx" always_null
 local-zone: "babestube.de" always_null
 local-zone: "fapcat.de" always_null
 local-zone: "milffox.de" always_null
@@ -18989,7 +18989,7 @@ local-zone: "goldtits.de" always_null
 local-zone: "pornmate.de" always_null
 local-zone: "tubehall.de" always_null
 local-zone: "leslez.de" always_null
-local-zone: "freehdvideos.xxx
+local-zone: "freehdvideos.xxx" always_null
 local-zone: "teenxy.de" always_null
 local-zone: "freehdporn.de" always_null
 local-zone: "pornstars.de" always_null
@@ -19015,17 +19015,17 @@ local-zone: "xvidzz.de" always_null
 local-zone: "sxyprn.de" always_null
 local-zone: "porn.de" always_null
 local-zone: "yespornxxx.de" always_null
-local-zone: "yesporn.xxx
+local-zone: "yesporn.xxx" always_null
 local-zone: "tubegalore.de" always_null
 local-zone: "fapmeifyoucan.de" always_null
 local-zone: "xxxomg.de" always_null
 local-zone: "tnaflix.de" always_null
 local-zone: "freefanstv.de" always_null
-local-zone: "freefans.tv
+local-zone: "freefans.tv" always_null
 local-zone: "hotmovs.de" always_null
 local-zone: "angelsx.de" always_null
 local-zone: "pornhd.de" always_null
-local-zone: "sos.xxx
+local-zone: "sos.xxx" always_null
 local-zone: "sosxxx.de" always_null
 local-zone: "porntube.de" always_null
 local-zone: "3movs.de" always_null
@@ -19049,7 +19049,7 @@ local-zone: "mompornonly.de" always_null
 local-zone: "upornia.de" always_null
 local-zone: "hardpornotube.de" always_null
 local-zone: "hotporn.sex.de" always_null
-local-zone: "hotporn.sex
+local-zone: "hotporn.sex" always_null
 local-zone: "porntrex.de" always_null
 local-zone: "sexvid.de" always_null
 local-zone: "hclips.de" always_null
@@ -19060,7 +19060,7 @@ local-zone: "putarianocelular.de" always_null
 local-zone: "hdzog.de" always_null
 local-zone: "pornhd.de" always_null
 local-zone: "hornybutt.de" always_null
-local-zone: "gimmeporn.xyz
+local-zone: "gimmeporn.xyz" always_null
 local-zone: "hornyhill.de" always_null
 local-zone: "spankandbang.de" always_null
 local-zone: "xvideoshd.de" always_null
@@ -19077,7 +19077,7 @@ local-zone: "sexycandidgirls.de" always_null
 local-zone: "jenporno.cz" always_null
 local-zone: "jenporno.de" always_null
 local-zone: "burningangles.de" always_null
-local-zone: "burningangles.tv
+local-zone: "burningangles.tv" always_null
 local-zone: "suicidegirls.de" always_null
 local-zone: "realitykings.de" always_null
 local-zone: "inthevip.de" always_null
@@ -19085,72 +19085,72 @@ local-zone: "faketaxi.de" always_null
 local-zone: "lesbian.de" always_null
 local-zone: "squird.de" always_null
 local-zone: "fap.de" always_null
-local-zone: "brazzers.de/	
-local-zone: "digitalplayground.de/	
+local-zone: "brazzers.de" always_null
+local-zone: "digitalplayground.de" always_null
 local-zone: "naughtyamerica.de" always_null
-local-zone: "realitykings.de/	
+local-zone: "realitykings.de" always_null
 local-zone: "iknowthatgirl.de" always_null
-local-zone: "fakehub.de/	
+local-zone: "fakehub.de" always_null
 local-zone: "bangbros.de" always_null
-local-zone: "japanhdv.de/	
-local-zone: "familystrokes.de/	
+local-zone: "japanhdv.de" always_null
+local-zone: "familystrokes.de" always_null
 local-zone: "lovehomeporn.de" always_null
-local-zone: "mofos.de/	
-local-zone: "mydirtyhobby.de/	
+local-zone: "mofos.de" always_null
+local-zone: "mydirtyhobby.de" always_null
 local-zone: "blacked.de" always_null
 local-zone: "aoflix.de" always_null
-local-zone: "publicagent.de/	
+local-zone: "publicagent.de" always_null
 local-zone: "twistys.de" always_null
 local-zone: "blackedraw.de" always_null
 local-zone: "faphouse.de" always_null
-local-zone: "wicked.de/	
-local-zone: "babes.de/	
-local-zone: "povd.de/	
-local-zone: "teensloveblackcocks.de/	
-local-zone: "holed.de/	
-local-zone: "propertysex.de/	
-local-zone: "evilangel.de/	
-local-zone: "pornpros.de/	
-local-zone: "21sextury.de/	
-local-zone: "shoplyfter.de/	
-local-zone: "perfectgonzo.de/	
-local-zone: "asstraffic.de/	
-local-zone: "dogfartnetwork.de/	
-local-zone: "exxxtrasmall.de/	
-local-zone: "javhd.de/	
-local-zone: "hustler.de/	
-local-zone: "teamskeet.de/	
+local-zone: "wicked.de" always_null
+local-zone: "babes.de" always_null
+local-zone: "povd.de" always_null
+local-zone: "teensloveblackcocks.de" always_null	
+local-zone: "holed.de" always_null
+local-zone: "propertysex.de" always_null
+local-zone: "evilangel.de" always_null
+local-zone: "pornpros.de" always_null
+local-zone: "21sextury.de" always_null
+local-zone: "shoplyfter.de" always_null
+local-zone: "perfectgonzo.de" always_null
+local-zone: "asstraffic.de" always_null
+local-zone: "dogfartnetwork.de" always_null
+local-zone: "exxxtrasmall.de" always_null
+local-zone: "javhd.de" always_null
+local-zone: "hustler.de" always_null
+local-zone: "teamskeet.de" always_null
 local-zone: "vixen.de" always_null
 local-zone: "tushy.de" always_null
-local-zone: "fakeagent.de/	
-local-zone: "faketaxi.de/	
-local-zone: "fakehostel.de/	
-local-zone: "danejones.de/	
-local-zone: "lesbea.de/	
-local-zone: "massagerooms.de/	
-local-zone: "momxxx.de/	
-local-zone: "stasyq.de/	
-local-zone: "newsensations.de/	
+local-zone: "fakeagent.de" always_null
+local-zone: "faketaxi.de" always_null
+local-zone: "fakehostel.de" always_null
+local-zone: "danejones.de" always_null
+local-zone: "lesbea.de" always_null
+local-zone: "massagerooms.de" always_null
+local-zone: "momxxx.de" always_null
+local-zone: "stasyq.de" always_null
+local-zone: "newsensations.de" always_null	
 local-zone: "dailyscenes.de" always_null
 local-zone: "pdcams.de" always_null
 local-zone: "stripchat.de" always_null
 local-zone: "camsoda.de" always_null
 local-zone: "flirt4free.de" always_null
 local-zone: "imlive.de" always_null
-local-zone: "babestation.de/	
+local-zone: "babestation.de" always_null
 local-zone: "anacams.de" always_null
 local-zone: "jerkmate.de" always_null
 local-zone: "amateurtv.de" always_null
-local-zone: "amateur.tv
+local-zone: "amateur.tv" always_null
 local-zone: "everycamgirl.de" always_null
 local-zone: "masturbate2gether.de" always_null
 local-zone: "camfall.de" always_null
 local-zone: "lemoncams.de" always_null
-local-zone: "omegle.de/	
-local-zone: "pornlive.de/	
+local-zone: "omegle.de" always_null
+local-zone: "pornlive.de" always_null
 local-zone: "sexfortokens.de" always_null
 local-zone: "boinkstream.de" always_null
-local-zone: "rabbitscams.de/	
+local-zone: "rabbitscams.de" always_null	
 local-zone: "rampanttv.de" always_null
 local-zone: "sextingfinder.de" always_null
 local-zone: "sexchat.de" always_null
@@ -19179,7 +19179,7 @@ local-zone: "nsfw.tools.de" always_null
 local-zone: "fantasygf.de" always_null
 local-zone: "homemoviestube.de" always_null
 local-zone: "lovehomeporn.de" always_null
-local-zone: "entensity.de/	
+local-zone: "entensity.de" always_null
 local-zone: "warddogs.de" always_null
 local-zone: "shooshtime.de" always_null
 local-zone: "amateurporn.de" always_null
@@ -19192,12 +19192,12 @@ local-zone: "voyeurweb.de" always_null
 local-zone: "youramateurporn.de" always_null
 local-zone: "anon-v.de" always_null
 local-zone: "amateurcool.de" always_null
-local-zone: "eurogirlsescort.de/	
+local-zone: "eurogirlsescort.de" always_null
 local-zone: "topescortbabes.de" always_null
 local-zone: "escortsaffair.de" always_null
 local-zone: "honeyaffair.de" always_null
 local-zone: "incontriamocixxx.de" always_null
-local-zone: "incontriamoci.xxx
+local-zone: "incontriamoci.xxx" always_null
 local-zone: "amasens.de" always_null
 local-zone: "lovehub.de" always_null
 local-zone: "massagerepublic.de" always_null
@@ -19206,17 +19206,17 @@ local-zone: "lisbonescorts.de" always_null
 local-zone: "bunnyagent.de" always_null
 local-zone: "escortamsterdam.de" always_null
 local-zone: "richobo.de" always_null
-local-zone: "girls.co.uk
+local-zone: "girls.co.uk" always_null
 local-zone: "lushescorts.de" always_null
 local-zone: "bedpage.de" always_null
 local-zone: "deutschlandescort.de" always_null
 local-zone: "superacompanhantes.de" always_null
 local-zone: "fgirl.de" always_null
-local-zone: "topescort.de/	
+local-zone: "topescort.de
 local-zone: "escortempire.de" always_null
 local-zone: "localxlist.de" always_null
 local-zone: "divinematesliverpool.de" always_null
-local-zone: "faphouse.de/	
+local-zone: "faphouse.de" always_null	
 local-zone: "saveporn.de" always_null
 local-zone: "pptube.de" always_null
 local-zone: "inovideoapp.de" always_null
@@ -19271,7 +19271,7 @@ local-zone: "vdsblog.de" always_null
 local-zone: "xxxhindi.de" always_null
 local-zone: "xnxxvideos.de" always_null
 local-zone: "desiporn.de" always_null
-local-zone: "hentaistream.de/	
+local-zone: "hentaistream.de" always_null
 local-zone: "freehentaistream.de" always_null
 local-zone: "manytoon.de" always_null
 local-zone: "hentaivostfr.de" always_null
@@ -19295,25 +19295,25 @@ local-zone: "hentaipulse.de" always_null
 local-zone: "hentaiporntube.de" always_null
 local-zone: "cartoonprn.de" always_null
 local-zone: "adultcomixxx.de" always_null
-local-zone: "adultcomi.xxx
+local-zone: "adultcomi.xxx" always_null
 local-zone: "porntotal.de" always_null
 local-zone: "celebrityporn.de" always_null
 local-zone: "allnudecelebs.de" always_null
 local-zone: "celebjihad.de" always_null
-local-zone: "adultmovies.de/	
+local-zone: "adultmovies.de" always_null
 local-zone: "hornyjav.de" always_null
 local-zone: "analmom.de" always_null
 local-zone: "onlytight.de" always_null
 local-zone: "sexycandidgirls.de" always_null
-local-zone: "extremeporn.de/	
+local-zone: "extremeporn.de" always_null
 local-zone: "reflectivedesire.de" always_null
 local-zone: "milflove.de" always_null
-local-zone: "bdsmchat.de/	
+local-zone: "bdsmchat.de" always_null
 local-zone: "girlswallowed.de" always_null
 local-zone: "uhairy.de" always_null
 local-zone: "mybigtitsbabes.de" always_null
 local-zone: "lovelyfemdom.de" always_null
-local-zone: "perverttube.de/	
+local-zone: "perverttube.de" always_null
 local-zone: "tubepornclassic.de" always_null
 local-zone: "gaypornotube.de" always_null
 local-zone: "mencelebrities.de" always_null
@@ -19326,7 +19326,7 @@ local-zone: "smplace.de" always_null
 local-zone: "vipergirls.de" always_null
 local-zone: "kikdirty.de" always_null
 local-zone: "pornbb.de" always_null
-local-zone: "rabbitsreviews.de/	
+local-zone: "rabbitsreviews.de" always_null
 local-zone: "porndiscounts.de" always_null
 local-zone: "discountedporn.de" always_null
 local-zone: "pornmode.de" always_null
@@ -19356,11 +19356,11 @@ local-zone: "jerkdolls.de" always_null
 local-zone: "jerkmategames.de" always_null
 local-zone: "adultgamescollector.de" always_null
 local-zone: "adultgamesworld.de" always_null
-local-zone: "stripparadise.de/	
+local-zone: "stripparadise.de" always_null
 local-zone: "xxxgames.de" always_null
 local-zone: "stripselector.de" always_null
 local-zone: "porngamestv.de" always_null
-local-zone: "porngames.tv
+local-zone: "porngames.tv" always_null
 local-zone: "stripskunk.de" always_null
 local-zone: "selectyourgame.de" always_null
 local-zone: "fetishgames.de" always_null
@@ -19369,13 +19369,13 @@ local-zone: "lewdflix.de" always_null
 local-zone: "gamcore.de" always_null
 local-zone: "sinvr.de" always_null
 local-zone: "bestporngames.de" always_null
-local-zone: "porngames.de/	
-local-zone: "sexgames.de/	
+local-zone: "porngames.de" always_null
+local-zone: "sexgames.de" always_null
 local-zone: "babepedia.de" always_null
 local-zone: "reddxxx.de" always_null
 local-zone: "babestare.de" always_null
 local-zone: "girlstop.de" always_null
-local-zone: "pornpics.de/	
+local-zone: "pornpics.de" always_null
 local-zone: "russiansexygirls.de" always_null
 local-zone: "miagallery.de" always_null
 local-zone: "pandesiaworld.de" always_null
@@ -19398,8 +19398,8 @@ local-zone: "hqbabes.de" always_null
 local-zone: "javgg.de" always_null
 local-zone: "javwine.de" always_null
 local-zone: "fc2hub.de" always_null
-local-zone: "javdragon.de/	
-local-zone: "asiancams.de/	
+local-zone: "javdragon.de" always_null
+local-zone: "asiancams.de" always_null
 local-zone: "avgle.de" always_null
 local-zone: "javcv.de" always_null
 local-zone: "jav.sb.de" always_null
@@ -19422,29 +19422,29 @@ local-zone: "alllesbiantube.de" always_null
 local-zone: "lesbianpornvideos.de" always_null
 local-zone: "milfslesbian.de" always_null
 local-zone: "gfrevenge.de" always_null
-local-zone: "daredorm.de/	
+local-zone: "daredorm.de" always_null
 local-zone: "crazycollegegfs.de" always_null
-local-zone: "gfleaks.de/	
-local-zone: "gifporntube.de/	
-local-zone: "literotica.de/	
-local-zone: "sexstories.de/	
-local-zone: "frolicme.de/	
-local-zone: "juicysexstories.de/	
+local-zone: "gfleaks.de" always_null
+local-zone: "gifporntube.de" always_null
+local-zone: "literotica.de" always_null
+local-zone: "sexstories.de" always_null
+local-zone: "frolicme.de" always_null
+local-zone: "juicysexstories.de" always_null
 local-zone: "randomsites.de" always_null
 local-zone: "pornstargold.de" always_null
-local-zone: "colegialasreales.de/	
-local-zone: "maturecams.de/	
+local-zone: "colegialasreales.de" always_null
+local-zone: "maturecams.de" always_null
 local-zone: "mature.nl" always_null
-local-zone: "mature.de/	
+local-zone: "mature.de" always_null
 local-zone: "leslez.ch" always_null
 local-zone: "lesbify.ch" always_null
 local-zone: "tnaflix.ch" always_null
-local-zone: "hdtube.porn
+local-zone: "hdtube.porn" always_null
 local-zone: "twinrdsyte.ch" always_null
 local-zone: "upornia.ch" always_null
 local-zone: "tnaflix.ch" always_null
 local-zone: "pornhits.ch" always_null
-local-zone: "bigfuck.tv
+local-zone: "bigfuck.tv" always_null
 local-zone: "txxx.ch" always_null
 local-zone: "hdzog.ch" always_null
 local-zone: "pornhat.ch" always_null
@@ -19465,7 +19465,7 @@ local-zone: "tnaflix.ch" always_null
 local-zone: "megatube.ch" always_null
 local-zone: "zbporn.ch" always_null
 local-zone: "porntop.ch" always_null
-local-zone: "ok.xxx
+local-zone: "ok.xxx" always_null
 local-zone: "babestube.ch" always_null
 local-zone: "fapcat.ch" always_null
 local-zone: "milffox.ch" always_null
@@ -19486,7 +19486,7 @@ local-zone: "goldtits.ch" always_null
 local-zone: "pornmate.ch" always_null
 local-zone: "tubehall.ch" always_null
 local-zone: "leslez.ch" always_null
-local-zone: "freehdvideos.xxx
+local-zone: "freehdvideos.xxx" always_null
 local-zone: "teenxy.ch" always_null
 local-zone: "freehdporn.ch" always_null
 local-zone: "pornstars.ch" always_null
@@ -19512,17 +19512,17 @@ local-zone: "xvidzz.ch" always_null
 local-zone: "sxyprn.ch" always_null
 local-zone: "porn.ch" always_null
 local-zone: "yespornxxx.ch" always_null
-local-zone: "yesporn.xxx
+local-zone: "yesporn.xxx" always_null
 local-zone: "tubegalore.ch" always_null
 local-zone: "fapmeifyoucan.ch" always_null
 local-zone: "xxxomg.ch" always_null
 local-zone: "tnaflix.ch" always_null
 local-zone: "freefanstv.ch" always_null
-local-zone: "freefans.tv
+local-zone: "freefans.tv" always_null
 local-zone: "hotmovs.ch" always_null
 local-zone: "angelsx.ch" always_null
 local-zone: "pornhd.ch" always_null
-local-zone: "sos.xxx
+local-zone: "sos.xxx" always_null
 local-zone: "sosxxx.ch" always_null
 local-zone: "porntube.ch" always_null
 local-zone: "3movs.ch" always_null
@@ -19546,7 +19546,7 @@ local-zone: "mompornonly.ch" always_null
 local-zone: "upornia.ch" always_null
 local-zone: "hardpornotube.ch" always_null
 local-zone: "hotporn.sex.ch" always_null
-local-zone: "hotporn.sex
+local-zone: "hotporn.sex" always_null
 local-zone: "porntrex.ch" always_null
 local-zone: "sexvid.ch" always_null
 local-zone: "hclips.ch" always_null
@@ -19557,7 +19557,7 @@ local-zone: "putarianocelular.ch" always_null
 local-zone: "hdzog.ch" always_null
 local-zone: "pornhd.ch" always_null
 local-zone: "hornybutt.ch" always_null
-local-zone: "gimmeporn.xyz
+local-zone: "gimmeporn.xyz" always_null
 local-zone: "hornyhill.ch" always_null
 local-zone: "spankandbang.ch" always_null
 local-zone: "xvideoshd.ch" always_null
@@ -19574,7 +19574,7 @@ local-zone: "sexycandidgirls.ch" always_null
 local-zone: "jenporno.cz" always_null
 local-zone: "jenporno.ch" always_null
 local-zone: "burningangles.ch" always_null
-local-zone: "burningangles.tv
+local-zone: "burningangles.tv" always_null
 local-zone: "suicidegirls.ch" always_null
 local-zone: "realitykings.ch" always_null
 local-zone: "inthevip.ch" always_null
@@ -19582,72 +19582,72 @@ local-zone: "faketaxi.ch" always_null
 local-zone: "lesbian.ch" always_null
 local-zone: "squird.ch" always_null
 local-zone: "fap.ch" always_null
-local-zone: "brazzers.ch/	
-local-zone: "digitalplayground.ch/	
+local-zone: "brazzers.ch" always_null
+local-zone: "digitalplayground.ch" always_null
 local-zone: "naughtyamerica.ch" always_null
-local-zone: "realitykings.ch/	
+local-zone: "realitykings.ch" always_null
 local-zone: "iknowthatgirl.ch" always_null
-local-zone: "fakehub.ch/	
+local-zone: "fakehub.ch" always_null
 local-zone: "bangbros.ch" always_null
-local-zone: "japanhdv.ch/	
-local-zone: "familystrokes.ch/	
+local-zone: "japanhdv.ch" always_null
+local-zone: "familystrokes.ch" always_null
 local-zone: "lovehomeporn.ch" always_null
-local-zone: "mofos.ch/	
-local-zone: "mydirtyhobby.ch/	
+local-zone: "mofos.ch" always_null
+local-zone: "mydirtyhobby.ch" always_null
 local-zone: "blacked.ch" always_null
 local-zone: "aoflix.ch" always_null
-local-zone: "publicagent.ch/	
+local-zone: "publicagent.ch" always_null
 local-zone: "twistys.ch" always_null
 local-zone: "blackedraw.ch" always_null
 local-zone: "faphouse.ch" always_null
-local-zone: "wicked.ch/	
-local-zone: "babes.ch/	
-local-zone: "povd.ch/	
-local-zone: "teensloveblackcocks.ch/	
-local-zone: "holed.ch/	
-local-zone: "propertysex.ch/	
-local-zone: "evilangel.ch/	
-local-zone: "pornpros.ch/	
-local-zone: "21sextury.ch/	
-local-zone: "shoplyfter.ch/	
-local-zone: "perfectgonzo.ch/	
-local-zone: "asstraffic.ch/	
-local-zone: "dogfartnetwork.ch/	
-local-zone: "exxxtrasmall.ch/	
-local-zone: "javhd.ch/	
-local-zone: "hustler.ch/	
-local-zone: "teamskeet.ch/	
+local-zone: "wicked.ch" always_null
+local-zone: "babes.ch" always_null
+local-zone: "povd.ch" always_null
+local-zone: "teensloveblackcocks.ch" always_null
+local-zone: "holed.ch" always_null
+local-zone: "propertysex.ch" always_null
+local-zone: "evilangel.ch" always_null
+local-zone: "pornpros.ch" always_null
+local-zone: "21sextury.ch" always_null
+local-zone: "shoplyfter.ch" always_null
+local-zone: "perfectgonzo.ch" always_null
+local-zone: "asstraffic.ch" always_null
+local-zone: "dogfartnetwork.ch" always_null
+local-zone: "exxxtrasmall.ch" always_null
+local-zone: "javhd.ch" always_null
+local-zone: "hustler.ch" always_null
+local-zone: "teamskeet.ch" always_null
 local-zone: "vixen.ch" always_null
 local-zone: "tushy.ch" always_null
-local-zone: "fakeagent.ch/	
-local-zone: "faketaxi.ch/	
-local-zone: "fakehostel.ch/	
-local-zone: "danejones.ch/	
-local-zone: "lesbea.ch/	
-local-zone: "massagerooms.ch/	
-local-zone: "momxxx.ch/	
-local-zone: "stasyq.ch/	
-local-zone: "newsensations.ch/	
+local-zone: "fakeagent.ch" always_null
+local-zone: "faketaxi.ch" always_null
+local-zone: "fakehostel.ch" always_null
+local-zone: "danejones.ch" always_null
+local-zone: "lesbea.ch" always_null
+local-zone: "massagerooms.ch" always_null
+local-zone: "momxxx.ch" always_null
+local-zone: "stasyq.ch" always_null
+local-zone: "newsensations.ch" always_null
 local-zone: "dailyscenes.ch" always_null
 local-zone: "pdcams.ch" always_null
 local-zone: "stripchat.ch" always_null
 local-zone: "camsoda.ch" always_null
 local-zone: "flirt4free.ch" always_null
 local-zone: "imlive.ch" always_null
-local-zone: "babestation.ch/	
+local-zone: "babestation.ch" always_null
 local-zone: "anacams.ch" always_null
 local-zone: "jerkmate.ch" always_null
 local-zone: "amateurtv.ch" always_null
-local-zone: "amateur.tv
+local-zone: "amateur.tv" always_null
 local-zone: "everycamgirl.ch" always_null
 local-zone: "masturbate2gether.ch" always_null
 local-zone: "camfall.ch" always_null
 local-zone: "lemoncams.ch" always_null
-local-zone: "omegle.ch/	
-local-zone: "pornlive.ch/	
+local-zone: "omegle.ch" always_null
+local-zone: "pornlive.ch" always_null
 local-zone: "sexfortokens.ch" always_null
 local-zone: "boinkstream.ch" always_null
-local-zone: "rabbitscams.ch/	
+local-zone: "rabbitscams.ch" always_null
 local-zone: "rampanttv.ch" always_null
 local-zone: "sextingfinder.ch" always_null
 local-zone: "sexchat.ch" always_null
@@ -19676,7 +19676,7 @@ local-zone: "nsfw.tools.ch" always_null
 local-zone: "fantasygf.ch" always_null
 local-zone: "homemoviestube.ch" always_null
 local-zone: "lovehomeporn.ch" always_null
-local-zone: "entensity.ch/	
+local-zone: "entensity.ch" always_null
 local-zone: "warddogs.ch" always_null
 local-zone: "shooshtime.ch" always_null
 local-zone: "amateurporn.ch" always_null
@@ -19689,12 +19689,12 @@ local-zone: "voyeurweb.ch" always_null
 local-zone: "youramateurporn.ch" always_null
 local-zone: "anon-v.ch" always_null
 local-zone: "amateurcool.ch" always_null
-local-zone: "eurogirlsescort.ch/	
+local-zone: "eurogirlsescort.ch" always_null
 local-zone: "topescortbabes.ch" always_null
 local-zone: "escortsaffair.ch" always_null
 local-zone: "honeyaffair.ch" always_null
 local-zone: "incontriamocixxx.ch" always_null
-local-zone: "incontriamoci.xxx
+local-zone: "incontriamoci.xxx" always_null
 local-zone: "amasens.ch" always_null
 local-zone: "lovehub.ch" always_null
 local-zone: "massagerepublic.ch" always_null
@@ -19703,17 +19703,17 @@ local-zone: "lisbonescorts.ch" always_null
 local-zone: "bunnyagent.ch" always_null
 local-zone: "escortamsterdam.ch" always_null
 local-zone: "richobo.ch" always_null
-local-zone: "girls.co.uk
+local-zone: "girls.co.uk" always_null
 local-zone: "lushescorts.ch" always_null
 local-zone: "bedpage.ch" always_null
 local-zone: "deutschlandescort.ch" always_null
 local-zone: "superacompanhantes.ch" always_null
 local-zone: "fgirl.ch" always_null
-local-zone: "topescort.ch/	
+local-zone: "topescort.ch" always_null
 local-zone: "escortempire.ch" always_null
 local-zone: "localxlist.ch" always_null
 local-zone: "divinematesliverpool.ch" always_null
-local-zone: "faphouse.ch/	
+local-zone: "faphouse.ch" always_null
 local-zone: "saveporn.ch" always_null
 local-zone: "pptube.ch" always_null
 local-zone: "inovideoapp.ch" always_null
@@ -19768,7 +19768,7 @@ local-zone: "vdsblog.ch" always_null
 local-zone: "xxxhindi.ch" always_null
 local-zone: "xnxxvideos.ch" always_null
 local-zone: "desiporn.ch" always_null
-local-zone: "hentaistream.ch/	
+local-zone: "hentaistream.ch" always_null
 local-zone: "freehentaistream.ch" always_null
 local-zone: "manytoon.ch" always_null
 local-zone: "hentaivostfr.ch" always_null
@@ -19792,25 +19792,25 @@ local-zone: "hentaipulse.ch" always_null
 local-zone: "hentaiporntube.ch" always_null
 local-zone: "cartoonprn.ch" always_null
 local-zone: "adultcomixxx.ch" always_null
-local-zone: "adultcomi.xxx
+local-zone: "adultcomi.xxx" always_null
 local-zone: "porntotal.ch" always_null
 local-zone: "celebrityporn.ch" always_null
 local-zone: "allnudecelebs.ch" always_null
 local-zone: "celebjihad.ch" always_null
-local-zone: "adultmovies.ch/	
+local-zone: "adultmovies.ch" always_null
 local-zone: "hornyjav.ch" always_null
 local-zone: "analmom.ch" always_null
 local-zone: "onlytight.ch" always_null
 local-zone: "sexycandidgirls.ch" always_null
-local-zone: "extremeporn.ch/	
+local-zone: "extremeporn.ch" always_null
 local-zone: "reflectivedesire.ch" always_null
 local-zone: "milflove.ch" always_null
-local-zone: "bdsmchat.ch/	
+local-zone: "bdsmchat.ch" always_null
 local-zone: "girlswallowed.ch" always_null
 local-zone: "uhairy.ch" always_null
 local-zone: "mybigtitsbabes.ch" always_null
 local-zone: "lovelyfemdom.ch" always_null
-local-zone: "perverttube.ch/	
+local-zone: "perverttube.ch" always_null
 local-zone: "tubepornclassic.ch" always_null
 local-zone: "gaypornotube.ch" always_null
 local-zone: "mencelebrities.ch" always_null
@@ -19823,7 +19823,7 @@ local-zone: "smplace.ch" always_null
 local-zone: "vipergirls.ch" always_null
 local-zone: "kikdirty.ch" always_null
 local-zone: "pornbb.ch" always_null
-local-zone: "rabbitsreviews.ch/	
+local-zone: "rabbitsreviews.ch" always_null
 local-zone: "porndiscounts.ch" always_null
 local-zone: "discountedporn.ch" always_null
 local-zone: "pornmode.ch" always_null
@@ -19853,11 +19853,11 @@ local-zone: "jerkdolls.ch" always_null
 local-zone: "jerkmategames.ch" always_null
 local-zone: "adultgamescollector.ch" always_null
 local-zone: "adultgamesworld.ch" always_null
-local-zone: "stripparadise.ch/	
+local-zone: "stripparadise.ch" always_null
 local-zone: "xxxgames.ch" always_null
 local-zone: "stripselector.ch" always_null
 local-zone: "porngamestv.ch" always_null
-local-zone: "porngames.tv
+local-zone: "porngames.tv" always_null
 local-zone: "stripskunk.ch" always_null
 local-zone: "selectyourgame.ch" always_null
 local-zone: "fetishgames.ch" always_null
@@ -19866,13 +19866,13 @@ local-zone: "lewdflix.ch" always_null
 local-zone: "gamcore.ch" always_null
 local-zone: "sinvr.ch" always_null
 local-zone: "bestporngames.ch" always_null
-local-zone: "porngames.ch/	
-local-zone: "sexgames.ch/	
+local-zone: "porngames.ch" always_null
+local-zone: "sexgames.ch" always_null
 local-zone: "babepedia.ch" always_null
 local-zone: "reddxxx.ch" always_null
 local-zone: "babestare.ch" always_null
 local-zone: "girlstop.ch" always_null
-local-zone: "pornpics.ch/	
+local-zone: "pornpics.ch" always_null
 local-zone: "russiansexygirls.ch" always_null
 local-zone: "miagallery.ch" always_null
 local-zone: "pandesiaworld.ch" always_null
@@ -19895,8 +19895,8 @@ local-zone: "hqbabes.ch" always_null
 local-zone: "javgg.ch" always_null
 local-zone: "javwine.ch" always_null
 local-zone: "fc2hub.ch" always_null
-local-zone: "javdragon.ch/	
-local-zone: "asiancams.ch/	
+local-zone: "javdragon.ch" always_null
+local-zone: "asiancams.ch" always_null
 local-zone: "avgle.ch" always_null
 local-zone: "javcv.ch" always_null
 local-zone: "jav.sb.ch" always_null
@@ -19919,29 +19919,29 @@ local-zone: "alllesbiantube.ch" always_null
 local-zone: "lesbianpornvideos.ch" always_null
 local-zone: "milfslesbian.ch" always_null
 local-zone: "gfrevenge.ch" always_null
-local-zone: "daredorm.ch/	
+local-zone: "daredorm.ch" always_null
 local-zone: "crazycollegegfs.ch" always_null
-local-zone: "gfleaks.ch/	
-local-zone: "gifporntube.ch/	
-local-zone: "literotica.ch/	
-local-zone: "sexstories.ch/	
-local-zone: "frolicme.ch/	
-local-zone: "juicysexstories.ch/	
+local-zone: "gfleaks.ch" always_null
+local-zone: "gifporntube.ch" always_null
+local-zone: "literotica.ch" always_null
+local-zone: "sexstories.ch" always_null
+local-zone: "frolicme.ch" always_null
+local-zone: "juicysexstories.ch" always_null
 local-zone: "randomsites.ch" always_null
 local-zone: "pornstargold.ch" always_null
-local-zone: "colegialasreales.ch/	
-local-zone: "maturecams.ch/	
+local-zone: "colegialasreales.ch" always_null
+local-zone: "maturecams.ch" always_null
 local-zone: "mature.nl" always_null
 local-zone: "mature.ch" always_null
 local-zone: "leslez.at" always_null
 local-zone: "lesbify.at" always_null
 local-zone: "tnaflix.at" always_null
-local-zone: "hdtube.porn
+local-zone: "hdtube.porn" always_null
 local-zone: "twinrdsyte.at" always_null
 local-zone: "upornia.at" always_null
 local-zone: "tnaflix.at" always_null
 local-zone: "pornhits.at" always_null
-local-zone: "bigfuck.tv
+local-zone: "bigfuck.tv" always_null
 local-zone: "txxx.at" always_null
 local-zone: "hdzog.at" always_null
 local-zone: "pornhat.at" always_null
@@ -19962,7 +19962,7 @@ local-zone: "tnaflix.at" always_null
 local-zone: "megatube.at" always_null
 local-zone: "zbporn.at" always_null
 local-zone: "porntop.at" always_null
-local-zone: "ok.xxx
+local-zone: "ok.xxx" always_null
 local-zone: "babestube.at" always_null
 local-zone: "fapcat.at" always_null
 local-zone: "milffox.at" always_null
@@ -19983,7 +19983,7 @@ local-zone: "goldtits.at" always_null
 local-zone: "pornmate.at" always_null
 local-zone: "tubehall.at" always_null
 local-zone: "leslez.at" always_null
-local-zone: "freehdvideos.xxx
+local-zone: "freehdvideos.xxx" always_null
 local-zone: "teenxy.at" always_null
 local-zone: "freehdporn.at" always_null
 local-zone: "pornstars.at" always_null
@@ -20009,17 +20009,17 @@ local-zone: "xvidzz.at" always_null
 local-zone: "sxyprn.at" always_null
 local-zone: "porn.at" always_null
 local-zone: "yespornxxx.at" always_null
-local-zone: "yesporn.xxx
+local-zone: "yesporn.xxx" always_null
 local-zone: "tubegalore.at" always_null
 local-zone: "fapmeifyoucan.at" always_null
 local-zone: "xxxomg.at" always_null
 local-zone: "tnaflix.at" always_null
 local-zone: "freefanstv.at" always_null
-local-zone: "freefans.tv
+local-zone: "freefans.tv" always_null
 local-zone: "hotmovs.at" always_null
 local-zone: "angelsx.at" always_null
 local-zone: "pornhd.at" always_null
-local-zone: "sos.xxx
+local-zone: "sos.xxx" always_null
 local-zone: "sosxxx.at" always_null
 local-zone: "porntube.at" always_null
 local-zone: "3movs.at" always_null
@@ -20043,7 +20043,7 @@ local-zone: "mompornonly.at" always_null
 local-zone: "upornia.at" always_null
 local-zone: "hardpornotube.at" always_null
 local-zone: "hotporn.sex.at" always_null
-local-zone: "hotporn.sex
+local-zone: "hotporn.sex" always_null
 local-zone: "porntrex.at" always_null
 local-zone: "sexvid.at" always_null
 local-zone: "hclips.at" always_null
@@ -20054,7 +20054,7 @@ local-zone: "putarianocelular.at" always_null
 local-zone: "hdzog.at" always_null
 local-zone: "pornhd.at" always_null
 local-zone: "hornybutt.at" always_null
-local-zone: "gimmeporn.xyz
+local-zone: "gimmeporn.xyz" always_null
 local-zone: "hornyhill.at" always_null
 local-zone: "spankandbang.at" always_null
 local-zone: "xvideoshd.at" always_null
@@ -20071,7 +20071,7 @@ local-zone: "sexycandidgirls.at" always_null
 local-zone: "jenporno.cz" always_null
 local-zone: "jenporno.at" always_null
 local-zone: "burningangles.at" always_null
-local-zone: "burningangles.tv
+local-zone: "burningangles.tv" always_null
 local-zone: "suicidegirls.at" always_null
 local-zone: "realitykings.at" always_null
 local-zone: "inthevip.at" always_null
@@ -20079,72 +20079,72 @@ local-zone: "faketaxi.at" always_null
 local-zone: "lesbian.at" always_null
 local-zone: "squird.at" always_null
 local-zone: "fap.at" always_null
-local-zone: "brazzers.at/	
-local-zone: "digitalplayground.at/	
+local-zone: "brazzers.at" always_null
+local-zone: "digitalplayground.at" always_null
 local-zone: "naughtyamerica.at" always_null
-local-zone: "realitykings.at/	
+local-zone: "realitykings.at" always_null
 local-zone: "iknowthatgirl.at" always_null
-local-zone: "fakehub.at/	
+local-zone: "fakehub.at" always_null
 local-zone: "bangbros.at" always_null
-local-zone: "japanhdv.at/	
-local-zone: "familystrokes.at/	
+local-zone: "japanhdv.at" always_null
+local-zone: "familystrokes.at" always_null
 local-zone: "lovehomeporn.at" always_null
-local-zone: "mofos.at/	
-local-zone: "mydirtyhobby.at/	
+local-zone: "mofos.at" always_null
+local-zone: "mydirtyhobby.at" always_null
 local-zone: "blacked.at" always_null
 local-zone: "aoflix.at" always_null
-local-zone: "publicagent.at/	
+local-zone: "publicagent.at" always_null
 local-zone: "twistys.at" always_null
 local-zone: "blackedraw.at" always_null
 local-zone: "faphouse.at" always_null
-local-zone: "wicked.at/	
-local-zone: "babes.at/	
-local-zone: "povd.at/	
-local-zone: "teensloveblackcocks.at/	
-local-zone: "holed.at/	
-local-zone: "propertysex.at/	
-local-zone: "evilangel.at/	
-local-zone: "pornpros.at/	
-local-zone: "21sextury.at/	
-local-zone: "shoplyfter.at/	
-local-zone: "perfectgonzo.at/	
-local-zone: "asstraffic.at/	
-local-zone: "dogfartnetwork.at/	
-local-zone: "exxxtrasmall.at/	
-local-zone: "javhd.at/	
-local-zone: "hustler.at/	
-local-zone: "teamskeet.at/	
+local-zone: "wicked.at" always_null
+local-zone: "babes.at" always_null
+local-zone: "povd.at" always_null
+local-zone: "teensloveblackcocks.at" always_null	
+local-zone: "holed.at" always_null
+local-zone: "propertysex.at" always_null
+local-zone: "evilangel.at" always_null
+local-zone: "pornpros.at" always_null
+local-zone: "21sextury.at" always_null
+local-zone: "shoplyfter.at" always_null
+local-zone: "perfectgonzo.at" always_null
+local-zone: "asstraffic.at" always_null
+local-zone: "dogfartnetwork.at" always_null
+local-zone: "exxxtrasmall.at" always_null
+local-zone: "javhd.at" always_null
+local-zone: "hustler.at" always_null
+local-zone: "teamskeet.at" always_null
 local-zone: "vixen.at" always_null
 local-zone: "tushy.at" always_null
-local-zone: "fakeagent.at/	
-local-zone: "faketaxi.at/	
-local-zone: "fakehostel.at/	
-local-zone: "danejones.at/	
-local-zone: "lesbea.at/	
-local-zone: "massagerooms.at/	
-local-zone: "momxxx.at/	
-local-zone: "stasyq.at/	
-local-zone: "newsensations.at/	
+local-zone: "fakeagent.at" always_null
+local-zone: "faketaxi.at" always_null
+local-zone: "fakehostel.at" always_null
+local-zone: "danejones.at" always_null
+local-zone: "lesbea.at" always_null
+local-zone: "massagerooms.at" always_null
+local-zone: "momxxx.at" always_null
+local-zone: "stasyq.at" always_null
+local-zone: "newsensations.at" always_null
 local-zone: "dailyscenes.at" always_null
 local-zone: "pdcams.at" always_null
 local-zone: "stripchat.at" always_null
 local-zone: "camsoda.at" always_null
 local-zone: "flirt4free.at" always_null
 local-zone: "imlive.at" always_null
-local-zone: "babestation.at/	
+local-zone: "babestation.at" always_null
 local-zone: "anacams.at" always_null
 local-zone: "jerkmate.at" always_null
 local-zone: "amateurtv.at" always_null
-local-zone: "amateur.tv
+local-zone: "amateur.tv" always_null
 local-zone: "everycamgirl.at" always_null
 local-zone: "masturbate2gether.at" always_null
 local-zone: "camfall.at" always_null
 local-zone: "lemoncams.at" always_null
-local-zone: "omegle.at/	
-local-zone: "pornlive.at/	
+local-zone: "omegle.at" always_null
+local-zone: "pornlive.at" always_null
 local-zone: "sexfortokens.at" always_null
 local-zone: "boinkstream.at" always_null
-local-zone: "rabbitscams.at/	
+local-zone: "rabbitscams.at" always_null
 local-zone: "rampanttv.at" always_null
 local-zone: "sextingfinder.at" always_null
 local-zone: "sexchat.at" always_null
@@ -20173,7 +20173,7 @@ local-zone: "nsfw.tools.at" always_null
 local-zone: "fantasygf.at" always_null
 local-zone: "homemoviestube.at" always_null
 local-zone: "lovehomeporn.at" always_null
-local-zone: "entensity.at/	
+local-zone: "entensity.at" always_null
 local-zone: "warddogs.at" always_null
 local-zone: "shooshtime.at" always_null
 local-zone: "amateurporn.at" always_null
@@ -20186,12 +20186,12 @@ local-zone: "voyeurweb.at" always_null
 local-zone: "youramateurporn.at" always_null
 local-zone: "anon-v.at" always_null
 local-zone: "amateurcool.at" always_null
-local-zone: "eurogirlsescort.at/	
+local-zone: "eurogirlsescort.at" always_null
 local-zone: "topescortbabes.at" always_null
 local-zone: "escortsaffair.at" always_null
 local-zone: "honeyaffair.at" always_null
 local-zone: "incontriamocixxx.at" always_null
-local-zone: "incontriamoci.xxx
+local-zone: "incontriamoci.xxx" always_null
 local-zone: "amasens.at" always_null
 local-zone: "lovehub.at" always_null
 local-zone: "massagerepublic.at" always_null
@@ -20200,17 +20200,17 @@ local-zone: "lisbonescorts.at" always_null
 local-zone: "bunnyagent.at" always_null
 local-zone: "escortamsterdam.at" always_null
 local-zone: "richobo.at" always_null
-local-zone: "girls.co.uk
+local-zone: "girls.co.uk" always_null
 local-zone: "lushescorts.at" always_null
 local-zone: "bedpage.at" always_null
 local-zone: "deutschlandescort.at" always_null
 local-zone: "superacompanhantes.at" always_null
 local-zone: "fgirl.at" always_null
-local-zone: "topescort.at/	
+local-zone: "topescort.at" always_null
 local-zone: "escortempire.at" always_null
 local-zone: "localxlist.at" always_null
 local-zone: "divinematesliverpool.at" always_null
-local-zone: "faphouse.at/	
+local-zone: "faphouse.at" always_null
 local-zone: "saveporn.at" always_null
 local-zone: "pptube.at" always_null
 local-zone: "inovideoapp.at" always_null
@@ -20265,7 +20265,7 @@ local-zone: "vdsblog.at" always_null
 local-zone: "xxxhindi.at" always_null
 local-zone: "xnxxvideos.at" always_null
 local-zone: "desiporn.at" always_null
-local-zone: "hentaistream.at/	
+local-zone: "hentaistream.at" always_null
 local-zone: "freehentaistream.at" always_null
 local-zone: "manytoon.at" always_null
 local-zone: "hentaivostfr.at" always_null
@@ -20289,25 +20289,25 @@ local-zone: "hentaipulse.at" always_null
 local-zone: "hentaiporntube.at" always_null
 local-zone: "cartoonprn.at" always_null
 local-zone: "adultcomixxx.at" always_null
-local-zone: "adultcomi.xxx
+local-zone: "adultcomi.xxx" always_null
 local-zone: "porntotal.at" always_null
 local-zone: "celebrityporn.at" always_null
 local-zone: "allnudecelebs.at" always_null
 local-zone: "celebjihad.at" always_null
-local-zone: "adultmovies.at/	
+local-zone: "adultmovies.at" always_null
 local-zone: "hornyjav.at" always_null
 local-zone: "analmom.at" always_null
 local-zone: "onlytight.at" always_null
 local-zone: "sexycandidgirls.at" always_null
-local-zone: "extremeporn.at/	
+local-zone: "extremeporn.at" always_null
 local-zone: "reflectivedesire.at" always_null
 local-zone: "milflove.at" always_null
-local-zone: "bdsmchat.at/	
+local-zone: "bdsmchat.at" always_null
 local-zone: "girlswallowed.at" always_null
 local-zone: "uhairy.at" always_null
 local-zone: "mybigtitsbabes.at" always_null
 local-zone: "lovelyfemdom.at" always_null
-local-zone: "perverttube.at/	
+local-zone: "perverttube.at" always_null
 local-zone: "tubepornclassic.at" always_null
 local-zone: "gaypornotube.at" always_null
 local-zone: "mencelebrities.at" always_null
@@ -20320,7 +20320,7 @@ local-zone: "smplace.at" always_null
 local-zone: "vipergirls.at" always_null
 local-zone: "kikdirty.at" always_null
 local-zone: "pornbb.at" always_null
-local-zone: "rabbitsreviews.at/	
+local-zone: "rabbitsreviews.at" always_null
 local-zone: "porndiscounts.at" always_null
 local-zone: "discountedporn.at" always_null
 local-zone: "pornmode.at" always_null
@@ -20350,11 +20350,11 @@ local-zone: "jerkdolls.at" always_null
 local-zone: "jerkmategames.at" always_null
 local-zone: "adultgamescollector.at" always_null
 local-zone: "adultgamesworld.at" always_null
-local-zone: "stripparadise.at/	
+local-zone: "stripparadise.at" always_null
 local-zone: "xxxgames.at" always_null
 local-zone: "stripselector.at" always_null
 local-zone: "porngamestv.at" always_null
-local-zone: "porngames.tv
+local-zone: "porngames.tv" always_null
 local-zone: "stripskunk.at" always_null
 local-zone: "selectyourgame.at" always_null
 local-zone: "fetishgames.at" always_null
@@ -20363,13 +20363,13 @@ local-zone: "lewdflix.at" always_null
 local-zone: "gamcore.at" always_null
 local-zone: "sinvr.at" always_null
 local-zone: "bestporngames.at" always_null
-local-zone: "porngames.at/	
-local-zone: "sexgames.at/	
+local-zone: "porngames.at" always_null
+local-zone: "sexgames.at" always_null
 local-zone: "babepedia.at" always_null
 local-zone: "reddxxx.at" always_null
 local-zone: "babestare.at" always_null
 local-zone: "girlstop.at" always_null
-local-zone: "pornpics.at/	
+local-zone: "pornpics.at" always_null
 local-zone: "russiansexygirls.at" always_null
 local-zone: "miagallery.at" always_null
 local-zone: "pandesiaworld.at" always_null
@@ -20392,8 +20392,8 @@ local-zone: "hqbabes.at" always_null
 local-zone: "javgg.at" always_null
 local-zone: "javwine.at" always_null
 local-zone: "fc2hub.at" always_null
-local-zone: "javdragon.at/	
-local-zone: "asiancams.at/	
+local-zone: "javdragon.at" always_null
+local-zone: "asiancams.at" always_null
 local-zone: "avgle.at" always_null
 local-zone: "javcv.at" always_null
 local-zone: "jav.sb.at" always_null
@@ -20416,29 +20416,29 @@ local-zone: "alllesbiantube.at" always_null
 local-zone: "lesbianpornvideos.at" always_null
 local-zone: "milfslesbian.at" always_null
 local-zone: "gfrevenge.at" always_null
-local-zone: "daredorm.at/	
+local-zone: "daredorm.at" always_null
 local-zone: "crazycollegegfs.at" always_null
-local-zone: "gfleaks.at/	
-local-zone: "gifporntube.at/	
-local-zone: "literotica.at/	
-local-zone: "sexstories.at/	
-local-zone: "frolicme.at/	
-local-zone: "juicysexstories.at/	
+local-zone: "gfleaks.at" always_null
+local-zone: "gifporntube.at" always_null
+local-zone: "literotica.at" always_null
+local-zone: "sexstories.at" always_null
+local-zone: "frolicme.at" always_null
+local-zone: "juicysexstories.at" always_null
 local-zone: "randomsites.at" always_null
 local-zone: "pornstargold.at" always_null
-local-zone: "colegialasreales.at/	
-local-zone: "maturecams.at/	
+local-zone: "colegialasreales.at" always_null
+local-zone: "maturecams.at" always_null
 local-zone: "mature.nl" always_null
-local-zone: "mature.at/	
+local-zone: "mature.at" always_null
 local-zone: "leslez.cz" always_null
 local-zone: "lesbify.cz" always_null
 local-zone: "tnaflix.cz" always_null
-local-zone: "hdtube.porn
+local-zone: "hdtube.porn" always_null
 local-zone: "twinrdsyte.cz" always_null
 local-zone: "upornia.cz" always_null
 local-zone: "tnaflix.cz" always_null
 local-zone: "pornhits.cz" always_null
-local-zone: "bigfuck.tv
+local-zone: "bigfuck.tv" always_null
 local-zone: "txxx.cz" always_null
 local-zone: "hdzog.cz" always_null
 local-zone: "pornhat.cz" always_null
@@ -20459,7 +20459,7 @@ local-zone: "tnaflix.cz" always_null
 local-zone: "megatube.cz" always_null
 local-zone: "zbporn.cz" always_null
 local-zone: "porntop.cz" always_null
-local-zone: "ok.xxx
+local-zone: "ok.xxx" always_null
 local-zone: "babestube.cz" always_null
 local-zone: "fapcat.cz" always_null
 local-zone: "milffox.cz" always_null
@@ -20480,7 +20480,7 @@ local-zone: "goldtits.cz" always_null
 local-zone: "pornmate.cz" always_null
 local-zone: "tubehall.cz" always_null
 local-zone: "leslez.cz" always_null
-local-zone: "freehdvideos.xxx
+local-zone: "freehdvideos.xxx" always_null
 local-zone: "teenxy.cz" always_null
 local-zone: "freehdporn.cz" always_null
 local-zone: "pornstars.cz" always_null
@@ -20506,17 +20506,17 @@ local-zone: "xvidzz.cz" always_null
 local-zone: "sxyprn.cz" always_null
 local-zone: "porn.cz" always_null
 local-zone: "yespornxxx.cz" always_null
-local-zone: "yesporn.xxx
+local-zone: "yesporn.xxx" always_null
 local-zone: "tubegalore.cz" always_null
 local-zone: "fapmeifyoucan.cz" always_null
 local-zone: "xxxomg.cz" always_null
 local-zone: "tnaflix.cz" always_null
 local-zone: "freefanstv.cz" always_null
-local-zone: "freefans.tv
+local-zone: "freefans.tv" always_null
 local-zone: "hotmovs.cz" always_null
 local-zone: "angelsx.cz" always_null
 local-zone: "pornhd.cz" always_null
-local-zone: "sos.xxx
+local-zone: "sos.xxx" always_null
 local-zone: "sosxxx.cz" always_null
 local-zone: "porntube.cz" always_null
 local-zone: "3movs.cz" always_null
@@ -20540,7 +20540,7 @@ local-zone: "mompornonly.cz" always_null
 local-zone: "upornia.cz" always_null
 local-zone: "hardpornotube.cz" always_null
 local-zone: "hotporn.sex.cz" always_null
-local-zone: "hotporn.sex
+local-zone: "hotporn.sex" always_null
 local-zone: "porntrex.cz" always_null
 local-zone: "sexvid.cz" always_null
 local-zone: "hclips.cz" always_null
@@ -20551,7 +20551,7 @@ local-zone: "putarianocelular.cz" always_null
 local-zone: "hdzog.cz" always_null
 local-zone: "pornhd.cz" always_null
 local-zone: "hornybutt.cz" always_null
-local-zone: "gimmeporn.xyz
+local-zone: "gimmeporn.xyz" always_null
 local-zone: "hornyhill.cz" always_null
 local-zone: "spankandbang.cz" always_null
 local-zone: "xvideoshd.cz" always_null
@@ -20568,7 +20568,7 @@ local-zone: "sexycandidgirls.cz" always_null
 local-zone: "jenporno.cz" always_null
 local-zone: "jenporno.cz" always_null
 local-zone: "burningangles.cz" always_null
-local-zone: "burningangles.tv
+local-zone: "burningangles.tv" always_null
 local-zone: "suicidegirls.cz" always_null
 local-zone: "realitykings.cz" always_null
 local-zone: "inthevip.cz" always_null
@@ -20576,72 +20576,72 @@ local-zone: "faketaxi.cz" always_null
 local-zone: "lesbian.cz" always_null
 local-zone: "squird.cz" always_null
 local-zone: "fap.cz" always_null
-local-zone: "brazzers.cz/	
-local-zone: "digitalplayground.cz/	
+local-zone: "brazzers.cz" always_null
+local-zone: "digitalplayground.cz" always_null
 local-zone: "naughtyamerica.cz" always_null
-local-zone: "realitykings.cz/	
+local-zone: "realitykings.cz" always_null
 local-zone: "iknowthatgirl.cz" always_null
-local-zone: "fakehub.cz/	
+local-zone: "fakehub.cz" always_null
 local-zone: "bangbros.cz" always_null
-local-zone: "japanhdv.cz/	
-local-zone: "familystrokes.cz/	
+local-zone: "japanhdv.cz" always_null
+local-zone: "familystrokes.cz" always_null
 local-zone: "lovehomeporn.cz" always_null
-local-zone: "mofos.cz/	
-local-zone: "mydirtyhobby.cz/	
+local-zone: "mofos.cz" always_null
+local-zone: "mydirtyhobby.cz" always_null
 local-zone: "blacked.cz" always_null
 local-zone: "aoflix.cz" always_null
-local-zone: "publicagent.cz/	
+local-zone: "publicagent.cz" always_null
 local-zone: "twistys.cz" always_null
 local-zone: "blackedraw.cz" always_null
 local-zone: "faphouse.cz" always_null
-local-zone: "wicked.cz/	
-local-zone: "babes.cz/	
-local-zone: "povd.cz/	
-local-zone: "teensloveblackcocks.cz/	
-local-zone: "holed.cz/	
-local-zone: "propertysex.cz/	
-local-zone: "evilangel.cz/	
-local-zone: "pornpros.cz/	
-local-zone: "21sextury.cz/	
-local-zone: "shoplyfter.cz/	
-local-zone: "perfectgonzo.cz/	
-local-zone: "asstraffic.cz/	
-local-zone: "dogfartnetwork.cz/	
-local-zone: "exxxtrasmall.cz/	
-local-zone: "javhd.cz/	
-local-zone: "hustler.cz/	
-local-zone: "teamskeet.cz/	
+local-zone: "wicked.cz" always_null
+local-zone: "babes.cz" always_null
+local-zone: "povd.cz" always_null
+local-zone: "teensloveblackcocks.cz" always_null	
+local-zone: "holed.cz" always_null
+local-zone: "propertysex.cz" always_null
+local-zone: "evilangel.cz" always_null
+local-zone: "pornpros.cz" always_null
+local-zone: "21sextury.cz" always_null
+local-zone: "shoplyfter.cz" always_null
+local-zone: "perfectgonzo.cz" always_null
+local-zone: "asstraffic.cz" always_null
+local-zone: "dogfartnetwork.cz" always_null
+local-zone: "exxxtrasmall.cz" always_null
+local-zone: "javhd.cz" always_null
+local-zone: "hustler.cz" always_null
+local-zone: "teamskeet.cz" always_null
 local-zone: "vixen.cz" always_null
 local-zone: "tushy.cz" always_null
-local-zone: "fakeagent.cz/	
-local-zone: "faketaxi.cz/	
-local-zone: "fakehostel.cz/	
-local-zone: "danejones.cz/	
-local-zone: "lesbea.cz/	
-local-zone: "massagerooms.cz/	
-local-zone: "momxxx.cz/	
-local-zone: "stasyq.cz/	
-local-zone: "newsensations.cz/	
+local-zone: "fakeagent.cz" always_null
+local-zone: "faketaxi.cz" always_null
+local-zone: "fakehostel.cz" always_null
+local-zone: "danejones.cz" always_null
+local-zone: "lesbea.cz" always_null
+local-zone: "massagerooms.cz" always_null
+local-zone: "momxxx.cz" always_null
+local-zone: "stasyq.cz" always_null
+local-zone: "newsensations.cz" always_null
 local-zone: "dailyscenes.cz" always_null
 local-zone: "pdcams.cz" always_null
 local-zone: "stripchat.cz" always_null
 local-zone: "camsoda.cz" always_null
 local-zone: "flirt4free.cz" always_null
 local-zone: "imlive.cz" always_null
-local-zone: "babestation.cz/	
+local-zone: "babestation.cz" always_null
 local-zone: "anacams.cz" always_null
 local-zone: "jerkmate.cz" always_null
 local-zone: "amateurtv.cz" always_null
-local-zone: "amateur.tv
+local-zone: "amateur.tv" always_null
 local-zone: "everycamgirl.cz" always_null
 local-zone: "masturbate2gether.cz" always_null
 local-zone: "camfall.cz" always_null
 local-zone: "lemoncams.cz" always_null
-local-zone: "omegle.cz/	
-local-zone: "pornlive.cz/	
+local-zone: "omegle.cz" always_null
+local-zone: "pornlive.cz" always_null
 local-zone: "sexfortokens.cz" always_null
 local-zone: "boinkstream.cz" always_null
-local-zone: "rabbitscams.cz/	
+local-zone: "rabbitscams.cz" always_null
 local-zone: "rampanttv.cz" always_null
 local-zone: "sextingfinder.cz" always_null
 local-zone: "sexchat.cz" always_null
@@ -20670,7 +20670,7 @@ local-zone: "nsfw.tools.cz" always_null
 local-zone: "fantasygf.cz" always_null
 local-zone: "homemoviestube.cz" always_null
 local-zone: "lovehomeporn.cz" always_null
-local-zone: "entensity.cz/	
+local-zone: "entensity.cz" always_null
 local-zone: "warddogs.cz" always_null
 local-zone: "shooshtime.cz" always_null
 local-zone: "amateurporn.cz" always_null
@@ -20683,12 +20683,12 @@ local-zone: "voyeurweb.cz" always_null
 local-zone: "youramateurporn.cz" always_null
 local-zone: "anon-v.cz" always_null
 local-zone: "amateurcool.cz" always_null
-local-zone: "eurogirlsescort.cz/	
+local-zone: "eurogirlsescort.cz" always_null
 local-zone: "topescortbabes.cz" always_null
 local-zone: "escortsaffair.cz" always_null
 local-zone: "honeyaffair.cz" always_null
 local-zone: "incontriamocixxx.cz" always_null
-local-zone: "incontriamoci.xxx
+local-zone: "incontriamoci.xxx" always_null
 local-zone: "amasens.cz" always_null
 local-zone: "lovehub.cz" always_null
 local-zone: "massagerepublic.cz" always_null
@@ -20697,17 +20697,17 @@ local-zone: "lisbonescorts.cz" always_null
 local-zone: "bunnyagent.cz" always_null
 local-zone: "escortamsterdam.cz" always_null
 local-zone: "richobo.cz" always_null
-local-zone: "girls.co.uk
+local-zone: "girls.co.uk" always_null
 local-zone: "lushescorts.cz" always_null
 local-zone: "bedpage.cz" always_null
 local-zone: "deutschlandescort.cz" always_null
 local-zone: "superacompanhantes.cz" always_null
 local-zone: "fgirl.cz" always_null
-local-zone: "topescort.cz/	
+local-zone: "topescort.cz" always_null
 local-zone: "escortempire.cz" always_null
 local-zone: "localxlist.cz" always_null
 local-zone: "divinematesliverpool.cz" always_null
-local-zone: "faphouse.cz/	
+local-zone: "faphouse.cz" always_null
 local-zone: "saveporn.cz" always_null
 local-zone: "pptube.cz" always_null
 local-zone: "inovideoapp.cz" always_null
@@ -20762,7 +20762,7 @@ local-zone: "vdsblog.cz" always_null
 local-zone: "xxxhindi.cz" always_null
 local-zone: "xnxxvideos.cz" always_null
 local-zone: "desiporn.cz" always_null
-local-zone: "hentaistream.cz/	
+local-zone: "hentaistream.cz" always_null
 local-zone: "freehentaistream.cz" always_null
 local-zone: "manytoon.cz" always_null
 local-zone: "hentaivostfr.cz" always_null
@@ -20786,25 +20786,25 @@ local-zone: "hentaipulse.cz" always_null
 local-zone: "hentaiporntube.cz" always_null
 local-zone: "cartoonprn.cz" always_null
 local-zone: "adultcomixxx.cz" always_null
-local-zone: "adultcomi.xxx
+local-zone: "adultcomi.xxx" always_null
 local-zone: "porntotal.cz" always_null
 local-zone: "celebrityporn.cz" always_null
 local-zone: "allnudecelebs.cz" always_null
 local-zone: "celebjihad.cz" always_null
-local-zone: "adultmovies.cz/	
+local-zone: "adultmovies.cz" always_null
 local-zone: "hornyjav.cz" always_null
 local-zone: "analmom.cz" always_null
 local-zone: "onlytight.cz" always_null
 local-zone: "sexycandidgirls.cz" always_null
-local-zone: "extremeporn.cz/	
+local-zone: "extremeporn.cz" always_null
 local-zone: "reflectivedesire.cz" always_null
 local-zone: "milflove.cz" always_null
-local-zone: "bdsmchat.cz/	
+local-zone: "bdsmchat.cz" always_null
 local-zone: "girlswallowed.cz" always_null
 local-zone: "uhairy.cz" always_null
 local-zone: "mybigtitsbabes.cz" always_null
 local-zone: "lovelyfemdom.cz" always_null
-local-zone: "perverttube.cz/	
+local-zone: "perverttube.cz" always_null
 local-zone: "tubepornclassic.cz" always_null
 local-zone: "gaypornotube.cz" always_null
 local-zone: "mencelebrities.cz" always_null
@@ -20817,7 +20817,7 @@ local-zone: "smplace.cz" always_null
 local-zone: "vipergirls.cz" always_null
 local-zone: "kikdirty.cz" always_null
 local-zone: "pornbb.cz" always_null
-local-zone: "rabbitsreviews.cz/	
+local-zone: "rabbitsreviews.cz" always_null
 local-zone: "porndiscounts.cz" always_null
 local-zone: "discountedporn.cz" always_null
 local-zone: "pornmode.cz" always_null
@@ -20847,11 +20847,11 @@ local-zone: "jerkdolls.cz" always_null
 local-zone: "jerkmategames.cz" always_null
 local-zone: "adultgamescollector.cz" always_null
 local-zone: "adultgamesworld.cz" always_null
-local-zone: "stripparadise.cz/	
+local-zone: "stripparadise.cz" always_null
 local-zone: "xxxgames.cz" always_null
 local-zone: "stripselector.cz" always_null
 local-zone: "porngamestv.cz" always_null
-local-zone: "porngames.tv
+local-zone: "porngames.tv" always_null
 local-zone: "stripskunk.cz" always_null
 local-zone: "selectyourgame.cz" always_null
 local-zone: "fetishgames.cz" always_null
@@ -20860,13 +20860,13 @@ local-zone: "lewdflix.cz" always_null
 local-zone: "gamcore.cz" always_null
 local-zone: "sinvr.cz" always_null
 local-zone: "bestporngames.cz" always_null
-local-zone: "porngames.cz/	
-local-zone: "sexgames.cz/	
+local-zone: "porngames.cz" always_null
+local-zone: "sexgames.cz" always_null
 local-zone: "babepedia.cz" always_null
 local-zone: "reddxxx.cz" always_null
 local-zone: "babestare.cz" always_null
 local-zone: "girlstop.cz" always_null
-local-zone: "pornpics.cz/	
+local-zone: "pornpics.cz" always_null
 local-zone: "russiansexygirls.cz" always_null
 local-zone: "miagallery.cz" always_null
 local-zone: "pandesiaworld.cz" always_null
@@ -20889,8 +20889,8 @@ local-zone: "hqbabes.cz" always_null
 local-zone: "javgg.cz" always_null
 local-zone: "javwine.cz" always_null
 local-zone: "fc2hub.cz" always_null
-local-zone: "javdragon.cz/	
-local-zone: "asiancams.cz/	
+local-zone: "javdragon.cz" always_null
+local-zone: "asiancams.cz" always_null
 local-zone: "avgle.cz" always_null
 local-zone: "javcv.cz" always_null
 local-zone: "jav.sb.cz" always_null
@@ -20913,20 +20913,20 @@ local-zone: "alllesbiantube.cz" always_null
 local-zone: "lesbianpornvideos.cz" always_null
 local-zone: "milfslesbian.cz" always_null
 local-zone: "gfrevenge.cz" always_null
-local-zone: "daredorm.cz/	
+local-zone: "daredorm.cz" always_null
 local-zone: "crazycollegegfs.cz" always_null
-local-zone: "gfleaks.cz/	
-local-zone: "gifporntube.cz/	
-local-zone: "literotica.cz/	
-local-zone: "sexstories.cz/	
-local-zone: "frolicme.cz/	
-local-zone: "juicysexstories.cz/	
+local-zone: "gfleaks.cz" always_null
+local-zone: "gifporntube.cz" always_null
+local-zone: "literotica.cz" always_null
+local-zone: "sexstories.cz" always_null
+local-zone: "frolicme.cz" always_null
+local-zone: "juicysexstories.cz" always_null
 local-zone: "randomsites.cz" always_null
 local-zone: "pornstargold.cz" always_null
-local-zone: "colegialasreales.cz/	
-local-zone: "maturecams.cz/	
+local-zone: "colegialasreales.cz" always_null
+local-zone: "maturecams.cz" always_null
 local-zone: "mature.nl" always_null
-local-zone: "mature.cz/	
+local-zone: "mature.cz" always_null
 local-zone: "leslez.pl" always_null
 local-zone: "lesbify.pl" always_null
 local-zone: "tnaflix.pl" always_null
@@ -20935,7 +20935,7 @@ local-zone: "twinrdsyte.pl" always_null
 local-zone: "upornia.pl" always_null
 local-zone: "tnaflix.pl" always_null
 local-zone: "pornhits.pl" always_null
-local-zone: "bigfuck.tv
+local-zone: "bigfuck.tv" always_null
 local-zone: "txxx.pl" always_null
 local-zone: "hdzog.pl" always_null
 local-zone: "pornhat.pl" always_null
@@ -20977,7 +20977,7 @@ local-zone: "goldtits.pl" always_null
 local-zone: "pornmate.pl" always_null
 local-zone: "tubehall.pl" always_null
 local-zone: "leslez.pl" always_null
-local-zone: "freehdvideos.xxx
+local-zone: "freehdvideos.xxx" always_null
 local-zone: "teenxy.pl" always_null
 local-zone: "freehdporn.pl" always_null
 local-zone: "pornstars.pl" always_null
@@ -21008,11 +21008,11 @@ local-zone: "fapmeifyoucan.pl" always_null
 local-zone: "xxxomg.pl" always_null
 local-zone: "tnaflix.pl" always_null
 local-zone: "freefanstv.pl" always_null
-local-zone: "freefans.tv
+local-zone: "freefans.tv" always_null
 local-zone: "hotmovs.pl" always_null
 local-zone: "angelsx.pl" always_null
 local-zone: "pornhd.pl" always_null
-local-zone: "sos.xxx
+local-zone: "sos.xxx" always_null
 local-zone: "sosxxx.pl" always_null
 local-zone: "porntube.pl" always_null
 local-zone: "3movs.pl" always_null
@@ -21070,72 +21070,72 @@ local-zone: "faketaxi.pl" always_null
 local-zone: "lesbian.pl" always_null
 local-zone: "squird.pl" always_null
 local-zone: "fap.pl" always_null
-local-zone: "brazzers.pl/	
-local-zone: "digitalplayground.pl/	
+local-zone: "brazzers.pl" always_null
+local-zone: "digitalplayground.pl" always_null
 local-zone: "naughtyamerica.pl" always_null
-local-zone: "realitykings.pl/	
+local-zone: "realitykings.pl" always_null
 local-zone: "iknowthatgirl.pl" always_null
-local-zone: "fakehub.pl/	
+local-zone: "fakehub.pl" always_null
 local-zone: "bangbros.pl" always_null
-local-zone: "japanhdv.pl/	
-local-zone: "familystrokes.pl/	
+local-zone: "japanhdv.pl" always_null
+local-zone: "familystrokes.pl" always_null
 local-zone: "lovehomeporn.pl" always_null
-local-zone: "mofos.pl/	
-local-zone: "mydirtyhobby.pl/	
+local-zone: "mofos.pl" always_null
+local-zone: "mydirtyhobby.pl" always_null
 local-zone: "blacked.pl" always_null
 local-zone: "aoflix.pl" always_null
-local-zone: "publicagent.pl/	
+local-zone: "publicagent.pl" always_null
 local-zone: "twistys.pl" always_null
 local-zone: "blackedraw.pl" always_null
 local-zone: "faphouse.pl" always_null
-local-zone: "wicked.pl/	
-local-zone: "babes.pl/	
-local-zone: "povd.pl/	
-local-zone: "teensloveblackcocks.pl/	
-local-zone: "holed.pl/	
-local-zone: "propertysex.pl/	
-local-zone: "evilangel.pl/	
-local-zone: "pornpros.pl/	
-local-zone: "21sextury.pl/	
-local-zone: "shoplyfter.pl/	
-local-zone: "perfectgonzo.pl/	
-local-zone: "asstraffic.pl/	
-local-zone: "dogfartnetwork.pl/	
-local-zone: "exxxtrasmall.pl/	
-local-zone: "javhd.pl/	
-local-zone: "hustler.pl/	
-local-zone: "teamskeet.pl/	
+local-zone: "wicked.pl" always_null
+local-zone: "babes.pl" always_null
+local-zone: "povd.pl" always_null
+local-zone: "teensloveblackcocks.pl" always_null
+local-zone: "holed.pl" always_null
+local-zone: "propertysex.pl" always_null
+local-zone: "evilangel.pl" always_null
+local-zone: "pornpros.pl" always_null
+local-zone: "21sextury.pl" always_null
+local-zone: "shoplyfter.pl" always_null
+local-zone: "perfectgonzo.pl" always_null
+local-zone: "asstraffic.pl" always_null
+local-zone: "dogfartnetwork.pl" always_null
+local-zone: "exxxtrasmall.pl" always_null
+local-zone: "javhd.pl" always_null
+local-zone: "hustler.pl" always_null
+local-zone: "teamskeet.pl" always_null
 local-zone: "vixen.pl" always_null
 local-zone: "tushy.pl" always_null
-local-zone: "fakeagent.pl/	
-local-zone: "faketaxi.pl/	
-local-zone: "fakehostel.pl/	
-local-zone: "danejones.pl/	
-local-zone: "lesbea.pl/	
-local-zone: "massagerooms.pl/	
-local-zone: "momxxx.pl/	
-local-zone: "stasyq.pl/	
-local-zone: "newsensations.pl/	
+local-zone: "fakeagent.pl" always_null
+local-zone: "faketaxi.pl" always_null
+local-zone: "fakehostel.pl" always_null
+local-zone: "danejones.pl" always_null
+local-zone: "lesbea.pl" always_null
+local-zone: "massagerooms.pl" always_null
+local-zone: "momxxx.pl" always_null
+local-zone: "stasyq.pl" always_null
+local-zone: "newsensations.pl" always_null
 local-zone: "dailyscenes.pl" always_null
 local-zone: "pdcams.pl" always_null
 local-zone: "stripchat.pl" always_null
 local-zone: "camsoda.pl" always_null
 local-zone: "flirt4free.pl" always_null
 local-zone: "imlive.pl" always_null
-local-zone: "babestation.pl/	
+local-zone: "babestation.pl" always_null
 local-zone: "anacams.pl" always_null
 local-zone: "jerkmate.pl" always_null
 local-zone: "amateurtv.pl" always_null
-local-zone: "amateur.tv
+local-zone: "amateur.tv" always_null
 local-zone: "everycamgirl.pl" always_null
 local-zone: "masturbate2gether.pl" always_null
 local-zone: "camfall.pl" always_null
 local-zone: "lemoncams.pl" always_null
-local-zone: "omegle.pl/	
-local-zone: "pornlive.pl/	
+local-zone: "omegle.pl" always_null
+local-zone: "pornlive.pl" always_null
 local-zone: "sexfortokens.pl" always_null
 local-zone: "boinkstream.pl" always_null
-local-zone: "rabbitscams.pl/	
+local-zone: "rabbitscams.pl" always_null
 local-zone: "rampanttv.pl" always_null
 local-zone: "sextingfinder.pl" always_null
 local-zone: "sexchat.pl" always_null
@@ -21164,7 +21164,7 @@ local-zone: "nsfw.tools.pl" always_null
 local-zone: "fantasygf.pl" always_null
 local-zone: "homemoviestube.pl" always_null
 local-zone: "lovehomeporn.pl" always_null
-local-zone: "entensity.pl/	
+local-zone: "entensity.pl" always_null
 local-zone: "warddogs.pl" always_null
 local-zone: "shooshtime.pl" always_null
 local-zone: "amateurporn.pl" always_null
@@ -21177,7 +21177,7 @@ local-zone: "voyeurweb.pl" always_null
 local-zone: "youramateurporn.pl" always_null
 local-zone: "anon-v.pl" always_null
 local-zone: "amateurcool.pl" always_null
-local-zone: "eurogirlsescort.pl/	
+local-zone: "eurogirlsescort.pl" always_null
 local-zone: "topescortbabes.pl" always_null
 local-zone: "escortsaffair.pl" always_null
 local-zone: "honeyaffair.pl" always_null
@@ -21190,17 +21190,17 @@ local-zone: "lisbonescorts.pl" always_null
 local-zone: "bunnyagent.pl" always_null
 local-zone: "escortamsterdam.pl" always_null
 local-zone: "richobo.pl" always_null
-local-zone: "girls.co.uk
+local-zone: "girls.co.uk" always_null
 local-zone: "lushescorts.pl" always_null
 local-zone: "bedpage.pl" always_null
 local-zone: "deutschlandescort.pl" always_null
 local-zone: "superacompanhantes.pl" always_null
 local-zone: "fgirl.pl" always_null
-local-zone: "topescort.pl/	
+local-zone: "topescort.pl" always_null
 local-zone: "escortempire.pl" always_null
 local-zone: "localxlist.pl" always_null
 local-zone: "divinematesliverpool.pl" always_null
-local-zone: "faphouse.pl/	
+local-zone: "faphouse.pl" always_null
 local-zone: "saveporn.pl" always_null
 local-zone: "pptube.pl" always_null
 local-zone: "inovideoapp.pl" always_null
@@ -21255,7 +21255,7 @@ local-zone: "vdsblog.pl" always_null
 local-zone: "xxxhindi.pl" always_null
 local-zone: "xnxxvideos.pl" always_null
 local-zone: "desiporn.pl" always_null
-local-zone: "hentaistream.pl/	
+local-zone: "hentaistream.pl" always_null
 local-zone: "freehentaistream.pl" always_null
 local-zone: "manytoon.pl" always_null
 local-zone: "hentaivostfr.pl" always_null
@@ -21283,20 +21283,20 @@ local-zone: "porntotal.pl" always_null
 local-zone: "celebrityporn.pl" always_null
 local-zone: "allnudecelebs.pl" always_null
 local-zone: "celebjihad.pl" always_null
-local-zone: "adultmovies.pl/	
+local-zone: "adultmovies.pl" always_null
 local-zone: "hornyjav.pl" always_null
 local-zone: "analmom.pl" always_null
 local-zone: "onlytight.pl" always_null
 local-zone: "sexycandidgirls.pl" always_null
-local-zone: "extremeporn.pl/	
+local-zone: "extremeporn.pl" always_null
 local-zone: "reflectivedesire.pl" always_null
 local-zone: "milflove.pl" always_null
-local-zone: "bdsmchat.pl/	
+local-zone: "bdsmchat.pl" always_null
 local-zone: "girlswallowed.pl" always_null
 local-zone: "uhairy.pl" always_null
 local-zone: "mybigtitsbabes.pl" always_null
 local-zone: "lovelyfemdom.pl" always_null
-local-zone: "perverttube.pl/	
+local-zone: "perverttube.pl" always_null
 local-zone: "tubepornclassic.pl" always_null
 local-zone: "gaypornotube.pl" always_null
 local-zone: "mencelebrities.pl" always_null
@@ -21309,7 +21309,7 @@ local-zone: "smplace.pl" always_null
 local-zone: "vipergirls.pl" always_null
 local-zone: "kikdirty.pl" always_null
 local-zone: "pornbb.pl" always_null
-local-zone: "rabbitsreviews.pl/	
+local-zone: "rabbitsreviews.pl" always_null
 local-zone: "porndiscounts.pl" always_null
 local-zone: "discountedporn.pl" always_null
 local-zone: "pornmode.pl" always_null
@@ -21339,11 +21339,11 @@ local-zone: "jerkdolls.pl" always_null
 local-zone: "jerkmategames.pl" always_null
 local-zone: "adultgamescollector.pl" always_null
 local-zone: "adultgamesworld.pl" always_null
-local-zone: "stripparadise.pl/	
+local-zone: "stripparadise.pl" always_null	
 local-zone: "xxxgames.pl" always_null
 local-zone: "stripselector.pl" always_null
 local-zone: "porngamestv.pl" always_null
-local-zone: "porngames.tv
+local-zone: "porngames.tv" always_null
 local-zone: "stripskunk.pl" always_null
 local-zone: "selectyourgame.pl" always_null
 local-zone: "fetishgames.pl" always_null
@@ -21352,13 +21352,13 @@ local-zone: "lewdflix.pl" always_null
 local-zone: "gamcore.pl" always_null
 local-zone: "sinvr.pl" always_null
 local-zone: "bestporngames.pl" always_null
-local-zone: "porngames.pl/	
-local-zone: "sexgames.pl/	
+local-zone: "porngames.pl" always_null
+local-zone: "sexgames.pl" always_null
 local-zone: "babepedia.pl" always_null
 local-zone: "reddxxx.pl" always_null
 local-zone: "babestare.pl" always_null
 local-zone: "girlstop.pl" always_null
-local-zone: "pornpics.pl/	
+local-zone: "pornpics.pl" always_null
 local-zone: "russiansexygirls.pl" always_null
 local-zone: "miagallery.pl" always_null
 local-zone: "pandesiaworld.pl" always_null
@@ -21381,8 +21381,8 @@ local-zone: "hqbabes.pl" always_null
 local-zone: "javgg.pl" always_null
 local-zone: "javwine.pl" always_null
 local-zone: "fc2hub.pl" always_null
-local-zone: "javdragon.pl/	
-local-zone: "asiancams.pl/	
+local-zone: "javdragon.pl" always_null
+local-zone: "asiancams.pl" always_null
 local-zone: "avgle.pl" always_null
 local-zone: "javcv.pl" always_null
 local-zone: "jav.sb.pl" always_null
