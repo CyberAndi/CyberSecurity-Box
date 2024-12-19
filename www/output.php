@@ -439,9 +439,9 @@ $IP = $Domain = $SSID = $WKey = $PASS = "";
 						echo '<p>Then you can reach the Router under: <a id="lnk" href="https://' . $IP . ':8443/cgi-bin/luci">https://' . $IP . ':8443' . '/cgi-bin/luci/</a></p>';
 						echo '<p>Please wait until the configuration is complete. This may take up to 20 minutes. After then you can login with root and your Password. </p><p>';
 						exec("sh /root/openWRT23_install.sh $GW $IP $Domain $SSID $WKey $PASS", $output); 
-						foreach ($output as $line) {
- 							/* echo $line . "\n"; */
-						};	
+						/* foreach ($output as $line) {
+ 							 echo $line . "\n"; 
+						};	*/
 						echo '</p>';
 					}
 					?>
