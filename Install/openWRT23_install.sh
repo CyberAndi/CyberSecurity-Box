@@ -543,7 +543,7 @@ if [ "$(opkg list-upgradable)" != "" ]
   		opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
 fi 
 echo 'check if installed'
-install_check #>> install.log
+#install_check #>> install.log
 opkg update >> install.log
 if [ "$unbound_inst" = "" ]
 	then
@@ -656,7 +656,7 @@ install_check
 
 if [ "$unbound_inst" = "" ]
 	then
-		if [ "$main_release" = "23" ] 
+		if [ "$main_release" -ge "23" ] 
   			then
   				echo $main_release
       				opkg update >> install.log
@@ -33283,7 +33283,7 @@ if [ -z $remotestart ]
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
 		create_hotspot >> install.log
 fi
-
+install_check
 ###################################################################################################
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Create Switch'>> install.log
 #create_switch_23 >> install.log
