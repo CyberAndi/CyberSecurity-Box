@@ -29732,10 +29732,12 @@ view_config
 }
 
 set_dhcp() {
-if [ "$dnsmasq_inst" != "" ]
-	then
-		set_dhcp_sub
-fi
+	echo "DNSMASQ install " $dnsmasq_inst >> install.log
+	echo "Release: " $main_release >> install.log
+	if [ "$dnsmasq_inst" != "" ]
+		then
+			set_dhcp_sub
+	fi
 }
 
 set_dhcp_sub() {
@@ -29743,7 +29745,7 @@ set_dhcp_sub() {
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) 'delete dhcp.@dnsmasq[-1]'>> install.log
 		echo
   		uci delete dhcp.@dnsmasq[-1] >/dev/null
-    		processes=$(uci commit && reload_config)
+   		processes=$(uci commit && reload_config)
 		wait $processes >/dev/null
 
 		uci set dhcp.Blacklist=dnsmasq	
@@ -29769,6 +29771,7 @@ set_dhcp_sub() {
 		uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
 		if [ "$main_release" != "23" && "$main_release" != "24" ] 
 			then
+				echo $main_release >> install.log
 				uci add_list dhcp.Blacklist.notinterface='br-lan.105'
 				uci add_list dhcp.Blacklist.notinterface='br-lan.106'
 				uci add_list dhcp.Blacklist.notinterface='br-lan.107'
@@ -29776,6 +29779,7 @@ set_dhcp_sub() {
 				uci add_list dhcp.Blacklist.notinterface='br-lan.110'
 				uci add_list dhcp.Blacklist.notinterface='loopback'
 			else
+			    echo $main_release >> install.log
 				uci add_list dhcp.Blacklist.interface='br-lan.105'
 				uci add_list dhcp.Blacklist.interface='br-lan.106'
 				uci add_list dhcp.Blacklist.interface='br-lan.107'
