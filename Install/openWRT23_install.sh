@@ -29734,6 +29734,7 @@ view_config
 set_dhcp() {
 	echo "DNSMASQ install " $dnsmasq_inst >> install.log
 	echo "Release: " $main_release >> install.log
+	
 	if [ "$dnsmasq_inst" != "" ]
 		then
 			set_dhcp_sub
@@ -29741,6 +29742,7 @@ set_dhcp() {
 }
 
 set_dhcp_sub() {
+		release_check="23"
 		echo 'delete dhcp.@dnsmasq[-1]'
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) 'delete dhcp.@dnsmasq[-1]'>> install.log
 		echo
@@ -29769,7 +29771,7 @@ set_dhcp_sub() {
 		uci set dhcp.Blacklist.leasefile='/tmp/dhcp.leases'
 		uci set dhcp.Blacklist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
 		uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
-		if [ "$main_release" != "23" && "$main_release" != "24" ] 
+		if [ $(echo "$main_release < $release_check" | bc -1) -eq 1 ] 
 			then
 				echo $main_release >> install.log
 				uci add_list dhcp.Blacklist.notinterface='br-lan.105'
@@ -29795,7 +29797,7 @@ set_dhcp_sub() {
 		uci set dhcp:Blacklist.filter_a='0'
 		uci set dhcp:Blacklist.filter_aaaa='1'
 
-		if [ "$main_release" != "23" && "$main_release" != "24" ] 
+		if [ $(echo "$main_release < $release_check" | bc -1) -eq 1  ] 
 			then
 
 				uci set dhcp.Whitelist=dnsmasq
