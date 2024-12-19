@@ -14500,6 +14500,9 @@ address=/lesbify.at/
 address=/lesbify.ch/
 address=/lesbify.cz/
 address=/lesbify.pl/
+address=/leslez.com/
+address=/tubehall.com/
+address=/pornmate.com/
 EOF
 
 cat << EOF > /etc/dnsmasq.d/Blacklist/white
@@ -16020,6 +16023,8 @@ local-zone: "6kea.de" always_null
 local-zone: "7dak.com" always_null
 local-zone: "7dak.de" always_null
 
+local-zone: "leslez.com" always_null
+local-zone: "tubehall.com" always_null
 local-zone: "pornmate.com" always_null
 local-zone: "lesbify.com" always_null
 local-zone: "lesbify.nl" always_null
@@ -17519,7 +17524,7 @@ local-zone: "selbstbefriedigung.de" always_null
 local-zone: "sex" always_null 
 local-zone: "sex.com" always_null 
 local-zone: "sex.de" always_null 
-local-zone: "sex/" always_null 
+local-zone: "sex" always_null 
 local-zone: "sexhubhd.com" always_null 
 local-zone: "sexhubhd.de" always_null 
 local-zone: "sexhubhd.net" always_null 
@@ -17685,7 +17690,6 @@ local-zone: "xvidzz.com" always_null
 local-zone: "xvidzz.de" always_null 
 local-zone: "xx" always_null 
 local-zone: "xxx" always_null 
-local-zone: "xxx/" always_null 
 local-zone: "xxxbule.com" always_null 
 local-zone: "xxxbule.de" always_null 
 local-zone: "xxxpicz.com" always_null 
