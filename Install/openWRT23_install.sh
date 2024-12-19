@@ -10789,6 +10789,492 @@ address=/6kea.com/
 address=/6kea.de/
 address=/7dak.com/
 address=/7dak.de/
+address=/leslez.com/
+address=/lesbify.com/
+address=/tnaflix.com/
+address=/hdtube.porn/
+address=/twinrdsyte.com/
+address=/upornia.com/
+address=/tnaflix.com/
+address=/pornhits.com/
+address=/txxx.com/
+address=/hdzog.com/
+address=/pornhat.com/
+address=/leslez.com/
+address=/sexvid.com/
+address=/inporn.com/
+address=/hdtube.com/
+address=/xhamster.com/
+address=/pornid.com/
+address=/porndr.com/
+address=/empflix.com/
+address=/pornomovies.com/
+address=/rat.com/
+address=/pornhits.com/
+address=/hclips.com/
+address=/vxxx.com/
+address=/tnaflix.com/
+address=/megatube.com/
+address=/zbporn.com/
+address=/porntop.com/
+address=/ok.xxx/
+address=/babestube.com/
+address=/fapcat.com/
+address=/milffox.com/
+address=/deviants.com/
+address=/bdmsx.com/
+address=/bdms.com/
+address=/xmilf.com/
+address=/momvids.com/
+address=/teenvids.com/
+address=/emovids.com/
+address=/tattoovids.com/
+address=/milfvids.com/
+address=/gayvids.com/
+address=/lebsvids.com/
+address=/faketaxi.com/
+address=/goldtits.com/
+address=/pornmate.com/
+address=/tubehall.com/
+address=/leslez.com/
+address=/teenxy.com/
+address=/freehdporn.com/
+address=/pornstars.com/
+address=/redtube.com/
+address=/tube8.com/
+address=/beeg.com/
+address=/xhamster.com/
+address=/youporn.com/
+address=/youjizz.com/
+address=/hqporn.com/
+address=/xvideos.com/
+address=/bustybus.com/
+address=/massageporn.com/
+address=/pornhub.com/
+address=/xcums.com/
+address=/drtuber.com/
+address=/hqporner.com/
+address=/eporner.com/
+address=/inxxx.com/
+address=/txxx.com/
+address=/xnxx.com/
+address=/xvidzz.com/
+address=/sxyprn.com/
+address=/porn.com/
+address=/yespornxxx.com/
+address=/tubegalore.com/
+address=/fapmeifyoucan.com/
+address=/xxxomg.com/
+address=/tnaflix.com/
+address=/freefanstv.com/
+address=/hotmovs.com/
+address=/angelsx.com/
+address=/pornhd.com/
+address=/sosxxx.com/
+address=/porntube.com/
+address=/3movs.com/
+address=/watchmygf.com/
+address=/4kpornvideos.com/
+address=/petardas.com/
+address=/cuckoldplacetube.com/
+address=/usersporn.com/
+address=/goldtits.com/
+address=/megaporn.com/
+address=/deepfaceporn.com/
+address=/pornyteen.com/
+address=/pornoflux.com/
+address=/porn300.com/
+address=/voyeurhit.com/
+address=/iceporn.com/
+address=/americass.com/
+address=/lecoinporno.com/
+address=/uppornx.com/
+address=/mompornonly.com/
+address=/upornia.com/
+address=/hardpornotube.com/
+address=/hotporn.sex.com/
+address=/porntrex.com/
+address=/sexvid.com/
+address=/hclips.com/
+address=/pornone.com/
+address=/nuvid.com/
+address=/porndoe.com/
+address=/putarianocelular.com/
+address=/hdzog.com/
+address=/pornhd.com/
+address=/hornybutt.com/
+address=/hornyhill.com/
+address=/spankandbang.com/
+address=/xvideoshd.com/
+address=/hardcoresex.com/
+address=/ziporn.com/
+address=/justxxx.com/
+address=/eyerollorgasm.com/
+address=/iceporn.com/
+address=/iporntoo.com/
+address=/xnxxarab.com/
+address=/pornovidea.com/
+address=/onlytight.com/
+address=/sexycandidgirls.com/
+address=/jenporno.com/
+address=/burningangles.com/
+address=/suicidegirls.com/
+address=/realitykings.com/
+address=/inthevip.com/
+address=/faketaxi.com/
+address=/lesbian.com/
+address=/squird.com/
+address=/fap.com/
+address=/brazzers.com/
+address=/digitalplayground.com/
+address=/naughtyamerica.com/
+address=/realitykings.com/
+address=/iknowthatgirl.com/
+address=/fakehub.com/
+address=/bangbros.com/
+address=/japanhdv.com/
+address=/familystrokes.com/
+address=/lovehomeporn.com/
+address=/mofos.com/
+address=/mydirtyhobby.com/
+address=/blacked.com/
+address=/aoflix.com/
+address=/publicagent.com/
+address=/twistys.com/
+address=/blackedraw.com/
+address=/faphouse.com/
+address=/wicked.com/
+address=/babes.com/
+address=/povd.com/
+address=/teensloveblackcocks.com/
+address=/holed.com/
+address=/propertysex.com/
+address=/evilangel.com/
+address=/pornpros.com/
+address=/21sextury.com/
+address=/shoplyfter.com/
+address=/perfectgonzo.com/
+address=/asstraffic.com/
+address=/dogfartnetwork.com/
+address=/exxxtrasmall.com/
+address=/javhd.com/
+address=/hustler.com/
+address=/teamskeet.com/
+address=/vixen.com/
+address=/tushy.com/
+address=/fakeagent.com/
+address=/faketaxi.com/
+address=/fakehostel.com/
+address=/danejones.com/
+address=/lesbea.com/
+address=/massagerooms.com/
+address=/momxxx.com/
+address=/stasyq.com/
+address=/newsensations.com/
+address=/dailyscenes.com/
+address=/pdcams.com/
+address=/stripchat.com/
+address=/camsoda.com/
+address=/flirt4free.com/
+address=/imlive.com/
+address=/babestation.com/
+address=/anacams.com/
+address=/jerkmate.com/
+address=/amateurtv.com/
+address=/amateur.tv/
+address=/everycamgirl.com/
+address=/masturbate2gether.com/
+address=/camfall.com/
+address=/lemoncams.com/
+address=/omegle.com/
+address=/pornlive.com/
+address=/sexfortokens.com/
+address=/boinkstream.com/
+address=/rabbitscams.com/
+address=/rampanttv.com/
+address=/sextingfinder.com/
+address=/sexchat.com/
+address=/ifreechat.com/
+address=/chaturbate.com/
+address=/xcams.com/
+address=/livejasmin.com/
+address=/cambb.com/
+address=/chatsexocam.com/
+address=/fuckableteens.com/
+address=/camster.com/
+address=/cams.com/
+address=/camsex.com/
+address=/clothoff.com/
+address=/tingo.com/
+address=/trynectar.com/
+address=/deepmode.com/
+address=/seduced.com/
+address=/facy.com/
+address=/createporn.com/
+address=/nudiva.com/
+address=/drawnudes.com/
+address=/blushy.com/
+address=/bestfacesswap.com/
+address=/nsfw.tools.com/
+address=/fantasygf.com/
+address=/homemoviestube.com/
+address=/lovehomeporn.com/
+address=/entensity.com/
+address=/warddogs.com/
+address=/shooshtime.com/
+address=/amateurporn.com/
+address=/realgfporn.com/
+address=/amateurdoporn.com/
+address=/daftporn.com/
+address=/porn555.com/
+address=/eroprofile.com/
+address=/voyeurweb.com/
+address=/youramateurporn.com/
+address=/anon-v.com/
+address=/amateurcool.com/
+address=/eurogirlsescort.com/
+address=/topescortbabes.com/
+address=/escortsaffair.com/
+address=/honeyaffair.com/
+address=/incontriamocixxx.com/
+address=/incontriamoci.xxx/
+address=/amasens.com/
+address=/lovehub.com/
+address=/massagerepublic.com/
+address=/backpagea.com/
+address=/lisbonescorts.com/
+address=/bunnyagent.com/
+address=/escortamsterdam.com/
+address=/richobo.com/
+address=/girls.co.uk/
+address=/lushescorts.com/
+address=/bedpage.com/
+address=/deutschlandescort.com/
+address=/superacompanhantes.com/
+address=/fgirl.com/
+address=/topescort.com/
+address=/escortempire.com/
+address=/localxlist.com/
+address=/divinematesliverpool.com/
+address=/faphouse.com/
+address=/saveporn.com/
+address=/pptube.com/
+address=/inovideoapp.com/
+address=/androidadult.com/
+address=/porn4k.com/
+address=/adultandroidgames.com/
+address=/porncentral.com/
+address=/downloaderwiki.com/
+address=/yesdownloader.com/
+address=/virtualbb.com/
+address=/domporn.com/
+address=/pornobuzz.com/
+address=/datingsites.com/
+address=/freelocalsex.com/
+address=/fuckmeets.com/
+address=/findafuckbuddy.com/
+address=/freefucksite.com/
+address=/chicks2fuck.com/
+address=/teenager365.com/
+address=/hornyfap.com/
+address=/fapptime.com/
+address=/leaktape.com/
+address=/theleaksbay.com/
+address=/shareanynudes.com/
+address=/tomxcontents.com/
+address=/banflix.com/
+address=/thotsluts.com/
+address=/ibradome.com/
+address=/lovense.com/
+address=/ppunson.com/
+address=/yourdoll.com/
+address=/theadulttoyshop.com/
+address=/realsexdoll.com/
+address=/mrhankeystoys.com/
+address=/rosetoyofficial.com/
+address=/hismith.com/
+address=/lezovibes.com/
+address=/tantaly.com/
+address=/xtorso.com/
+address=/sexdollmall.com/
+address=/tiktokpornsites.com/
+address=/xxxfollow.com/
+address=/titstok.com/
+address=/alpenrammler.com/
+address=/dropmms.com/
+address=/mmsdose.com/
+address=/indianxnxxtube.com/
+address=/indianporn365.com/
+address=/gandubaba.com/
+address=/fsiblog.com/
+address=/vdsblog.com/
+address=/xxxhindi.com/
+address=/xnxxvideos.com/
+address=/desiporn.com/
+address=/hentaistream.com/
+address=/freehentaistream.com/
+address=/manytoon.com/
+address=/hentaivostfr.com/
+address=/8musescomics.com/
+address=/manhwahentai.com/
+address=/animeporn.com/
+address=/xcomics.com/
+address=/mangahentai.com/
+address=/hentaivideos.com/
+address=/hentaiporn.com/
+address=/cartoonporn.com/
+address=/hentaihaven.com/
+address=/xhentai.com/
+address=/hentaifox.com/
+address=/hentaigasm.com/
+address=/xanimeporn.com/
+address=/asmhentai.com/
+address=/myhentaitv.com/
+address=/cartoonpornvideos.com/
+address=/hentaipulse.com/
+address=/hentaiporntube.com/
+address=/cartoonprn.com/
+address=/adultcomixxx.com/
+address=/adultcomi.xxx/
+address=/porntotal.com/
+address=/celebrityporn.com/
+address=/allnudecelebs.com/
+address=/celebjihad.com/
+address=/adultmovies.com/
+address=/hornyjav.com/
+address=/analmom.com/
+address=/onlytight.com/
+address=/sexycandidgirls.com/
+address=/extremeporn.com/
+address=/reflectivedesire.com/
+address=/milflove.com/
+address=/bdsmchat.com/
+address=/girlswallowed.com/
+address=/uhairy.com/
+address=/mybigtitsbabes.com/
+address=/lovelyfemdom.com/
+address=/perverttube.com/
+address=/tubepornclassic.com/
+address=/gaypornotube.com/
+address=/mencelebrities.com/
+address=/icegayporn.com/
+address=/gayporn.com/
+address=/javboys.com/
+address=/bemyhole.com/
+address=/sexcelebrity.com/
+address=/smplace.com/
+address=/vipergirls.com/
+address=/kikdirty.com/
+address=/pornbb.com/
+address=/rabbitsreviews.com/
+address=/porndiscounts.com/
+address=/discountedporn.com/
+address=/pornmode.com/
+address=/porndeals.com/
+address=/czechvr.com/
+address=/xhamster.com/
+address=/sexlikereal.com/
+address=/povr.com/
+address=/pornhub.com/
+address=/javvr.com/
+address=/vrsmash.com/
+address=/vrporncat.com/
+address=/vrpornjack.com/
+address=/vrporngamester.com/
+address=/xvideosvr.com/
+address=/spankbangvr.com/
+address=/myfreevrporn.com/
+address=/laidhub.com/
+address=/youpornvr.com/
+address=/vrporn.com/
+address=/xnxxvr.com/
+address=/vrbangers.com/
+address=/mysexgames.com/
+address=/porngames.com/
+address=/porngameshub.com/
+address=/jerkdolls.com/
+address=/jerkmategames.com/
+address=/adultgamescollector.com/
+address=/adultgamesworld.com/
+address=/stripparadise.com/
+address=/xxxgames.com/
+address=/stripselector.com/
+address=/porngamestv.com/
+address=/porngames.tv/
+address=/stripskunk.com/
+address=/selectyourgame.com/
+address=/fetishgames.com/
+address=/hentakugames.com/
+address=/lewdflix.com/
+address=/gamcore.com/
+address=/sinvr.com/
+address=/bestporngames.com/
+address=/porngames.com/
+address=/sexgames.com/
+address=/babepedia.com/
+address=/reddxxx.com/
+address=/babestare.com/
+address=/girlstop.com/
+address=/pornpics.com/
+address=/russiansexygirls.com/
+address=/miagallery.com/
+address=/pandesiaworld.com/
+address=/imagefap.com/
+address=/sexykittenporn.com/
+address=/porn-star.com/
+address=/mypmates.com/
+address=/morazzia.com/
+address=/eroticbeauties.com/
+address=/freexcafe.com/
+address=/silkengirl.com/
+address=/xmissy.com/
+address=/sexygirlspics.com/
+address=/babesandgirls.com/
+address=/foxhq.com/
+address=/girlsofdesire.com/
+address=/glam0ur.com/
+address=/hqsluts.com/
+address=/hqbabes.com/
+address=/javgg.com/
+address=/javwine.com/
+address=/fc2hub.com/
+address=/javdragon.com/
+address=/asiancams.com/
+address=/avgle.com/
+address=/javcv.com/
+address=/jav.sb.com/
+address=/rjav.com/
+address=/thempho.com/
+address=/javpub.com/
+address=/mustjav.com/
+address=/vjav.com/
+address=/12jav.com/
+address=/buomtv.com/
+address=/javlibrary.com/
+address=/85tube.com/
+address=/javmost.com/
+address=/youav.com/
+address=/sextop1.com/
+address=/lesbify.com/
+address=/lesbian8.com/
+address=/onlylesbiantube.com/
+address=/alllesbiantube.com/
+address=/lesbianpornvideos.com/
+address=/milfslesbian.com/
+address=/gfrevenge.com/
+address=/daredorm.com/
+address=/crazycollegegfs.com/
+address=/gfleaks.com/
+address=/gifporntube.com/
+address=/literotica.com/
+address=/sexstories.com/
+address=/frolicme.com/
+address=/juicysexstories.com/
+address=/randomsites.com/
+address=/pornstargold.com/
+address=/colegialasreales.com/
+address=/maturecams.com/
+address=/mature.com/
 address=/abosgratis.at/
 address=/abosgratis.ch/
 address=/abosgratis.com/
@@ -16025,7 +16511,492 @@ local-zone: "6kea.com" always_null
 local-zone: "6kea.de" always_null
 local-zone: "7dak.com" always_null
 local-zone: "7dak.de" always_null
-
+local-zone: "leslez.com" always_null
+local-zone: "lesbify.com" always_null
+local-zone: "tnaflix.com" always_null
+local-zone: "hdtube.porn" always_null
+local-zone: "twinrdsyte.com" always_null
+local-zone: "upornia.com" always_null
+local-zone: "tnaflix.com" always_null
+local-zone: "pornhits.com" always_null
+local-zone: "txxx.com" always_null
+local-zone: "hdzog.com" always_null
+local-zone: "pornhat.com" always_null
+local-zone: "leslez.com" always_null
+local-zone: "sexvid.com" always_null
+local-zone: "inporn.com" always_null
+local-zone: "hdtube.com" always_null
+local-zone: "xhamster.com" always_null
+local-zone: "pornid.com" always_null
+local-zone: "porndr.com" always_null
+local-zone: "empflix.com" always_null
+local-zone: "pornomovies.com" always_null
+local-zone: "rat.com" always_null
+local-zone: "pornhits.com" always_null
+local-zone: "hclips.com" always_null
+local-zone: "vxxx.com" always_null
+local-zone: "tnaflix.com" always_null
+local-zone: "megatube.com" always_null
+local-zone: "zbporn.com" always_null
+local-zone: "porntop.com" always_null
+local-zone: "ok.xxx" always_null
+local-zone: "babestube.com" always_null
+local-zone: "fapcat.com" always_null
+local-zone: "milffox.com" always_null
+local-zone: "deviants.com" always_null
+local-zone: "bdmsx.com" always_null
+local-zone: "bdms.com" always_null
+local-zone: "xmilf.com" always_null
+local-zone: "momvids.com" always_null
+local-zone: "teenvids.com" always_null
+local-zone: "emovids.com" always_null
+local-zone: "tattoovids.com" always_null
+local-zone: "milfvids.com" always_null
+local-zone: "gayvids.com" always_null
+local-zone: "lebsvids.com" always_null
+local-zone: "faketaxi.com" always_null
+local-zone: "goldtits.com" always_null
+local-zone: "pornmate.com" always_null
+local-zone: "tubehall.com" always_null
+local-zone: "leslez.com" always_null
+local-zone: "teenxy.com" always_null
+local-zone: "freehdporn.com" always_null
+local-zone: "pornstars.com" always_null
+local-zone: "redtube.com" always_null
+local-zone: "tube8.com" always_null
+local-zone: "beeg.com" always_null
+local-zone: "xhamster.com" always_null
+local-zone: "youporn.com" always_null
+local-zone: "youjizz.com" always_null
+local-zone: "hqporn.com" always_null
+local-zone: "xvideos.com" always_null
+local-zone: "bustybus.com" always_null
+local-zone: "massageporn.com" always_null
+local-zone: "pornhub.com" always_null
+local-zone: "xcums.com" always_null
+local-zone: "drtuber.com" always_null
+local-zone: "hqporner.com" always_null
+local-zone: "eporner.com" always_null
+local-zone: "inxxx.com" always_null
+local-zone: "txxx.com" always_null
+local-zone: "xnxx.com" always_null
+local-zone: "xvidzz.com" always_null
+local-zone: "sxyprn.com" always_null
+local-zone: "porn.com" always_null
+local-zone: "yespornxxx.com" always_null
+local-zone: "tubegalore.com" always_null
+local-zone: "fapmeifyoucan.com" always_null
+local-zone: "xxxomg.com" always_null
+local-zone: "tnaflix.com" always_null
+local-zone: "freefanstv.com" always_null
+local-zone: "hotmovs.com" always_null
+local-zone: "angelsx.com" always_null
+local-zone: "pornhd.com" always_null
+local-zone: "sosxxx.com" always_null
+local-zone: "porntube.com" always_null
+local-zone: "3movs.com" always_null
+local-zone: "watchmygf.com" always_null
+local-zone: "4kpornvideos.com" always_null
+local-zone: "petardas.com" always_null
+local-zone: "cuckoldplacetube.com" always_null
+local-zone: "usersporn.com" always_null
+local-zone: "goldtits.com" always_null
+local-zone: "megaporn.com" always_null
+local-zone: "deepfaceporn.com" always_null
+local-zone: "pornyteen.com" always_null
+local-zone: "pornoflux.com" always_null
+local-zone: "porn300.com" always_null
+local-zone: "voyeurhit.com" always_null
+local-zone: "iceporn.com" always_null
+local-zone: "americass.com" always_null
+local-zone: "lecoinporno.com" always_null
+local-zone: "uppornx.com" always_null
+local-zone: "mompornonly.com" always_null
+local-zone: "upornia.com" always_null
+local-zone: "hardpornotube.com" always_null
+local-zone: "hotporn.sex.com" always_null
+local-zone: "porntrex.com" always_null
+local-zone: "sexvid.com" always_null
+local-zone: "hclips.com" always_null
+local-zone: "pornone.com" always_null
+local-zone: "nuvid.com" always_null
+local-zone: "porndoe.com" always_null
+local-zone: "putarianocelular.com" always_null
+local-zone: "hdzog.com" always_null
+local-zone: "pornhd.com" always_null
+local-zone: "hornybutt.com" always_null
+local-zone: "hornyhill.com" always_null
+local-zone: "spankandbang.com" always_null
+local-zone: "xvideoshd.com" always_null
+local-zone: "hardcoresex.com" always_null
+local-zone: "ziporn.com" always_null
+local-zone: "justxxx.com" always_null
+local-zone: "eyerollorgasm.com" always_null
+local-zone: "iceporn.com" always_null
+local-zone: "iporntoo.com" always_null
+local-zone: "xnxxarab.com" always_null
+local-zone: "pornovidea.com" always_null
+local-zone: "onlytight.com" always_null
+local-zone: "sexycandidgirls.com" always_null
+local-zone: "jenporno.com" always_null
+local-zone: "burningangles.com" always_null
+local-zone: "suicidegirls.com" always_null
+local-zone: "realitykings.com" always_null
+local-zone: "inthevip.com" always_null
+local-zone: "faketaxi.com" always_null
+local-zone: "lesbian.com" always_null
+local-zone: "squird.com" always_null
+local-zone: "fap.com" always_null
+local-zone: "brazzers.com	" always_null
+local-zone: "digitalplayground.com	" always_null
+local-zone: "naughtyamerica.com" always_null
+local-zone: "realitykings.com	" always_null
+local-zone: "iknowthatgirl.com" always_null
+local-zone: "fakehub.com	" always_null
+local-zone: "bangbros.com" always_null
+local-zone: "japanhdv.com	" always_null
+local-zone: "familystrokes.com	" always_null
+local-zone: "lovehomeporn.com" always_null
+local-zone: "mofos.com	" always_null
+local-zone: "mydirtyhobby.com	" always_null
+local-zone: "blacked.com" always_null
+local-zone: "aoflix.com" always_null
+local-zone: "publicagent.com	" always_null
+local-zone: "twistys.com" always_null
+local-zone: "blackedraw.com" always_null
+local-zone: "faphouse.com" always_null
+local-zone: "wicked.com	" always_null
+local-zone: "babes.com	" always_null
+local-zone: "povd.com	" always_null
+local-zone: "teensloveblackcocks.com	" always_null
+local-zone: "holed.com	" always_null
+local-zone: "propertysex.com	" always_null
+local-zone: "evilangel.com	" always_null
+local-zone: "pornpros.com	" always_null
+local-zone: "21sextury.com	" always_null
+local-zone: "shoplyfter.com	" always_null
+local-zone: "perfectgonzo.com	" always_null
+local-zone: "asstraffic.com	" always_null
+local-zone: "dogfartnetwork.com	" always_null
+local-zone: "exxxtrasmall.com	" always_null
+local-zone: "javhd.com	" always_null
+local-zone: "hustler.com	" always_null
+local-zone: "teamskeet.com	" always_null
+local-zone: "vixen.com" always_null
+local-zone: "tushy.com" always_null
+local-zone: "fakeagent.com	" always_null
+local-zone: "faketaxi.com	" always_null
+local-zone: "fakehostel.com	" always_null
+local-zone: "danejones.com	" always_null
+local-zone: "lesbea.com	" always_null
+local-zone: "massagerooms.com	" always_null
+local-zone: "momxxx.com	" always_null
+local-zone: "stasyq.com	" always_null
+local-zone: "newsensations.com	" always_null
+local-zone: "dailyscenes.com" always_null
+local-zone: "pdcams.com" always_null
+local-zone: "stripchat.com" always_null
+local-zone: "camsoda.com" always_null
+local-zone: "flirt4free.com" always_null
+local-zone: "imlive.com" always_null
+local-zone: "babestation.com	" always_null
+local-zone: "anacams.com" always_null
+local-zone: "jerkmate.com" always_null
+local-zone: "amateurtv.com" always_null
+local-zone: "amateur.tv" always_null
+local-zone: "everycamgirl.com" always_null
+local-zone: "masturbate2gether.com" always_null
+local-zone: "camfall.com" always_null
+local-zone: "lemoncams.com" always_null
+local-zone: "omegle.com	" always_null
+local-zone: "pornlive.com	" always_null
+local-zone: "sexfortokens.com" always_null
+local-zone: "boinkstream.com" always_null
+local-zone: "rabbitscams.com	" always_null
+local-zone: "rampanttv.com" always_null
+local-zone: "sextingfinder.com" always_null
+local-zone: "sexchat.com" always_null
+local-zone: "ifreechat.com" always_null
+local-zone: "chaturbate.com" always_null
+local-zone: "xcams.com" always_null
+local-zone: "livejasmin.com" always_null
+local-zone: "cambb.com" always_null
+local-zone: "chatsexocam.com" always_null
+local-zone: "fuckableteens.com" always_null
+local-zone: "camster.com" always_null
+local-zone: "cams.com" always_null
+local-zone: "camsex.com" always_null
+local-zone: "clothoff.com" always_null
+local-zone: "tingo.com" always_null
+local-zone: "trynectar.com" always_null
+local-zone: "deepmode.com" always_null
+local-zone: "seduced.com" always_null
+local-zone: "facy.com" always_null
+local-zone: "createporn.com" always_null
+local-zone: "nudiva.com" always_null
+local-zone: "drawnudes.com" always_null
+local-zone: "blushy.com" always_null
+local-zone: "bestfacesswap.com" always_null
+local-zone: "nsfw.tools.com" always_null
+local-zone: "fantasygf.com" always_null
+local-zone: "homemoviestube.com" always_null
+local-zone: "lovehomeporn.com" always_null
+local-zone: "entensity.com	" always_null
+local-zone: "warddogs.com" always_null
+local-zone: "shooshtime.com" always_null
+local-zone: "amateurporn.com" always_null
+local-zone: "realgfporn.com" always_null
+local-zone: "amateurdoporn.com" always_null
+local-zone: "daftporn.com" always_null
+local-zone: "porn555.com" always_null
+local-zone: "eroprofile.com" always_null
+local-zone: "voyeurweb.com" always_null
+local-zone: "youramateurporn.com" always_null
+local-zone: "anon-v.com" always_null
+local-zone: "amateurcool.com" always_null
+local-zone: "eurogirlsescort.com	" always_null
+local-zone: "topescortbabes.com" always_null
+local-zone: "escortsaffair.com" always_null
+local-zone: "honeyaffair.com" always_null
+local-zone: "incontriamocixxx.com" always_null
+local-zone: "incontriamoci.xxx" always_null
+local-zone: "amasens.com" always_null
+local-zone: "lovehub.com" always_null
+local-zone: "massagerepublic.com" always_null
+local-zone: "backpagea.com" always_null
+local-zone: "lisbonescorts.com" always_null
+local-zone: "bunnyagent.com" always_null
+local-zone: "escortamsterdam.com" always_null
+local-zone: "richobo.com" always_null
+local-zone: "girls.co.uk" always_null
+local-zone: "lushescorts.com" always_null
+local-zone: "bedpage.com" always_null
+local-zone: "deutschlandescort.com" always_null
+local-zone: "superacompanhantes.com" always_null
+local-zone: "fgirl.com" always_null
+local-zone: "topescort.com	" always_null
+local-zone: "escortempire.com" always_null
+local-zone: "localxlist.com" always_null
+local-zone: "divinematesliverpool.com" always_null
+local-zone: "faphouse.com	" always_null
+local-zone: "saveporn.com" always_null
+local-zone: "pptube.com" always_null
+local-zone: "inovideoapp.com" always_null
+local-zone: "androidadult.com" always_null
+local-zone: "porn4k.com" always_null
+local-zone: "adultandroidgames.com" always_null
+local-zone: "porncentral.com" always_null
+local-zone: "downloaderwiki.com" always_null
+local-zone: "yesdownloader.com" always_null
+local-zone: "virtualbb.com" always_null
+local-zone: "domporn.com" always_null
+local-zone: "pornobuzz.com" always_null
+local-zone: "datingsites.com" always_null
+local-zone: "freelocalsex.com" always_null
+local-zone: "fuckmeets.com" always_null
+local-zone: "findafuckbuddy.com" always_null
+local-zone: "freefucksite.com" always_null
+local-zone: "chicks2fuck.com" always_null
+local-zone: "teenager365.com" always_null
+local-zone: "hornyfap.com" always_null
+local-zone: "fapptime.com" always_null
+local-zone: "leaktape.com" always_null
+local-zone: "theleaksbay.com" always_null
+local-zone: "shareanynudes.com" always_null
+local-zone: "tomxcontents.com" always_null
+local-zone: "banflix.com" always_null
+local-zone: "thotsluts.com" always_null
+local-zone: "ibradome.com" always_null
+local-zone: "lovense.com" always_null
+local-zone: "ppunson.com" always_null
+local-zone: "yourdoll.com" always_null
+local-zone: "theadulttoyshop.com" always_null
+local-zone: "realsexdoll.com" always_null
+local-zone: "mrhankeystoys.com" always_null
+local-zone: "rosetoyofficial.com" always_null
+local-zone: "hismith.com" always_null
+local-zone: "lezovibes.com" always_null
+local-zone: "tantaly.com" always_null
+local-zone: "xtorso.com" always_null
+local-zone: "sexdollmall.com" always_null
+local-zone: "tiktokpornsites.com" always_null
+local-zone: "xxxfollow.com" always_null
+local-zone: "titstok.com" always_null
+local-zone: "alpenrammler.com" always_null
+local-zone: "dropmms.com" always_null
+local-zone: "mmsdose.com" always_null
+local-zone: "indianxnxxtube.com" always_null
+local-zone: "indianporn365.com" always_null
+local-zone: "gandubaba.com" always_null
+local-zone: "fsiblog.com" always_null
+local-zone: "vdsblog.com" always_null
+local-zone: "xxxhindi.com" always_null
+local-zone: "xnxxvideos.com" always_null
+local-zone: "desiporn.com" always_null
+local-zone: "hentaistream.com	" always_null
+local-zone: "freehentaistream.com" always_null
+local-zone: "manytoon.com" always_null
+local-zone: "hentaivostfr.com" always_null
+local-zone: "8musescomics.com" always_null
+local-zone: "manhwahentai.com" always_null
+local-zone: "animeporn.com" always_null
+local-zone: "xcomics.com" always_null
+local-zone: "mangahentai.com" always_null
+local-zone: "hentaivideos.com" always_null
+local-zone: "hentaiporn.com" always_null
+local-zone: "cartoonporn.com" always_null
+local-zone: "hentaihaven.com" always_null
+local-zone: "xhentai.com" always_null
+local-zone: "hentaifox.com" always_null
+local-zone: "hentaigasm.com" always_null
+local-zone: "xanimeporn.com" always_null
+local-zone: "asmhentai.com" always_null
+local-zone: "myhentaitv.com" always_null
+local-zone: "cartoonpornvideos.com" always_null
+local-zone: "hentaipulse.com" always_null
+local-zone: "hentaiporntube.com" always_null
+local-zone: "cartoonprn.com" always_null
+local-zone: "adultcomixxx.com" always_null
+local-zone: "adultcomi.xxx" always_null
+local-zone: "porntotal.com" always_null
+local-zone: "celebrityporn.com" always_null
+local-zone: "allnudecelebs.com" always_null
+local-zone: "celebjihad.com" always_null
+local-zone: "adultmovies.com	" always_null
+local-zone: "hornyjav.com" always_null
+local-zone: "analmom.com" always_null
+local-zone: "onlytight.com" always_null
+local-zone: "sexycandidgirls.com" always_null
+local-zone: "extremeporn.com	" always_null
+local-zone: "reflectivedesire.com" always_null
+local-zone: "milflove.com" always_null
+local-zone: "bdsmchat.com	" always_null
+local-zone: "girlswallowed.com" always_null
+local-zone: "uhairy.com" always_null
+local-zone: "mybigtitsbabes.com" always_null
+local-zone: "lovelyfemdom.com" always_null
+local-zone: "perverttube.com	" always_null
+local-zone: "tubepornclassic.com" always_null
+local-zone: "gaypornotube.com" always_null
+local-zone: "mencelebrities.com" always_null
+local-zone: "icegayporn.com" always_null
+local-zone: "gayporn.com" always_null
+local-zone: "javboys.com" always_null
+local-zone: "bemyhole.com" always_null
+local-zone: "sexcelebrity.com" always_null
+local-zone: "smplace.com" always_null
+local-zone: "vipergirls.com" always_null
+local-zone: "kikdirty.com" always_null
+local-zone: "pornbb.com" always_null
+local-zone: "rabbitsreviews.com	" always_null
+local-zone: "porndiscounts.com" always_null
+local-zone: "discountedporn.com" always_null
+local-zone: "pornmode.com" always_null
+local-zone: "porndeals.com" always_null
+local-zone: "czechvr.com" always_null
+local-zone: "xhamster.com" always_null
+local-zone: "sexlikereal.com" always_null
+local-zone: "povr.com" always_null
+local-zone: "pornhub.com" always_null
+local-zone: "javvr.com" always_null
+local-zone: "vrsmash.com" always_null
+local-zone: "vrporncat.com" always_null
+local-zone: "vrpornjack.com" always_null
+local-zone: "vrporngamester.com" always_null
+local-zone: "xvideosvr.com" always_null
+local-zone: "spankbangvr.com" always_null
+local-zone: "myfreevrporn.com" always_null
+local-zone: "laidhub.com" always_null
+local-zone: "youpornvr.com" always_null
+local-zone: "vrporn.com" always_null
+local-zone: "xnxxvr.com" always_null
+local-zone: "vrbangers.com" always_null
+local-zone: "mysexgames.com" always_null
+local-zone: "porngames.com" always_null
+local-zone: "porngameshub.com" always_null
+local-zone: "jerkdolls.com" always_null
+local-zone: "jerkmategames.com" always_null
+local-zone: "adultgamescollector.com" always_null
+local-zone: "adultgamesworld.com" always_null
+local-zone: "stripparadise.com	" always_null
+local-zone: "xxxgames.com" always_null
+local-zone: "stripselector.com" always_null
+local-zone: "porngamestv.com" always_null
+local-zone: "porngames.tv" always_null
+local-zone: "stripskunk.com" always_null
+local-zone: "selectyourgame.com" always_null
+local-zone: "fetishgames.com" always_null
+local-zone: "hentakugames.com" always_null
+local-zone: "lewdflix.com" always_null
+local-zone: "gamcore.com" always_null
+local-zone: "sinvr.com" always_null
+local-zone: "bestporngames.com" always_null
+local-zone: "porngames.com	" always_null
+local-zone: "sexgames.com	" always_null
+local-zone: "babepedia.com" always_null
+local-zone: "reddxxx.com" always_null
+local-zone: "babestare.com" always_null
+local-zone: "girlstop.com" always_null
+local-zone: "pornpics.com	" always_null
+local-zone: "russiansexygirls.com" always_null
+local-zone: "miagallery.com" always_null
+local-zone: "pandesiaworld.com" always_null
+local-zone: "imagefap.com" always_null
+local-zone: "sexykittenporn.com" always_null
+local-zone: "porn-star.com" always_null
+local-zone: "mypmates.com" always_null
+local-zone: "morazzia.com" always_null
+local-zone: "eroticbeauties.com" always_null
+local-zone: "freexcafe.com" always_null
+local-zone: "silkengirl.com" always_null
+local-zone: "xmissy.com" always_null
+local-zone: "sexygirlspics.com" always_null
+local-zone: "babesandgirls.com" always_null
+local-zone: "foxhq.com" always_null
+local-zone: "girlsofdesire.com" always_null
+local-zone: "glam0ur.com" always_null
+local-zone: "hqsluts.com" always_null
+local-zone: "hqbabes.com" always_null
+local-zone: "javgg.com" always_null
+local-zone: "javwine.com" always_null
+local-zone: "fc2hub.com" always_null
+local-zone: "javdragon.com	" always_null
+local-zone: "asiancams.com	" always_null
+local-zone: "avgle.com" always_null
+local-zone: "javcv.com" always_null
+local-zone: "jav.sb.com" always_null
+local-zone: "rjav.com" always_null
+local-zone: "thempho.com" always_null
+local-zone: "javpub.com" always_null
+local-zone: "mustjav.com" always_null
+local-zone: "vjav.com" always_null
+local-zone: "12jav.com" always_null
+local-zone: "buomtv.com" always_null
+local-zone: "javlibrary.com" always_null
+local-zone: "85tube.com" always_null
+local-zone: "javmost.com" always_null
+local-zone: "youav.com" always_null
+local-zone: "sextop1.com" always_null
+local-zone: "lesbify.com" always_null
+local-zone: "lesbian8.com" always_null
+local-zone: "onlylesbiantube.com" always_null
+local-zone: "alllesbiantube.com" always_null
+local-zone: "lesbianpornvideos.com" always_null
+local-zone: "milfslesbian.com" always_null
+local-zone: "gfrevenge.com" always_null
+local-zone: "daredorm.com	" always_null
+local-zone: "crazycollegegfs.com" always_null
+local-zone: "gfleaks.com	" always_null
+local-zone: "gifporntube.com	" always_null
+local-zone: "literotica.com	" always_null
+local-zone: "sexstories.com	" always_null
+local-zone: "frolicme.com	" always_null
+local-zone: "juicysexstories.com	" always_null
+local-zone: "randomsites.com" always_null
+local-zone: "pornstargold.com" always_null
+local-zone: "colegialasreales.com	" always_null
+local-zone: "maturecams.com	" always_null
+local-zone: "mature.com" always_null
 local-zone: "leslez.com" always_null
 local-zone: "tubehall.com" always_null
 local-zone: "pornmate.com" always_null
