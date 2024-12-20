@@ -12463,6 +12463,7 @@ server=/amazonvideo.com/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/api-global.netflix.com/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/openwrt.org/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/firmware-selector.openwrt.org/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
+server=/one.openwrt.org/$(echo $DNS_IP)/#$(echo $DNSMASQ_Relay_port)
 server=/raspbery.org/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 
 
@@ -13234,6 +13235,7 @@ local-zone: "amazonvideo.com" transparent
 local-zone: "api-global.netflix.com" transparent
 local-zone: "openwrt.org" transparent
 local-zone: "firmware-selector.openwrt.org" transparent
+local-zone: "one.openwrt.org" transparent
 local-zone: "raspbery.org" transparent
 local-zone: "apple.com" transparent
 local-zone: "mzstatic.com" transparent
