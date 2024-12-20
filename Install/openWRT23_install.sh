@@ -1596,7 +1596,9 @@ FILE=/www/luci-static/bootstrap/OCR-A.ttf
 		processes8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/OCR-A.woff -P /www/luci-static/bootstrap/)
 		wait $processes8
 # fi
+}
 
+config_overview(){
 FILE1=/www/luci-static/resources/view/status/include/90_system.js
 if [ ! -f "$FILE" ]
 	then
@@ -1735,28 +1737,6 @@ uci set uhttpd.defaults.country='DE'
 uci set uhttpd.defaults.location='DMZ'
 uci set uhttpd.defaults.commonname='$LAN_domain'
 uci set uhttpd.defaults.state='Unknown'
-}
-
-set_uhttpd_() {
-uci set uhttpd.main=uhttpd
-uci set uhttpd.main.redirect_https='1'
-uci set uhttpd.main.home='/www'
-uci set uhttpd.main.rfc1918_filter='1'
-uci set uhttpd.main.max_requests='3'
-uci set uhttpd.main.max_connections='100'
-uci set uhttpd.main.cert='/etc/uhttpd.crt'
-uci set uhttpd.main.key='/etc/uhttpd.key'
-uci set uhttpd.main.cgi_prefix='/cgi-bin'
-uci set uhttpd.main.lua_prefix='/cgi-bin/luci=/usr/lib/lua/luci/sgi/uhttpd.lua'
-uci set uhttpd.main.script_timeout='60'
-uci set uhttpd.main.network_timeout='30'
-uci set uhttpd.main.http_keepalive='20'
-uci set uhttpd.main.tcp_keepalive='1'
-uci set uhttpd.main.ubus_prefix='/ubus'
-uci set uhttpd.main.index_page='index.php'
-uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
-processes=$(uci commit && reload_config)
-wait $processes  >> install.log
 }
 
 create_bridge_ports() {
@@ -34256,6 +34236,8 @@ if [ -z $remotestart ]
 		create_hotspot >> install.log
 fi
 install_check
+
+config_overview >> install.log
 ###################################################################################################
 #echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Create Switch'>> install.log
 #create_switch_23 >> install.log
