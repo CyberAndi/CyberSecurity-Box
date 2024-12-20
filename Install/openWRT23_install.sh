@@ -34372,7 +34372,7 @@ echo $(logread | grep 'dnsmasq' | grep 'crash') >> install.log
 if [ ! -z $remotestart ]
 	then
 		echo
-#		uninstall_cleanup >> install.log
+		uninstall_cleanup >> install.log
 fi
 
 echo
