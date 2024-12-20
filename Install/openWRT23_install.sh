@@ -32214,7 +32214,7 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-Zones' >> install.log
 create_firewall_zones >> install.log
 
 ####################################################################################################
-create_MWAN >> install.log
+# create_MWAN >> install.log
 ####################################################################################################
 echo >> install.log
 echo
