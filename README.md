@@ -1,7 +1,7 @@
 <head>
 <meta name="google-site-verification" content="puDJPKt82mah02UkmE5ThtOtTU-B1gTDxL5i85x9wSI" />
 </head>
-<img src="/wiki_pic/CyberSecurityBox.jpg" alt="Logo" width="300px"> </img>
+<img src="wiki_pic/csb_logo_neu.svg" alt="Logo" width="300px"> </img>
 <h1>CyberSecurity-Box</h1>
 <h4>(inkl. Ad Blocker, <img src="/wiki_pic/unbound_logo.png" style="max-width: 100%; vertical-align: middle; background-color: rgba(230,230,230,0.7); padding: 0.15em 0.25em; height:1em" height="14px"> (DNS), <img src="/wiki_pic/tor-logo%402x.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> or optional <img src="/wiki_pic/pihole.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Pi-Hole (incl. DB) and ntopng) </h4>
 
