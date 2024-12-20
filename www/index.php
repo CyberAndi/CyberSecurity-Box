@@ -472,6 +472,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 	</script>
 </head>
 <body class="lang_en modal-overlay">
+<div id="avatar"></div>
 <div class="bubble-container">
 	<div class="bubble">
         	<blockquote class="oval">
@@ -512,7 +513,6 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 		</blockquote>
 	</div>
 </div>
-<div id="avatar"></div>
 <div id="modal_overlay"><div class="modal"></div></div>
 </body>
 <script>
