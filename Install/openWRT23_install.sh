@@ -727,6 +727,7 @@ uninstall_cleanup() {
 	/etc/init.d/uhttpd restart  >> install.log
 
 	opkg remove luci-app-uhttpd >> install.log
+	
 }
 
 install_adguard() {
