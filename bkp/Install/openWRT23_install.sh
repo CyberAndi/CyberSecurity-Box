@@ -630,6 +630,82 @@ echo 'Software Packeges installed'
 view_config
 }
 
+install_update_() {
+echo
+echo 'Install Software'
+echo
+echo 'Please wait ....'
+echo
+echo 'On Error enter logread'
+echo
+if [ "$dnsmasq_inst" != "" ]
+	then
+		/etc/init.d/dnsmasq stop >> install.log
+		/etc/init.d/dnsmasq disable >> install.log
+		opkg update >> install.log
+		opkg remove dnsmasq >> install.log
+fi
+opkg update >> install.log
+if [ "$(opkg list-upgradable)" != "" ]
+	then
+		echo 'upgrade installed Packages' >> install.log
+  		opkg update >> install.log
+  		opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
+fi 
+install_check
+
+if [ "$unbound_inst" = "" ]
+	then
+		if [ "$main_release" -ge "23" ] 
+  			then
+  				echo $main_release
+      				opkg update >> install.log
+      				#opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill dnsmasq-full
+				opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill dnsmasq-full
+			
+   			elif [ "$main_release" = "22" ]
+   				then
+       				echo $main_release
+	    			opkg update >> install.log
+					opkg install nano wget curl kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server tc luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full
+			else 
+   					echo $main_release
+					opkg update >> install.log
+   					opkg install nano wget curl kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound ca-certificates acme acme-dnsapi luci-app-acme stubby tor tor-geoip bind-dig openssh-sftp-server ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns drill mwan3 luci-app-mwan3 dnsmasq-full --force-overwrite >> install.log
+		fi
+   			opkg update >> install.log
+fi
+
+opkg update >> install.log
+if [ "$iptables_inst" != "" ] 
+	then
+		echo 'remove iptable-Packages' >> install.log
+  		opkg remove iptable* --force-removal-of-dependent-packages >> install.log
+fi
+
+if [ "$odhcpd_inst" != "" ] 
+	then
+		echo 'remove odhcpd-Packages' >> install.log
+  		opkg update >> install.log
+fi
+echo 'install opkg'
+
+/etc/init.d/dnsmasq enable >> install.log
+/etc/init.d/dnsmasq start >> install.log
+clear
+echo
+echo '########################################################'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
+echo '#                                                      #'
+echo '########################################################'
+echo
+echo 'Software Packeges installed'
+view_config
+}
+
 uninstall_cleanup() {
 	echo 'uninstall and cleanup at end'
 	echo 'uninstall and cleanup at end' >> install.log
@@ -655,7 +731,7 @@ uninstall_cleanup() {
 }
 
 install_adguard() {
-opkg update && opkg install wget
+#opkg update && opkg install wget
 mkdir -p /opt/ && cd /opt
 wget -c https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.105.2/AdGuardHome_linux_armv5.tar.gz
 tar xfvz AdGuardHome_linux_armv5.tar.gz
@@ -12387,9 +12463,9 @@ server=/amazonvideo.com/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/api-global.netflix.com/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/openwrt.org/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/firmware-selector.openwrt.org/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
-server=/one.openwrt.org/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
-server=/openwrt.org/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
+server=/one.openwrt.org/$(echo $DNS_IP)/#$(echo $DNSMASQ_Relay_port)
 server=/raspbery.org/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
+
 
 server=/apple.com/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 server=/mzstatic.com/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
