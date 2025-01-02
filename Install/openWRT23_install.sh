@@ -2031,105 +2031,6 @@ uci add_list network.@bridge-vlan[-1].ports='lan4:t'
 
 }
 
-
-
-create_vlan_bridge_old() {
-
-uci set network.lan.device='br-lan.1'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-lan'
-uci set network.@bridge-vlan[-1].vlan='1'
-uci set network.@bridge-vlan[-1].vid='1'
-uci add_list network.@bridge-vlan[-1].ports='lan1:u*'
-uci add_list network.@bridge-vlan[-1].ports='lan2:u*'
-uci add_list network.@bridge-vlan[-1].ports='lan3:u*'
-uci add_list network.@bridge-vlan[-1].ports='lan4:u*'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-lan'
-uci set network.@bridge-vlan[-1].vlan='101'
-uci set network.@bridge-vlan[-1].vid='101'
-uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan2:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan3:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan4:t'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-lan'
-uci set network.@bridge-vlan[-1].vlan='102'
-uci set network.@bridge-vlan[-1].vid='102'
-uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan2:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan3:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan4:t'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-lan'
-uci set network.@bridge-vlan[-1].vlan='103'
-uci set network.@bridge-vlan[-1].vid='103'
-uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan2:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan3:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan4:t'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-lan'
-uci set network.@bridge-vlan[-1].vlan='104'
-uci set network.@bridge-vlan[-1].vid='104'
-uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan2:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan3:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan4:t'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-lan'
-uci set network.@bridge-vlan[-1].vlan='105'
-uci set network.@bridge-vlan[-1].vid='105'
-uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan2:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan3:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan4:t'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-lan'
-uci set network.@bridge-vlan[-1].vlan='106'
-uci set network.@bridge-vlan[-1].vid='106'
-uci add_list network.@bridge-vlan[-1].ports='lan1:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan2:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan3:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan4:t'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-lan'
-uci set network.@bridge-vlan[-1].vlan='107'
-uci set network.@bridge-vlan[-1].vid='107'
-uci add_list network.@bridge-vlan[-1].ports='lan1:t'
-uci add_list network.@bridge-vlan[-1].ports='lan2:t'
-uci add_list network.@bridge-vlan[-1].ports='lan3:t' 
-uci add_list network.@bridge-vlan[-1].ports='lan4:t'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-lan'
-uci set network.@bridge-vlan[-1].vlan='108'
-uci set network.@bridge-vlan[-1].vid='108'
-uci add_list network.@bridge-vlan[-1].ports='lan1:t'
-uci add_list network.@bridge-vlan[-1].ports='lan2:t'
-uci add_list network.@bridge-vlan[-1].ports='lan3:t'
-uci add_list network.@bridge-vlan[-1].ports='lan4:t'
-
-uci add network bridge-vlan
-uci set network.@bridge-vlan[-1].device='br-lan'
-uci set network.@bridge-vlan[-1].vlan='110'
-uci set network.@bridge-vlan[-1].vid='110'
-uci add_list network.@bridge-vlan[-1].ports='lan1:t'
-uci add_list network.@bridge-vlan[-1].ports='lan2:t'
-uci add_list network.@bridge-vlan[-1].ports='lan3:t'
-uci add_list network.@bridge-vlan[-1].ports='lan4:t'
-
-processes=$(uci commit && reload_config) wait $processes
-}
-
 create_network() {
 clear
 echo
@@ -3209,182 +3110,6 @@ ContactInfo Cyb3r4nd1@protonmail.com
 #DataDirectory /var/lib/tor
 
 EOF
-}
-
-set_tor_sub_old() {
-/etc/init.d/tor stop >> install.log
-/etc/init.d/log restart >> install.log
-
-# Configure Tor client
-cat << EOF > /etc/tor/main
-AutomapHostsOnResolve 1
-VirtualAddrNetworkIPV4 10.192.0.0/10
-VirtualAddrNetworkIPv6 fc00::/7
-
-SocksListenAddress 127.0.0.1
-SocksListenAddress $(echo $SERVER_ip)
-SocksListenAddress $(echo $HCONTROL_ip)
-SocksListenAddress $(echo $CONTROL_ip)
-SocksListenAddress $(echo $INET_ip)
-SocksListenAddress [0::1]
-
-ControlPort 127.0.0.1:9051
-ControlPort [0::1]:9051
-ControlPort $(echo $SERVER_ip):9051
-ControlPort $(echo $HCONTROL_ip):9051
-ControlPort $(echo $CONTROL_ip):9051
-ControlPort $(echo $INET_ip):9051
-
-DNSPort 127.0.0.1:9053
-DNSPort 127.0.0.1:9153
-DNSPort 127.0.0.1:853
-DNSPort 127.0.10.1:53
-DNSPort 127.0.0.1:54
-DNSPort [0::1]:9053
-DNSPort [0::1]:9153
-DNSPort [0::1]:853
-DNSPort [0::1]:54
-
-DNSPort $(echo $SERVER_ip):9053
-DNSPort $(echo $HCONTROL_ip):9053
-DNSPort $(echo $CONTROL_ip):9053
-DNSPort $(echo $INET_ip):9053
-
-DNSPort $(echo $SERVER_ip):9153
-DNSPort $(echo $HCONTROL_ip):9153
-DNSPort $(echo $CONTROL_ip):9153
-DNSPort $(echo $INET_ip):9153
-
-DNSPort $(echo $SERVER_ip):54
-DNSPort $(echo $HCONTROL_ip):54
-DNSPort $(echo $CONTROL_ip):54
-DNSPort $(echo $INET_ip):54
-
-TransPort $(echo $SERVER_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort $(echo $HCONTROL_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort $(echo $CONTROL_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort $(echo $INET_ip):9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort 127.0.0.1:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort [0::1]:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-
-#SocksPort ist der Port für die Clientverbindung
-SocksPort $(echo $SERVER_ip):9050
-SocksPort $(echo $HCONTROL_ip):9050
-SocksPort $(echo $CONTROL_ip):9050
-SocksPort $(echo $INET_ip):9050
-SocksPort 127.0.0.1:9050
-SocksPort [0::1]:9050
-
-SocksPort $(echo $SERVER_ip):9100
-SocksPort $(echo $HCONTROL_ip):9100
-SocksPort $(echo $CONTROL_ip):9100
-SocksPort $(echo $INET_ip):9100
-SocksPort 127.0.0.1:9100
-SocksPort [0::1]:9100
-
-SocksPort $(echo $SERVER_ip):9150
-SocksPort $(echo $HCONTROL_ip):9150
-SocksPort $(echo $CONTROL_ip):9150
-SocksPort $(echo $INET_ip):9150
-SocksPort 127.0.0.1:9150
-SocksPort [0::1]:9150
-
-SocksPort $(echo $SERVER_ip):9200 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort $(echo $HCONTROL_ip):9200 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort $(echo $CONTROL_ip):9200 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort $(echo $INET_ip):9200 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort 127.0.0.1:9200 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort [0::1]:9200 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-
-#ORPort empfängt Daten aus dem Tor Netzwerk im Internet
-#ORPort $(echo $WAN_ip):9049
-#DirPort zum Spiegeln der Tor-Server-Adressen
-#DirPort $(echo $WAN_ip):9030
-
-HTTPTunnelPort $(echo $SERVER_ip):9060
-HTTPTunnelPort $(echo $HCONTROL_ip):9060
-HTTPTunnelPort $(echo $CONTROL_ip):9060
-HTTPTunnelPort $(echo $INET_ip):9060
-HTTPTunnelPort 127.0.0.1:9060
-HTTPTunnelPort [0::1]:9060
-
-#ExitPolicy reject *:*
-#ExitPolicy stellt den Node Type ein. Hier Weiterleitung
-RelayBandwidthRate 10000 KB
-RelayBandwidthBurst 50000 KB
-DisableDebuggerAttachment 0
-AccountingStart day 06:00
-AccountingMax 50 GBytes
-
-NumCPUs 1
-
-#Nur sichere Exitnodes Benutzen
-StrictExitNodes 1 # war aktiv
-
-ExcludeNodes {AU}, {CA}, {FR}, {GB}, {NZ}, {US}, {DE}, {CH}, {JP}, {FR}, {SE}, {DK}, {NL}, {NO}, {IT}, {ES}, {BE}, {BG}, {EE}, {FI}, {GR}, {IL}, {SG}, {KR}, {HR}, {LV}, {LT}, {LU}, {MT}, {NO}, {AT}, {PL}, {PT}, {RO}, {RU}, {SE}, {SK}, {SI}, {CZ}, {HU}, {CY}, {EU}, {HU}, {UA}, {SZ}, {CS}, {TR}, {RS}, {MF}, {BL}, {RE}, {MK}, {ME}, {MY}, {HR}, {IE}, {PF}, {GF}, {CK}, {BA}  
-ExitNodes {CL}, {LI}, {LV}, {TW}, {AE}, {TH}, {IS}, {KW}, {PA}
-
-SafeSocks 1
-WarnUnsafeSocks 1
-#Log warn syslog
-#Das Schreiben auf die Disk verringern AvoidDiskWrites 1
-AvoidDiskWrites 1
-RunAsDaemon 1
-Nickname EnemyOneEU
-AutomapHostsSuffixes .onion,.exit
-
-## Tor hidden sites do not have real IP addresses. This specifies what range of
-## IP addresses will be handed to the application as "cookies" for .onion names.
-## Of course, you should pick a block of addresses which you aren't going to
-## ever need to actually connect to. This is similar to the MapAddress feature
-## of the main tor daemon.
-## OnionAddrRange 127.42.42.0/24
-##
-## ServerDNSResolvConfFile filename
-## ServerDNSAllowBrokenConfig 0|1
-## ServerDNSSearchDomains 1
-##
-## CacheIPv4DNS 1
-##
-## HiddenServiceDir /home/pi/hidden_service/
-## HiddenServicePort 80 192.168.175.250:80
-##
-## HiddenServiceDir /var/lib/tor/other_hidden_service/
-## HiddenServicePort 80 127.0.0.1:80
-## HiddenServicePort 22 127.0.0.1:22
-##
-## SOCKS5 Username and Password. This is used to isolate the torsocks connection
-## circuit from other streams in Tor. Use with option IsolateSOCKSAuth (on by
-## default) in tor(1). TORSOCKS_USERNAME and TORSOCKS_PASSWORD environment
-## variable overrides these options.
-## SOCKS5Username <username>
-## SOCKS5Password <password>
-##
-## Log notice file /var/log/tor/tor-notices.log
-ReachableAddresses accept *:443, reject *:*
-ReachableORAddresses *:443
-
-DataDirectory /var/lib/tor
-User tor
-
-EOF
-
-
-uci del_list tor.conf.tail_include="/etc/tor/main" >> install.log
-uci add_list tor.conf.tail_include="/etc/tor/main" >> install.log
-processes=$(uci commit && reload_config)
-wait $processesg >> install.log
-
-/etc/init.d/tor start  >> install.log
-
-
-echo 
-echo 'Tor-Onion-Services activated'
-echo
-
-echo
-echo 'On Error enter logread'
-echo
 }
 
 set_stubby() {
@@ -28582,6 +28307,21 @@ echo 'On Error enter logread'
 echo
 }
 
+set_firewall_intercept(){
+echo 'set Tor intercept' >> install.log
+uci set firewall.ssh_int.enabled='1'
+uci set firewall.http_int.enabled='1'
+uci set firewall.https_int.enabled='1'
+uci set firewall.tcp_tor1_int.enabled='1'
+uci set firewall.tcp_tor2_int.enabled='1'
+processes=$(uci commit && reload_config)
+wait $processes >> install.log
+
+echo
+echo 'On Error enter logread'
+echo
+}
+
 set_HS_Firewall() {
 uci set firewall.OfficeClient.enabled='1'
 uci set firewall.OfficeWebClient.enabled='1'
@@ -31199,6 +30939,7 @@ create_firewall_zones >> install.log
 ####################################################################################################
 # create_MWAN >> install.log
 ####################################################################################################
+echo
 echo >> install.log
 echo
 view_config
@@ -31206,6 +30947,18 @@ echo
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Rules'
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Rules' >> install.log
 set_firewall_rules >> install.log
+
+if [ "$TOR_ONION" = "1" ]
+   	then
+		echo
+		echo >> install.log
+		echo
+		view_config
+		echo
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept'
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept' >> install.log
+		set_firewall_intercept >> install.log
+fi
 
 if [ "$AD_GUARD" = "1" ]
 	then
