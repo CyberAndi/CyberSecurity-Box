@@ -28307,7 +28307,7 @@ echo 'On Error enter logread'
 echo
 }
 
-set_firewall_intercept(){
+set_firewall_intercept() {
 echo 'set Tor intercept' >> install.log
 uci set firewall.ssh_int.enabled='1'
 uci set firewall.http_int.enabled='1'
@@ -30959,6 +30959,15 @@ if [ "$TOR_ONION" = "1" ]
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept' >> install.log
 		set_firewall_intercept >> install.log
 fi
+
+echo
+echo >> install.log
+echo
+view_config
+echo 
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set'
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set' >> install.log
+set_firewall_ipset >> install.log
 
 if [ "$AD_GUARD" = "1" ]
 	then
