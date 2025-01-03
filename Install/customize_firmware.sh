@@ -1,15 +1,15 @@
 #!/bin/sh
 clear
 mv /www/index.html /www/index.old
-release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=')
-revision=$(cat /etc/openwrt_release | grep "DISTRIB_REVISION" | cut -f2 -d '=')
+release=$(grep "DISTRIB_RELEASE" /etc/openwrt_release | cut -f2 -d '=')
+revision=$(grep "DISTRIB_REVISION" /etc/openwrt_release | cut -f2 -d '=')
 revision=${revision::-1}
 release=${release::-1}
 revision=${revision:1}
 release=${release:1}
-main_release=$(cat /etc/openwrt_release | grep "DISTRIB_RELEASE" | cut -f2 -d '=' | cut -f1 -d '.' | cut -c 2-)
-architecture=$(cat /etc/openwrt_release | grep "ARCH" | cut -f2 -d '=')
-target=$(cat /etc/openwrt_release | grep "TARGET" | cut -f2 -d '=')
+main_release=$(grep "DISTRIB_RELEASE" /etc/openwrt_release | cut -f2 -d '=' | cut -f1 -d '.' | cut -c 2-)
+architecture=$(grep "ARCH" /etc/openwrt_release | cut -f2 -d '=')
+target=$(grep "TARGET" /etc/openwrt_release | cut -f2 -d '=')
 architecture=${architecture::-1}
 target=${target::-1}
 architecture=${architecture:1}
@@ -22,8 +22,8 @@ check_hash() {
 }
 
 customize_firmware() {
-FILE=/www/luci-static/resources/view/dashboard/css/c*.css
-if [ ! -f "$FILE" ]
+FILE1=/www/luci-static/resources/view/dashboard/css/c*.css
+if [ ! -f "$FILE1" ]
 
 	then
 		customize_firmware_sub
@@ -119,7 +119,6 @@ DEVICE_MANUFACTURER='@CyberAndi'
 DEVICE_MANUFACTURER_URL='https://cyberandi.tumblr.com/'
 DEVICE_PRODUCT='CyberSecurity-Box'
 DEVICE_REVISION='v0.95'
-
 EOF
 
 cat << EOF > /etc/sysupgrade.conf
@@ -137,8 +136,8 @@ EOF
 datum=$(date +"%y%d%m%H%M")
 echo $datum
 sleep 20
-FILE=/www/luci-static/bootstrap/OCR-A.ttf
-if [ ! -f "$FILE" ] 
+FILE2=/www/luci-static/bootstrap/OCR-A.ttf
+if [ ! -f "$FILE2" ] 
 	then
 		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 			then
@@ -151,10 +150,10 @@ if [ ! -f "$FILE" ]
 				processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
     				wait $processes
 		fi
-		process=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
-    		wait $process
+		process0=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
+    	wait $process0
 	  	processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
-    		wait $processes2
+    	wait $processes2
  		processes3=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/)
 		wait $processes3
 		processes4=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
@@ -172,8 +171,8 @@ if [ ! -f "$FILE" ]
 
 fi
 
-FILE1=/www/luci-static/resources/view/dashboard/css/c*.css
-if [ ! -f "$FILE" ]
+FILE3=/www/luci-static/resources/view/dashboard/css/c*.css
+if [ ! -f "$FILE3" ]
 	then
 		mv /www/luci-static/resources/view/status/include/*_dsl.js /www/luci-static/resources/view/status/include/10_dsl.js
 		mv /www/luci-static/resources/view/status/include/*_ports.js /www/luci-static/resources/view/status/include/11_ports.js
@@ -194,7 +193,7 @@ echo
 }
 
 create_hotspot(){
-	FILE=/www/CaptivePortal/pic
+	FILE4=/www/CaptivePortal/pic
  	uci set wireless.radio0=wifi-device
 	uci set wireless.radio0.type='mac80211'
 	uci set wireless.radio0.path='platform/soc/a000000.wifi'
@@ -205,7 +204,7 @@ create_hotspot(){
  	uci delete wireless.radio0.disabled >> install.log
   	processes=$(uci commit && reload_config)
 	wait $processes  >> install.log
-	if [ ! -d "$FILE" ]
+	if [ ! -d "$FILE4" ]
 		then
 			create_hotspot_sub
 	fi
@@ -222,8 +221,8 @@ mkdir -p /www/CaptivePortal
 mkdir -p /www/generate_204	
 mkdir -p /www/CaptivePortal/pic
 
-processe=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/index.htm -P /www/)
-wait $processe
+processes0=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/index.htm -P /www/)
+wait $processes0
 processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/captiveportal.htm -O /www/CaptivePortal/index.htm)
 wait $processes1
 processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/mobile.css -P /www/CaptivePortal/)
@@ -349,7 +348,7 @@ cat << EOF > /etc/rc.local
 			wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/
-    		wait $process
+    		wait
 		else
 			rm /root/*.sh
 	fi
