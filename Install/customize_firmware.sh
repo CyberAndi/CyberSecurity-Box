@@ -16,6 +16,89 @@ architecture=${architecture:1}
 target=${target:1}
 
 
+LOCALADDRESS="127.192.0.1/10"
+
+actLoop=$(ifconfig | grep '^l\w*' -m 1 | cut -f1 -d ' ')
+actEth=$(ifconfig | grep '^e\w*' -m 1 | cut -f1 -d ' ')
+actWlan=$(ifconfig | grep '^w\w*' -m 1 | cut -f1 -d ' ')
+
+#Internet Gateway
+if [ ! -z "$1" ]  
+	then
+		INET_GW=$1
+	else
+		INET_GW=$(ip route | grep default | cut -f3  -d ' ')
+fi
+INET_GW_org=$INET_GW
+echo
+#read -p 'Please give me the WAN-IP (Gateway/Router): ['$INET_GW'] ' INET_GW
+echo
+if [ "$INET_GW" = "" ]
+	then
+		INET_GW=$INET_GW_org
+fi
+
+WAN_ip=$(echo $INET_GW | cut -f1 -d '.')
+WAN_ip=$WAN_ip'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_ip=$WAN_ip'.'$(echo $INET_GW | cut -f3 -d '.')'.250'
+
+WAN_broadcast=$(echo $INET_GW | cut -f1 -d '.')
+WAN_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f3 -d '.')'.255'
+
+WAN_MOBILE_ip=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_ip=$WAN_ip'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_ip=$WAN_ip'.'$(echo $INET_GW | cut -f3 -d '.')'.251'
+
+WAN_MOBILE_broadcast=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f3 -d '.')'.255'
+
+WAN_MOBILE_GW=$(echo $INET_GW | cut -f1 -d '.')
+WAN_MOBILE_GW=$WAN_ip'.'$(echo $INET_GW | cut -f2 -d '.')
+WAN_MOBILE_GW=$WAN_ip'.'$(echo $INET_GW | cut -f3 -d '.')'.253'
+
+
+#complet Internet
+Internet="0.0.0.0/0"
+
+#all Adresses
+all_IP="0.0.0.0"
+all_IP6="[::]"
+
+#Access to Server
+ACCESS_SERVER=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' )
+
+#Lokal LAN
+if [ ! -z "$2" ]
+	then
+		LAN=$2
+	else
+		LAN=$(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep 'inet ' | cut -f6 -d ' ' ) | cut -f1 -d ' ' | cut -f1 -d'/' )
+fi
+
+IPv6=""
+IPv6=$(echo $(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' ) | cut -c 5-6)
+
+if [ "$IPv6" = "::" ]
+	then
+		LAN=''
+fi
+
+if [ "$LAN" = "" ]
+        then
+                LAN='192.168.1.1'
+fi
+
+LAN_org=$LAN
+
+#read -p 'Type the LAN-IP (Internal Network): ['$( echo $LAN )'] ' LAN
+if [ "$LAN" = "" ]
+        then
+                LAN=$LAN_org
+fi
+
+
 check_hash() {
     local file=$1
     echo "$EXPECTED_HASH  $file" | sha256sum -c
@@ -142,13 +225,13 @@ if [ ! -f "$FILE2" ]
 		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 			then
 				processes=$(rm /www/luci-static/bootstrap/c*.css)
-    				wait $processes
+    			wait $processes
 		fi
 
 		if [ "$(ls /www/luci-static/resources/view/dashboard/css/c*.css)" != "" ]
 			then
 				processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
-    				wait $processes
+    			wait $processes
 		fi
 		process0=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
     	wait $process0
@@ -341,9 +424,9 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd' >> install.log
 set_uhttpd >> install.log
 
 cat << EOF > /etc/rc.local
-        if [ ! -f /root/openWRT23_install.sh ]
+    if [ ! -f /root/openWRT23_install.sh ]
 		then
-        	rm /www/index.html && sleep 20
+			rm /www/index.html && sleep 20
 			# wget --waitretry=10 -t 5 -O /root/customize_firmware.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh && sh /root/customize_firmware.sh & wait
 			wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/
