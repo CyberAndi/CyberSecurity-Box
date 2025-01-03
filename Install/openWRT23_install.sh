@@ -30978,6 +30978,7 @@ if [ "$AD_GUARD" = "1" ]
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard' >> install.log
 		install_adguard >> install.log
 fi
+
 echo
 echo >> install.log
 
