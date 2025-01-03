@@ -18,10 +18,8 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>
 <br><br>
   <img src="/wiki_pic/Firmware_Config.png" alt="select_packages" width="50%"> </img><br><br>
   And in the field <code>Script to run on first boot (uci-defaults)</code> insert.<br><br>
-  <pre><code>
-uci set network.wan6.disabled='1' && uci commit && reload_config && service network restart && sleep 20 && wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh & wait
-exit 0
-</code></pre>
+  <pre><code>echo 'start '$(date) > /root/firstboot && uci set network.wan6.disabled='1' && processes=$(uci commit && reload_config) && wait $processesss  && processes1=$(/etc/init.d/network restart) && sleep 30 && echo 'starting..' > /root/wget_start && wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh && echo 'end '$(date) > /root/end
+  </code></pre>
   Then press <code>Request Build</code>.<br><br>
   <img src="/wiki_pic/Request_build.png" alt="select_packages" width="50%"> </img>.<br><br>
   Afterwards generate the File with <code>Kernel</code> and download it.<br><br>
