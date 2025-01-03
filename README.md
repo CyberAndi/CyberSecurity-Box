@@ -11,15 +11,13 @@
 For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>.	
 <ol><h3><li>Alternative 1 - Installation on <img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>-Router( <img src="/wiki_pic/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px" alt="AVM"></img> Fritz!Box, <img src="/wiki_pic/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="tp-link"></img>, <img src="/wiki_pic/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="ASUS"></img> etc.)</h3>
   Go on <a href="https://openwrt.org/" target="_blank"><img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router. Please click before on <code>Customize installed packages and/or first boot script</code> then add the following items at the end.<br><br>
-<pre><code>ca-bundle dnsmasq-full stubby tor tor-geoip unbound-daemon unbound-anchor unbound-control-setup unbound-host unbound-checkconf luci-app-unbound tc luci-app-qos luci-app-nft-qos nft-qos kmod-nls-cp437 kmod-nls-iso8859-1 nano wget curl openssh-sftp-server getdns drill bind-dig ca-certificates acme luci-app-acme php8-fpm php8-cgi mwan3 luci-app-mwan3
-</code></pre>
+<pre><code>ca-bundle dnsmasq-full stubby tor tor-geoip unbound-daemon unbound-anchor unbound-control-setup unbound-host unbound-checkconf luci-app-unbound tc luci-app-qos luci-app-nft-qos nft-qos kmod-nls-cp437 kmod-nls-iso8859-1 nano wget curl openssh-sftp-server getdns drill bind-dig ca-certificates acme luci-app-acme php8-fpm php8-cgi mwan3 luci-app-mwan3</code></pre>
   into the field <code>Installed Packages</code>.<br><br>
 <img src="/wiki_pic/Make Firmware.gif" alt="Make Firmware" width="50%"> </img>
 <br><br>
   <img src="/wiki_pic/Firmware_Config.png" alt="select_packages" width="50%"> </img><br><br>
   And in the field <code>Script to run on first boot (uci-defaults)</code> insert.<br><br>
-  <pre><code>echo 'start '$(date) > /root/firstboot && uci set network.wan6.disabled='1' && processes=$(uci commit && reload_config) && wait $processesss  && processes1=$(/etc/init.d/network restart) && sleep 30 && echo 'starting..' > /root/wget_start && wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh && echo 'end '$(date) > /root/end
-  </code></pre>
+  <pre><code>echo 'start '$(date) > /root/firstboot && uci set network.wan6.disabled='1' && processes=$(uci commit && reload_config) && wait $processesss  && processes1=$(/etc/init.d/network restart) && sleep 30 && echo 'starting..' > /root/wget_start && wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh && echo 'end '$(date) > /root/end </code></pre>
   Then press <code>Request Build</code>.<br><br>
   <img src="/wiki_pic/Request_build.png" alt="select_packages" width="50%"> </img>.<br><br>
   Afterwards generate the File with <code>Kernel</code> and download it.<br><br>
