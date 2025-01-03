@@ -15,7 +15,6 @@ target=${target::-1}
 architecture=${architecture:1}
 target=${target:1}
 
-
 LOCALADDRESS="127.192.0.1/10"
 
 actLoop=$(ifconfig | grep '^l\w*' -m 1 | cut -f1 -d ' ')
@@ -57,7 +56,6 @@ WAN_MOBILE_broadcast=$WAN_broadcast'.'$(echo $INET_GW | cut -f3 -d '.')'.255'
 WAN_MOBILE_GW=$(echo $INET_GW | cut -f1 -d '.')
 WAN_MOBILE_GW=$WAN_ip'.'$(echo $INET_GW | cut -f2 -d '.')
 WAN_MOBILE_GW=$WAN_ip'.'$(echo $INET_GW | cut -f3 -d '.')'.253'
-
 
 #complet Internet
 Internet="0.0.0.0/0"
@@ -117,9 +115,8 @@ check_download()  {
     	else
        		# echo "Hash-Error"
         	rm -f "$OUTPUT_FILE"
-    fi
-fi
-    
+    	fi
+	fi    
 }
 
 customize_firmware() {
@@ -171,13 +168,12 @@ uci set wireless.default_radio1.ssid='CyberSec-Box'
 uci set uhttpd.main.index_page='index.php'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 processes=$(uci commit && reload_config)
-wait $processes  >> install.log
-/etc/init.d/uhttpd restart  >> install.log
-/etc/init.d/network restart  >> install.log
+wait $processes  >> install_customice.log
+/etc/init.d/uhttpd restart  >> install_customice.log
+/etc/init.d/network restart  >> install_customice.log
 echo
 echo 'Default Country-Settings'
 echo 
-
 
 echo
 echo 'https activated'
@@ -314,9 +310,9 @@ create_hotspot(){
 	uci set wireless.radio0.country='DE'
 	uci set wireless.radio0.channel='auto'
 	uci set wireless.radio0.hwmode='11n'
-	uci delete wireless.radio0.disabled >> install.log
+	uci delete wireless.radio0.disabled >> install_customice.log
 	processes=$(uci commit && reload_config)
-	wait $processes  >> install.log
+	wait $processes  >> install_customice.log
 	if [ ! -d "$FILE" ]
 		then
 			create_hotspot_sub
@@ -418,35 +414,35 @@ set_uhttpd() {
 	uci set uhttpd.main.index_page='index.php'
 	uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 	processes=$(uci commit && reload_config)
-	wait $processes  >> install.log
+	wait $processes  >> install_customice.log
 }
 
 #-------------------------start---------------------------------------
 
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...' >> install_customice.log
 echo
-echo >> install.log
+echo >> install_customice.log
 echo $main_release
 echo
 echo 'Automation Install'
 echo
-echo >> install.log
+echo >> install_customice.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> install.log
-customize_firmware >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> install_customice.log
+customize_firmware >> install_customice.log
 
 echo
-echo >> install.log
+echo >> install_customice.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
-create_hotspot >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install_customice.log
+create_hotspot >> install_customice.log
 
 echo
-echo >> install.log
+echo >> install_customice.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd' >> install.log
-set_uhttpd >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd' >> install_customice.log
+set_uhttpd >> install_customice.log
 
 cat << EOF > /etc/rc.local
 	if [ ! -f /root/openWRT23_install.sh ] && [ ! -f www/luci-static/bootstrap/cascade.css ]
