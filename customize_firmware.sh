@@ -233,8 +233,10 @@ datum=$(date +"%y%d%m%H%M")
 echo $datum
 sleep 30
 FILE=/www/luci-static/bootstrap/OCR-A.ttf
+echo $datum >> /root/install_customice.log
 if [ ! -f "$FILE" ] 
 	then
+		echo 'file not found - download' >> /root/install_customice.log
 		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 			then
 				processes=$(rm /www/luci-static/bootstrap/c*.css)
