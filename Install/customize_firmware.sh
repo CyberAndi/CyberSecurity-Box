@@ -118,7 +118,7 @@ check_download()  {
         	echo "Hash is okay"  >> /root/install_customice.log
         	break
     	else
-       		# echo "Hash-Error"
+       		echo "$OUTPUT_FILE" | sha256sum >> /root/install_customice.log
         	rm -f "$OUTPUT_FILE" && echo 'del file false Hash' >> /root/install_customice.log
     	fi
 	fi    
