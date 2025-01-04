@@ -249,7 +249,7 @@ if [ ! -f "$FILE" ]
     			wait $processes51 && echo 'delete dashboard c*.css' >> /root/install_customice.log
 		fi
 		process50=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
-    	wait $process50 && echo 'download openWRT23_install.sh' >> /root/install_customice.log
+    	wait $process50 && echo 'download retry openWRT23_install.sh' >> /root/install_customice.log
 
 		if [ "$(ls /www/luci-static/bootstrap/logo.svg)" != "" ]
 			then
