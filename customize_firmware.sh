@@ -239,48 +239,48 @@ if [ ! -f "$FILE" ]
 		echo 'file not found - download' >> /root/install_customice.log
 		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 			then
-				processes=$(rm /www/luci-static/bootstrap/c*.css)
-    			wait $processes
+				processes52=$(rm /www/luci-static/bootstrap/c*.css)
+    			wait $processes52 && echo 'delete c*.css' >> /root/install_customice.log
 		fi
 
 		if [ "$(ls /www/luci-static/resources/view/dashboard/css/c*.css)" != "" ]
 			then
-				processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
-    			wait $processes
+				processes51=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
+    			wait $processes51 && echo 'delete dashboard c*.css' >> /root/install_customice.log
 		fi
-		process50=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh >> /root/install_customice.log)
-    	wait $process50
+		process50=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
+    	wait $process50 && echo 'download openWRT23_install.sh' >> /root/install_customice.log
 
 		if [ "$(ls /www/luci-static/bootstrap/logo.svg)" != "" ]
 			then
-				processes=$(rm /www/luci-static/bootstrap/logo*.* >> /root/install_customice.log)
-    			wait $processes
+				processe53s=$(rm /www/luci-static/bootstrap/logo*.* >> /root/install_customice.log)
+    			wait $processes53 && echo 'delete logo.svg' >> /root/install_customice.log
 		fi
 
 		process=$(check_download "https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh" "f9a60bb40fe8cc535e3d1a321b52cb2c76eaa80ffbf4884e43eeb0f7b910a2d2" "openWRT23_install.sh")
-		wait $process
+		wait $process && echo 'download openWRT23_install.sh' >> /root/install_customice.log
 		process1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/logo.svg -P /www/)
-    	wait $process1
+    	wait $process1 && echo 'download logo.svg' >> /root/install_customice.log
 	  	process2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
-    	wait $process2
+    	wait $process2	&& echo 'download index.php' >> /root/install_customice.log
  		process3=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/)
-		wait $process3
+		wait $process3 && echo 'download output.php' >> /root/install_customice.log
 		process4=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberSecurity-Box.png -P /www/luci-static/bootstrap/)
-		wait $process4
+		wait $process4 && echo 'download CyberSecurity-Box.png' >> /root/install_customice.log
 		process5=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberSecurity-Box.svg -P /www/luci-static/bootstrap/)
-		wait $process5
+		wait $process5 && echo 'download CyberSecurity-Box.svg' >> /root/install_customice.log
 		process6=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/CyberAndi.svg -P /www/luci-static/bootstrap/)
-		wait $process6
+		wait $process6 && echo 'download CyberAndi.svg' >> /root/install_customice.log
 		process7=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/cascade.css -P /www/luci-static/bootstrap/)
-		wait $process7
+		wait $process7 && echo 'download cascade.css' >> /root/install_customice.log
 		process8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/OCR-A.ttf -P /www/luci-static/bootstrap/)
-		wait $process8
+		wait $process8 && echo 'download OCR-A.ttf' >> /root/install_customice.log
 		process9=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/OCR-A.woff -P /www/luci-static/bootstrap/)
-		wait $process9
+		wait $process9 && echo 'download OCR-A.woff' >> /root/install_customice.log
 		process10=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/logo.svg -P /www/luci-static/bootstrap/)
-		wait $process10
+		wait $process10 && echo 'download logo.svg' >> /root/install_customice.log
 		process11=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/logo_48.png -P /www/luci-static/bootstrap/)
-		wait $process11
+		wait $process11 && echo 'download logo_48.png' >> /root/install_customice.log
 fi
 
 FILE1=/www/luci-static/resources/view/dashboard/css/c*.css
@@ -329,69 +329,69 @@ create_hotspot_sub() {
 	mkdir -p /www/generate_204	
 	mkdir -p /www/CaptivePortal/pic
 	processe=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/index.htm -P /www/)
-	wait $processe
+	wait $processe && echo 'download index.htm' >> /root/install_customice.log
 	processes1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/captiveportal.htm -O /www/CaptivePortal/index.htm)
-	wait $processes1
+	wait $processes1 && echo 'download captiveportal.htm' >> /root/install_customice.log
 	processes2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/mobile.css -P /www/CaptivePortal/)
-	wait $processes2
+	wait $processes2 && echo 'download mobile.css' >> /root/install_customice.log
 	processes3=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/theme.css -P /www/CaptivePortal/)
-	wait $processes3
+	wait $processes3 && echo 'download theme.css' >> /root/install_customice.log
 	processes4=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/theme_variable.css -P /www/CaptivePortal/)
-	wait $processes4
+	wait $processes4 && echo 'download theme_variable.css' >> /root/install_customice.log
 	processes5=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/prophetie.htm -P /www/CaptivePortal/)
-	wait $processes5
+	wait $processes5 && echo 'download prophetie.htm' >> /root/install_customice.log
 	processes6=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/OCR-A.ttf -P /www/CaptivePortal/)
-	wait $processes6
+	wait $processes6 && echo 'download OCR-A.ttf' >> /root/install_customice.log
 	processes7=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/OCRAStd.woff -P /www/CaptivePortal/)
-	wait $processes7
+	wait $processes7 && echo 'download OCRAStd.woff' >> /root/install_customice.log
 	processes8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/Unwetter2.jpg -P /www/CaptivePortal/pic/)
-	wait $processes8
+	wait $processes8 && echo 'download Unwetter2.jpg' >> /root/install_customice.log
 	processes9=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/Bibelserver.png -P /www/CaptivePortal/pic/)
-	wait $processes9
+	wait $processes9 && echo 'download Bibelserver.png' >> /root/install_customice.log
 	processes10=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/CMovie.svg -P /www/CaptivePortal/pic/)
-	wait $processes10
+	wait $processes10 && echo 'download CMovie.svg' >> /root/install_customice.log
 	processes11=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/virus.png -P /www/CaptivePortal/pic/)
-	wait $processes11
+	wait $processes11 && echo 'download virus.png' >> /root/install_customice.log
 	processes12=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/CMovie-Logo.png -P /www/CaptivePortal/pic/)
-	wait $processes12
+	wait $processes12 && echo 'download CMovie-Logo.png' >> /root/install_customice.log
 	processes13=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/CMovie-Play.svg -P /www/CaptivePortal/pic/)
-	#wait $processes13
+	wait $processes13 && echo 'download CMovie-Play.svg' >> /root/install_customice.log
 	#processes14=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/Corona_2.svg -P /www/CaptivePortal/pic/)
-	wait $processes14
+	#wait $processes14 && echo 'download Corona_2.svg' >> /root/install_customice.log
 	processes15=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/csb.png -P /www/CaptivePortal/pic/)
-	wait $processes15
+	wait $processes15 && echo 'download csb.png' >> /root/install_customice.log
 	processes16=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/Münzen.png -P /www/CaptivePortal/pic/)
-	wait $processes16
+	wait $processes16 && echo 'download Münzen.png' >> /root/install_customice.log
 	processes17=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/search.svg -P /www/CaptivePortal/pic/)
-	wait $processes17
+	wait $processes17 && echo 'download search.svg' >> /root/install_customice.log
 	processes18=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/search-128.svg -P /www/CaptivePortal/pic/)
-	wait $processes18
+	wait $processes18 && echo 'download search-128.svg' >> /root/install_customice.log
 	processes19=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/War.jpg -P /www/CaptivePortal/pic/)
-	wait $processes19
+	wait $processes19 && echo 'download War.jpg' >> /root/install_customice.log
 	processes20=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/War_Foreground_Maske.png -P /www/CaptivePortal/pic/)
-	wait $processes20
+	wait $processes20 && echo 'download War_Foreground_Maske.png' >> /root/install_customice.log
 	processes21=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/War_Foreground_Maske_o.png -P /www/CaptivePortal/pic/)
-	wait $processes21
+	wait $processes21 && echo 'download War_Foreground_Maske_o.png' >> /root/install_customice.log
 	processes22=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/War_Maske.png -P /www/CaptivePortal/pic/)
-	wait $processes22
+	wait $processes22 && echo 'download War_Maske.png' >> /root/install_customice.log
 	processes23=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/War_MaskeDust.png -P /www/CaptivePortal/pic/)
-	wait $processes23
+	wait $processes23 && echo 'download War_MaskeDust.png' >> /root/install_customice.log
 	processes24=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/War_MaskeDust2.png -P /www/CaptivePortal/pic/)
-	wait $processes24
+	wait $processes24 && echo 'download War_MaskeDust2.png' >> /root/install_customice.log
 	processes25=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/War_MaskeFlammen.png -P /www/CaptivePortal/pic/)
-	wait $processes25
+	wait $processes25 && echo 'download War_MaskeFlammen.png' >> /root/install_customice.log
 	processes26=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/War_MaskeFlammen_o.png -P /www/CaptivePortal/pic/)
-	wait $processes26
+	wait $processes26 && echo 'download War_MaskeFlammen_o.png' >> /root/install_customice.log
 	processes27=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/War_MaskeHimmel.png -P /www/CaptivePortal/pic/)
-	wait $processes27
+	wait $processes27 && echo 'download War_MaskeHimmel.png' >> /root/install_customice.log
 	processes28=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/War_MaskeSchutt.png -P /www/CaptivePortal/pic/)
-	wait $processes28
+	wait $processes28 && echo 'download War_MaskeSchutt.png' >> /root/install_customice.log
 	processes29=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/WarMaske.png -P /www/CaptivePortal/pic/)
-	wait $processes29
+	wait $processes29 && echo 'download WarMaske.png' >> /root/install_customice.log
 	processes30=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/WarMaskeSky.png -P /www/CaptivePortal/pic/)
-	wait $processes30
+	wait $processes30 && echo 'download WarMaskeSky.png' >> /root/install_customice.log
 	processes31=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/CaptivePortal/pic/WarMaskeSky_.png -P /www/CaptivePortal/pic/)
-	wait $processes31
+	wait $processes31 && echo 'download WarMaskeSky_.png' >> /root/install_customice.log
 	echo
 	echo 'On Error enter logread'
 	echo
