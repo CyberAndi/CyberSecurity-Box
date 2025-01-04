@@ -246,8 +246,8 @@ if [ ! -f "$FILE" ]
 				processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
     			wait $processes
 		fi
-		#process=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
-    	#wait $process
+		process50=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
+    	wait $process50
 
 		if [ "$(ls /www/luci-static/bootstrap/logo.svg)" != "" ]
 			then
@@ -461,7 +461,7 @@ cat << EOF > /etc/rc.local
 	fi
 	if [ ! -f /root/run ] 
 		then
-			echo $(date) > /root/run
+			echo "'"'$(date) "'"> /root/run
 			rm /root/customize_firmware.sh
 			exit 0
 	fi
