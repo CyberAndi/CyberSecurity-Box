@@ -465,6 +465,8 @@ cat << EOF > /etc/rc.local
 			rm /root/customize_firmware.sh >> /root/install_rc_local.log
 			exit 0
 	fi
+	echo '$(date) ' >> /root/install_rc_local.log
+	cat /etc/rc.local >> /root/install_rc_local.log
 	rm /etc/rc.local >> /root/install_rc_local.log
 	echo "" > /www/phpinfo.php
 	echo "exit 0" > /etc/rc.local
