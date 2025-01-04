@@ -105,16 +105,21 @@ check_download()  {
 	local URL=$1
 	local EXPECTED_HASH=$2
 	local OUTPUT_FILE=$3
+	echo >> /root/install_customice.log
+	echo $URL >> /root/install_customice.log
+	echo $EXPECTED_HASH >> /root/install_customice.log
+	echo $OUTPUT_FILE >> /root/install_customice.log
+
 
 	wget --waitretry=10 -t 5 -O "/root/$OUTPUT_FILE" "$URL"
     
 	if [[ $? -eq 0 ]]; then
     	if check_hash "$OUTPUT_FILE"; then
-        	echo "Hash is okay"
+        	echo "Hash is okay"  >> /root/install_customice.log
         	break
     	else
        		# echo "Hash-Error"
-        	rm -f "$OUTPUT_FILE"
+        	rm -f "$OUTPUT_FILE" && echo 'del file false Hash' >> /root/install_customice.log
     	fi
 	fi    
 }
