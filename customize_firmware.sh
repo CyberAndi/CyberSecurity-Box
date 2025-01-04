@@ -113,8 +113,9 @@ check_download()  {
 
 
 	out=$(wget --waitretry=10 -t 5 -O "/root/$OUTPUT_FILE" "$URL")
-    
-	wait $out && if [[ $? -eq 0 ]]; then
+    wait $out
+	sleep 40
+	 if [[ $? -eq 0 ]]; then
     	if check_hash "$OUTPUT_FILE"; then
         	echo "Hash is okay"  >> /root/install_customice.log
         	break
