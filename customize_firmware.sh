@@ -263,7 +263,7 @@ if [ ! -f "$FILE" ]
     			wait $processes53 && echo 'delete logo.svg' >> /root/install_customice.log
 		fi
 
-		process=$(check_download "https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh" "d6450c03cd2228f8792c284f2dc5ec87524f3ab44b078d4fd70b5bd9db178db4" "openWRT23_install.sh")
+		process=$(check_download "https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh" "d6450c03cd2228f8792c284f2dc5ec87524f3ab44b078d4fd70b5bd9db178db4  -" "openWRT23_install.sh")
 		wait $process && echo 'download openWRT23_install.sh' >> /root/install_customice.log
 		process1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/logo.svg -P /www/)
     	wait $process1 && echo 'download logo.svg' >> /root/install_customice.log
