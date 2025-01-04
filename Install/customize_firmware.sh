@@ -1,5 +1,6 @@
 #!/bin/sh
 clear
+/etc/init.d/uhttpd stop >> /root/install_customice.log
 mv /www/index.html /www/index.old
 release=$(grep "DISTRIB_RELEASE" /etc/openwrt_release | cut -f2 -d '=')
 revision=$(grep "DISTRIB_REVISION" /etc/openwrt_release | cut -f2 -d '=')
@@ -113,7 +114,7 @@ check_download()  {
 
 	wget --waitretry=10 -t 5 -O "/root/$OUTPUT_FILE" "$URL"
     
-	if [[ $? -eq 0 ]]; then
+	wait && if [[ $? -eq 0 ]]; then
     	if check_hash "$OUTPUT_FILE"; then
         	echo "Hash is okay"  >> /root/install_customice.log
         	break
@@ -174,8 +175,8 @@ uci set uhttpd.main.index_page='index.php'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 processes=$(uci commit && reload_config)
 wait $processes  >> /root/install_customice.log
-/etc/init.d/uhttpd restart  >> /root/install_customice.log
-/etc/init.d/network restart  >> /root/install_customice.log
+#/etc/init.d/uhttpd restart  >> /root/install_customice.log
+#/etc/init.d/network restart  >> /root/install_customice.log
 echo
 echo 'Default Country-Settings'
 echo 
@@ -422,6 +423,11 @@ set_uhttpd() {
 	uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 	processes=$(uci commit && reload_config)
 	wait $processes  >> /root/install_customice.log
+	/etc/init.d/uhttpd restart  >> /root/install_customice.log	
+	/etc/init.d/network restart  >> /root/install_customice.log
+	echo 'On Error enter logread'
+	echo
+
 }
 
 #-------------------------start---------------------------------------
