@@ -168,9 +168,9 @@ uci set wireless.default_radio1.ssid='CyberSec-Box'
 uci set uhttpd.main.index_page='index.php'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 processes=$(uci commit && reload_config)
-wait $processes  >> install_customice.log
-/etc/init.d/uhttpd restart  >> install_customice.log
-/etc/init.d/network restart  >> install_customice.log
+wait $processes  >> /root/install_customice.log
+/etc/init.d/uhttpd restart  >> /root/install_customice.log
+/etc/init.d/network restart  >> /root/install_customice.log
 echo
 echo 'Default Country-Settings'
 echo 
@@ -246,12 +246,12 @@ if [ ! -f "$FILE" ]
 				processes=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
     			wait $processes
 		fi
-		process50=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
+		process50=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh >> /root/install_customice.log)
     	wait $process50
 
 		if [ "$(ls /www/luci-static/bootstrap/logo.svg)" != "" ]
 			then
-				processes=$(rm /www/luci-static/bootstrap/logo*.*)
+				processes=$(rm /www/luci-static/bootstrap/logo*.* >> /root/install_customice.log)
     			wait $processes
 		fi
 
@@ -310,9 +310,9 @@ create_hotspot(){
 	uci set wireless.radio0.country='DE'
 	uci set wireless.radio0.channel='auto'
 	uci set wireless.radio0.hwmode='11n'
-	uci delete wireless.radio0.disabled >> install_customice.log
+	uci delete wireless.radio0.disabled >> /root/install_customice.log
 	processes=$(uci commit && reload_config)
-	wait $processes  >> install_customice.log
+	wait $processes  >> /root/install_customice.log
 	if [ ! -d "$FILE" ]
 		then
 			create_hotspot_sub
@@ -414,58 +414,58 @@ set_uhttpd() {
 	uci set uhttpd.main.index_page='index.php'
 	uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 	processes=$(uci commit && reload_config)
-	wait $processes  >> install_customice.log
+	wait $processes  >> /root/install_customice.log
 }
 
 #-------------------------start---------------------------------------
 
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...' >> install_customice.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...' >> /root/install_customice.log
 echo
-echo >> install_customice.log
+echo >> /root/install_customice.log
 echo $main_release
 echo
 echo 'Automation Install'
 echo
-echo >> install_customice.log
+echo >> /root/install_customice.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> install_customice.log
-customize_firmware >> install_customice.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> /root/install_customice.log
+customize_firmware >> /root/install_customice.log
 
 echo
-echo >> install_customice.log
+echo >> /root/install_customice.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install_customice.log
-create_hotspot >> install_customice.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> /root/install_customice.log
+create_hotspot >> /root/install_customice.log
 
 echo
-echo >> install_customice.log
+echo >> /root/install_customice.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd' >> install_customice.log
-set_uhttpd >> install_customice.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd' >> /root/install_customice.log
+set_uhttpd >> /root/install_customice.log
 
 cat << EOF > /etc/rc.local
 	if [ ! -f /root/openWRT23_install.sh ] && [ ! -f www/luci-static/bootstrap/cascade.css ]
 		then
-			rm /www/index.html && sleep 20
+			rm /www/index.html && sleep 20 >> /root/install_rc_local.log
 			if [ ! -f /root/customize_firmware.sh ] 
 			then
-				wget --waitretry=10 -t 5 -O /root/customize_firmware.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh && sh /root/customize_firmware.sh & wait
+				wget --waitretry=10 -t 5 -O /root/customize_firmware.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh && sh /root/customize_firmware.sh  >> /root/install_rc_local.log & wait
 			fi
-			wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh
-			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/
-			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/
+			wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh >> /root/install_rc_local.log
+			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/ >> /root/install_rc_local.log
+			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/ >> /root/install_rc_local.log
 		else
-			rm /root/*.sh
-			rm /root/*.sh.*
+			rm /root/*.sh >> /root/install_rc_local.log
+			rm /root/*.sh.* >> /root/install_rc_local.log
 	fi
 	if [ ! -f /root/run ] 
 		then
-			echo "'"'$(date) "'"> /root/run
-			rm /root/customize_firmware.sh
+			echo ' $(date) ' > /root/run >> /root/install_rc_local.log
+			rm /root/customize_firmware.sh >> /root/install_rc_local.log
 			exit 0
 	fi
-	rm /etc/rc.local
+	rm /etc/rc.local >> /root/install_rc_local.log
 	echo "" > /www/phpinfo.php
 	echo "exit 0" > /etc/rc.local
 EOF
