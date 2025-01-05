@@ -197,10 +197,11 @@ https://cyberandi.tumblr.com
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/5b502b53-1cea-4024-afc5-3847ac6cccca.png" width="50%">
 <p>
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/3906e52e-3e02-47ae-9b61-ecb9e498955b.png" width="50%">
-
+<p>
 <hr>
 
-&copy; CyberAndi 2019-2024 
+&copy; CyberAndi 2019-2024
 
 email: [programming@cyberandi.slmail.me](mailto:programming@cyberandi.slmail.me)<br>
 https://cyberandi.tumblr.com
+<p>
