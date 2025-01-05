@@ -1,28 +1,6 @@
 <head>
 <base href="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/">
 <meta name="google-site-verification" content="puDJPKt82mah02UkmE5ThtOtTU-B1gTDxL5i85x9wSI" />
-<style>
-  :root{
-    background-color: #212830;
-  }
-  * {
-    color: #d1d7e0;
-  }
-  body{
-    background-color: #212830;
-  }
-  .js-snippet-clipboard-copy-unpositioned .markdown-body .snippet-clipboard-content, .js-snippet-clipboard-copy-unpositioned .markdown-body .highlight {
-  background-color: #262c36 !important;
-  }
-  .markdown-body .highlight pre, .markdown-body pre {
-  padding: 16px;
-  overflow: auto;
-  font-size: 85%;
-  line-height: 1.45;
-  background-color: #262c36;
-  border-radius: 3px;
-  }
-</style>
 </head>
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/csb_logo_neu.svg" alt="Logo" width="300px">
 <h1>CyberSecurity-Box</h1>
