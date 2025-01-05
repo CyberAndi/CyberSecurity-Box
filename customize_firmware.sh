@@ -31,7 +31,7 @@ if [ ! -z "$1" ]
 fi
 INET_GW_org=$INET_GW
 echo
-#read -p 'Please give me the WAN-IP (Gateway/Router): ['$INET_GW'] ' INET_GW
+
 echo
 if [ "$INET_GW" = "" ]
 	then
@@ -91,7 +91,6 @@ fi
 
 LAN_org=$LAN
 
-#read -p 'Type the LAN-IP (Internal Network): ['$( echo $LAN )'] ' LAN
 if [ "$LAN" = "" ]
         then
                 LAN=$LAN_org
@@ -114,7 +113,7 @@ check_download()  {
 	sleep 40
 	out=$(wget --waitretry=10 -t 5 -O "/root/$OUTPUT_FILE" "$URL")
     wait $out
-	
+	echo $out >> /root/install_customice.log
 	 if [[ $? -eq 0 ]]; then
     	if check_hash "$OUTPUT_FILE"; then
         	echo "Hash is okay"  >> /root/install_customice.log
@@ -176,8 +175,6 @@ uci set uhttpd.main.index_page='index.php'
 uci set uhttpd.main.interpreter='.php=/usr/bin/php-cgi'
 processes=$(uci commit && reload_config)
 wait $processes  >> /root/install_customice.log
-#/etc/init.d/uhttpd restart  >> /root/install_customice.log
-#/etc/init.d/network restart  >> /root/install_customice.log
 echo
 echo 'Default Country-Settings'
 echo 
@@ -249,23 +246,25 @@ if [ ! -f "$FILE" ]
 				processes52=$(rm /www/luci-static/bootstrap/c*.css)
     			wait $processes52 && echo 'delete c*.css' >> /root/install_customice.log
 		fi
-
+		
 		if [ "$(ls /www/luci-static/resources/view/dashboard/css/c*.css)" != "" ]
 			then
 				processes51=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
     			wait $processes51 && echo 'delete dashboard c*.css' >> /root/install_customice.log
 		fi
-		#process50=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
-    	#wait $process50 && echo 'download retry openWRT23_install.sh' >> /root/install_customice.log
+		process50=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
+    	wait $process50 && echo 'download retry openWRT23_install.sh' >> /root/install_customice.log
 
 		if [ "$(ls /www/luci-static/bootstrap/logo.svg)" != "" ]
 			then
 				processe53s=$(rm /www/luci-static/bootstrap/logo*.* >> /root/install_customice.log)
     			wait $processes53 && echo 'delete logo.svg' >> /root/install_customice.log
 		fi
-
+		ls /root/ -Rlha >> /root/install_customice.log
 		process=$(check_download "https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh" "b86e524d522def9ee4f032667f2bff088e3a185a1e8cfe3f7e663fae98af8022" "openWRT23_install.sh")
 		wait $process && echo 'download openWRT23_install.sh' >> /root/install_customice.log
+		ls /root/ -Rlha >> /root/install_customice.log
+		echo >> /root/install_customice.log
 		process1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/logo.svg -P /www/)
     	wait $process1 && echo 'download logo.svg' >> /root/install_customice.log
 	  	process2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
