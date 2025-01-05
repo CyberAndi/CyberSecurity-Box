@@ -254,8 +254,9 @@ if [ ! -f "$FILE" ]
 				processes51=$(rm /www/luci-static/resources/view/dashboard/css/c*.css)
     			wait $processes51 && echo 'delete dashboard c*.css' >> /root/install_customice.log
 		fi
-		#process50=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
-    	#wait $process50 && echo 'download retry openWRT23_install.sh' >> /root/install_customice.log
+		sleep 30
+		process50=$(wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh)
+    	wait $process50 && echo 'download retry openWRT23_install.sh' >> /root/install_customice.log
 
 		if [ "$(ls /www/luci-static/bootstrap/logo.svg)" != "" ]
 			then
@@ -263,8 +264,8 @@ if [ ! -f "$FILE" ]
     			wait $processes53 && echo 'delete logo.svg' >> /root/install_customice.log
 		fi
 
-		process=$(check_download "https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh" "b86e524d522def9ee4f032667f2bff088e3a185a1e8cfe3f7e663fae98af8022" "openWRT23_install.sh")
-		wait $process && echo 'download openWRT23_install.sh' >> /root/install_customice.log
+		#process=$(check_download "https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh" "b86e524d522def9ee4f032667f2bff088e3a185a1e8cfe3f7e663fae98af8022" "openWRT23_install.sh")
+		#wait $process && echo 'download openWRT23_install.sh' >> /root/install_customice.log
 		process1=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/logo.svg -P /www/)
     	wait $process1 && echo 'download logo.svg' >> /root/install_customice.log
 	  	process2=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/)
