@@ -1,5 +1,5 @@
 <head>
-<base href="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/">
+<base href="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/">
 <meta name="google-site-verification" content="puDJPKt82mah02UkmE5ThtOtTU-B1gTDxL5i85x9wSI" />
 </head>
 <img src="wiki_pic/csb_logo_neu.svg" alt="Logo" width="300px">
