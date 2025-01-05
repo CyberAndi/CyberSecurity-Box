@@ -55,7 +55,8 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi"> Alternative 2 </a></
   </code></pre>
   <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
   <p><p>
-  <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" width="50%">
+  <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" width="50%"> 
+
 </details>
 <p id="afterreboot">
    <h3>After the reboot you will have following Networks: </h3>
@@ -92,7 +93,7 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi"> Alternative 2 </a></
   <pre><code>sudo su
 apt-get update
 apt-get upgrade -y</code></pre>
-  <ul>
+  <ol>
     <li>
 <h4>Type for Installation</h4>
      <pre><code>apt-get install tor unbound privoxy ntopng postfix iptables-persistent netfilter-persistent -y
@@ -108,8 +109,8 @@ curl -sSL https://install.pi-hole.net | bash</code></pre>
     <li>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz" target="_blank">pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz</a></h4> inludes White- and Blacklist (Advertisement, Maleware, Tracking and Porn).<b> Until Pi-Hole 4 and smaller</b></li>
     <li>
-    <h4>The Pi-Hole 4 <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list" target="_blank">regex.list</a></h4> includes Blacklist (Advertisment, Maleware, Tracking and Porn) with over 40% blocking rate.<br> In pi-hole-teleporter_2020-06-07_09-38-48.tar.gz is this included for Pi-Hole5.
-  <pre><code>service pihole-FTL stop
+    <h4>The Pi-Hole 4 <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list" target="_blank">regex.list</a></h4> includes Blacklist (Advertisment, Maleware, Tracking and Porn) with over 40% blocking rate.<br> In pi-hole-teleporter_2020-06-07_09-38-48.tar.gz is this included for Pi-Hole5.<br> <br>
+    <pre><code>service pihole-FTL stop
 service unbound stop
 service privoxy stop
 service tor stop
@@ -139,9 +140,10 @@ cp blockingpage.css /var/www/html/pihole/
 service tor start
 service privoxy start
 service unbound start
-service pihole-FTL start</code></pre>
+service pihole-FTL start
+    </code></pre>
    </li>
-  </ul>
+  </ol>
   
   <h3><li>Alternative 2 optional - Pi_Hole Configuration of the AVM FRITZ!Box with Presets for Security and Port-List </li></h3>
 <h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip" target="_blank">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
