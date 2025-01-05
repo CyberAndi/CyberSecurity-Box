@@ -1,58 +1,37 @@
 <head>
 <base href="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/">
 <meta name="google-site-verification" content="puDJPKt82mah02UkmE5ThtOtTU-B1gTDxL5i85x9wSI" />
-<style>
-  :root{
-    background-color: #212830;
-  }
-  * {
-    color: #d1d7e0;
-  }
-  body{
-    background-color: #212830;
-  }
-  .js-snippet-clipboard-copy-unpositioned .markdown-body .snippet-clipboard-content, .js-snippet-clipboard-copy-unpositioned .markdown-body .highlight {
-  background-color: #262c36 !important;
-  }
-  .markdown-body .highlight pre, .markdown-body pre {
-  padding: 16px;
-  overflow: auto;
-  font-size: 85%;
-  line-height: 1.45;
-  background-color: #262c36;
-  border-radius: 3px;
-  }
-</style>
 </head>
+<body style="background-color: #212830; color: #d1d7e0;">
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/csb_logo_neu.svg" alt="Logo" width="300px">
 <h1>CyberSecurity-Box</h1>
-<h4>(inkl. Ad Blocker, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/unbound_logo.png" style="max-width: 100%; vertical-align: middle; background-color: rgba(230,230,230,0.7); padding: 0.15em 0.25em; height:1em" height="14px"> (DNS), <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/tor-logo%402x.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Tor optional <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/pihole.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Pi-Hole (incl. DB) and ntopng) </h4>
+<h4>(inkl. Ad Blocker, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/unbound_logo.png" style="max-width: 100%; vertical-align: middle; background-color: rgba(230,230,230,0.; padding: 0.15em 0.25em; height:1em;background-color: #262c36;" height="14px"> (DNS), <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/tor-logo%402x.png" style="max-width: 100%;  padding: 0em; height:1em;background-color: #262c36;" height="14px"> Tor optional <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/pihole.png" style="max-width: 100%;  padding: 0em; height:1em;background-color: #262c36;" height="14px"> Pi-Hole (incl. DB) and ntopng) </h4>
 
-<h4><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch"><img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/de.gif" style="width:20px;  padding: 0em; height:1em" height="14px"></a><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch">&nbsp; F&uuml;r Deutsch / For German</a></h4>
+<h4><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch"><img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/de.gif" style="width:20px;  padding: 0em; height:1em;background-color: #262c36;" height="14px"></a><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch">&nbsp; F&uuml;r Deutsch / For German</a></h4>
 <p>
-  First load the <b><a href="https://brave.com/download/" target="_blank"><img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="14px"> Brave-Browser </a> </b> from the <a href="https://brave.com/" target="_blank">Brave-Website </a>.<br><br>
+  First load the <b><a href="https://brave.com/download/" target="_blank"><img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em;background-color: #262c36;" height="14px"> Brave-Browser </a> </b> from the <a href="https://brave.com/" target="_blank">Brave-Website </a>.<br><br>
 For the Raspberry-Pi Installation goto <b><a href="#raspi"> Alternative 2 </a></b>.	
-<ol><h3><li>Alternative 1 - Installation on <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Router( <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px" alt="AVM"> Fritz!Box, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="tp-link">, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="ASUS"> etc.)</li> </h3>
-  Go on <a href="https://openwrt.org/" target="_blank"><img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router. Please click before on <code>Customize installed packages and/or first boot script</code> then add the following items at the end.<br><br>
-<pre><code>ca-bundle dnsmasq-full stubby tor tor-geoip unbound-daemon unbound-anchor unbound-control-setup unbound-host unbound-checkconf luci-app-unbound tc luci-app-qos luci-app-nft-qos nft-qos kmod-nls-cp437 kmod-nls-iso8859-1 nano wget curl openssh-sftp-server getdns drill bind-dig ca-certificates acme luci-app-acme php8-fpm php8-cgi mwan3 luci-app-mwan3</code></pre>
+<ol><h3><li>Alternative 1 - Installation on <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em;background-color: #262c36;" height="20px">-Router( <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: #262c36;" height="20px" alt="AVM"> Fritz!Box, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em;background-color: #262c36;" height="20px" alt="tp-link">, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em;background-color: #262c36;" height="20px" alt="ASUS"> etc.)</li> </h3>
+  Go on <a href="https://openwrt.org/" target="_blank"><img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em;background-color: #262c36;" height="20px">-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router. Please click before on <code>Customize installed packages and/or first boot script</code> then add the following items at the end.<br><br>
+<pre style="background-color: #262c36;"><code>ca-bundle dnsmasq-full stubby tor tor-geoip unbound-daemon unbound-anchor unbound-control-setup unbound-host unbound-checkconf luci-app-unbound tc luci-app-qos luci-app-nft-qos nft-qos kmod-nls-cp437 kmod-nls-iso8859-1 nano wget curl openssh-sftp-server getdns drill bind-dig ca-certificates acme luci-app-acme php8-fpm php8-cgi mwan3 luci-app-mwan3</code></pre>
   into the field <code>Installed Packages</code>.<br><br>
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/Make Firmware.gif" alt="Make Firmware" width="50%"> 
 <br><br>
   <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/Firmware_Config.png" alt="select_packages" width="50%"> <br><br>
   And in the field <code>Script to run on first boot (uci-defaults)</code> insert.<br><br>
-  <pre><code>echo 'start '$(date) > /root/firstboot && uci set network.wan6.disabled='1' && processes=$(uci commit && reload_config) && wait $processesss  && processes1=$(/etc/init.d/network restart) && sleep 30 && echo 'starting..' > /root/wget_start && wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh && echo 'end '$(date) > /root/end && exit 0 </code></pre>
+  <pre style="background-color: #262c36;"><code>echo 'start '$(date) > /root/firstboot && uci set network.wan6.disabled='1' && processes=$(uci commit && reload_config) && wait $processesss  && processes1=$(/etc/init.d/network restart) && sleep 30 && echo 'starting..' > /root/wget_start && wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh && echo 'end '$(date) > /root/end && exit 0 </code></pre>
   Then press <code>Request Build</code>.<br><br>
   <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/Request_build.png" alt="select_packages" width="50%"> .<br><br>
   Afterwards generate the File with <code>Kernel</code> and download it.<br><br>
   <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/generate_firmware.png" alt="select_packages" width="50%"> 
   <br><br>
   After flushing use SSH or Putty for Installation and type the following code.<br><br>
-  <pre><code>ssh [ip-address of OpenWRT]</code></pre>
+  <pre style="background-color: #262c36;"><code>ssh [ip-address of OpenWRT]</code></pre>
   User: <i><b>root</b></i>
   <br>
   Password: <i><b></b></i><br><br>
   Change the Password with<br><br>
-  <pre><code>passwd
+  <pre style="background-color: #262c36;"><code>passwd
 [newpassword]
 [newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>. Now go to the <a href="#afterreboot">Network-Overview </a>.
@@ -61,19 +40,19 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi"> Alternative 2 </a></
   <summary>If you didn´t insert the <code>Script to run on first boot (uci-defaults)</code> then download the Installscript.  (For more Informations open here). </summary> 
   It starts automatically. Else skip this Part and go to <a href="#afterreboot">Network-Overview </a>. <br><br>
   for OpenWRT Version 23.x.xx<br><br>
-  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh && sh openWRT23_install.sh
+  <pre style="background-color: #262c36;"><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh && sh openWRT23_install.sh
   </code></pre>
   <br>
   for OpenWRT Version 22.x.xx<br><br>
-  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT22_install.sh && sh openWRT22_install.sh
+  <pre style="background-color: #262c36;"><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT22_install.sh && sh openWRT22_install.sh
   </code></pre>
   <br>
   for OpenWRT Version 21.x.xx<br><br>
-  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT21_install.sh && sh openWRT21_install.sh
+  <pre style="background-color: #262c36;"><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT21_install.sh && sh openWRT21_install.sh
   </code></pre>
   <br>
   for OpenWRT Version 19.x.xx<br><br>
-  <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT19_install.sh && sh openWRT19_install.sh
+  <pre style="background-color: #262c36;"><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT19_install.sh && sh openWRT19_install.sh
   </code></pre>
   <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
   <p></p><p>
@@ -97,28 +76,28 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi"> Alternative 2 </a></
   You will find the Screenshots <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/README.md#screenshots"> here </a>. 
   </p>
   
-<h3><li id="raspi">Alternative 2 - Installation CyberSecurity-Box ( <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"> RaspPi) </li> </h3>
+<h3><li id="raspi">Alternative 2 - Installation CyberSecurity-Box ( <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em; background-color: #262c36;" height="20px"> RaspPi) </li> </h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank"> Raspbian-SD-Card-Image </a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
   <br>Install one of this with <b><a href="https://www.balena.io/etcher/" target="_blank"> balenaEtcher </a> </b> on a SD-Card. <br>Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.<br><br>
-  <pre><code>ssh [ip-address of RasPi]</code></pre>
+  <pre style="background-color: #262c36;"><code>ssh [ip-address of RasPi]</code></pre>
   User: <i><b>pi</b></i>
   <br>
   Password: <i><b>raspberry</b></i><br><br>
   Change the Password with<br><br>
-  <pre><code>passwd
+  <pre style="background-color: #262c36;"><code>passwd
 [newpassword]
 [newpassword]</code></pre>
   Don´t forget to note the <i><b>newpassword</b></i>.<br>
   <br>
-  <pre><code>sudo su
+  <pre style="background-color: #262c36;"><code>sudo su
 apt-get update
 apt-get upgrade -y</code></pre>
   <ol>
     <li>
 <h4>Type for Installation</h4>
-     <pre><code>apt-get install tor unbound privoxy ntopng postfix iptables-persistent netfilter-persistent -y
+     <pre style="background-color: #262c36;"><code>apt-get install tor unbound privoxy ntopng postfix iptables-persistent netfilter-persistent -y
 curl -sSL https://install.pi-hole.net | bash</code></pre>
      and follow the messages on the screen.<br>
     </li>
@@ -132,7 +111,7 @@ curl -sSL https://install.pi-hole.net | bash</code></pre>
     <h4>The <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/pi-hole-teleporter_CyberSecurity_Box_without_Porn.tar.gz" target="_blank">pi-hole-teleporter_CyberSecurity_Box_2018-12-20_.tar.gz</a></h4> inludes White- and Blacklist (Advertisement, Maleware, Tracking and Porn).<b> Until Pi-Hole 4 and smaller</b></li>
     <li>
     <h4>The Pi-Hole 4 <a href="https://github.com/CyberAndi/CyberSecurity-Box/raw/master/regex.list" target="_blank">regex.list</a></h4> includes Blacklist (Advertisment, Maleware, Tracking and Porn) with over 40% blocking rate.<br> In pi-hole-teleporter_2020-06-07_09-38-48.tar.gz is this included for Pi-Hole5.<br> <br>
-    <pre><code>service pihole-FTL stop
+    <pre style="background-color: #262c36;"><code>service pihole-FTL stop
 service unbound stop
 service privoxy stop
 service tor stop
@@ -227,3 +206,4 @@ https://cyberandi.tumblr.com
 email: [programming@cyberandi.slmail.me](mailto:programming@cyberandi.slmail.me)<br>
 https://cyberandi.tumblr.com
 <p>
+</body>
