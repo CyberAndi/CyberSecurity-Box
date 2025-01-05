@@ -9,6 +9,9 @@
   * { 
     color: #d1d7e0;
   }
+  body{
+    background-color: #212830;
+  }
 </style>
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/csb_logo_neu.svg" alt="Logo" width="300px">
 <h1>CyberSecurity-Box</h1>
