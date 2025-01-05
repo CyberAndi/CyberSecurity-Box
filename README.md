@@ -12,6 +12,9 @@
   body{
     background-color: #212830;
   }
+  .js-snippet-clipboard-copy-unpositioned .markdown-body .snippet-clipboard-content, .js-snippet-clipboard-copy-unpositioned .markdown-body .highlight {
+	background-color: #262c36;
+}
 </style>
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/csb_logo_neu.svg" alt="Logo" width="300px">
 <h1>CyberSecurity-Box</h1>
