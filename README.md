@@ -165,22 +165,22 @@ https://cyberandi.tumblr.com
 <p>
 <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" alt="Set Parameters" width="50%">
 <p>
-  <img src="https://user-images.githubusercontent.com/46010442/133788783-9ef6d6c9-4428-4bb1-9971-ddb40f524e4b.png" alt="Login Page" width=50%">
- <p>
- <img src="https://user-images.githubusercontent.com/46010442/133788864-be55d84f-47d3-44b9-9134-31b903ff1938.png" alt="Overview" width=50%">
- <p>
- <img src="https://user-images.githubusercontent.com/46010442/133788889-e6e42258-6f8d-4d8b-a3f3-2d557e490531.png" alt="Overview 2" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133788783-9ef6d6c9-4428-4bb1-9971-ddb40f524e4b.png" alt="Login Page" width=50%">
 <p>
- <img src="https://user-images.githubusercontent.com/46010442/133786871-56b38494-6326-4194-8e37-1f62a4b30d9d.png" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133788864-be55d84f-47d3-44b9-9134-31b903ff1938.png" alt="Overview" width=50%">
 <p>
- <img src="https://user-images.githubusercontent.com/46010442/133786876-76f2cf7d-5fe4-4a64-81a5-66d1333a52ec.png" width=50%">
- <p>
- <img src="https://user-images.githubusercontent.com/46010442/133786879-ebaed5be-1853-48c2-b3fa-dc22966e454f.png" width=50%">
- <p>
- <img src="https://user-images.githubusercontent.com/46010442/133790948-5b2b2d82-c296-4484-831b-9527ed791ba9.png" width=50%> 
-  <p>
- <img src="https://user-images.githubusercontent.com/46010442/133790213-459364b2-5120-491f-8db4-7b009f8ed46b.png" width=50%">
- <p> 
+<img src="https://user-images.githubusercontent.com/46010442/133788889-e6e42258-6f8d-4d8b-a3f3-2d557e490531.png" alt="Overview 2" width=50%">
+<p>
+<img src="https://user-images.githubusercontent.com/46010442/133786871-56b38494-6326-4194-8e37-1f62a4b30d9d.png" width=50%">
+<p>
+<img src="https://user-images.githubusercontent.com/46010442/133786876-76f2cf7d-5fe4-4a64-81a5-66d1333a52ec.png" width=50%">
+<p>
+<img src="https://user-images.githubusercontent.com/46010442/133786879-ebaed5be-1853-48c2-b3fa-dc22966e454f.png" width=50%">
+<p>
+<img src="https://user-images.githubusercontent.com/46010442/133790948-5b2b2d82-c296-4484-831b-9527ed791ba9.png" width=50%> 
+<p>
+<img src="https://user-images.githubusercontent.com/46010442/133790213-459364b2-5120-491f-8db4-7b009f8ed46b.png" width=50%">
+<p> 
 <img src="https://user-images.githubusercontent.com/46010442/133786886-1caf75ce-e220-40d3-adcb-980bf081a8a9.png" width=50%">
 <p>
 <img src="https://user-images.githubusercontent.com/46010442/133786890-071828fc-80dd-4ce6-ab08-15ce47c9f000.png" width=50%">
