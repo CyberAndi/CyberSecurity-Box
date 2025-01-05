@@ -36,8 +36,8 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi"> Alternative 2 </a></
   Don´t forget to note the <i><b>newpassword</b></i>. Now go to the <a href="#afterreboot">Network-Overview </a>.
 <br><br>
 <details>
-  <summary>If you didn´t insert the <code>Script to run on first boot (uci-defaults)</code> then download the Installscript.  (For more Informations open here). </summary> It starts automatically.
-  Else skip this Part and go to <a href="#afterreboot">Network-Overview </a>. <br><br>
+  <summary>If you didn´t insert the <code>Script to run on first boot (uci-defaults)</code> then download the Installscript.  (For more Informations open here). </summary> 
+  It starts automatically. Else skip this Part and go to <a href="#afterreboot">Network-Overview </a>. <br><br>
   for OpenWRT Version 23.x.xx<br><br>
   <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh && sh openWRT23_install.sh
   </code></pre>
@@ -167,37 +167,37 @@ https://cyberandi.tumblr.com
 <p>
 <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" alt="Set Parameters" width="50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133788783-9ef6d6c9-4428-4bb1-9971-ddb40f524e4b.png" alt="Login Page" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133788783-9ef6d6c9-4428-4bb1-9971-ddb40f524e4b.png" alt="Login Page" width="50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133788864-be55d84f-47d3-44b9-9134-31b903ff1938.png" alt="Overview" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133788864-be55d84f-47d3-44b9-9134-31b903ff1938.png" alt="Overview" width="50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133788889-e6e42258-6f8d-4d8b-a3f3-2d557e490531.png" alt="Overview 2" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133788889-e6e42258-6f8d-4d8b-a3f3-2d557e490531.png" alt="Overview 2" width="50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133786871-56b38494-6326-4194-8e37-1f62a4b30d9d.png" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133786871-56b38494-6326-4194-8e37-1f62a4b30d9d.png" width="50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133786876-76f2cf7d-5fe4-4a64-81a5-66d1333a52ec.png" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133786876-76f2cf7d-5fe4-4a64-81a5-66d1333a52ec.png" width="50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133786879-ebaed5be-1853-48c2-b3fa-dc22966e454f.png" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133786879-ebaed5be-1853-48c2-b3fa-dc22966e454f.png" width="50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133790948-5b2b2d82-c296-4484-831b-9527ed791ba9.png" width=50%> 
+<img src="https://user-images.githubusercontent.com/46010442/133790948-5b2b2d82-c296-4484-831b-9527ed791ba9.png" width="50%"> 
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133790213-459364b2-5120-491f-8db4-7b009f8ed46b.png" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133790213-459364b2-5120-491f-8db4-7b009f8ed46b.png" width="50%">
 <p> 
-<img src="https://user-images.githubusercontent.com/46010442/133786886-1caf75ce-e220-40d3-adcb-980bf081a8a9.png" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133786886-1caf75ce-e220-40d3-adcb-980bf081a8a9.png" width="50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133786890-071828fc-80dd-4ce6-ab08-15ce47c9f000.png" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133786890-071828fc-80dd-4ce6-ab08-15ce47c9f000.png" width="50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133786902-e4167664-97dc-4a85-a491-0698f349a572.png" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133786902-e4167664-97dc-4a85-a491-0698f349a572.png" width="50%">
 <p> 
-<img src="https://user-images.githubusercontent.com/46010442/133786905-74f2d27a-8813-46a1-b4f9-bd415abbe14a.png" width=50%">
+<img src="https://user-images.githubusercontent.com/46010442/133786905-74f2d27a-8813-46a1-b4f9-bd415abbe14a.png" width="50%">
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/d3fcdc8a-b8f0-4531-bca4-b7e9831a020b.png" width=50%>
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/d3fcdc8a-b8f0-4531-bca4-b7e9831a020b.png" width="50%">
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/282b4391-3a9e-4efe-8b8a-73efd6b22dc0.png" width=50%>
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/282b4391-3a9e-4efe-8b8a-73efd6b22dc0.png" width="50%">
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/5b502b53-1cea-4024-afc5-3847ac6cccca.png" width=50%>
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/5b502b53-1cea-4024-afc5-3847ac6cccca.png" width="50%">
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/3906e52e-3e02-47ae-9b61-ecb9e498955b.png" width=50%>
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/3906e52e-3e02-47ae-9b61-ecb9e498955b.png" width="50%">
 
 ***
 &copy; CyberAndi 2019-2024 
