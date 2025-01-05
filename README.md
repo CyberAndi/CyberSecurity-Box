@@ -2,7 +2,7 @@
 <base href="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/">
 <meta name="google-site-verification" content="puDJPKt82mah02UkmE5ThtOtTU-B1gTDxL5i85x9wSI" />
 </head>
-<body style="background-color: #212830;">
+<body style="background-color: #212830; color: #d1d7e0;">
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/csb_logo_neu.svg" alt="Logo" width="300px">
 <h1>CyberSecurity-Box</h1>
 <h4>(inkl. Ad Blocker, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/unbound_logo.png" style="max-width: 100%; vertical-align: middle; background-color: rgba(230,230,230,0.7); padding: 0.15em 0.25em; height:1em" height="14px"> (DNS), <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/tor-logo%402x.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Tor optional <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/pihole.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Pi-Hole (incl. DB) and ntopng) </h4>
