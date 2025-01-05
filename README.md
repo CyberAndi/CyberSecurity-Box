@@ -153,14 +153,14 @@ service pihole-FTL start
 <p>
 For more Information in german visit <a href="https://cyberandi.tumblr.com/Smarthome" target="_blank"> https://cyberandi.tumblr.com/Smarthome</a>
 </p>
-<hr></hr>
+<hr>
 
 &copy; CyberAndi 2019-2024
 
 email: [programming@cyberandi.slmail.me](mailto:programming@cyberandi.slmail.me)<br>
 https://cyberandi.tumblr.com
 <p>
-<hr></hr>
+<hr>
 <p>
 <h3>Screenshots</h3>
 <p>
@@ -198,7 +198,7 @@ https://cyberandi.tumblr.com
 <p>
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/3906e52e-3e02-47ae-9b61-ecb9e498955b.png" width="50%">
 
-<hr></hr>
+<hr>
 
 &copy; CyberAndi 2019-2024 
 
