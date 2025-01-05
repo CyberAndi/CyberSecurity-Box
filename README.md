@@ -2,27 +2,27 @@
 <base href="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/">
 <meta name="google-site-verification" content="puDJPKt82mah02UkmE5ThtOtTU-B1gTDxL5i85x9wSI" />
 </head>
-<img src="wiki_pic/csb_logo_neu.svg" alt="Logo" width="300px">
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/csb_logo_neu.svg" alt="Logo" width="300px">
 <h1>CyberSecurity-Box</h1>
-<h4>(inkl. Ad Blocker, <img src="/wiki_pic/unbound_logo.png" style="max-width: 100%; vertical-align: middle; background-color: rgba(230,230,230,0.7); padding: 0.15em 0.25em; height:1em" height="14px"> (DNS), <img src="/wiki_pic/tor-logo%402x.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> or optional <img src="/wiki_pic/pihole.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Pi-Hole (incl. DB) and ntopng) </h4>
+<h4>(inkl. Ad Blocker, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/unbound_logo.png" style="max-width: 100%; vertical-align: middle; background-color: rgba(230,230,230,0.7); padding: 0.15em 0.25em; height:1em" height="14px"> (DNS), <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/tor-logo%402x.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> or optional <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/pihole.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Pi-Hole (incl. DB) and ntopng) </h4>
 
 <h4><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch"><img src="/wiki_pic/de.gif" style="width:20px;  padding: 0em; height:1em" height="14px">&nbsp; F&uuml;r Deutsch / For German</a></h4>
 <p>
   First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/wiki_pic/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="14px"> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a>.<br><br>
 For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>.	
-<ol><h3><li>Alternative 1 - Installation on <img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Router( <img src="/wiki_pic/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px" alt="AVM"> Fritz!Box, <img src="/wiki_pic/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="tp-link">, <img src="/wiki_pic/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="ASUS"> etc.)</h3>
-  Go on <a href="https://openwrt.org/" target="_blank"><img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router. Please click before on <code>Customize installed packages and/or first boot script</code> then add the following items at the end.<br><br>
+<ol><h3><li>Alternative 1 - Installation on <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Router( <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px" alt="AVM"> Fritz!Box, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="tp-link">, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="ASUS"> etc.)</h3>
+  Go on <a href="https://openwrt.org/" target="_blank"><img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router. Please click before on <code>Customize installed packages and/or first boot script</code> then add the following items at the end.<br><br>
 <pre><code>ca-bundle dnsmasq-full stubby tor tor-geoip unbound-daemon unbound-anchor unbound-control-setup unbound-host unbound-checkconf luci-app-unbound tc luci-app-qos luci-app-nft-qos nft-qos kmod-nls-cp437 kmod-nls-iso8859-1 nano wget curl openssh-sftp-server getdns drill bind-dig ca-certificates acme luci-app-acme php8-fpm php8-cgi mwan3 luci-app-mwan3</code></pre>
   into the field <code>Installed Packages</code>.<br><br>
-<img src="/wiki_pic/Make Firmware.gif" alt="Make Firmware" width="50%"> 
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/Make Firmware.gif" alt="Make Firmware" width="50%"> 
 <br><br>
-  <img src="/wiki_pic/Firmware_Config.png" alt="select_packages" width="50%"> <br><br>
+  <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/Firmware_Config.png" alt="select_packages" width="50%"> <br><br>
   And in the field <code>Script to run on first boot (uci-defaults)</code> insert.<br><br>
   <pre><code>echo 'start '$(date) > /root/firstboot && uci set network.wan6.disabled='1' && processes=$(uci commit && reload_config) && wait $processesss  && processes1=$(/etc/init.d/network restart) && sleep 30 && echo 'starting..' > /root/wget_start && wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh && echo 'end '$(date) > /root/end && exit 0 </code></pre>
   Then press <code>Request Build</code>.<br><br>
-  <img src="/wiki_pic/Request_build.png" alt="select_packages" width="50%"> .<br><br>
+  <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/Request_build.png" alt="select_packages" width="50%"> .<br><br>
   Afterwards generate the File with <code>Kernel</code> and download it.<br><br>
-  <img src="/wiki_pic/generate_firmware.png" alt="select_packages" width="50%"> 
+  <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/generate_firmware.png" alt="select_packages" width="50%"> 
   <br><br>
   After flushing use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
