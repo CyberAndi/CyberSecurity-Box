@@ -190,7 +190,7 @@ https://cyberandi.tumblr.com
 <p> 
 <img src="https://user-images.githubusercontent.com/46010442/133786905-74f2d27a-8813-46a1-b4f9-bd415abbe14a.png" width="50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/d3fcdc8a-b8f0-4531-bca4-b7e9831a020b.png" width="50%">
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/d3fcdc8a-b8f0-4531-bca4-b7e9831a020b.png" width="50%">
 <p>
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/282b4391-3a9e-4efe-8b8a-73efd6b22dc0.png" width="50%">
 <p>
