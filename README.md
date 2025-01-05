@@ -54,9 +54,9 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi"> Alternative 2 </a></
   <pre><code>wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT19_install.sh && sh openWRT19_install.sh
   </code></pre>
   <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
-  <p><p>
-  <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" width="50%"> 
-
+  <p></p><p>
+  <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" width="50%">
+  </p>
 </details>
 <p id="afterreboot">
    <h3>After the reboot you will have following Networks: </h3>
