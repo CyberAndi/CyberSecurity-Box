@@ -10,7 +10,7 @@
 <p>
   First load the <b><a href="https://brave.com/download/" target="_blank"><img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="14px"> Brave-Browser </a> </b> from the <a href="https://brave.com/" target="_blank">Brave-Website </a>.<br><br>
 For the Raspberry-Pi Installation goto <b><a href="#raspi"> Alternative 2 </a></b>.	
-<ol><h3><l>Alternative 1 - Installation on <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Router( <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px" alt="AVM"> Fritz!Box, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="tp-link">, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="ASUS"> etc.)</li> </h3>
+<ol><h3><li>Alternative 1 - Installation on <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Router( <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px" alt="AVM"> Fritz!Box, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="tp-link">, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="ASUS"> etc.)</li> </h3>
   Go on <a href="https://openwrt.org/" target="_blank"><img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router. Please click before on <code>Customize installed packages and/or first boot script</code> then add the following items at the end.<br><br>
 <pre><code>ca-bundle dnsmasq-full stubby tor tor-geoip unbound-daemon unbound-anchor unbound-control-setup unbound-host unbound-checkconf luci-app-unbound tc luci-app-qos luci-app-nft-qos nft-qos kmod-nls-cp437 kmod-nls-iso8859-1 nano wget curl openssh-sftp-server getdns drill bind-dig ca-certificates acme luci-app-acme php8-fpm php8-cgi mwan3 luci-app-mwan3</code></pre>
   into the field <code>Installed Packages</code>.<br><br>
@@ -57,7 +57,7 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi"> Alternative 2 </a></
   <p><p>
   <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" width="50%">
 </details>
-<li id="afterreboot">
+<p id="afterreboot">
    <h3>After the reboot you will have following Networks: </h3>
   <ul>
     <li><b>REPEATER</b> for internal Communication between Router and Repeater for all of this Networks</li>
@@ -72,9 +72,9 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi"> Alternative 2 </a></
   All of this have the WiFi-Password/-Key: <i><b>Cyber,Sec9ox</b></i><br><br>
   For each of this separated Networks you will have a <b>VLAN</b> on the Switch-/Output-Ethernet-Ports of the Router between <b>VLAN_ID 101</b> and <b>VLAN_ID 106</b>.<p></p>
   You will find the Screenshots <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/README.md#screenshots"> here </a>. 
-  </li>
+  </p>
   
-<h3><li id="raspi"> </h3>Alternative 2 - Installation CyberSecurity-Box ( <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"> RaspPi) </li> </h3>
+<h3><li id="raspi">Alternative 2 - Installation CyberSecurity-Box ( <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"> RaspPi) </li> </h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank"> Raspbian-SD-Card-Image </a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
@@ -143,9 +143,9 @@ service pihole-FTL start</code></pre>
    </li>
   </ul>
   
-  <li><h3>Alternative 2 optional - Pi_Hole Configuration of the AVM FRITZ!Box with Presets for Security and Port-List </h3></li>
+  <h3><li>Alternative 2 optional - Pi_Hole Configuration of the AVM FRITZ!Box with Presets for Security and Port-List </li></h3>
 <h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip" target="_blank">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
-  <img src="/wiki_pic/Schema.PNG" width="450px">
+  <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/Schema.PNG" width="450px">
 
 </ol></p>
 <p>
