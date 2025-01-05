@@ -7,21 +7,21 @@
 
 <h4><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch"><img src="/wiki_pic/de.gif" style="width:20px;  padding: 0em; height:1em" height="14px">&nbsp; F&uuml;r Deutsch / For German</a></h4>
 <p>
-  First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/wiki_pic/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="14px"></img> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a>.<br><br>
+  First load the <b><a href="https://brave.com/download/" target="_blank"><img src="/wiki_pic/brave-logo-sans-text.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="14px"> Brave-Browser</a></b> from the <a href="https://brave.com/" target="_blank">Brave-Website</a>.<br><br>
 For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>.	
-<ol><h3><li>Alternative 1 - Installation on <img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>-Router( <img src="/wiki_pic/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px" alt="AVM"></img> Fritz!Box, <img src="/wiki_pic/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="tp-link"></img>, <img src="/wiki_pic/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="ASUS"></img> etc.)</h3>
-  Go on <a href="https://openwrt.org/" target="_blank"><img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router. Please click before on <code>Customize installed packages and/or first boot script</code> then add the following items at the end.<br><br>
+<ol><h3><li>Alternative 1 - Installation on <img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Router( <img src="/wiki_pic/AVM_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0.15em 0.25em; height:1em; background-color: rgba(230,230,230,0.7);" height="20px" alt="AVM"> Fritz!Box, <img src="/wiki_pic/tplink-logo-white.svg" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="tp-link">, <img src="/wiki_pic/ASUS_logo.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px" alt="ASUS"> etc.)</h3>
+  Go on <a href="https://openwrt.org/" target="_blank"><img src="/wiki_pic/openWRT.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">-Page</a> and download the <b><a href="https://firmware-selector.openwrt.org/" target="_blank">Firmware</a></b> for your Router. Please click before on <code>Customize installed packages and/or first boot script</code> then add the following items at the end.<br><br>
 <pre><code>ca-bundle dnsmasq-full stubby tor tor-geoip unbound-daemon unbound-anchor unbound-control-setup unbound-host unbound-checkconf luci-app-unbound tc luci-app-qos luci-app-nft-qos nft-qos kmod-nls-cp437 kmod-nls-iso8859-1 nano wget curl openssh-sftp-server getdns drill bind-dig ca-certificates acme luci-app-acme php8-fpm php8-cgi mwan3 luci-app-mwan3</code></pre>
   into the field <code>Installed Packages</code>.<br><br>
-<img src="/wiki_pic/Make Firmware.gif" alt="Make Firmware" width="50%"> </img>
+<img src="/wiki_pic/Make Firmware.gif" alt="Make Firmware" width="50%"> 
 <br><br>
-  <img src="/wiki_pic/Firmware_Config.png" alt="select_packages" width="50%"> </img><br><br>
+  <img src="/wiki_pic/Firmware_Config.png" alt="select_packages" width="50%"> <br><br>
   And in the field <code>Script to run on first boot (uci-defaults)</code> insert.<br><br>
   <pre><code>echo 'start '$(date) > /root/firstboot && uci set network.wan6.disabled='1' && processes=$(uci commit && reload_config) && wait $processesss  && processes1=$(/etc/init.d/network restart) && sleep 30 && echo 'starting..' > /root/wget_start && wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/customize_firmware.sh -P /root/ && sh /root/customize_firmware.sh && echo 'end '$(date) > /root/end && exit 0 </code></pre>
   Then press <code>Request Build</code>.<br><br>
-  <img src="/wiki_pic/Request_build.png" alt="select_packages" width="50%"> </img>.<br><br>
+  <img src="/wiki_pic/Request_build.png" alt="select_packages" width="50%"> .<br><br>
   Afterwards generate the File with <code>Kernel</code> and download it.<br><br>
-  <img src="/wiki_pic/generate_firmware.png" alt="select_packages" width="50%"> </img>
+  <img src="/wiki_pic/generate_firmware.png" alt="select_packages" width="50%"> 
   <br><br>
   After flushing use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of OpenWRT]</code></pre>
@@ -54,7 +54,7 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>
   </code></pre>
   <br> Now it will appear some Questions about your Network and your Devices.  <b>Note: All Values needed !!</b>.
   <p><p>
-  <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" width="50%"></img>
+  <img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" width="50%">
 </details>
 </li>
 <h3><li id="afterreboot">
@@ -74,7 +74,7 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>
   You will find the Screenshots <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/README.md#screenshots">here</a>. 
   </li>
   
-  <h3> <li id="raspi">Alternative 2 - Installation CyberSecurity-Box ( <img src="/wiki_pic/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"></img>RaspPi)</li></h3>
+  <h3> <li id="raspi">Alternative 2 - Installation CyberSecurity-Box ( <img src="/wiki_pic/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">RaspPi)</li></h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
   Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank">Raspbian-SD-Card-Image</a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
@@ -145,7 +145,7 @@ service pihole-FTL start</code></pre>
   
   <h3><li>Alternative 2 optional - Pi_Hole Configuration of the AVM FRITZ!Box with Presets for Security and Port-List</h3>
 <h4>This <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/master/CyberSecurityBox.zip" target="_blank">zip-File</a></h4> includes a AVM FRITZ!Box-Export-File for FRITZ OS 6.80 and above. It includes Firewall-Rules for Amazon Alexa/Echo, Google Assistens, NAS, MS-Servers etc.<br>
-  <img src="/wiki_pic/Schema.PNG" width="450px"></img>
+  <img src="/wiki_pic/Schema.PNG" width="450px">
   </li>
 </ol></p>
 <p>
@@ -163,39 +163,39 @@ https://cyberandi.tumblr.com
 <p>
 <h3>Screenshots</h3>
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" alt="Set Parameters" width="50%"></img>
+<img src="https://user-images.githubusercontent.com/46010442/127338090-c8fa4a0c-c2ec-4e62-938e-9c5b6320bd41.jpg" alt="Set Parameters" width="50%">
 <p>
-  <img src="https://user-images.githubusercontent.com/46010442/133788783-9ef6d6c9-4428-4bb1-9971-ddb40f524e4b.png" alt="Login Page" width=50%"></img>
+  <img src="https://user-images.githubusercontent.com/46010442/133788783-9ef6d6c9-4428-4bb1-9971-ddb40f524e4b.png" alt="Login Page" width=50%">
  <p>
- <img src="https://user-images.githubusercontent.com/46010442/133788864-be55d84f-47d3-44b9-9134-31b903ff1938.png" alt="Overview" width=50%"></img>
+ <img src="https://user-images.githubusercontent.com/46010442/133788864-be55d84f-47d3-44b9-9134-31b903ff1938.png" alt="Overview" width=50%">
  <p>
- <img src="https://user-images.githubusercontent.com/46010442/133788889-e6e42258-6f8d-4d8b-a3f3-2d557e490531.png" alt="Overview 2" width=50%"></img>
+ <img src="https://user-images.githubusercontent.com/46010442/133788889-e6e42258-6f8d-4d8b-a3f3-2d557e490531.png" alt="Overview 2" width=50%">
 <p>
- <img src="https://user-images.githubusercontent.com/46010442/133786871-56b38494-6326-4194-8e37-1f62a4b30d9d.png" width=50%"></img>
+ <img src="https://user-images.githubusercontent.com/46010442/133786871-56b38494-6326-4194-8e37-1f62a4b30d9d.png" width=50%">
 <p>
- <img src="https://user-images.githubusercontent.com/46010442/133786876-76f2cf7d-5fe4-4a64-81a5-66d1333a52ec.png" width=50%"></img>
+ <img src="https://user-images.githubusercontent.com/46010442/133786876-76f2cf7d-5fe4-4a64-81a5-66d1333a52ec.png" width=50%">
  <p>
- <img src="https://user-images.githubusercontent.com/46010442/133786879-ebaed5be-1853-48c2-b3fa-dc22966e454f.png" width=50%"></img>
+ <img src="https://user-images.githubusercontent.com/46010442/133786879-ebaed5be-1853-48c2-b3fa-dc22966e454f.png" width=50%">
  <p>
- <img src="https://user-images.githubusercontent.com/46010442/133790948-5b2b2d82-c296-4484-831b-9527ed791ba9.png" width=50%> </img>
+ <img src="https://user-images.githubusercontent.com/46010442/133790948-5b2b2d82-c296-4484-831b-9527ed791ba9.png" width=50%> 
   <p>
- <img src="https://user-images.githubusercontent.com/46010442/133790213-459364b2-5120-491f-8db4-7b009f8ed46b.png" width=50%"></img>
+ <img src="https://user-images.githubusercontent.com/46010442/133790213-459364b2-5120-491f-8db4-7b009f8ed46b.png" width=50%">
  <p> 
-<img src="https://user-images.githubusercontent.com/46010442/133786886-1caf75ce-e220-40d3-adcb-980bf081a8a9.png" width=50%"></img>
+<img src="https://user-images.githubusercontent.com/46010442/133786886-1caf75ce-e220-40d3-adcb-980bf081a8a9.png" width=50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133786890-071828fc-80dd-4ce6-ab08-15ce47c9f000.png" width=50%"></img>
+<img src="https://user-images.githubusercontent.com/46010442/133786890-071828fc-80dd-4ce6-ab08-15ce47c9f000.png" width=50%">
 <p>
-<img src="https://user-images.githubusercontent.com/46010442/133786902-e4167664-97dc-4a85-a491-0698f349a572.png" width=50%"></img>
+<img src="https://user-images.githubusercontent.com/46010442/133786902-e4167664-97dc-4a85-a491-0698f349a572.png" width=50%">
 <p> 
-<img src="https://user-images.githubusercontent.com/46010442/133786905-74f2d27a-8813-46a1-b4f9-bd415abbe14a.png" width=50%"></img>
+<img src="https://user-images.githubusercontent.com/46010442/133786905-74f2d27a-8813-46a1-b4f9-bd415abbe14a.png" width=50%">
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/d3fcdc8a-b8f0-4531-bca4-b7e9831a020b.png" width=50%></img>
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/d3fcdc8a-b8f0-4531-bca4-b7e9831a020b.png" width=50%>
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/282b4391-3a9e-4efe-8b8a-73efd6b22dc0.png" width=50%></img>
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/282b4391-3a9e-4efe-8b8a-73efd6b22dc0.png" width=50%>
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/5b502b53-1cea-4024-afc5-3847ac6cccca.png" width=50%></img>
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/5b502b53-1cea-4024-afc5-3847ac6cccca.png" width=50%>
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/3906e52e-3e02-47ae-9b61-ecb9e498955b.png" width=50%></img>
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/assets/46010442/3906e52e-3e02-47ae-9b61-ecb9e498955b.png" width=50%>
 
 ***
 &copy; CyberAndi 2019-2024 
