@@ -4,7 +4,7 @@
 </head>
 <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/csb_logo_neu.svg" alt="Logo" width="300px">
 <h1>CyberSecurity-Box</h1>
-<h4>(inkl. Ad Blocker, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/unbound_logo.png" style="max-width: 100%; vertical-align: middle; background-color: rgba(230,230,230,0.7); padding: 0.15em 0.25em; height:1em" height="14px"> (DNS), <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/tor-logo%402x.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> or optional <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box//wiki_pic/pihole.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Pi-Hole (incl. DB) and ntopng) </h4>
+<h4>(inkl. Ad Blocker, <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/unbound_logo.png" style="max-width: 100%; vertical-align: middle; background-color: rgba(230,230,230,0.7); padding: 0.15em 0.25em; height:1em" height="14px"> (DNS), <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/tor-logo%402x.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> or optional <img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/pihole.png" style="max-width: 100%;  padding: 0em; height:1em" height="14px"> Pi-Hole (incl. DB) and ntopng) </h4>
 
 <h4><a href="https://github.com/CyberAndi/CyberSecurity-Box/wiki/Deutsch"><img src="/wiki_pic/de.gif" style="width:20px;  padding: 0em; height:1em" height="14px">&nbsp; F&uuml;r Deutsch / For German</a></h4>
 <p>
@@ -75,11 +75,11 @@ For the Raspberry-Pi Installation goto <b><a href="#raspi">Alternative 2</a></b>
   You will find the Screenshots <a href="https://github.com/CyberAndi/CyberSecurity-Box/blob/CyberAndi-Pi-Hole-5/README.md#screenshots">here</a>. 
   </li>
   
-  <h3> <li id="raspi">Alternative 2 - Installation CyberSecurity-Box ( <img src="/wiki_pic/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px">RaspPi)</li></h3>
+  <h3> <li id="raspi">Alternative 2 - Installation CyberSecurity-Box ( <img src="/wiki_pic/RaspBerry.png" style="max-width: 100%; vertical-align: middle; padding: 0em; height:1em" height="20px"> RaspPi)</li></h3>
   You need a Raspberry Pi and a SD-Card with 8 GByte or more.
-  Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank">Raspbian-SD-Card-Image</a></b> or 
+  Use a blank <b><a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank"> Raspbian-SD-Card-Image</a></b> or 
   <b>CyberSecurityBox_2.img</b> is the Pi-Hole, UnBound and torrc with a ready-to-use Image.
-  <br>Install one of this with <b><a href="https://www.balena.io/etcher/" target="_blank">balenaEtcher</a></b> on a SD-Card. <br>Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.<br><br>
+  <br>Install one of this with <b><a href="https://www.balena.io/etcher/" target="_blank"> balenaEtcher</a></b> on a SD-Card. <br>Insert the SD-Card in the RasPi. And use SSH or Putty for Installation and type the following code.<br><br>
   <pre><code>ssh [ip-address of RasPi]</code></pre>
   User: <i><b>pi</b></i>
   <br>
