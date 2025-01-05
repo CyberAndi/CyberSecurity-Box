@@ -190,13 +190,13 @@ https://cyberandi.tumblr.com
 <p> 
 <img src="https://user-images.githubusercontent.com/46010442/133786905-74f2d27a-8813-46a1-b4f9-bd415abbe14a.png" width="50%">
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/d3fcdc8a-b8f0-4531-bca4-b7e9831a020b.png" width="50%">
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/263396213-d3fcdc8a-b8f0-4531-bca4-b7e9831a020b.jpeg" width="50%">
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/282b4391-3a9e-4efe-8b8a-73efd6b22dc0.png" width="50%">
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/263396269-5b502b53-1cea-4024-afc5-3847ac6cccca.jpeg" width="50%">
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/5b502b53-1cea-4024-afc5-3847ac6cccca.png" width="50%">
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/263396319-282b4391-3a9e-4efe-8b8a-73efd6b22dc0.jpeg" width="50%">
 <p>
-<img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/3906e52e-3e02-47ae-9b61-ecb9e498955b.png" width="50%">
+<img src="https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/wiki_pic/263396364-3906e52e-3e02-47ae-9b61-ecb9e498955b.jpeg" width="50%">
 <p>
 <hr>
 
