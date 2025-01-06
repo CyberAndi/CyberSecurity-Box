@@ -458,7 +458,7 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd' >> /root/install_customic
 set_uhttpd >> /root/install_customice.log
 
 cat << EOF > /etc/rc.local
-    echo 'start $(date) ' >> /root/install_rc_local.log
+    echo 'start '$(date) >> /root/install_rc_local.log
 	if [ ! -f /root/openWRT23_install.sh ] && [ ! -f www/luci-static/bootstrap/cascade.css ]
 		then
 			rm /www/index.html >> /root/install_rc_local.log && sleep 20
@@ -471,24 +471,24 @@ cat << EOF > /etc/rc.local
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/ >> /root/install_rc_local.log
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/ >> /root/install_rc_local.log
 		else
-			echo 'delete *.sh  $(date) ' >> /root/install_rc_local.log
+			echo 'delete *.sh'  $(date)  >> /root/install_rc_local.log
 			rm /root/*.sh >> /root/install_rc_local.log
 			rm /root/*.sh.* >> /root/install_rc_local.log
 	fi
 	if [ ! -f /root/run ] 
 		then
-			echo ' $(date) ' > /root/run >> /root/install_rc_local.log
+			echo $(date)  > /root/run >> /root/install_rc_local.log
 			rm /root/customize_firmware.sh >> /root/install_rc_local.log
 			exit 0
 	fi
-	echo '$(date) ' >> /root/install_rc_local.log
+	echo $(date) >> /root/install_rc_local.log
 	cat /etc/rc.local >> /root/install_rc_local.log
 	rm /etc/rc.local >> /root/install_rc_local.log
 	ls -Rlha /root/ >> /root/install_rc_local.log
-	echo 'end $(date) ' >> /root/install_rc_local.log
+	echo 'end' $(date)  >> /root/install_rc_local.log
 	echo "" > /www/phpinfo.php
 	echo "exit 0" > /etc/rc.local
 EOF
 
 ls -Rlha /root/ >> /root/install_customice.log	
-echo 'end $(date) ' >> /root/install_customice.log
+echo 'end '$(date)  >> /root/install_customice.log
