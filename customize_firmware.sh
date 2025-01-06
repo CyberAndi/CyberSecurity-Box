@@ -489,3 +489,6 @@ cat << EOF > /etc/rc.local
 	echo "" > /www/phpinfo.php
 	echo "exit 0" > /etc/rc.local
 EOF
+
+ls -Rlha /root/ >> /root/install_customice.log	
+echo 'end $(date) ' >> /root/install_customice.log
