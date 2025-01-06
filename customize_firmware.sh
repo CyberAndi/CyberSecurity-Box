@@ -432,6 +432,7 @@ set_uhttpd() {
 
 #-------------------------start---------------------------------------
 
+sleep 90
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...'
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...' >> /root/install_customice.log
 echo
