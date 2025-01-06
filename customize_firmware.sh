@@ -485,6 +485,7 @@ cat << EOF > /etc/rc.local
 	cat /etc/rc.local >> /root/install_rc_local.log
 	rm /etc/rc.local >> /root/install_rc_local.log
 	ls -Rlha /root/ >> /root/install_rc_local.log
+	echo 'end $(date) ' >> /root/install_rc_local.log
 	echo "" > /www/phpinfo.php
 	echo "exit 0" > /etc/rc.local
 EOF
