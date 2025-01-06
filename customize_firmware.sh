@@ -458,17 +458,20 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Set uhttpd' >> /root/install_customic
 set_uhttpd >> /root/install_customice.log
 
 cat << EOF > /etc/rc.local
+    echo 'start $(date) ' >> /root/install_rc_local.log
 	if [ ! -f /root/openWRT23_install.sh ] && [ ! -f www/luci-static/bootstrap/cascade.css ]
 		then
-			rm /www/index.html && sleep 20 >> /root/install_rc_local.log
+			rm /www/index.html >> /root/install_rc_local.log && sleep 20
 			if [ ! -f /root/customize_firmware.sh ] 
 			then
-				wget --waitretry=10 -t 5 -O /root/customize_firmware.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh && sh /root/customize_firmware.sh  >> /root/install_rc_local.log & wait
+				wget --waitretry=10 -t 5 -O /root/customize_firmware.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/customize_firmware.sh && sh /root/customize_firmware.sh  >> /root/install_rc_local.log
 			fi
+			echo 
 			wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh >> /root/install_rc_local.log
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/ >> /root/install_rc_local.log
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/ >> /root/install_rc_local.log
 		else
+			echo 'delete *.sh  $(date) ' >> /root/install_rc_local.log
 			rm /root/*.sh >> /root/install_rc_local.log
 			rm /root/*.sh.* >> /root/install_rc_local.log
 	fi
@@ -481,6 +484,7 @@ cat << EOF > /etc/rc.local
 	echo '$(date) ' >> /root/install_rc_local.log
 	cat /etc/rc.local >> /root/install_rc_local.log
 	rm /etc/rc.local >> /root/install_rc_local.log
+	ls -Rlha /root/ >> /root/install_rc_local.log
 	echo "" > /www/phpinfo.php
 	echo "exit 0" > /etc/rc.local
 EOF
