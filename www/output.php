@@ -334,6 +334,7 @@ $IP = $Domain = $SSID = $WKey = $PASS = "";
 
 
 		.bubble .oval input:is(:hover,:active,:focus), .bubble .oval input::placeholder:is(:hover,:active,:focus) {
+			color: inherit;
 			/*color: rgb(0,0,0) !important;
 			background-Color: #ffffff !important;*/
 		}
@@ -439,6 +440,7 @@ $IP = $Domain = $SSID = $WKey = $PASS = "";
 						echo '<p>I will use the following settings:<br> IP: ' . $IP . '<br>Domain: ' . $Domain . '<br>WLAN: ' . $SSID . '<br>Key: ' . $WKey . '</p>'; 
 						echo '<p>Then you can reach the Router under: <a id="lnk" href="https://' . $IP . ':8443/cgi-bin/luci">https://' . $IP . ':8443' . '/cgi-bin/luci/</a></p>';
 						echo '<p>Please wait until the configuration is complete. This may take up to 20 minutes. After then you can login with root and your Password. </p><p>';
+						exec("echo 'output.php ' $GW $IP $Domain $SSID $WKey $PASS >> /root/install_rc_local.log ");
 						exec("sh /root/openWRT23_install.sh $GW $IP $Domain $SSID $WKey $PASS", $output); 
 						/* foreach ($output as $line) {
  							 echo $line . "\n"; 

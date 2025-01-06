@@ -471,6 +471,9 @@ cat << EOF > /etc/rc.local
 			wget --waitretry=10 -t 5 -O /root/openWRT23_install.sh https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Install/openWRT23_install.sh >> /root/install_rc_local.log
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/index.php -P /www/ >> /root/install_rc_local.log
 			wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/output.php -P /www/ >> /root/install_rc_local.log
+		elif [ ! -f /root/openWRT23_install.sh ] || [ -f www/luci-static/bootstrap/cascade.css ]
+			then
+				echo ' '  $(date)  >> /root/install_rc_local.log
 		else
 			echo 'delete *.sh'  $(date)  >> /root/install_rc_local.log
 			rm /root/*.sh >> /root/install_rc_local.log
