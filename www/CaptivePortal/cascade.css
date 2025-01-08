@@ -204,6 +204,7 @@ button::-moz-focus-inner,input::-moz-focus-inner {
 
 button,input[type="button"],input[type="reset"],input[type="submit"] {
 	cursor: pointer;
+	appearance: button;
 	-webkit-appearance: button;
 	word-break: break-all
 }
@@ -213,6 +214,7 @@ button[disabled],input[type="button"][disabled],input[type="reset"][disabled],in
 }
 
 input[type="search"] {
+	appearance: button;
 	-webkit-appearance: textfield;
 	box-sizing: content-box
 }
@@ -2460,7 +2462,7 @@ tr.tr.cbi-section-table-descr.anonymous > .th.cbi-section-table-cell[data-widget
 }
 
 #mwan_status_text > div {
-	display: inline-block;
+	display: block;
 	margin: 1rem;
 	padding: 1rem;
 	width: 15rem;
@@ -2478,7 +2480,7 @@ tr.tr.cbi-section-table-descr.anonymous > .th.cbi-section-table-cell[data-widget
 }
 
 .active {
-	#text-shadow: 0 0 0.25em rgba(230,230,230,0.5);
+	/*text-shadow: 0 0 0.25em rgba(230,230,230,0.5); */
 	color: #000;
 }
 
