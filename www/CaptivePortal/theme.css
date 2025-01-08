@@ -996,7 +996,7 @@ body {
 	padding: var(--noMarginPadding);
 	margin: var(--noMarginPadding);
 	text-shadow: var(--fontShadow);
-	overflow: var(--overflowHidden);
+	overflow-x: var(--overflowHidden);
 	-webkit-overflow-x: var(--overflowHidden);
 	-moz-overflow-x: var(--overflowHidden);
 	-ms-overflow-x: var(--overflowHidden);
@@ -1154,7 +1154,7 @@ body * {
 	color: var(--blackColor) !important;
 	float: var(--buttonFloat);
 	font-size: var(--infoFontButtonHeight);
-	font-wight: 900;
+	font-weight: 900;
 	margin: var(--noMarginPadding) !important;
 	position: var(--posAbsolute);
 	top: var(--buttonTop) !important;
@@ -1177,7 +1177,7 @@ body * {
 	color: var(--blackColor) !important;
 	float: var(--buttonFloat);
 	font-size: var(--infoFontButtonHeight);
-	font-wight: 900;
+	font-weight: 900;
 	margin: var(--noMarginPadding) !important;
 	position: var(--posAbsolute);
 	top: var(--buttonTop) !important;
@@ -1322,6 +1322,7 @@ nav#topMenu > ul {
 	list-style-type: none;
 	padding: 0.25em var(--noMarginPadding);
 	border-radius: var(--borderRadius);
+	overflow-x: var(--overflowCut);
 	-webkit-overflow-x: var(--overflowCut);
 	-moz-overflow-x: var(--overflowCut);
 	-ms-overflow-x: var(--overflowCut);
@@ -1585,11 +1586,11 @@ a:hover {
 
 
 [alt="tumblr"]::before{
-	content: content: var(--imageTumblr);	
+	content: var(--imageTumblr);	
 }
 
 [alt="facebook"]::before{
-	content: content: var(--imageFacebook);
+	content: var(--imageFacebook);
 }
 
 [alt="pinterest"]::before{
@@ -2344,7 +2345,7 @@ nav#topMenu:is(:hover,:active,:focus) ~ #Main :is(.containerSlider .Slideshow) {
 	width: var(--screenWide);
 }
 
-.containerSlider:is(:hover,:active,:focus) .channelLogo, :is(.Slideshow .SlideshowContent :is(#Pos1,#Pos2,#Pos3,#Pos4.#Pos5,#Pos6,#Pos7,#Pos8,#Pos9,#Pos10):target) ~ .channelLogo  {
+.containerSlider:is(:hover,:active,:focus) .channelLogo, :is(.Slideshow .SlideshowContent :is(#Pos1,#Pos2,#Pos3,#Pos4,#Pos5,#Pos6,#Pos7,#Pos8,#Pos9,#Pos10):target) ~ .channelLogo  {
 	height: var(--calcLogoHeight);
 	width: var(--calcLogoWidth);
 	border: var(--borderLght);
@@ -2740,7 +2741,7 @@ div.Slide {
 
 	transform: translateX(0%);
     -webkit-animation-name: aniSlideshow !important;
-	-webkit-animation-duration: 132s !imortant;
+	-webkit-animation-duration: 132s !important;
 	-webkit-animation-iteration-count: infinite !important;
 	-webkit-animation-delay: 20s;
 	animation-name: aniSlideshow !important;
@@ -3162,26 +3163,26 @@ main .containerOverlay .Overlay.Book {
 	opacity: var(--noTransparent);
 	position: var(--posRelative);
 	display: var(--displayInlineBlock) !important;
-	#width: var(--screenWide);
+	/* width: var(--screenWide); */
 	margin: var(--centerMargin);
-	#top: calc(-28.125vw - 7.5em);
+	/* top: calc(-28.125vw - 7.5em); */
 	left: 0px;
 	text-align: center;
 	vertical-align: middle;
 	backdrop-filter: var(--bgBlur);
 	-webkit-backdrop-filter: var(--bgBlur);
-	#background-color: rgba(0,0,128,0.4);
-	#padding-bottom: 8.5em;
+	/* background-color: rgba(0,0,128,0.4); */
+	/* padding-bottom: 8.5em; */
 	color: var(--colorLgtGrey);
 	font-size: var(--fontSizeOverlay);
 	overflow-x: var(--overflowCut);
+	overflow-y: var(--overflowCut);
 	-webkit-overflow-scrolling: auto;
 	-webkit-overflow-x: var(--overflowCut);
 	-webkit-overflow-y: var(--overflowCut);
 	user-select: var(--userSelect);
 	-webkit-user-select: var(--userSelect);
 	-moz-user-select: var(--userSelect);
-	text-select: var(--userSelect);
 	z-index: 20;
 }
 
