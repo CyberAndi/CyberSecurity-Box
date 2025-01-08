@@ -12,7 +12,7 @@ echo '########################################################'
 #Firewall Pihole Unbound Tor Transparentproxy
 
 view_config()  {
-echo >> install.log
+echo >> /root/install.log
 echo
 echo 'Your Config is:'
 echo
@@ -87,7 +87,7 @@ echo 'Target '$target
 echo
 echo 'Architecture ' $architecture
 
-echo 'Release: '$main_release >> install.log
+echo 'Release: '$main_release >> /root/install.log
 #Localaddresen
 LOCALADDRESS="127.192.0.1/10"
 
@@ -529,93 +529,93 @@ echo 'On Error enter logread'
 echo
 if [ "$dnsmasq_inst" != "" ]
 	then
-		/etc/init.d/dnsmasq stop >> install.log
-		/etc/init.d/dnsmasq disable >> install.log
-		opkg update  >> install.log
-		opkg remove dnsmasq >> install.log
+		/etc/init.d/dnsmasq stop >> /root/install.log
+		/etc/init.d/dnsmasq disable >> /root/install.log
+		opkg update  >> /root/install.log
+		opkg remove dnsmasq >> /root/install.log
 fi
 
-opkg update >> install.log
+opkg update >> /root/install.log
 if [ "$(opkg list-upgradable)" != "" ]
 	then
 		echo 'upgrade installed Packages'
-  		opkg update >> install.log
-  		opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> install.log
+  		opkg update >> /root/install.log
+  		opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> /root/install.log
 fi 
 echo 'check if installed'
-#install_check #>> install.log
-opkg update >> install.log
+#install_check #>> /root/install.log
+opkg update >> /root/install.log
 if [ "$unbound_inst" = "" ]
 	then
 		if [ "$main_release" -ge "23" ]
   			then
 				echo $main_release
-				opkg update >> install.log
-				opkg install nano wget curl openssh-sftp-server getdns drill bind-dig  >> install.log
-				opkg update >> install.log
-				opkg install kmod-nls-cp437 kmod-nls-iso8859-1 >> install.log
-				opkg update >> install.log
-				opkg install tc luci-app-qos luci-app-nft-qos nft-qos  >> install.log
-				opkg update >> install.log
-				opkg install unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound  >> install.log
-				opkg update >> install.log
-				opkg install ca-certificates acme luci-app-acme acme-dnsapi >> install.log
-				opkg update >> install.log
-				opkg install stubby tor tor-geoip dnsmasq-full  >> install.log
-    			opkg update >> install.log
-				opkg install php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd >> install.log
+				opkg update >> /root/install.log
+				opkg install nano wget curl openssh-sftp-server getdns drill bind-dig  >> /root/install.log
+				opkg update >> /root/install.log
+				opkg install kmod-nls-cp437 kmod-nls-iso8859-1 >> /root/install.log
+				opkg update >> /root/install.log
+				opkg install tc luci-app-qos luci-app-nft-qos nft-qos  >> /root/install.log
+				opkg update >> /root/install.log
+				opkg install unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound  >> /root/install.log
+				opkg update >> /root/install.log
+				opkg install ca-certificates acme luci-app-acme acme-dnsapi >> /root/install.log
+				opkg update >> /root/install.log
+				opkg install stubby tor tor-geoip dnsmasq-full  >> /root/install.log
+    			opkg update >> /root/install.log
+				opkg install php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd >> /root/install.log
 			elif [ "$main_release" = "22" ]
    				then
        				echo $main_release
-	    			opkg update >> install.log
-					opkg install nano wget curl openssh-sftp-server getdns drill bind-dig --force-overwrite >> install.log
-					opkg update >> install.log
-					opkg install kmod-nls-cp437 kmod-nls-iso8859-1 --force-overwrite >> install.log
-					opkg update >> install.log
-					opkg install unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound --force-overwrite >> install.log
-					opkg update >> install.log
-					opkg install ca-certificates acme acme-dnsapi luci-app-acme --force-overwrite >> install.log
-					opkg update >> install.log
-					opkg install stubby tor tor-geoip luci-app-qos luci-app-nft-qos nft-qos getdns dnsmasq-full --force-overwrite >> install.log
-					opkg update >> install.log
-					opkg install mwan3 luci-app-mwan3 --force-overwrite >> install.log
+	    			opkg update >> /root/install.log
+					opkg install nano wget curl openssh-sftp-server getdns drill bind-dig --force-overwrite >> /root/install.log
+					opkg update >> /root/install.log
+					opkg install kmod-nls-cp437 kmod-nls-iso8859-1 --force-overwrite >> /root/install.log
+					opkg update >> /root/install.log
+					opkg install unbound-daemon unbound-anchor unbound-control unbound-host unbound-checkconf luci-app-unbound --force-overwrite >> /root/install.log
+					opkg update >> /root/install.log
+					opkg install ca-certificates acme acme-dnsapi luci-app-acme --force-overwrite >> /root/install.log
+					opkg update >> /root/install.log
+					opkg install stubby tor tor-geoip luci-app-qos luci-app-nft-qos nft-qos getdns dnsmasq-full --force-overwrite >> /root/install.log
+					opkg update >> /root/install.log
+					opkg install mwan3 luci-app-mwan3 --force-overwrite >> /root/install.log
 			else 
    					echo $main_release
-					opkg update >> install.log
-					opkg install nano wget curl openssh-sftp-server getdns drill bind-dig --force-overwrite >> install.log
-   					opkg update >> install.log
-   					opkg install kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat --force-overwrite >> install.log
-   					opkg update >> install.log
-   					opkg install kmod-nls-cp437 kmod-nls-iso8859-1 --force-overwrite >> install.log
-   					opkg update >> install.log
-   					opkg install unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound --force-overwrite >> install.log
-   					opkg update  >> install.log
-   					opkg install ca-certificates acme acme-dnsapi luci-app-acme --force-overwrite >> install.log
-   					opkg update >> install.log
-   					opkg install stubby tor tor-geoip ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns --force-overwrite >> install.log
-   					opkg update >> install.log
-   					opkg install php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd --force-overwrite >> install.log
+					opkg update >> /root/install.log
+					opkg install nano wget curl openssh-sftp-server getdns drill bind-dig --force-overwrite >> /root/install.log
+   					opkg update >> /root/install.log
+   					opkg install kmod-usb-storage kmod-usb-storage-extras e2fsprogs kmod-fs-ext4 block-mount kmod-fs-vfat --force-overwrite >> /root/install.log
+   					opkg update >> /root/install.log
+   					opkg install kmod-nls-cp437 kmod-nls-iso8859-1 --force-overwrite >> /root/install.log
+   					opkg update >> /root/install.log
+   					opkg install unbound-daemon unbound-anchor unbound-control unbound-control-up unbound-host unbound-checkconf luci-app-unbound --force-overwrite >> /root/install.log
+   					opkg update  >> /root/install.log
+   					opkg install ca-certificates acme acme-dnsapi luci-app-acme --force-overwrite >> /root/install.log
+   					opkg update >> /root/install.log
+   					opkg install stubby tor tor-geoip ipset ipset-dns tc iptables-mod-ipopt luci-app-qos luci-app-nft-qos nft-qos getdns --force-overwrite >> /root/install.log
+   					opkg update >> /root/install.log
+   					opkg install php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd --force-overwrite >> /root/install.log
 					
 		fi
-   		opkg update >> install.log
+   		opkg update >> /root/install.log
 	fi
 
-opkg update >> install.log
+opkg update >> /root/install.log
 if [ "$iptables_inst" != "" ] 
 	then
 		echo 'remove iptable-Packages' 
-  		opkg remove iptable* --force-removal-of-dependent-packages >> install.log
+  		opkg remove iptable* --force-removal-of-dependent-packages >> /root/install.log
 fi
 
 if [ "$odhcpd_inst" != "" ] 
 	then
 		echo 'remove odhcpd-Packages'
-  		opkg remove odhc* --force-removal-of-dependent-packages >> install.log
+  		opkg remove odhc* --force-removal-of-dependent-packages >> /root/install.log
 fi
 echo 'install opkg'
 
-/etc/init.d/dnsmasq enable >> install.log
-/etc/init.d/dnsmasq start >> install.log
+/etc/init.d/dnsmasq enable >> /root/install.log
+/etc/init.d/dnsmasq start >> /root/install.log
 clear
 echo
 echo '########################################################'
@@ -632,25 +632,25 @@ view_config
 
 uninstall_cleanup() {
 	echo 'uninstall and cleanup at end'
-	echo 'uninstall and cleanup at end' >> install.log
-	rm /www/*.php -rv >> install.log
-	rm /www/*.php.* -rv >> install.log
-	rm /www/*.html -rv >> install.log
-	rm /root/*.sh -rv >> install.log
-	rm /root/*.sh.* -rv >> install.log
+	echo 'uninstall and cleanup at end' >> /root/install.log
+	rm /www/*.php -rv >> /root/install.log
+	rm /www/*.php.* -rv >> /root/install.log
+	rm /www/*.html -rv >> /root/install.log
+	rm /root/*.sh -rv >> /root/install.log
+	rm /root/*.sh.* -rv >> /root/install.log
 
-	opkg update >> install.log
-	opkg remove php* --force-removal-of-dependent-packages >> install.log
-	opkg update >> install.log
+	opkg update >> /root/install.log
+	opkg remove php* --force-removal-of-dependent-packages >> /root/install.log
+	opkg update >> /root/install.log
 	
 	uci del uhttpd.main.interpreter
 	uci del uhttpd.main.index_page
 	uci set uhttpd.main.index_page='index.htm'
 	processes=$(uci commit && reload_config)
-	wait $processes  >> install.log
-	/etc/init.d/uhttpd restart  >> install.log
+	wait $processes  >> /root/install.log
+	/etc/init.d/uhttpd restart  >> /root/install.log
 
-	opkg remove luci-app-uhttpd >> install.log
+	opkg remove luci-app-uhttpd >> /root/install.log
 
 }
 
@@ -1403,8 +1403,8 @@ uci set luci.diag.ping='cmovie.4lima.de'
 uci set luci.diag.route='brave.com'
 uci set luci.diag.dns='bible4u2lvhacg4b3to2e2veqpwmrc2c3tjf2wuuqiz332vlwmr4xbad.onion'
 processes=$(uci commit && reload_config)
-wait $processes  >> install.log
-/etc/init.d/uhttpd restart  >> install.log
+wait $processes  >> /root/install.log
+/etc/init.d/uhttpd restart  >> /root/install.log
 
 echo
 echo 'Default Country-Settings'
@@ -1747,10 +1747,10 @@ uci set network.@device[-1].bridge_empty='1'
 }
 create_network_interfaces() {
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='TELEKOM'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.TELEKOM.proto='static'
 uci set network.TELEKOM.ipaddr=$CMOVIE_ip
 uci set network.TELEKOM.netmask='255.255.255.0'
@@ -1761,12 +1761,12 @@ uci set network.TELEKOM.dns=$CMOVIE_ip
 #uci set network.TELEKOM.dns=$INET_GW
 uci set network.TELEKOM.device='br-lan.110'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='CMOVIE'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.CMOVIE.proto='static'
 uci set network.CMOVIE.ipaddr=$CMOVIE_ip
 uci set network.CMOVIE.netmask='255.255.255.0'
@@ -1777,12 +1777,12 @@ uci set network.CMOVIE.dns=$CMOVIE_ip
 #uci set network.CMOVIE.dns=$INET_GW
 uci set network.CMOVIE.device='br-lan.108'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='GUEST'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.GUEST.proto='static'
 uci set network.GUEST.ipaddr=$GUEST_ip
 uci set network.GUEST.netmask='255.255.255.0'
@@ -1793,12 +1793,12 @@ uci set network.GUEST.dns=$GUEST_ip
 #uci set network.GUEST.dns=$INET_GW
 uci set network.GUEST.device='br-lan.107'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='ENTERTAIN'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.ENTERTAIN.proto='static'
 uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
 uci set network.ENTERTAIN.netmask='255.255.255.0'
@@ -1809,12 +1809,12 @@ uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
 #uci set network.ENTERTAIN.dns=$INET_GW
 uci set network.ENTERTAIN.device='br-lan.106'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='VOICE'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.VOICE.proto='static'
 uci set network.VOICE.ipaddr=$VOICE_ip
 uci set network.VOICE.netmask='255.255.255.0'
@@ -1825,12 +1825,12 @@ uci set network.VOICE.dns=$VOICE_ip
 #uci set network.VOICE.dns=$INET_GW
 uci set network.VOICE.device='br-lan.105'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='INET'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.INET.proto='static'
 uci set network.INET.ipaddr=$INET_ip
 uci set network.INET.netmask='255.255.255.0'
@@ -1841,12 +1841,12 @@ uci set network.INET.dns=$INET_ip
 #uci set network.INET.dns=$INET_GW
 uci set network.INET.device='br-lan.104'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='CONTROL'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.CONTROL.proto='static'
 uci set network.CONTROL.ipaddr=$CONTROL_ip
 uci set network.CONTROL.netmask='255.255.255.0'
@@ -1857,12 +1857,12 @@ uci set network.CONTROL.dns=$CONTROL_ip
 #uci set network.CONTROL.dns=$INET_GW
 uci set network.CONTROL.device='br-lan.103'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='HCONTROL'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.HCONTROL.proto='static'
 uci set network.HCONTROL.ipaddr=$HCONTROL_ip
 uci set network.HCONTROL.netmask='255.255.255.0'
@@ -1873,12 +1873,12 @@ uci set network.HCONTROL.dns=$HCONTROL_ip
 #uci set network.HCONTROL.dns=$INET_GW
 uci set network.HCONTROL.device='br-lan.102'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='SERVER'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.SERVER.proto='static'
 uci set network.SERVER.ipaddr=$SERVER_ip
 uci set network.SERVER.netmask='255.255.255.0'
@@ -1889,9 +1889,9 @@ uci set network.SERVER.dns=$SERVER_ip
 #uci set network.SERVER.dns=$INET_GW
 uci set network.SERVER.device='br-lan.101'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci set network.wan=interface >> install.log
+uci set network.wan=interface >> /root/install.log
 uci set network.wan.proto='static'
 uci set network.wan.netmask='255.255.255.0'
 uci set network.wan.ip6assign='60'
@@ -1901,7 +1901,7 @@ uci set network.wan.ifname='eth1'
 uci set network.wan.ipaddr=$WAN_ip
 uci set network.wan.peerdns="0"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
 uci set network.wan6.proto='dhcpv6'
 uci set network.wan6.reqaddress='try'
@@ -1912,7 +1912,7 @@ uci set network.wan6.ifname='eth1'
 uci add_list network.wan6.dns="0::1"
 uci set network.wan6.peerdns="0"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
 echo
 echo 'On Error enter logread'
@@ -2050,10 +2050,10 @@ uci set network.loopback.ipaddr='127.0.0.1'
 uci set network.loopback.netmask='255.0.0.0'
 uci set network.loopback.dns='127.0.0.1'
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='TELEKOM'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.TELEKOM.proto='static'
 uci set network.TELEKOM.ipaddr=$CMOVIE_ip
 uci set network.TELEKOM.netmask='255.255.255.0'
@@ -2064,12 +2064,12 @@ uci set network.TELEKOM.gateway=$INET_GW
 uci set network.TELEKOM.dns=$INET_GW
 uci set network.TELEKOM.device='br-TELEKOM.110'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='CMOVIE'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.CMOVIE.proto='static'
 uci set network.CMOVIE.ipaddr=$CMOVIE_ip
 uci set network.CMOVIE.netmask='255.255.255.0'
@@ -2080,12 +2080,12 @@ uci set network.CMOVIE.gateway=$INET_GW
 uci set network.CMOVIE.dns=$INET_GW
 uci set network.CMOVIE.device='br-CMOVIE.108'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='GUEST'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.GUEST.proto='static'
 uci set network.GUEST.ipaddr=$GUEST_ip
 uci set network.GUEST.netmask='255.255.255.0'
@@ -2096,12 +2096,12 @@ uci set network.GUEST.gateway=$INET_GW
 uci set network.GUEST.dns=$INET_GW
 uci set network.GUEST.device='br-GUEST.107'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='ENTERTAIN'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.ENTERTAIN.proto='static'
 uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
 uci set network.ENTERTAIN.netmask='255.255.255.0'
@@ -2112,12 +2112,12 @@ uci set network.ENTERTAIN.gateway=$INET_GW
 uci set network.ENTERTAIN.dns=$INET_GW
 uci set network.ENTERTAIN.device='br-ENTERTAIN.106'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='VOICE'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.VOICE.proto='static'
 uci set network.VOICE.ipaddr=$VOICE_ip
 uci set network.VOICE.netmask='255.255.255.0'
@@ -2128,12 +2128,12 @@ uci set network.VOICE.gateway=$INET_GW
 uci set network.VOICE.dns=$INET_GW
 uci set network.VOICE.device='br-VOICE.105'
 processes=$(uci commit && reload_config)
-wait $processes network >> install.log
+wait $processes network >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='INET'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.INET.proto='static'
 uci set network.INET.ipaddr=$INET_ip
 uci set network.INET.netmask='255.255.255.0'
@@ -2144,12 +2144,12 @@ uci set network.INET.gateway=$INET_GW
 uci set network.INET.dns=$INET_GW
 uci set network.INET.device='br-INET.104'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='CONTROL'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.CONTROL.proto='static'
 uci set network.CONTROL.ipaddr=$CONTROL_ip
 uci set network.CONTROL.netmask='255.255.255.0'
@@ -2160,12 +2160,12 @@ uci set network.CONTROL.gateway=$INET_GW
 uci set network.CONTROL.dns=$INET_GW
 uci set network.CONTROL.device='br-CONTROL.103'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='HCONTROL'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.HCONTROL.proto='static'
 uci set network.HCONTROL.ipaddr=$HCONTROL_ip
 uci set network.HCONTROL.netmask='255.255.255.0'
@@ -2176,12 +2176,12 @@ uci set network.HCONTROL.gateway=$INET_GW
 uci set network.HCONTROL.dns=$INET_GW
 uci set network.HCONTROL.device='br-HCONTROL.102'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add network interface >> install.log
+uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='SERVER'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 uci set network.SERVER.proto='static'
 uci set network.SERVER.ipaddr=$SERVER_ip
 uci set network.SERVER.netmask='255.255.255.0'
@@ -2192,9 +2192,9 @@ uci set network.SERVER.gateway=$INET_GW
 uci set network.SERVER.dns=$INET_GW
 uci set network.SERVER.device='br-SERVER.101'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci set network.wan=interface >> install.log
+uci set network.wan=interface >> /root/install.log
 uci set network.wan.proto='static'
 uci set network.wan.netmask='255.255.255.0'
 uci set network.wan.ip6assign='60'
@@ -2204,7 +2204,7 @@ uci set network.wan.ifname='eth1'
 uci set network.wan.ipaddr=$WAN_ip
 uci set network.wan.peerdns="0"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
 uci set network.wan6.proto='dhcpv6'
 uci set network.wan6.reqaddress='try'
@@ -2215,7 +2215,7 @@ uci set network.wan6.ifname='eth1'
 uci add_list network.wan6.dns="0::1"
 uci set network.wan6.peerdns="0"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
 echo
 echo 'On Error enter logread'
@@ -2375,7 +2375,7 @@ uci set mwan3.wan_mobile6.family='ipv6'
 uci set mwan3.wan_mobile6.track_ip='2606:4700:4700::1113'
 uci set mwan3.wan_mobile6.reliability='2'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
 echo
 echo 'On Error enter logread'
@@ -2383,7 +2383,7 @@ echo
 }
 
 create_wlan() {
-uci -q delete wireless  >> install.log
+uci -q delete wireless  >> /root/install.log
 
 echo
 echo 'WIFI 11n'
@@ -2742,11 +2742,11 @@ uci set wireless.wifinet18.key=$WIFI_PASS
 uci set wireless.wifinet18.network='TELEKOM'
 uci set wireless.wifinet18.ssid='Vodafon-Hotspot'
 
-uci delete wireless.radio0.disabled >> install.log
-uci delete wireless.radio1.disabled >> install.log
+uci delete wireless.radio0.disabled >> /root/install.log
+uci delete wireless.radio1.disabled >> /root/install.log
 
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
 echo
 echo 'WiFi-Networks Settings defined'
@@ -2757,8 +2757,8 @@ echo
 
 set_tor() {
 
-/etc/init.d/tor stop >> install.log
-/etc/init.d/log restart >> install.log
+/etc/init.d/tor stop >> /root/install.log
+/etc/init.d/log restart >> /root/install.log
 
 echo
 if grep -q 'ContactInfo C' /etc/tor/torrc	
@@ -3170,9 +3170,9 @@ config resolver
 EOF
 
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-/etc/init.d/stubby restart  >> install.log
+/etc/init.d/stubby restart  >> /root/install.log
 
 echo
 echo 'Stubby Pivaticy over cloudflair.com'
@@ -3182,16 +3182,16 @@ echo
 echo 'On Error enter logread'
 echo
 
-/etc/init.d/unbound stop  >> install.log
-/etc/init.d/log restart  >> install.log
+/etc/init.d/unbound stop  >> /root/install.log
+/etc/init.d/log restart  >> /root/install.log
 
 #Configure stubby
 
 }
 
 set_unbound() {
-mkdir -p /etc/unbound/unbound.conf.d >> install.log
-curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache >> install.log
+mkdir -p /etc/unbound/unbound.conf.d >> /root/install.log
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache >> /root/install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
 cat << EOF > /etc/hosts
@@ -3298,8 +3298,8 @@ if  [ "$UNBOUND_Relay_port" = "5353" ]
 		uci set unbound.@zone[-1].forward_addr='dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion@'$UNBOUND_Relay_port
 fi
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-/etc/init.d/unbound restart  >> install.log
+wait $processes >> /root/install.log
+/etc/init.d/unbound restart  >> /root/install.log
 
 echo
 echo 'On Error enter logread'
@@ -3318,12 +3318,12 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-/etc/init.d/unbound restart  >> install.log
+/etc/init.d/unbound restart  >> /root/install.log
 }
 
 set_unbound_reset() {
-mkdir -p /etc/unbound/unbound.conf.d >> install.log
-curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache >> install.log
+mkdir -p /etc/unbound/unbound.conf.d >> /root/install.log
+curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache >> /root/install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
 
 cat << EOF > /etc/hosts
@@ -3440,14 +3440,14 @@ echo '########################################################'
 view_config
 
 
-mkdir -p /etc/dnsmasq.d  >> install.log
-mkdir -p /etc/dnsmasq.d/Blacklist >> install.log
-mkdir -p /etc/dnsmasq.d/Whitelist >> install.log
-mkdir -p /etc/dnsmasq.d/BlockAll >> install.log
-mkdir -p /etc/dnsmasq.d/AllowAll >> install.log
+mkdir -p /etc/dnsmasq.d  >> /root/install.log
+mkdir -p /etc/dnsmasq.d/Blacklist >> /root/install.log
+mkdir -p /etc/dnsmasq.d/Whitelist >> /root/install.log
+mkdir -p /etc/dnsmasq.d/BlockAll >> /root/install.log
+mkdir -p /etc/dnsmasq.d/AllowAll >> /root/install.log
 
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
 #DNSMASQ_Relay_port=9053
 
@@ -12541,14 +12541,14 @@ server=/commerzbank.de/$(echo $DNS_IP)#$(echo $DNSMASQ_Relay_port)
 EOF
 
 
-cp /etc/dnsmasq.d/Blacklist/ads /etc/dnsmasq.d/Whitelist/ads >> install.log
-cp /etc/dnsmasq.d/Blacklist/agency /etc/dnsmasq.d/Whitelist/agency >> install.log
-cp /etc/dnsmasq.d/Blacklist/banking /etc/dnsmasq.d/Whitelist/banking >> install.log
-cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys >> install.log
-cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn >> install.log
-cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white >> install.log
+cp /etc/dnsmasq.d/Blacklist/ads /etc/dnsmasq.d/Whitelist/ads >> /root/install.log
+cp /etc/dnsmasq.d/Blacklist/agency /etc/dnsmasq.d/Whitelist/agency >> /root/install.log
+cp /etc/dnsmasq.d/Blacklist/banking /etc/dnsmasq.d/Whitelist/banking >> /root/install.log
+cp /etc/dnsmasq.d/Blacklist/contrys /etc/dnsmasq.d/Whitelist/contrys >> /root/install.log
+cp /etc/dnsmasq.d/Blacklist/porn /etc/dnsmasq.d/Whitelist/porn >> /root/install.log
+cp /etc/dnsmasq.d/Blacklist/white /etc/dnsmasq.d/Whitelist/white >> /root/install.log
 
-/etc/init.d/dnsmasq restart >> install.log
+/etc/init.d/dnsmasq restart >> /root/install.log
 
 echo
 echo
@@ -12580,8 +12580,8 @@ echo '#                                                      #'
 echo '########################################################'
 view_config
 
-/etc/init.d/unbound stop  >> install.log
-/etc/init.d/log restart  >> install.log
+/etc/init.d/unbound stop  >> /root/install.log
+/etc/init.d/log restart  >> /root/install.log
 
 cat << EOF > /etc/unbound/unbound_srv.conf
 ##############################################################################
@@ -27773,8 +27773,8 @@ view_config
 }
 
 set_dhcp() {
-	echo "DNSMASQ install " $dnsmasq_inst >> install.log
-	echo "Release: " $main_release >> install.log
+	echo "DNSMASQ install " $dnsmasq_inst >> /root/install.log
+	echo "Release: " $main_release >> /root/install.log
 	
 	if [ "$dnsmasq_inst" != "" ]
 		then
@@ -27785,7 +27785,7 @@ set_dhcp() {
 set_dhcp_sub() {
 		release_check="23"
 		echo 'delete dhcp.@dnsmasq[-1]'
-		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) 'delete dhcp.@dnsmasq[-1]'>> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) 'delete dhcp.@dnsmasq[-1]'>> /root/install.log
 		echo
   		uci delete dhcp.@dnsmasq[-1] >/dev/null
    		processes=$(uci commit && reload_config)
@@ -27814,7 +27814,7 @@ set_dhcp_sub() {
 		uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
 		if [ $(echo "$main_release < $release_check" | bc -1) -eq 1 ] 
 			then
-				echo $main_release >> install.log
+				echo $main_release >> /root/install.log
 				uci add_list dhcp.Blacklist.notinterface='br-lan.105'
 				uci add_list dhcp.Blacklist.notinterface='br-lan.106'
 				uci add_list dhcp.Blacklist.notinterface='br-lan.107'
@@ -27822,7 +27822,7 @@ set_dhcp_sub() {
 				uci add_list dhcp.Blacklist.notinterface='br-lan.110'
 				uci add_list dhcp.Blacklist.notinterface='loopback'
 			else
-			    echo $main_release >> install.log
+			    echo $main_release >> /root/install.log
 				uci add_list dhcp.Blacklist.interface='br-lan.105'
 				uci add_list dhcp.Blacklist.interface='br-lan.106'
 				uci add_list dhcp.Blacklist.interface='br-lan.107'
@@ -28104,21 +28104,21 @@ set_dhcp_sub() {
 				uci set dhcp.VOICE.server=$VOICE_ip'#'$DNSMASQ_Relay_port
 		fi
 
-mkdir -p /etc/dnsmasq.d  >> install.log
-mkdir -p /etc/dnsmasq.d/Blacklist >> install.log
-mkdir -p /etc/dnsmasq.d/Whitelist >> install.log
-mkdir -p /etc/dnsmasq.d/BlockAll >> install.log
-mkdir -p /etc/dnsmasq.d/AllowAll >> install.log
+mkdir -p /etc/dnsmasq.d  >> /root/install.log
+mkdir -p /etc/dnsmasq.d/Blacklist >> /root/install.log
+mkdir -p /etc/dnsmasq.d/Whitelist >> /root/install.log
+mkdir -p /etc/dnsmasq.d/BlockAll >> /root/install.log
+mkdir -p /etc/dnsmasq.d/AllowAll >> /root/install.log
 
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 }
 
 create_firewall_zones() {
 uci del firewall.@zone[0].network
 uci add_list firewall.@zone[0].network='lan'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
 fwzone=""
 
@@ -28130,7 +28130,7 @@ fi
 }
 
 create_firewall_zones_sub() {
-uci add firewall zone >> install.log
+uci add firewall zone >> /root/install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="REPEATER"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -28139,15 +28139,15 @@ uci set firewall.@zone[-1].output="ACCEPT"
 uci set firewall.@zone[-1].forward="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-uci add firewall forwarding >> install.log
+wait $processes >> /root/install.log
+uci add firewall forwarding >> /root/install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="REPEATER"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add firewall zone >> install.log
+uci add firewall zone >> /root/install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="CONTROL"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -28156,15 +28156,15 @@ uci set firewall.@zone[-1].network="CONTROL"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-uci add firewall forwarding >> install.log
+wait $processes >> /root/install.log
+uci add firewall forwarding >> /root/install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="CONTROL"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add firewall zone >> install.log
+uci add firewall zone >> /root/install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="HCONTROL"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -28173,15 +28173,15 @@ uci set firewall.@zone[-1].network="HCONTROL"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-uci add firewall forwarding >> install.log
+wait $processes >> /root/install.log
+uci add firewall forwarding >> /root/install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="HCONTROL"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add firewall zone >> install.log
+uci add firewall zone >> /root/install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="SERVER"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -28190,15 +28190,15 @@ uci set firewall.@zone[-1].network="SERVER"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-uci add firewall forwarding >> install.log
+wait $processes >> /root/install.log
+uci add firewall forwarding >> /root/install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="SERVER"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add firewall zone >> install.log
+uci add firewall zone >> /root/install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="INET"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -28207,15 +28207,15 @@ uci set firewall.@zone[-1].network="INET"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-uci add firewall forwarding >> install.log
+wait $processes >> /root/install.log
+uci add firewall forwarding >> /root/install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="INET"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add firewall zone >> install.log
+uci add firewall zone >> /root/install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="GUEST"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -28224,15 +28224,15 @@ uci set firewall.@zone[-1].network="GUEST"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-uci add firewall forwarding >> install.log
+wait $processes >> /root/install.log
+uci add firewall forwarding >> /root/install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="GUEST"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add firewall zone >> install.log
+uci add firewall zone >> /root/install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="VOICE"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -28241,15 +28241,15 @@ uci set firewall.@zone[-1].network="VOICE"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-uci add firewall forwarding >> install.log
+wait $processes >> /root/install.log
+uci add firewall forwarding >> /root/install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="VOICE"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add firewall zone >> install.log
+uci add firewall zone >> /root/install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="ENTERTAIN"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -28258,15 +28258,15 @@ uci set firewall.@zone[-1].network="ENTERTAIN"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-uci add firewall forwarding >> install.log
+wait $processes >> /root/install.log
+uci add firewall forwarding >> /root/install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="ENTERTAIN"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add firewall zone >> install.log
+uci add firewall zone >> /root/install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="CMOVIE"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -28275,15 +28275,15 @@ uci set firewall.@zone[-1].network="CMOVIE"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-uci add firewall forwarding >> install.log
+wait $processes >> /root/install.log
+uci add firewall forwarding >> /root/install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="CMOVIE"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-uci add firewall zone >> install.log
+uci add firewall zone >> /root/install.log
 uci set firewall.@zone[-1]=zone
 uci set firewall.@zone[-1].name="TELEKOM"
 uci set firewall.@zone[-1].input="ACCEPT"
@@ -28292,13 +28292,13 @@ uci set firewall.@zone[-1].network="TELEKOM"
 uci set firewall.@zone[-1].output="ACCEPT"
 #uci set firewall.@zone[-1].log="1"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-uci add firewall forwarding >> install.log
+wait $processes >> /root/install.log
+uci add firewall forwarding >> /root/install.log
 uci set firewall.@forwarding[-1]=forwarding
 uci set firewall.@forwarding[-1].dest="wan"
 uci set firewall.@forwarding[-1].src="TELEKOM"
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
 echo
 echo 'On Error enter logread'
@@ -28306,14 +28306,14 @@ echo
 }
 
 set_firewall_intercept() {
-echo 'set Tor intercept' >> install.log
+echo 'set Tor intercept' >> /root/install.log
 uci set firewall.ssh_int.enabled='1'
 uci set firewall.http_int.enabled='1'
 uci set firewall.https_int.enabled='1'
 uci set firewall.tcp_tor1_int.enabled='1'
 uci set firewall.tcp_tor2_int.enabled='1'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
 echo
 echo 'On Error enter logread'
@@ -28340,8 +28340,8 @@ uci set firewall.Allow_Only_WebClient8.enabled='1'
 uci set firewall.otherProt.enabled='1'
 uci set firewall.blockIncoming.enabled='1'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-/etc/init.d/firewall restart >> install.log
+wait $processes >> /root/install.log
+/etc/init.d/firewall restart >> /root/install.log
 }
 
 set_HS_Firewall_disable() {
@@ -28364,8 +28364,8 @@ uci set firewall.Allow_Only_WebClient8.enabled='0'
 uci set firewall.otherProt.enabled='1'
 uci set firewall.blockIncoming.enabled='1'
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-/etc/init.d/firewall restart >> install.log
+wait $processes >> /root/install.log
+/etc/init.d/firewall restart >> /root/install.log
 }
 
 
@@ -28408,8 +28408,8 @@ uci set firewall.filter6_fwd.target="ACCEPT"
 
 
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-/etc/init.d/firewall restart >> install.log
+wait $processes >> /root/install.log
+/etc/init.d/firewall restart >> /root/install.log
 if [ "$SECURE_RULES" = "" ]
         then
              FW_HSactive='1'
@@ -28430,24 +28430,24 @@ iptables-save -t nat \
 | sed -e "/\s[DS]NAT\s/d;/\sMASQUERADE$/d;/\s--match-set\s\S*/s//\06/" \
 | ip6tables-restore -T nat
 EOF
-uci -q delete firewall.nat6 >> install.log
-uci set firewall.nat6="include" >> install.log
-uci set firewall.nat6.path="/etc/firewall.nat6" >> install.log
-uci set firewall.nat6.reload="1" >> install.log
+uci -q delete firewall.nat6 >> /root/install.log
+uci set firewall.nat6="include" >> /root/install.log
+uci set firewall.nat6.path="/etc/firewall.nat6" >> /root/install.log
+uci set firewall.nat6.reload="1" >> /root/install.log
  
 # Disable LAN to WAN forwarding
-uci rename firewall.@forwarding[0]="INET_INTERNET" >> install.log
-uci set firewall.INET_INTERNET.enabled="0" >> install.log
+uci rename firewall.@forwarding[0]="INET_INTERNET" >> /root/install.log
+uci set firewall.INET_INTERNET.enabled="0" >> /root/install.log
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-/etc/init.d/firewall restart >> install.log
+wait $processes >> /root/install.log
+/etc/init.d/firewall restart >> /root/install.log
  
 # Configure ipset-dns
-uci set ipset-dns.@ipset-dns[0].ipset="filter" >> install.log
-uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >> install.log
+uci set ipset-dns.@ipset-dns[0].ipset="filter" >> /root/install.log
+uci set ipset-dns.@ipset-dns[0].ipset6="filter6" >> /root/install.log
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
-/etc/init.d/ipset-dns restart >> install.log
+wait $processes >> /root/install.log
+/etc/init.d/ipset-dns restart >> /root/install.log
  
 # Resolve race conditions for ipset-dns
 cat << "EOF" > /etc/firewall.ipsetdns 
@@ -28456,16 +28456,16 @@ EOF
 cat << "EOF" >> /etc/sysupgrade.conf
 /etc/firewall.ipsetdns
 EOF
-uci -q delete firewall.ipsetdns >> install.log
-uci set firewall.ipsetdns="include" >> install.log
-uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >> install.log
-uci set firewall.ipsetdns.reload="1" >> install.log
+uci -q delete firewall.ipsetdns >> /root/install.log
+uci set firewall.ipsetdns="include" >> /root/install.log
+uci set firewall.ipsetdns.path="/etc/firewall.ipsetdns" >> /root/install.log
+uci set firewall.ipsetdns.reload="1" >> /root/install.log
 processes=$(uci commit && reload_config)
-wait $processes >> install.log
+wait $processes >> /root/install.log
 
-/etc/init.d/firewall restart >> install.log
-/etc/init.d/dnsmasq restart >> install.log
-/etc/init.d/network restart >> install.log
+/etc/init.d/firewall restart >> /root/install.log
+/etc/init.d/dnsmasq restart >> /root/install.log
+/etc/init.d/network restart >> /root/install.log
 clear
 
 }
@@ -30804,58 +30804,58 @@ test_dns_services() {
 #-------------------------start---------------------------------------
 
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':'%N) ' Starting...' >> /root/install.log
 echo
-echo >> install.log
+echo >> /root/install.log
 echo $main_release
 echo
-echo >> install.log
-define_variables >> install.log
+echo >> /root/install.log
+define_variables >> /root/install.log
 echo 'Automation Install'
 ask_parameter $1 $2 $3 $4 $5 $6 $7 $8 $9
 if [ ! -z $1 ]
 	then
- 		echo 'Automation Install' >> install.log
-   		echo >> install.log
-   		echo $1 >> install.log
-   		echo $2 >> install.log
-   		echo $3 >> install.log
-   		echo $4 >> install.log
-	 	echo $5 >> install.log
-   		echo $6 >> install.log
-   		echo $7 >> install.log
-   		echo $8 >> install.log
-   		echo $9 >> install.log
+ 		echo 'Automation Install' >> /root/install.log
+   		echo >> /root/install.log
+   		echo $1 >> /root/install.log
+   		echo $2 >> /root/install.log
+   		echo $3 >> /root/install.log
+   		echo $4 >> /root/install.log
+	 	echo $5 >> /root/install.log
+   		echo $6 >> /root/install.log
+   		echo $7 >> /root/install.log
+   		echo $8 >> /root/install.log
+   		echo $9 >> /root/install.log
 		remotestart=$1
 fi
 
 if [ -z $remotestart ]
 	then 
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' 
-		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' >> install.log
-		install_update >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Install Updates' >> /root/install.log
+		install_update >> /root/install.log
 		service log restart
 fi
 
 if [ "$TOR_ONION" = "1" ]
    	then
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Tor'
-		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Tor' >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Tor' >> /root/install.log
 		set_tor 
 fi
 echo
-echo >> install.log
+echo >> /root/install.log
 if [ "$STUBBY" = "1" ]
 	then
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Stubby'
-		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Stubby' >> install.log
-		set_stubby >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set Stubby' >> /root/install.log
+		set_stubby >> /root/install.log
 fi
 
 echo
-echo >> install.log
+echo >> /root/install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set UNBOUND'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set UNBOUND' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' set UNBOUND' >> /root/install.log
 
 if [ "$UNBOUND" = "1" ]
     then
@@ -30869,176 +30869,176 @@ processes1=$(/etc/init.d/unbound restart)
 wait $processes1
 
 echo
-echo >> install.log
+echo >> /root/install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create UNBOUND URL-Filter' 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create UNBOUND URL-Filter' >> install.log
-create_unbound_url_filter >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create UNBOUND URL-Filter' >> /root/install.log
+create_unbound_url_filter >> /root/install.log
 
 echo
-echo >> install.log
+echo >> /root/install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create DNSMASQ URL-Filter' 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create DNSMASQ URL-Filter' >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' create DNSMASQ URL-Filter' >> /root/install.log
 
 echo
-echo >> install.log
-create_dnsmasq_url_filter >> install.log
+echo >> /root/install.log
+create_dnsmasq_url_filter >> /root/install.log
 view_config
 
 if [ -z $remotestart ]
 	then
 		echo
-		echo >> install.log
+		echo >> /root/install.log
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' 
-		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> install.log
-		customize_firmware >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Customize Firmware' >> /root/install.log
+		customize_firmware >> /root/install.log
 		echo
-		echo >> install.log
+		echo >> /root/install.log
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot'
-		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> install.log
-		create_hotspot >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Hotspot' >> /root/install.log
+		create_hotspot >> /root/install.log
 fi
 install_check
 
-config_overview >> install.log
+config_overview >> /root/install.log
 
 echo
-echo >> install.log
+echo >> /root/install.log
 if [ "$VLAN_ENABLE" = "1" ]
 	then
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create VLAN' 
-		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create VLAN' >> install.log
-		create_vlan_bridge >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create VLAN' >> /root/install.log
+		create_vlan_bridge >> /root/install.log
 fi
 
 echo
-echo >> install.log
+echo >> /root/install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' SetDHCP' 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' SetDHCP' >> install.log
-set_dhcp >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' SetDHCP' >> /root/install.log
+set_dhcp >> /root/install.log
 
 echo
-echo >> install.log
+echo >> /root/install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Networkinterfaces'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Networkinterfaces' >> install.log
-create_network_interfaces >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Networkinterfaces' >> /root/install.log
+create_network_interfaces >> /root/install.log
 
 echo
-echo >> install.log
+echo >> /root/install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create WLAN'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create WLAN' >> install.log
-create_wlan >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create WLAN' >> /root/install.log
+create_wlan >> /root/install.log
 
 echo
-echo >> install.log
+echo >> /root/install.log
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-Zones' 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-Zones' >> install.log
-create_firewall_zones >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S)' Create Firewall-Zones' >> /root/install.log
+create_firewall_zones >> /root/install.log
 
 ####################################################################################################
-# create_MWAN >> install.log
+# create_MWAN >> /root/install.log
 ####################################################################################################
 echo
-echo >> install.log
+echo >> /root/install.log
 echo
 view_config
 echo
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Rules'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Rules' >> install.log
-set_firewall_rules >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Rules' >> /root/install.log
+set_firewall_rules >> /root/install.log
 
 if [ "$TOR_ONION" = "1" ]
    	then
 		echo
-		echo >> install.log
+		echo >> /root/install.log
 		echo
 		view_config
 		echo
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept'
-		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept' >> install.log
-		set_firewall_intercept >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept' >> /root/install.log
+		set_firewall_intercept >> /root/install.log
 fi
 
 echo
-echo >> install.log
+echo >> /root/install.log
 echo
 view_config
 echo 
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set' >> install.log
-set_firewall_ipset >> install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set' >> /root/install.log
+set_firewall_ipset >> /root/install.log
 
 if [ "$AD_GUARD" = "1" ]
 	then
 		echo
   		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Set_Mountpoints' 
-        echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Set_Mountpoints' >> install.log
-        set_mountpoints >> install.log
+        echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Set_Mountpoints' >> /root/install.log
+        set_mountpoints >> /root/install.log
 		echo
 	  	echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard'
-		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard' >> install.log
-		install_adguard >> install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard' >> /root/install.log
+		install_adguard >> /root/install.log
 fi
 
 echo
-echo >> install.log
+echo >> /root/install.log
 
 echo
-echo >> install.log
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) >> install.log
+echo >> /root/install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) >> /root/install.log
 
 echo
-echo >> install.log
-echo 'DNS-Server:' $DNS_IP >> install.log
-test_dns_services >> install.log
+echo >> /root/install.log
+echo 'DNS-Server:' $DNS_IP >> /root/install.log
+test_dns_services >> /root/install.log
 
 echo
 echo
-echo >> install.log
-echo 'Tor:	' $(service tor status) >> install.log
+echo >> /root/install.log
+echo 'Tor:	' $(service tor status) >> /root/install.log
 echo
-echo $(dig www.test.de -p $DNS_TOR_port @127.0.0.1) >> install.log
+echo $(dig www.test.de -p $DNS_TOR_port @127.0.0.1) >> /root/install.log
 echo
-echo 'crash	:' >> install.log
-echo $(logread | grep 'tor' | grep 'crash') >> install.log
+echo 'crash	:' >> /root/install.log
+echo $(logread | grep 'tor' | grep 'crash') >> /root/install.log
 
 echo
-echo >> install.log
-echo 'Stubby:	' $(service stubby status) >> install.log
+echo >> /root/install.log
+echo 'Stubby:	' $(service stubby status) >> /root/install.log
 echo
-echo $(dig www.test.de -p $DNS_STUBBY_port @127.0.0.1) >> install.log
+echo $(dig www.test.de -p $DNS_STUBBY_port @127.0.0.1) >> /root/install.log
 echo
-echo 'crash	:' >> install.log
-echo $(logread | grep 'stubby' | grep 'crash') >> install.log
+echo 'crash	:' >> /root/install.log
+echo $(logread | grep 'stubby' | grep 'crash') >> /root/install.log
 
 echo 
-echo >> install.log
-echo 'Unbound:	' $(service unbound status) >> install.log
+echo >> /root/install.log
+echo 'Unbound:	' $(service unbound status) >> /root/install.log
 echo
-echo $(dig www.test.de -p $DNS_UNBOUND_port @127.0.0.1) >> install.log
+echo $(dig www.test.de -p $DNS_UNBOUND_port @127.0.0.1) >> /root/install.log
 echo
-echo $(logread | grep 'unbound' | grep 'crash') >> install.log
+echo $(logread | grep 'unbound' | grep 'crash') >> /root/install.log
 echo
-echo 'crash	:' >> install.log
-echo $(unbound-checkconf) >> install.log
+echo 'crash	:' >> /root/install.log
+echo $(unbound-checkconf) >> /root/install.log
 
 echo
-echo >> install.log
-echo 'DNSMASQ:	' $(service dnsmasq status) >> install.log
+echo >> /root/install.log
+echo 'DNSMASQ:	' $(service dnsmasq status) >> /root/install.log
 echo
-echo $(dig www.test.de -p53 @127.0.0.1) >> install.log
+echo $(dig www.test.de -p53 @127.0.0.1) >> /root/install.log
 echo
-echo 'crash	:' >> install.log
-echo $(logread | grep 'dnsmasq' | grep 'crash') >> install.log
+echo 'crash	:' >> /root/install.log
+echo $(logread | grep 'dnsmasq' | grep 'crash') >> /root/install.log
 
 
 if [ ! -z $remotestart ]
 	then
 		echo
-		uninstall_cleanup >> install.log
+		uninstall_cleanup >> /root/install.log
 fi
 
 echo
-echo >> install.log
+echo >> /root/install.log
 
 clear
 echo
@@ -31099,5 +31099,5 @@ echo
 view_config
 echo
 echo 'I will reboot now. Wait 5 Minutes.'
-echo 'Restart at: '$(date +%d'.'%m'.'%y' '%H':'%M':'%S) >> install.log
+echo 'Restart at: '$(date +%d'.'%m'.'%y' '%H':'%M':'%S) >> /root/install.log
 #reboot 
