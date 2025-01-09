@@ -207,6 +207,13 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 			z-index: 900;
 		}
 
+		center { 
+			margin: auto !important;
+			height: 5em !important;
+			text-align: center !important;
+			place-items: center;
+		}
+
     	a { color: #cccccc !important;
 			margin: auto !important;
 			height: 5em !important;
@@ -335,6 +342,7 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 
 
 		.bubble .oval input:is(:hover,:active,:focus), .bubble .oval input::placeholder:is(:hover,:active,:focus) {
+			color: inherit;
 			/*color: rgb(0,0,0) !important;
 			background-Color: #ffffff !important;*/
 		}
