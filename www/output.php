@@ -208,13 +208,21 @@ $IP = $Domain = $SSID = $WKey = $PASS = "";
 			z-index: 900;
 		}
 
-    	a { color: #cccccc !important; margin: auto !important; height: 5em !important; align: center !important;
-		
+    	a { color: #cccccc !important;
+			margin: auto !important;
+			height: 5em !important;
+			text-align: center !important;
+			place-items: center;
 		}
 
 		@media (prefers-color-scheme: dark) {
 			body { background: black; }
-			a { color: #cccccc !important; margin: auto !important; height: 5em !important; align: center !important;}
+			a { color: #cccccc !important;
+				margin: auto !important;
+				height: 5em !important;
+				text-align: center !important;
+				place-items: center;
+			}
 		}
 
 		body {
