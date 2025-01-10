@@ -306,13 +306,11 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 			width: 0px;
 			z-index: -1;
 		}
-
 		.bubble-container .bubble .oval center {
 			color: rgb(230,230,230) !important;
-			margin: calc((18.5vh - 2.5em) / 2) 3em;
+			margin: calc((18.5vh - 3em) / 2) 3.5em;
 			opacity: 1 !important;
 		}
-
 		.bubble-container .bubble .oval center * {
 			font-family: inherit;
 			text-shadow: inherit;
