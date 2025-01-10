@@ -105,6 +105,8 @@
 */
 section.Overlay:nth-child(1) {
 	height: -webkit-fill-available;
+	overflow: visible;
+	backdrop-filter: none !important;
 }
 
 .scrollPic:nth-child(1) .containerOverlay{
