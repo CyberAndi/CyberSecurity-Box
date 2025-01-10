@@ -116,14 +116,14 @@ if [ "$RESET_ANSWER" = "y" ]
 		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/backup-OpenWrt-2024-08-29.tar.gz
 		sysupgrade -r backup-OpenWrt-2024-08-29.tar.gz
   		uci set unbound.ub_main.dhcp_link='dnsmasq'
-    		uci set unbound.ub_main.listen_port='5353'
-      		set_unbound_reset
+    	uci set unbound.ub_main.listen_port='5353'
+      	set_unbound_reset
   		processes=$(uci commit && reload_config)
-    		wait $processes
-      		processes1=$(/etc/init.d/unbound restart)
-    		wait $processes1
-      		processes2=$(/etc/init.d/tor restart)
-    		wait $processes2
+    	wait $processes
+      	processes1=$(/etc/init.d/unbound restart)
+    	wait $processes1
+      	processes2=$(/etc/init.d/tor restart)
+    	wait $processes2
 		exit 0
 	else
 		RESET='0'
@@ -185,16 +185,16 @@ if [ "$IPv6" = "::" ]
 fi
 
 if [ "$LAN" = "" ]
-        then
-                LAN='192.168.1.1'
+    then
+        LAN='192.168.1.1'
 fi
 
 LAN_org=$LAN
 
 read -p 'Type the LAN-IP (Internal Network): ['$( echo $LAN )'] ' LAN
 if [ "$LAN" = "" ]
-        then
-                LAN=$LAN_org
+    then
+        LAN=$LAN_org
 fi
 
 if [ ! -z "$3"  ]
@@ -224,8 +224,8 @@ echo
 
 read -p 'The Main-WiFi-SSID? ['$(echo $WIFI_SSID)'] ' WIFI_SSID
 if [ "$WIFI_SSID" = "" ]
-        then
-                WIFI_SSID=$WIFI_SSID_org
+    then
+        WIFI_SSID=$WIFI_SSID_org
 fi
 
 if [ ! -z "$5" ]
@@ -258,28 +258,26 @@ if [ ! -z "$6" ]
 	else
 		PASS='Cyber,Sec9ox'
 fi
-if [ -n "$PASS" ]; then
-  (echo "$PASS"; sleep 1; echo "$PASS") | passwd > /dev/null
+if [ -n "$PASS" ]; 
+	then
+		(echo "$PASS"; sleep 1; echo "$PASS") | passwd > /dev/null
 fi
 
 SUBNET=$(echo $LAN | cut -f3 -d '.')
 SUBNET_sep=$SUBNET
 
 if [ $SUBNET_sep -lt 125 ]
-        then
-
-                if  [ $SUBNET_sep -lt 5 ]
-                        then
-                                SUBNET_sep=$(($SUBNET_sep + 6))
-                fi
+    then
+        if  [ $SUBNET_sep -lt 5 ]
+            then
+                SUBNET_sep=$(($SUBNET_sep + 6))
+        fi
 		SUBNET_sep=$(($SUBNET_sep + 125))
-
-        else
-                if  [ $SUBNET_sep -gt 250 ]
-                        then
-                                SUBNET_sep=$(($SUBNET_sep - 62))
-                fi
-
+    else
+        if  [ $SUBNET_sep -gt 250 ]
+            then
+	            SUBNET_sep=$(($SUBNET_sep - 62))
+        fi
 fi
 
 AD_GUARD='0'
@@ -287,11 +285,10 @@ echo
 read -p 'Install AdGuard-Blocker? Need external USB-Device [y/N] ' -s  -n 1 ADGUARD_ACTIVE
 
 if [ "$ADGUARD_ACTIVE" = "" ]
+    then
+        AD_GUARD='0'
+    elif [ "$ADGUARD_ACTIVE" = "y" ]
         then
-             AD_GUARD='0'
-           
-        elif [ "$ADGUARD_ACTIVE" = "y" ]
-                then
 			AD_GUARD='1'
         else
             AD_GUARD='0'
@@ -306,7 +303,7 @@ if [ "$TOR_ACTIVE" = "" ]
 		TOR_ONION='1'
 	elif [ "$TOR_ACTIVE" = "y" ]
  		then
-		TOR_ONION='1'
+			TOR_ONION='1'
  	else
 		TOR_ONION='0'
 fi
@@ -339,48 +336,46 @@ DNS_PORT='y'
 read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
 UNBOUND='1'
 if [ "$DNS_PORT" = "" ]
-        then
-	       		UNBOUND='1'
-	  		DNSMASQ_Relay_port='5353'
-	  		if [ "$TOR_ONION" = "1" ]
-     				then
-					UNBOUND_Relay_port='9053'
-			elif [ "$STUBBY" = "0" ] 
-   				then
-     					UNBOUND_Relay_port='53'
-     			else
-   					UNBOUND_Relay_port='5453'
-    			fi
-        elif [ "$DNS_PORT" = "y" ]
+    then
+		UNBOUND='1'
+		DNSMASQ_Relay_port='5353'
+		if [ "$TOR_ONION" = "1" ]
+    		then
+				UNBOUND_Relay_port='9053'
+		elif [ "$STUBBY" = "0" ] 
+   			then
+    			UNBOUND_Relay_port='53'
+    		else
+   				UNBOUND_Relay_port='5453'
+    	fi
+    elif [ "$DNS_PORT" = "y" ]
 		then
 			UNBOUND='1'
    			DNSMASQ_Relay_port='5353'
-	  		if [ "$TOR_ONION" = "1" ]
-     				then
-					UNBOUND_Relay_port='9053'
-     			
-	elif [ "$STUBBY" = "0" ] 
-			then
-   					UNBOUND_Relay_port='53'
-			else
+			if [ "$TOR_ONION" = "1" ]
+    			then
+					UNBOUND_Relay_port='9053'    
+				elif [ "$STUBBY" = "0" ] 
+					then
+   						UNBOUND_Relay_port='53'
+				else
    					UNBOUND_Relay_port='5453'
-	fi
-		elif [ "$TOR_ONION" = "1" ]
-      	then
-	       		DNSMASQ_Relay_port='9053'
+			fi
+	elif [ "$TOR_ONION" = "1" ]
+    	then
+	    	DNSMASQ_Relay_port='9053'
 			UNBOUND_Relay_port='9053'
-     			UNBOUND='0'
-     		elif [ "$STUBBY" = "0" ] 
-			then
-   				DNSMASQ_Relay_port='53'
-	 			UNBOUND_Relay_port='53'
-     				UNBOUND='0'
-	 		else
-    				DNSMASQ_Relay_port='5453'
-				UNBOUND_Relay_port='5453'
-    				UNBOUND='0'
+     		UNBOUND='0'
+    elif [ "$STUBBY" = "0" ] 
+		then
+   			DNSMASQ_Relay_port='53'
+	 		UNBOUND_Relay_port='53'
+     		UNBOUND='0'
+		else
+    		DNSMASQ_Relay_port='5453'
+			UNBOUND_Relay_port='5453'
+    		UNBOUND='0'
 	fi
-
 VLAN_ENABLE='0'
 echo
 echo
@@ -410,14 +405,14 @@ read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 SECURE_RULES
 
 if [ "$SECURE_RULES" = "" ]
         then
-             FW_HSactive='1'
+           FW_HSactive='1'
            #  set_HS_Firewall
         elif [ "$SECURE_RULES" = "y" ]
-                then
+            then
 		FW_HSactive='1'
             #    set_HS_Firewall
         else
-              FW_HSactive='0'
+            FW_HSactive='0'
             #  set_HS_Firewall_disable
 fi
 
@@ -509,7 +504,6 @@ view_config
 }
 
 install_check() {
-
 	opkg update >/dev/null
 	unbound_inst=$(opkg list-installed | grep unbound)
 	stubby_inst=$(opkg list-installed | grep stubby)
@@ -598,7 +592,7 @@ if [ "$unbound_inst" = "" ]
 					
 		fi
    		opkg update >> /root/install.log
-	fi
+fi
 
 opkg update >> /root/install.log
 if [ "$iptables_inst" != "" ] 
@@ -1360,11 +1354,9 @@ echo
 customize_firmware() {
 FILE=/www/luci-static/resources/view/dashboard/css/c*.css
 if [ ! -f "$FILE" ]
-
 	then
 		customize_firmware_sub
 	fi
-
 }
 
 customize_firmware_sub() {
@@ -3113,7 +3105,7 @@ EOF
 set_stubby() {
 #Configure stubby
 cat << EOF > /etc/config/stubby
-config stubby 'global'
+	config stubby 'global'
        option manual '0'
        option trigger 'wan'
        # option triggerdelay '2'
@@ -3146,27 +3138,20 @@ config stubby 'global'
        option tls_min_version '1.2'
        # option tls_max_version '1.3'
 
-config resolver
+	config resolver
         option address '1.1.1.3'
         option tls_auth_name 'family.cloudflare-dns.com'
-
-
-config resolver
+	config resolver
         option address '1.0.0.3'
         option tls_auth_name 'family.cloudflare-dns.com'
-
-
-#config resolver
+#	config resolver
 #        option address '80.241.218.68'
 #        option tls_auth_name 'fdns1.dismail.de'
 #        list spki 'sha256/MMi3E2HZr5A5GL+badqe3tzEPCB00+OmApZqJakbqUU='
-
-#config resolver
+#	config resolver
 #        option address '46.182.19.48'
 #        option tls_auth_name 'dns2.digitalcourage.de'
 #        list spki 'sha256/v7rm6OtQQD3x/wbsdHDZjiDg+utMZvnoX3jq3Vi8tGU='
-
-
 EOF
 
 processes=$(uci commit && reload_config)
