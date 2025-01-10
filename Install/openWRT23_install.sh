@@ -28099,6 +28099,229 @@ processes=$(uci commit && reload_config)
 wait $processes >> /root/install.log
 }
 
+set_dhcp_22_sub() {
+
+uci delete dhcp.@dnsmasq[-1] >/dev/null
+uci commit dhcp >/dev/null
+
+uci set dhcp.Blacklist=dnsmasq
+uci set dhcp.Blacklist.domainneeded='1'
+uci set dhcp.Blacklist.boguspriv='1'
+uci set dhcp.Blacklist.filterwin2k='0'
+uci set dhcp.Blacklist.localise_queries='1'
+uci set dhcp.Blacklist.rebind_protection='1'
+uci set dhcp.Blacklist.rebind_localhost='1'
+uci set dhcp.Blacklist.expandhosts='1'
+uci set dhcp.Blacklist.nonegcache='0'
+uci set dhcp.Blacklist.authoritative='1'
+uci set dhcp.Blacklist.readethers='1'
+uci set dhcp.Blacklist.nonwildcard='1'
+uci set dhcp.Blacklist.localservice='1'
+uci set dhcp.Blacklist.ednspacket_max='1232'
+uci set dhcp.Blacklist.cachelocal='1'
+uci set dhcp.Blacklist.cachesize='0'
+uci set dhcp.Blacklist.queryport=$DNS_Relay_port
+uci set dhcp.Blacklist.leasefile='/tmp/dhcp.leases'
+uci set dhcp.Blacklist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
+uci add_list dhcp.Blacklist.notinterface='br-VOICE'
+uci add_list dhcp.Blacklist.notinterface='br-ENTERTAIN' 
+uci add_list dhcp.Blacklist.notinterface='br-GUEST'
+uci add_list dhcp.Blacklist.notinterface='br-CMOVIE'
+uci add_list dhcp.Blacklist.notinterface='br-TELEKOM'
+uci add_list dhcp.Blacklist.notinterface='loopback'
+uci add_list dhcp.Blacklist.interface='br-INET'
+uci add_list dhcp.Blacklist.interface='br-SERVER' 
+uci add_list dhcp.Blacklist.interface='br-HCONTROL'
+uci add_list dhcp.Blacklist.interface='br-CONTROL'
+uci add_list dhcp.Blacklist.interface='br-lan'
+
+uci set dhcp.Whitelist=dnsmasq
+uci set dhcp.Whitelist.domainneeded='1'
+uci set dhcp.Whitelist.boguspriv='1'
+uci set dhcp.Whitelist.filterwin2k='0'
+uci set dhcp.Whitelist.localise_queries='1'
+uci set dhcp.Whitelist.rebind_protection='1'
+uci set dhcp.Whitelist.rebind_localhost='1'
+uci set dhcp.Whitelist.expandhosts='1'
+uci set dhcp.Whitelist.nonegcache='0'
+uci set dhcp.Whitelist.authoritative='1'
+uci set dhcp.Whitelist.readethers='1'
+uci set dhcp.Whitelist.nonwildcard='1'
+uci set dhcp.Whitelist.localservice='1'
+uci set dhcp.Whitelist.ednspacket_max='1232'
+uci set dhcp.Whitelist.cachelocal='1'
+uci set dhcp.Whitelist.cachesize='0'
+uci set dhcp.Whitelist.queryport=$DNS_Relay_port
+uci set dhcp.Whitelist.leasefile='/tmp/dhcp.leases'
+uci set dhcp.Whitelist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
+uci add_list dhcp.Whitelist.interface='br-VOICE'
+uci add_list dhcp.Whitelist.interface='br-ENTERTAIN' 
+uci add_list dhcp.Whitelist.interface='br-GUEST'
+uci add_list dhcp.Whitelist.interface='br-CMOVIE'
+uci add_list dhcp.Whitelist.interface='br-TELEKOM'
+uci add_list dhcp.Whitelist.interface='loopback'
+uci add_list dhcp.Whitelist.notinterface='br-INET'
+uci add_list dhcp.Whitelist.notinterface='br-SERVER' 
+uci add_list dhcp.Whitelist.notinterface='br-HCONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-CONTROL'
+uci add_list dhcp.Whitelist.notinterface='br-lan'
+
+uci set dhcp.CMOVIE=dhcp
+uci set dhcp.CMOVIE.interface='CMOVIE'
+uci set dhcp.CMOVIE.start='20'
+uci set dhcp.CMOVIE.limit='250'
+uci set dhcp.CMOVIE.leasetime='24h'
+uci set dhcp.CMOVIE.netmask='255.255.255.0'
+uci set dhcp.CMOVIE.domain=$CMOVIE_domain
+uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
+uci set dhcp.CMOVIE.instance='Whitelist'
+uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
+uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
+uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
+uci set dhcp.CMOVIE.server=$SERVER_ip'#'$DNS_Relay_port
+
+uci set dhcp.CONTROL=dhcp
+uci set dhcp.CONTROL.interface='CONTROL'
+uci set dhcp.CONTROL.start='10'
+uci set dhcp.CONTROL.limit='250'
+uci set dhcp.CONTROL.leasetime='24h'
+uci set dhcp.CONTROL.netmask='255.255.255.0'
+uci set dhcp.CONTROL.domain=$CONTROL_domain
+uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
+uci set dhcp.CONTROL.instance='Blacklist'
+uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip 
+uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
+uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
+uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNS_Relay_port
+
+uci set dhcp.ENTERTAIN=dhcp
+uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
+uci set dhcp.ENTERTAIN.start='10'
+uci set dhcp.ENTERTAIN.limit='250'
+uci set dhcp.ENTERTAIN.leasetime='24h'
+uci set dhcp.ENTERTAIN.netmask='255.255.255.0'
+uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
+uci set dhcp.ENTERTAIN.instance='Whitelist'
+uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
+uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
+uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
+uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNS_Relay_port
+
+uci set dhcp.GUEST=dhcp
+uci set dhcp.GUEST.interface='GUEST'
+uci set dhcp.GUEST.start='10'
+uci set dhcp.GUEST.limit='250'
+uci set dhcp.GUEST.leasetime='24h'
+uci set dhcp.GUEST.netmask='255.255.255.0'
+uci set dhcp.GUEST.domain=$GUEST_domain
+uci set dhcp.GUEST.local='/'$GUEST_domain'/'
+uci set dhcp.GUEST.instance='Whitelist'
+uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
+uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
+uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
+uci set dhcp.GUEST.server=$GUEST_ip'#'$DNS_Relay_port
+
+uci set dhcp.HCONTROL=dhcp
+uci set dhcp.HCONTROL.interface='HCONTROL'
+uci set dhcp.HCONTROL.start='10'
+uci set dhcp.HCONTROL.limit='250'
+uci set dhcp.HCONTROL.leasetime='24h'
+uci set dhcp.HCONTROL.netmask='255.255.255.0'
+uci set dhcp.HCONTROL.domain=$HCONTROL_domain
+uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
+uci set dhcp.HCONTROL.instance='Blacklist'
+uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
+uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
+uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
+uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNS_Relay_port
+
+uci set dhcp.INET=dhcp
+uci set dhcp.INET.interface='INET'
+uci set dhcp.INET.start='10'
+uci set dhcp.INET.limit='250'
+uci set dhcp.INET.leasetime='24h'
+uci set dhcp.INET.netmask='255.255.255.0'
+uci set dhcp.INET.domain=$INET_domain
+uci set dhcp.INET.local='/'$INET_domain'/'
+uci set dhcp.INET.instance='Blacklist'
+uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
+uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
+uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
+uci set dhcp.INET.server=$INET_ip'#'$DNS_Relay_port
+
+uci del dhcp.lan.ra_slaac
+uci set dhcp.lan.start='10'
+uci set dhcp.lan.limit='250'
+uci set dhcp.lan.leasetime='24h'
+uci set dhcp.lan.netmask='255.255.255.0'
+uci set dhcp.lan.domain='lan.local'
+uci set dhcp.lan.local='/lan.local/'
+uci set dhcp.lan.instance='Blacklist'
+
+uci set dhcp.SERVER=dhcp
+uci set dhcp.SERVER.interface='SERVER'
+uci set dhcp.SERVER.start='10'
+uci set dhcp.SERVER.limit='250'
+uci set dhcp.SERVER.leasetime='24h'
+uci set dhcp.SERVER.netmask='255.255.255.0'
+uci set dhcp.SERVER.domain=$SERVER_domain
+uci set dhcp.SERVER.local='/'$SERVER_domain'/'
+uci set dhcp.SERVER.instance='Blacklist'
+uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
+uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
+uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
+uci set dhcp.SERVER.server=$SERVER_ip'#'$DNS_Relay_port
+
+
+uci set dhcp.TELEKOM=dhcp
+uci set dhcp.TELEKOM.interface='TELEKOM'
+uci set dhcp.TELEKOM.start='10'
+uci set dhcp.TELEKOM.limit='250'
+uci set dhcp.TELEKOM.leasetime='24h'
+uci set dhcp.TELEKOM.netmask='255.255.255.0'
+uci set dhcp.TELEKOM.domain=$TELEKOM_domain
+uci set dhcp.TELEKOM.local='/'$TELEKOM_domain'/'
+uci set dhcp.TELEKOM.instance='Whitelist'
+uci add_list dhcp.TELEKOM.dhcp_option='6,'$TELEKOM_ip 
+uci add_list dhcp.TELEKOM.dhcp_option='3,'$TELEKOM_ip
+uci add_list dhcp.TELEKOM.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.TELEKOM.dhcp_option='15,'$TELEKOM_domain
+uci set dhcp.TELEKOM.server=$TELEKOM_ip'#'$DNS_Relay_port
+
+uci set dhcp.VOICE=dhcp
+uci set dhcp.VOICE.interface='VOICE'
+uci set dhcp.VOICE.start='10'
+uci set dhcp.VOICE.limit='250'
+uci set dhcp.VOICE.leasetime='24h'
+uci set dhcp.VOICE.netmask='255.255.255.0'
+uci set dhcp.VOICE.domain=$VOICE_domain
+uci set dhcp.VOICE.local='/'$VOICE_domain'/'
+uci set dhcp.VOICE.instance='Whitelist'
+uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
+uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
+uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
+uci set dhcp.VOICE.server=$VOICE_ip'#'$DNS_Relay_port
+
+mkdir /etc/dnsmasq.d  >> install.log
+mkdir /etc/dnsmasq.d/Blacklist >> install.log
+mkdir /etc/dnsmasq.d/Whitelist >> install.log
+mkdir /etc/dnsmasq.d/BlockAll >> install.log
+mkdir /etc/dnsmasq.d/AllowAll >> install.log
+
+uci commit dhcp && reload_config >> install.log
+}
+
 create_firewall_zones() {
 uci del firewall.@zone[0].network
 uci add_list firewall.@zone[0].network='lan'
@@ -28303,6 +28526,137 @@ wait $processes >> /root/install.log
 echo
 echo 'On Error enter logread'
 echo
+}
+
+set_firewall_22_intercept() {
+
+echo 'set Tor intercept' >> /root/install.log
+# Intercept SSH, HTTP and HTTPS traffic
+uci -q delete firewall.ssh_int >/dev/null
+uci set firewall.ssh_int="redirect"
+uci set firewall.ssh_int.name="Intercept_SSH"
+uci set firewall.ssh_int.src="INET"
+uci set firewall.ssh_int.src_dport="$SSH_port"
+uci set firewall.ssh_int.proto="tcp"
+uci set firewall.ssh_int.target="DNAT"
+
+uci -q delete firewall.http_int >/dev/null
+uci set firewall.http_int="redirect"
+uci set firewall.http_int.name="Intercept_HTTP"
+uci set firewall.http_int.src="INET"
+uci set firewall.http_int.src_dport="$ACCESS_HTTP_port"
+uci set firewall.http_int.proto="tcp"
+uci set firewall.http_int.target="DNAT"
+
+uci -q delete firewall.https_int
+uci set firewall.https_int="redirect"
+uci set firewall.https_int.name="Intercept_HTTPS"
+uci set firewall.https_int.src="INET"
+uci set firewall.https_int.src_dport="$ACCESS_HTTPS_port"
+uci set firewall.https_int.proto="tcp"
+uci set firewall.https_int.target="DNAT"
+
+uci commit firewall && reload_config >/dev/null
+
+# Intercept DNS and TCP traffic
+
+uci -q delete firewall.tcp_onion_int > /dev/null uci set firewall.tcp_onion_int="redirect"
+uci set firewall.tcp_onion_int.name="Intercept_Onion_Domain"
+uci set firewall.tcp_onion_int.src_dport=$TOR_TRANS_port
+uci set firewall.tcp_onion_int.dest_port=$TOR_TRANS_port
+uci set firewall.tcp_onion_int.proto="tcp"
+uci set firewall.tcp_onion_int.target="DNAT"
+uci set firewall.tcp_onion_int.src="INET"
+uci set firewall.tcp_onion_int.src_dip="10.192.0.0./10"
+uci set firewall.tcp_onion_int.extra="--syn"
+uci set firewall.tcp_onion_int.enabled='0'
+
+uci -q delete firewall.tcp_onionSocks_int > /dev/null 
+uci set firewall.tcp_onionSocks_int="redirect"
+uci set firewall.tcp_onionSocks_int.name='Intercept_Onion_Domain'
+uci set firewall.tcp_onionSocks_int.src='INET'
+uci set firewall.tcp_onionSocks_int.src_dport=$TOR_SOCKS2_port
+uci set firewall.tcp_onionSocks_int.dest_port=$TOR_SOCKS2_port
+uci set firewall.tcp_onionSocks_int.src_dip='10.192.0.0/10'
+uci set firewall.tcp_onionSocks_int.proto='tcp'
+uci set firewall.tcp_onionSocks_int.target='DNAT'
+uci set firewall.tcp_onionSocks_int.extra='--syn'
+uci set firewall.tcp_onionSocks_int.enabled='0'
+
+uci -q delete firewall.tcp_onionSocks1_int > /dev/null 
+uci set firewall.tcp_onionSocks1_int=redirect
+uci set firewall.tcp_onionSocks1_int.name='Intercept_Onion1_Domain'
+uci set firewall.tcp_onionSocks1_int.src='INET'
+uci set firewall.tcp_onionSocks1_int.dest_port=$TOR_SOCKS_port
+uci set firewall.tcp_onionSocks1_int.src_dport=$TOR_SOCKS_port
+uci set firewall.tcp_onionSocks1_int.proto='tcp'
+uci set firewall.tcp_onionSocks1_int.target='DNAT'
+uci set firewall.tcp_onionSocks1_int.extra='--syn'
+uci set firewall.tcp_onionSocks1_int.enabled='0'
+
+uci -q delete firewall.tcp_tor2_int > /dev/null 
+uci set firewall.tcp_tor2_int=redirect
+uci set firewall.tcp_tor2_int.src_dip='!192.168.0.0/16'
+uci set firewall.tcp_tor2_int.proto='tcp'
+uci set firewall.tcp_tor2_int.target='DNAT'
+uci set firewall.tcp_tor2_int.dest_port=$TOR_TRANS_port
+uci set firewall.tcp_tor2_int.src='INET'
+uci set firewall.tcp_tor2_int.src_dport=$HTTPS_port
+uci set firewall.tcp_tor2_int.extra='--syn'
+uci set firewall.tcp_tor2_int.name='Intercept https tor'
+uci set firewall.tcp_tor2_int.enabled='0'
+
+uci -q delete firewall.tcp_tor3_int > /dev/null 
+uci set firewall.tcp_tor3_int=redirect
+uci set firewall.tcp_tor3_int.src_dip='!192.168.0.0/16'
+uci set firewall.tcp_tor3_int.proto='tcp'
+uci set firewall.tcp_tor3_int.target='DNAT'
+uci set firewall.tcp_tor3_int.dest_port=$TOR_TRANS_port
+uci set firewall.tcp_tor3_int.src='INET'
+uci set firewall.tcp_tor3_int.name='Intercept http tor'
+uci set firewall.tcp_tor3_int.src_dport=$HTTP_port
+uci set firewall.tcp_tor3_int.extra='--syn'
+uci set firewall.tcp_tor3_int.enabled='0'
+
+uci -q delete firewall.omada > /dev/null
+uci set firewall.omada=redirect
+uci set firewall.omada.dest_port=$CONTROLER_port
+uci set firewall.omada.name='Network_omada'
+uci set firewall.omada.src_dport=$CONTROLER_port
+uci set firewall.omada.target='DNAT'
+uci set firewall.omada.dest_ip='192.168.71.175'
+uci set firewall.omada.dest='HCONTROL'
+uci set firewall.omada.src='INET'
+uci set firewall.omada.extra='--syn'
+uci set firewall.omada.enabled='0'
+
+uci -q delete firewall.homematic > /dev/null
+uci set firewall.homematic=redirect
+uci set firewall.homematic.dest_port='80'
+uci set firewall.homematic.target='DNAT'
+uci set firewall.homematic.src='INET'
+uci set firewall.homematic.dest_ip='192.168.70.52'
+uci set firewall.homematic.dest='CONTROL'
+uci set firewall.homematic.proto='tcp'
+uci set firewall.homematic.name='Homematic ccu'
+uci set firewall.homematic.src_dip='192.168.70.52/32'
+uci set firewall.homematic.src_dport='8080'
+uci set firewall.homematic.extra='--syn'
+uci set firewall.homematic.enabled='0'
+
+uci -q delete firewall.homematic1 > /dev/null
+uci set firewall.homematic1=redirect
+uci set firewall.homematic1.dest_port='443'
+uci set firewall.homematic1.target='DNAT'
+uci set firewall.homematic1.src='INET'
+uci set firewall.homematic1.dest_ip='192.168.70.52'
+uci set firewall.homematic1.dest='CONTROL'
+uci set firewall.homematic1.proto='tcp'
+uci set firewall.homematic1.name='Homematic ccu'
+uci set firewall.homematic1.src_dip='192.168.70.52/32'
+uci set firewall.homematic1.src_dport='4443'
+uci set firewall.homematic1.extra='--syn'
+uci set firewall.homematic1.enabled='0'
 }
 
 set_HS_Firewall() {
@@ -30940,7 +31294,7 @@ if [ "$TOR_ONION" = "1" ]
 		echo
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept'
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept' >> /root/install.log
-		set_firewall_intercept >> /root/install.log
+		set_firewall_22_intercept >> /root/install.log
 fi
 
 echo
