@@ -27763,7 +27763,7 @@ set_dhcp() {
 	
 	if [ "$dnsmasq_inst" != "" ]
 		then
-			set_dhcp_sub
+			set_dhcp_22_sub
 	fi
 }
 
@@ -28101,8 +28101,13 @@ wait $processes >> /root/install.log
 
 set_dhcp_22_sub() {
 
+release_check="23"
+echo 'delete dhcp.@dnsmasq[-1]'
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) 'delete dhcp.@dnsmasq[-1]'>> /root/install.log
+echo
 uci delete dhcp.@dnsmasq[-1] >/dev/null
-uci commit dhcp >/dev/null
+processes=$(uci commit && reload_config)
+wait $processes >/dev/null
 
 uci set dhcp.Blacklist=dnsmasq
 uci set dhcp.Blacklist.domainneeded='1'
