@@ -1739,6 +1739,17 @@ uci set network.@device[-1].bridge_empty='1'
 }
 create_network_interfaces() {
 
+uci set network.lan.proto='static'
+uci set network.lan.ipaddr=$LAN_ip
+uci set network.lan.netmask='255.255.255.0'
+uci set network.lan.ip6assign='56'
+uci set network.lan.broadcast=$LAN_broadcast
+uci set network.lan.gateway=$INET_GW
+uci set network.lan.dns=$LAN_ip
+#uci set network.lan.dns=$INET_GW
+processes=$(uci commit && reload_config)
+wait $processes >> /root/install.log	
+
 uci add network interface >> /root/install.log
 uci rename network.@interface[-1]='TELEKOM'
 processes=$(uci commit && reload_config)
@@ -2034,6 +2045,17 @@ echo '#                Network Definitions                   #'
 echo '#                                                      #'
 echo '########################################################'
 echo 
+
+uci set network.lan.proto='static'
+uci set network.lan.ipaddr=$LAN_ip
+uci set network.lan.netmask='255.255.255.0'
+uci set network.lan.ip6assign='56'
+uci set network.lan.broadcast=$LAN_broadcast
+uci set network.lan.gateway=$INET_GW
+#uci set network.lan.dns=$LAN_ip
+uci set network.lan.dns=$INET_GW
+processes=$(uci commit && reload_config)
+wait $processes >> /root/install.log
 
 uci set network.loopback=interface
 uci set network.loopback.ifname='lo'
@@ -27763,7 +27785,7 @@ set_dhcp() {
 	
 	if [ "$dnsmasq_inst" != "" ]
 		then
-			set_dhcp_22_sub
+			set_dhcp_sub
 	fi
 }
 
@@ -28008,10 +28030,12 @@ set_dhcp_sub() {
 		#uci set dhcp.lan.instance='Blacklist'
 		uci set dhcp.lan.dhcpv4='server'
 		uci set dhcp.lan.dhcpv6='server'
-		uci add_list dhcp.lan.dhcp_option='6,'$INET_GW 
+		uci add_list dhcp.lan.dhcp_option='6,'$LAN_ip 
+		#uci add_list dhcp.lan.dhcp_option='6,'$INET_GW 
 		uci add_list dhcp.lan.dhcp_option='3,'$LAN_ip
 		uci add_list dhcp.lan.dhcp_option='42,'$INET_GW 
 		uci add_list dhcp.lan.dhcp_option='15,'$LAN_domain
+		
 		if [ "$DNS_IP" != "127.0.0.1" ]
 			then
 				uci set dhcp.lan.server=$DNS_IP'#'$DNSMASQ_Relay_port
@@ -28271,6 +28295,13 @@ uci set dhcp.lan.netmask='255.255.255.0'
 uci set dhcp.lan.domain='lan.local'
 uci set dhcp.lan.local='/lan.local/'
 uci set dhcp.lan.instance='Blacklist'
+uci set dhcp.lan.local='/'$LAN_domain'/'
+uci set dhcp.lan.instance='Blacklist'
+uci add_list dhcp.lan.dhcp_option='6,'$LAN_ip
+uci add_list dhcp.lan.dhcp_option='3,'$LAN_ip
+uci add_list dhcp.lan.dhcp_option='42,'$INET_GW 
+uci add_list dhcp.lan.dhcp_option='15,'$LAN_domain
+uci set dhcp.lan.server=$LAN_ip'#'$DNS_Relay_port
 
 uci set dhcp.SERVER=dhcp
 uci set dhcp.SERVER.interface='SERVER'
