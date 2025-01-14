@@ -31330,7 +31330,7 @@ if [ "$TOR_ONION" = "1" ]
 		echo
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept'
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept' >> /root/install.log
-		set_firewall_22_intercept >> /root/install.log
+		set_firewall_intercept >> /root/install.log
 fi
 
 echo
