@@ -31118,6 +31118,10 @@ uci set firewall.blockIncoming.name="Block_Incoming"
 uci set firewall.blockIncoming.dest="*"
 uci set firewall.blockIncoming.target="REJECT"
 uci set firewall.blockIncoming.enabled="1"
+if [ "$TOR_ONION" = "1" ]
+       then
+			setup_tor_routing
+fi	   
 echo
 echo 'Firewall active: ' $SECURE_RULES
 echo
@@ -31137,6 +31141,13 @@ fi
 processes=$(uci commit && reload_config)
 wait $processes >/dev/null
 /etc/init.d/firewall restart >/dev/null
+}
+
+setup_tor_routing() {
+    iptables -t nat -A PREROUTING -i inet -p tcp --syn -j REDIRECT --to-ports $TOR_TRANS_port
+    iptables -A FORWARD -i inet -o wan -j ACCEPT
+    iptables -A FORWARD -i wan -o inet -j ACCEPT
+    iptables -t nat -A POSTROUTING -o wan -j MASQUERADE
 }
 
 set_mountpoints() {
@@ -31331,6 +31342,9 @@ if [ "$TOR_ONION" = "1" ]
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept'
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept' >> /root/install.log
 		set_firewall_intercept >> /root/install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Routing über Tor Onion einrichten'
+        echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Routing über Tor Onion einrichten' >> /root/install.log
+        setup_tor_routing >> /root/install.log
 fi
 
 echo
