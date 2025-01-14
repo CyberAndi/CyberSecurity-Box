@@ -7,17 +7,17 @@ $IP = $Domain = $SSID = $WKey = $PASS= "";
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<base href="/">
-	<link rel="stylesheet" href="/luci-static/bootstrap-dark/cascade.css">
-	<link rel="icon" href="/luci-static/bootstrap/logo_48.png" sizes="48x48">
-	<link rel="icon" href="/luci-static/bootstrap/logo.svg" sizes="any">
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />
 	<meta http-equiv="Expires" content="Thu, 01 Jan 1970 00:00:00 GMT" />
-	<link rel="preload" href="/luci-static/bootstrap-dark/cascade.css">
-	<link rel="preload" href="/luci-static/bootstrap/OCRAStd.woff" as="font">
-	<link rel="preload" href="/luci-static/bootstrap/CyberSecurity-Box.svg">
-	<link rel="preload" href="/luci-static/bootstrap/CyberAndi.svg">
+	<link rel="stylesheet" href="/luci-static/bootstrap-dark/cascade.css" type="text/css" crossorigin>
+	<link rel="icon" href="/luci-static/bootstrap/logo_48.png" sizes="48x48" type="image/png" crossorigin> 
+	<link rel="icon" href="/luci-static/bootstrap/logo.svg" sizes="any" type="image/svg+xml" crossorigin>
+	<link rel="preload" href="/luci-static/bootstrap-dark/cascade.css" as="style" type="text/css" crossorigin>
+	<link rel="preload" href="/luci-static/bootstrap/OCRAStd.woff" as="font" type="font/woff" crossorigin>
+	<link rel="preload" href="/luci-static/bootstrap/CyberSecurity-Box.svg" as="image" type="image/svg+xml" crossorigin>
+	<link rel="preload" href="/luci-static/bootstrap/CyberAndi.svg" as="image" type="image/svg+xml" crossorigin>
 
 	<style type="text/css">
 		@font-face {
