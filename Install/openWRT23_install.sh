@@ -527,6 +527,8 @@ if [ "$dnsmasq_inst" != "" ]
 		/etc/init.d/dnsmasq disable >> /root/install.log
 		opkg update  >> /root/install.log
 		opkg remove dnsmasq >> /root/install.log
+		opkg update  >> /root/install.log
+		opkg remove odhcpd-ipv6only >> /root/install.log
 fi
 
 opkg update >> /root/install.log
@@ -27813,7 +27815,9 @@ set_dhcp_sub() {
 		uci set dhcp.Blacklist.localservice='1'
 		uci set dhcp.Blacklist.ednspacket_max='1232'
 		uci set dhcp.Blacklist.cachelocal='1'
-		uci set dhcp.Blacklist.cachesize='0'
+		#uci set dhcp.Blacklist.cachesize='0'
+		uci set dhcp.Blacklist.dnssec='1'
+		uci set dhcp.Blacklist.dnsseccheck='1'
 		uci set dhcp.Blacklist.server=$DNS_IP'#'$DNSMASQ_Relay_port 
   		#uci set dhcp.Blacklist.queryport=$DNSMASQ_Relay_port
 		uci set dhcp.Blacklist.leasefile='/tmp/dhcp.leases'
@@ -27863,7 +27867,9 @@ set_dhcp_sub() {
 				uci set dhcp.Whitelist.localservice='1'
 				uci set dhcp.Whitelist.ednspacket_max='1232'
 				uci set dhcp.Whitelist.cachelocal='1'
-				uci set dhcp.Whitelist.cachesize='0'
+				#uci set dhcp.Whitelist.cachesize='0'
+				uci set dhcp.Whitelist.dnssec='1'
+				uci set dhcp.Whitelist.dnsseccheck='1'
 				uci set dhcp.Whitelist.server=$DNS_IP'#'$DNSMASQ_Relay_port
 				uci set dhcp.Whitelist.leasefile='/tmp/dhcp.leases'
 				uci set dhcp.Whitelist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
@@ -31185,6 +31191,7 @@ test_dns_services() {
 	clear && echo 'Stopp all services' && service dnsmasq stop && service unbound stop && service stubby stop && service tor stop && sleep 5 
 	echo && service tor start && service stubby start && service unbound start && service dnsmasq start && sleep 30 
 	echo 'Tor' && dig www.test.de -p 9053 | grep 'www.test.de' && echo 'Stubby' && dig www.test.de -p 5453 | grep 'www.test.de' && echo 'Unbound' && dig www.test.de -p 5353 | grep 'www.test.de' && echo 'Dnsmasq' && dig www.test.de -p 53 | grep 'www.test.de'
+	echo 'DNSSEC Test' && dig sigok.verteiltesysteme.net +dnssec | grep flags: | grep ANSWER | grep ad; && echo && echo 'fail' && dig sigfail.verteiltesysteme.net +dnssec | grep flags: | grep ANSWER | grep ad 
 }
 
 #-------------------------start---------------------------------------
