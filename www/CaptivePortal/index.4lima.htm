@@ -1614,11 +1614,11 @@ a:hover {
 
 
 [alt="tumblr"]::before{
-	content: content: var(--imageTumblr);	
+	content: var(--imageTumblr);	
 }
 
 [alt="facebook"]::before{
-	content: content: var(--imageFacebook);
+	content:  var(--imageFacebook);
 }
 
 [alt="pinterest"]::before{
@@ -2373,7 +2373,7 @@ nav#topMenu:is(:hover,:active,:focus) ~ #Main :is(.containerSlider .Slideshow) {
 	width: var(--screenWide);
 }
 
-.containerSlider:is(:hover,:active,:focus) .channelLogo, :is(.Slideshow .SlideshowContent :is(#Pos1,#Pos2,#Pos3,#Pos4.#Pos5,#Pos6,#Pos7,#Pos8,#Pos9,#Pos10):target) ~ .channelLogo  {
+.containerSlider:is(:hover,:active,:focus) .channelLogo, :is(.Slideshow .SlideshowContent :is(#Pos1,#Pos2,#Pos3,#Pos4,#Pos5,#Pos6,#Pos7,#Pos8,#Pos9,#Pos10):target) ~ .channelLogo  {
 	height: var(--calcLogoHeight);
 	width: var(--calcLogoWidth);
 	border: var(--borderLght);
@@ -2769,7 +2769,7 @@ div.Slide {
 
 	transform: translateX(0%);
     -webkit-animation-name: aniSlideshow !important;
-	-webkit-animation-duration: 132s !imortant;
+	-webkit-animation-duration: 132s !important;
 	-webkit-animation-iteration-count: infinite !important;
 	-webkit-animation-delay: 20s;
 	animation-name: aniSlideshow !important;
@@ -3192,16 +3192,16 @@ main .containerOverlay .Overlay.Book {
 	opacity: var(--noTransparent);
 	position: var(--posRelative);
 	display: var(--displayInlineBlock) !important;
-	#width: var(--screenWide);
+	/*width: var(--screenWide); */
 	margin: var(--centerMargin);
-	#top: calc(-28.125vw - 7.5em);
+	/*top: calc(-28.125vw - 7.5em); */
 	left: 0px;
 	text-align: center;
 	vertical-align: middle;
 	backdrop-filter: var(--bgBlur);
 	-webkit-backdrop-filter: var(--bgBlur);
-	#background-color: rgba(0,0,128,0.4);
-	#padding-bottom: 8.5em;
+	/*background-color: rgba(0,0,128,0.4);
+	#padding-bottom: 8.5em;*/
 	color: var(--colorLgtGrey);
 	font-size: var(--fontSizeOverlay);
 	overflow-x: var(--overflowCut);
@@ -5067,9 +5067,7 @@ footer .footerText a, footer .footerText a img{
 	
 	header:hover {
 	    height: var(--setCalcMaxHeaderFactor);
-	}
-
-
+	
 	}
 }
 
