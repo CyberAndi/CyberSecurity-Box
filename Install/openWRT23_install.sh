@@ -31191,7 +31191,7 @@ test_dns_services() {
 	clear && echo 'Stopp all services' && service dnsmasq stop && service unbound stop && service stubby stop && service tor stop && sleep 5 
 	echo && service tor start && service stubby start && service unbound start && service dnsmasq start && sleep 30 
 	echo 'Tor' && dig www.test.de -p 9053 | grep 'www.test.de' && echo 'Stubby' && dig www.test.de -p 5453 | grep 'www.test.de' && echo 'Unbound' && dig www.test.de -p 5353 | grep 'www.test.de' && echo 'Dnsmasq' && dig www.test.de -p 53 | grep 'www.test.de'
-	echo 'DNSSEC Test' && dig sigok.verteiltesysteme.net +dnssec | grep flags: | grep ANSWER | grep ad; && echo && echo 'fail' && dig sigfail.verteiltesysteme.net +dnssec | grep flags: | grep ANSWER | grep ad 
+	echo 'DNSSEC Test' && dig sigok.verteiltesysteme.net +dnssec | grep 'flags:' | grep 'ANSWER' | grep 'ad' && echo && echo 'fail' && dig sigfail.verteiltesysteme.net +dnssec | grep 'flags:' | grep 'ANSWER' | grep 'ad' 
 }
 
 #-------------------------start---------------------------------------
