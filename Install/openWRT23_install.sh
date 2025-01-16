@@ -1752,150 +1752,152 @@ uci set network.lan.dns=$LAN_ip
 processes=$(uci commit && reload_config)
 wait $processes >> /root/install.log	
 
-uci add network interface >> /root/install.log
-uci rename network.@interface[-1]='TELEKOM'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
-uci set network.TELEKOM.proto='static'
-uci set network.TELEKOM.ipaddr=$CMOVIE_ip
-uci set network.TELEKOM.netmask='255.255.255.0'
-uci set network.TELEKOM.ip6assign='56'
-uci set network.TELEKOM.broadcast=$CMOVIE_broadcast
-uci set network.TELEKOM.gateway=$INET_GW
-uci set network.TELEKOM.dns=$CMOVIE_ip
-#uci set network.TELEKOM.dns=$INET_GW
-uci set network.TELEKOM.device='br-lan.110'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
+if [ "$VLAN_ENABLE" = "1" ]
+	then
+		uci add network interface >> /root/install.log
+		uci rename network.@interface[-1]='TELEKOM'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+		uci set network.TELEKOM.proto='static'
+		uci set network.TELEKOM.ipaddr=$CMOVIE_ip
+		uci set network.TELEKOM.netmask='255.255.255.0'
+		uci set network.TELEKOM.ip6assign='56'
+		uci set network.TELEKOM.broadcast=$CMOVIE_broadcast
+		uci set network.TELEKOM.gateway=$INET_GW
+		uci set network.TELEKOM.dns=$CMOVIE_ip
+		#uci set network.TELEKOM.dns=$INET_GW
+		uci set network.TELEKOM.device='br-lan.110'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
 
-uci add network interface >> /root/install.log
-uci rename network.@interface[-1]='CMOVIE'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
-uci set network.CMOVIE.proto='static'
-uci set network.CMOVIE.ipaddr=$CMOVIE_ip
-uci set network.CMOVIE.netmask='255.255.255.0'
-uci set network.CMOVIE.ip6assign='56'
-uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
-uci set network.CMOVIE.gateway=$INET_GW
-uci set network.CMOVIE.dns=$CMOVIE_ip
-#uci set network.CMOVIE.dns=$INET_GW
-uci set network.CMOVIE.device='br-lan.108'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
+		uci add network interface >> /root/install.log
+		uci rename network.@interface[-1]='CMOVIE'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+		uci set network.CMOVIE.proto='static'
+		uci set network.CMOVIE.ipaddr=$CMOVIE_ip
+		uci set network.CMOVIE.netmask='255.255.255.0'
+		uci set network.CMOVIE.ip6assign='56'
+		uci set network.CMOVIE.broadcast=$CMOVIE_broadcast
+		uci set network.CMOVIE.gateway=$INET_GW
+		uci set network.CMOVIE.dns=$CMOVIE_ip
+		#uci set network.CMOVIE.dns=$INET_GW
+		uci set network.CMOVIE.device='br-lan.108'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
 
-uci add network interface >> /root/install.log
-uci rename network.@interface[-1]='GUEST'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
-uci set network.GUEST.proto='static'
-uci set network.GUEST.ipaddr=$GUEST_ip
-uci set network.GUEST.netmask='255.255.255.0'
-uci set network.GUEST.ip6assign='56'
-uci set network.GUEST.broadcast=$GUEST_broadcast
-#uci set network.GUEST.gateway=$INET_GW
-uci set network.GUEST.dns=$GUEST_ip
-#uci set network.GUEST.dns=$INET_GW
-uci set network.GUEST.device='br-lan.107'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
+		uci add network interface >> /root/install.log
+		uci rename network.@interface[-1]='GUEST'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+		uci set network.GUEST.proto='static'
+		uci set network.GUEST.ipaddr=$GUEST_ip
+		uci set network.GUEST.netmask='255.255.255.0'
+		uci set network.GUEST.ip6assign='56'
+		uci set network.GUEST.broadcast=$GUEST_broadcast
+		#uci set network.GUEST.gateway=$INET_GW
+		uci set network.GUEST.dns=$GUEST_ip
+		#uci set network.GUEST.dns=$INET_GW
+		uci set network.GUEST.device='br-lan.107'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
 
-uci add network interface >> /root/install.log
-uci rename network.@interface[-1]='ENTERTAIN'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
-uci set network.ENTERTAIN.proto='static'
-uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
-uci set network.ENTERTAIN.netmask='255.255.255.0'
-uci set network.ENTERTAIN.ip6assign='56'
-uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
-uci set network.ENTERTAIN.gateway=$INET_GW
-uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
-#uci set network.ENTERTAIN.dns=$INET_GW
-uci set network.ENTERTAIN.device='br-lan.106'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
+		uci add network interface >> /root/install.log
+		uci rename network.@interface[-1]='ENTERTAIN'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+		uci set network.ENTERTAIN.proto='static'
+		uci set network.ENTERTAIN.ipaddr=$ENTERTAIN_ip
+		uci set network.ENTERTAIN.netmask='255.255.255.0'
+		uci set network.ENTERTAIN.ip6assign='56'
+		uci set network.ENTERTAIN.broadcast=$ENTERTAIN_broadcast
+		uci set network.ENTERTAIN.gateway=$INET_GW
+		uci set network.ENTERTAIN.dns=$ENTERTAIN_ip
+		#uci set network.ENTERTAIN.dns=$INET_GW
+		uci set network.ENTERTAIN.device='br-lan.106'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
 
-uci add network interface >> /root/install.log
-uci rename network.@interface[-1]='VOICE'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
-uci set network.VOICE.proto='static'
-uci set network.VOICE.ipaddr=$VOICE_ip
-uci set network.VOICE.netmask='255.255.255.0'
-uci set network.VOICE.ip6assign='56'
-uci set network.VOICE.broadcast=$VOICE_broadcast
-uci set network.VOICE.gateway=$INET_GW
-uci set network.VOICE.dns=$VOICE_ip
-#uci set network.VOICE.dns=$INET_GW
-uci set network.VOICE.device='br-lan.105'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
+		uci add network interface >> /root/install.log
+		uci rename network.@interface[-1]='VOICE'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+		uci set network.VOICE.proto='static'
+		uci set network.VOICE.ipaddr=$VOICE_ip
+		uci set network.VOICE.netmask='255.255.255.0'
+		uci set network.VOICE.ip6assign='56'
+		uci set network.VOICE.broadcast=$VOICE_broadcast
+		uci set network.VOICE.gateway=$INET_GW
+		uci set network.VOICE.dns=$VOICE_ip
+		#uci set network.VOICE.dns=$INET_GW
+		uci set network.VOICE.device='br-lan.105'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
 
-uci add network interface >> /root/install.log
-uci rename network.@interface[-1]='INET'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
-uci set network.INET.proto='static'
-uci set network.INET.ipaddr=$INET_ip
-uci set network.INET.netmask='255.255.255.0'
-uci set network.INET.ip6assign='56'
-uci set network.INET.broadcast=$INET_broadcast
-uci set network.INET.gateway=$INET_GW
-uci set network.INET.dns=$INET_ip
-#uci set network.INET.dns=$INET_GW
-uci set network.INET.device='br-lan.104'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
+		uci add network interface >> /root/install.log
+		uci rename network.@interface[-1]='INET'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+		uci set network.INET.proto='static'
+		uci set network.INET.ipaddr=$INET_ip
+		uci set network.INET.netmask='255.255.255.0'
+		uci set network.INET.ip6assign='56'
+		uci set network.INET.broadcast=$INET_broadcast
+		uci set network.INET.gateway=$INET_GW
+		uci set network.INET.dns=$INET_ip
+		#uci set network.INET.dns=$INET_GW
+		uci set network.INET.device='br-lan.104'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
 
-uci add network interface >> /root/install.log
-uci rename network.@interface[-1]='CONTROL'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
-uci set network.CONTROL.proto='static'
-uci set network.CONTROL.ipaddr=$CONTROL_ip
-uci set network.CONTROL.netmask='255.255.255.0'
-uci set network.CONTROL.ip6assign='56'
-uci set network.CONTROL.broadcast=$CONTROL_broadcast
-uci set network.CONTROL.gateway=$INET_GW
-uci set network.CONTROL.dns=$CONTROL_ip
-#uci set network.CONTROL.dns=$INET_GW
-uci set network.CONTROL.device='br-lan.103'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
+		uci add network interface >> /root/install.log
+		uci rename network.@interface[-1]='CONTROL'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+		uci set network.CONTROL.proto='static'
+		uci set network.CONTROL.ipaddr=$CONTROL_ip
+		uci set network.CONTROL.netmask='255.255.255.0'
+		uci set network.CONTROL.ip6assign='56'
+		uci set network.CONTROL.broadcast=$CONTROL_broadcast
+		uci set network.CONTROL.gateway=$INET_GW
+		uci set network.CONTROL.dns=$CONTROL_ip
+		#uci set network.CONTROL.dns=$INET_GW
+		uci set network.CONTROL.device='br-lan.103'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
 
-uci add network interface >> /root/install.log
-uci rename network.@interface[-1]='HCONTROL'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
-uci set network.HCONTROL.proto='static'
-uci set network.HCONTROL.ipaddr=$HCONTROL_ip
-uci set network.HCONTROL.netmask='255.255.255.0'
-uci set network.HCONTROL.ip6assign='56'
-uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
-uci set network.HCONTROL.gateway=$INET_GW
-uci set network.HCONTROL.dns=$HCONTROL_ip
-#uci set network.HCONTROL.dns=$INET_GW
-uci set network.HCONTROL.device='br-lan.102'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
+		uci add network interface >> /root/install.log
+		uci rename network.@interface[-1]='HCONTROL'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+		uci set network.HCONTROL.proto='static'
+		uci set network.HCONTROL.ipaddr=$HCONTROL_ip
+		uci set network.HCONTROL.netmask='255.255.255.0'
+		uci set network.HCONTROL.ip6assign='56'
+		uci set network.HCONTROL.broadcast=$HCONTROL_broadcast
+		uci set network.HCONTROL.gateway=$INET_GW
+		uci set network.HCONTROL.dns=$HCONTROL_ip
+		#uci set network.HCONTROL.dns=$INET_GW
+		uci set network.HCONTROL.device='br-lan.102'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
 
-uci add network interface >> /root/install.log
-uci rename network.@interface[-1]='SERVER'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
-uci set network.SERVER.proto='static'
-uci set network.SERVER.ipaddr=$SERVER_ip
-uci set network.SERVER.netmask='255.255.255.0'
-uci set network.SERVER.ip6assign='56'
-uci set network.SERVER.broadcast=$SERVER_broadcast
-uci set network.SERVER.gateway=$INET_GW
-uci set network.SERVER.dns=$SERVER_ip
-#uci set network.SERVER.dns=$INET_GW
-uci set network.SERVER.device='br-lan.101'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
-
+		uci add network interface >> /root/install.log
+		uci rename network.@interface[-1]='SERVER'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+		uci set network.SERVER.proto='static'
+		uci set network.SERVER.ipaddr=$SERVER_ip
+		uci set network.SERVER.netmask='255.255.255.0'
+		uci set network.SERVER.ip6assign='56'
+		uci set network.SERVER.broadcast=$SERVER_broadcast
+		uci set network.SERVER.gateway=$INET_GW
+		uci set network.SERVER.dns=$SERVER_ip
+		#uci set network.SERVER.dns=$INET_GW
+		uci set network.SERVER.device='br-lan.101'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+fi
 uci set network.wan=interface >> /root/install.log
 uci set network.wan.proto='static'
 uci set network.wan.netmask='255.255.255.0'
@@ -27822,300 +27824,304 @@ set_dhcp_sub() {
 		uci set dhcp.Blacklist.leasefile='/tmp/dhcp.leases'
 		uci set dhcp.Blacklist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
 		uci set dhcp.Blacklist.confdir='/etc/dnsmasq.d/Blacklist/'
-		if [ $(echo "$main_release < $release_check" | bc -1) -eq 1 ] 
+		if [ "$VLAN_ENABLE" = "1" ]
 			then
-				echo $main_release >> /root/install.log
-				uci add_list dhcp.Blacklist.notinterface='br-lan.105'
-				uci add_list dhcp.Blacklist.notinterface='br-lan.106'
-				uci add_list dhcp.Blacklist.notinterface='br-lan.107'
-				uci add_list dhcp.Blacklist.notinterface='br-lan.108'
-				uci add_list dhcp.Blacklist.notinterface='br-lan.110'
-				uci add_list dhcp.Blacklist.notinterface='loopback'
-			else
-			    echo $main_release >> /root/install.log
-				uci add_list dhcp.Blacklist.interface='br-lan.105'
-				uci add_list dhcp.Blacklist.interface='br-lan.106'
-				uci add_list dhcp.Blacklist.interface='br-lan.107'
-				uci add_list dhcp.Blacklist.interface='br-lan.108'
-				uci add_list dhcp.Blacklist.interface='br-lan.110'
-				uci add_list dhcp.Blacklist.interface='loopback'
+				if [ $(echo "$main_release < $release_check" | bc -1) -eq 1 ] 
+					then
+						echo $main_release >> /root/install.log
+						uci add_list dhcp.Blacklist.notinterface='br-lan.105'
+						uci add_list dhcp.Blacklist.notinterface='br-lan.106'
+						uci add_list dhcp.Blacklist.notinterface='br-lan.107'
+						uci add_list dhcp.Blacklist.notinterface='br-lan.108'
+						uci add_list dhcp.Blacklist.notinterface='br-lan.110'
+						uci add_list dhcp.Blacklist.notinterface='loopback'
+					else
+					    echo $main_release >> /root/install.log
+						uci add_list dhcp.Blacklist.interface='br-lan.105'
+						uci add_list dhcp.Blacklist.interface='br-lan.106'
+						uci add_list dhcp.Blacklist.interface='br-lan.107'
+						uci add_list dhcp.Blacklist.interface='br-lan.108'
+						uci add_list dhcp.Blacklist.interface='br-lan.110'
+						uci add_list dhcp.Blacklist.interface='loopback'
+				fi
+				uci add_list dhcp.Blacklist.interface='br-lan.104'
+				uci add_list dhcp.Blacklist.interface='br-lan.101' 
+				uci add_list dhcp.Blacklist.interface='br-lan.102'
+				uci add_list dhcp.Blacklist.interface='br-lan.103'
 		fi
-		uci add_list dhcp.Blacklist.interface='br-lan.104'
-		uci add_list dhcp.Blacklist.interface='br-lan.101' 
-		uci add_list dhcp.Blacklist.interface='br-lan.102'
-		uci add_list dhcp.Blacklist.interface='br-lan.103'
 		uci add_list dhcp.Blacklist.interface='br-lan.1'
 		uci set dhcp:Blacklist.filter_a='0'
 		uci set dhcp:Blacklist.filter_aaaa='1'
-
-		if [ $(echo "$main_release < $release_check" | bc -1) -eq 1  ] 
+		if [ "$VLAN_ENABLE" = "1" ]
 			then
+				if [ $(echo "$main_release < $release_check" | bc -1) -eq 1  ] 
+					then
 
-				uci set dhcp.Whitelist=dnsmasq
-				uci set dhcp.Whitelist.domainneeded='1'
-				uci set dhcp.Whitelist.boguspriv='1'
-				uci set dhcp.Whitelist.filterwin2k='0'
-				uci set dhcp.Whitelist.localise_queries='1'
-				uci set dhcp.Whitelist.rebind_protection='1'
-				uci set dhcp.Whitelist.rebind_localhost='1'
-				uci set dhcp.Whitelist.expandhosts='1'
-				uci set dhcp.Whitelist.nonegcache='0'
-				uci set dhcp.Whitelist.authoritative='1'
-				uci set dhcp.Whitelist.readethers='1'
-				uci set dhcp.Whitelist.nonwildcard='1'
-				uci set dhcp.Whitelist.localservice='1'
-				uci set dhcp.Whitelist.ednspacket_max='1232'
-				uci set dhcp.Whitelist.cachelocal='1'
-				uci set dhcp.Whitelist.cachesize='1000'
-				uci set dhcp.Whitelist.dnssec='1'
-				uci set dhcp.Whitelist.dnsseccheck='1'
-				uci set dhcp.Whitelist.server=$DNS_IP'#'$DNSMASQ_Relay_port
-				uci set dhcp.Whitelist.leasefile='/tmp/dhcp.leases'
-				uci set dhcp.Whitelist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
-				uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
-				uci add_list dhcp.Whitelist.interface='br-lan.105'
-				uci add_list dhcp.Whitelist.interface='br-lan.106'
-				uci add_list dhcp.Whitelist.interface='br-lan.107'
-				uci add_list dhcp.Whitelist.interface='br-lan.108'
-				uci add_list dhcp.Whitelist.interface='br-lan.110'
-				uci add_list dhcp.Whitelist.interface='loopback'
-				uci add_list dhcp.Whitelist.notinterface='br-lan.104'
-				uci add_list dhcp.Whitelist.notinterface='br-lan.101'
-				uci add_list dhcp.Whitelist.notinterface='br-lan.102'
-				uci add_list dhcp.Whitelist.notinterface='br-lan.103'
-				uci add_list dhcp.Whitelist.notinterface='br-lan.1'
-				uci set dhcp:Whitelist.filter_a='0'
-				uci set dhcp:Whitelist.filter_aaaa='1'
-		fi
-		uci set dhcp.CMOVIE=dhcp
-		uci set dhcp.CMOVIE.interface='CMOVIE'
-		uci set dhcp.CMOVIE.start='20'
-		uci set dhcp.CMOVIE.limit='250'
-		uci set dhcp.CMOVIE.leasetime='24h'
-		uci set dhcp.CMOVIE.netmask='255.255.255.0'
-		uci set dhcp.CMOVIE.domain=$CMOVIE_domain
-		uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
-		#uci set dhcp.CMOVIE.instance='Whitelist'
-		uci set dhcp.CMOVIE.dhcpv4='server'
-		uci set dhcp.CMOVIE.dhcpv6='server'
-		uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
-		#uci add_list dhcp.CMOVIE.dhcp_option='6,'$INET_GW 
-		uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
-		uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
-		uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
-		if [ "$DNS_IP" != "127.0.0.1" ]
-			then
-				uci set dhcp.CMOVIE.server=$DNS_IP'#'$DNSMASQ_Relay_port
-			else
-				uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNSMASQ_Relay_port
-		fi
+						uci set dhcp.Whitelist=dnsmasq
+						uci set dhcp.Whitelist.domainneeded='1'
+						uci set dhcp.Whitelist.boguspriv='1'
+						uci set dhcp.Whitelist.filterwin2k='0'
+						uci set dhcp.Whitelist.localise_queries='1'
+						uci set dhcp.Whitelist.rebind_protection='1'
+						uci set dhcp.Whitelist.rebind_localhost='1'
+						uci set dhcp.Whitelist.expandhosts='1'
+						uci set dhcp.Whitelist.nonegcache='0'
+						uci set dhcp.Whitelist.authoritative='1'
+						uci set dhcp.Whitelist.readethers='1'
+						uci set dhcp.Whitelist.nonwildcard='1'
+						uci set dhcp.Whitelist.localservice='1'
+						uci set dhcp.Whitelist.ednspacket_max='1232'
+						uci set dhcp.Whitelist.cachelocal='1'
+						uci set dhcp.Whitelist.cachesize='1000'
+						uci set dhcp.Whitelist.dnssec='1'
+						uci set dhcp.Whitelist.dnsseccheck='1'
+						uci set dhcp.Whitelist.server=$DNS_IP'#'$DNSMASQ_Relay_port
+						uci set dhcp.Whitelist.leasefile='/tmp/dhcp.leases'
+						uci set dhcp.Whitelist.resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+						uci set dhcp.Whitelist.confdir='/etc/dnsmasq.d/Whitelist/'
+						uci add_list dhcp.Whitelist.interface='br-lan.105'
+						uci add_list dhcp.Whitelist.interface='br-lan.106'
+						uci add_list dhcp.Whitelist.interface='br-lan.107'
+						uci add_list dhcp.Whitelist.interface='br-lan.108'
+						uci add_list dhcp.Whitelist.interface='br-lan.110'
+						uci add_list dhcp.Whitelist.interface='loopback'
+						uci add_list dhcp.Whitelist.notinterface='br-lan.104'
+						uci add_list dhcp.Whitelist.notinterface='br-lan.101'
+						uci add_list dhcp.Whitelist.notinterface='br-lan.102'
+						uci add_list dhcp.Whitelist.notinterface='br-lan.103'
+						uci add_list dhcp.Whitelist.notinterface='br-lan.1'
+						uci set dhcp:Whitelist.filter_a='0'
+						uci set dhcp:Whitelist.filter_aaaa='1'
+				fi
+				uci set dhcp.CMOVIE=dhcp
+				uci set dhcp.CMOVIE.interface='CMOVIE'
+				uci set dhcp.CMOVIE.start='20'
+				uci set dhcp.CMOVIE.limit='250'
+				uci set dhcp.CMOVIE.leasetime='24h'
+				uci set dhcp.CMOVIE.netmask='255.255.255.0'
+				uci set dhcp.CMOVIE.domain=$CMOVIE_domain
+				uci set dhcp.CMOVIE.local='/'$CMOVIE_domain'/'
+				#uci set dhcp.CMOVIE.instance='Whitelist'
+				uci set dhcp.CMOVIE.dhcpv4='server'
+				uci set dhcp.CMOVIE.dhcpv6='server'
+				uci add_list dhcp.CMOVIE.dhcp_option='6,'$CMOVIE_ip 
+				#uci add_list dhcp.CMOVIE.dhcp_option='6,'$INET_GW 
+				uci add_list dhcp.CMOVIE.dhcp_option='3,'$CMOVIE_ip
+				uci add_list dhcp.CMOVIE.dhcp_option='42,'$INET_GW 
+				uci add_list dhcp.CMOVIE.dhcp_option='15,'$CMOVIE_domain
+				if [ "$DNS_IP" != "127.0.0.1" ]
+					then
+						uci set dhcp.CMOVIE.server=$DNS_IP'#'$DNSMASQ_Relay_port
+					else
+						uci set dhcp.CMOVIE.server=$CMOVIE_ip'#'$DNSMASQ_Relay_port
+				fi
 
-		uci set dhcp.CONTROL=dhcp
-		uci set dhcp.CONTROL.interface='CONTROL'
-		uci set dhcp.CONTROL.start='10'
-		uci set dhcp.CONTROL.limit='250'
-		uci set dhcp.CONTROL.leasetime='24h'
-		uci set dhcp.CONTROL.netmask='255.255.255.0'	
-		uci set dhcp.CONTROL.domain=$CONTROL_domain
-		uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
-		#uci set dhcp.CONTROL.instance='Blacklist'
-		uci set dhcp.CONTROL.dhcpv4='server'
-		uci set dhcp.CONTROL.dhcpv6='server'
-		uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip 
-		#uci add_list dhcp.CONTROL.dhcp_option='6,'$INET_GW 
-		uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
-		uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
-		uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
-		if [ "$DNS_IP" != "127.0.0.1" ]
-			then
-				uci set dhcp.CONTROL.server=$DNS_IP'#'$DNSMASQ_Relay_port
-			else
-				uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNSMASQ_Relay_port
-		fi
+				uci set dhcp.CONTROL=dhcp
+				uci set dhcp.CONTROL.interface='CONTROL'
+				uci set dhcp.CONTROL.start='10'
+				uci set dhcp.CONTROL.limit='250'
+				uci set dhcp.CONTROL.leasetime='24h'
+				uci set dhcp.CONTROL.netmask='255.255.255.0'	
+				uci set dhcp.CONTROL.domain=$CONTROL_domain
+				uci set dhcp.CONTROL.local='/'$CONTROL_domain'/'
+				#uci set dhcp.CONTROL.instance='Blacklist'
+				uci set dhcp.CONTROL.dhcpv4='server'
+				uci set dhcp.CONTROL.dhcpv6='server'
+				uci add_list dhcp.CONTROL.dhcp_option='6,'$CONTROL_ip 
+				#uci add_list dhcp.CONTROL.dhcp_option='6,'$INET_GW 
+				uci add_list dhcp.CONTROL.dhcp_option='3,'$CONTROL_ip
+				uci add_list dhcp.CONTROL.dhcp_option='42,'$INET_GW 
+				uci add_list dhcp.CONTROL.dhcp_option='15,'$CONTROL_domain
+				if [ "$DNS_IP" != "127.0.0.1" ]
+					then
+						uci set dhcp.CONTROL.server=$DNS_IP'#'$DNSMASQ_Relay_port
+					else
+						uci set dhcp.CONTROL.server=$CONTROL_ip'#'$DNSMASQ_Relay_port
+				fi
 
-		uci set dhcp.ENTERTAIN=dhcp
-		uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
-		uci set dhcp.ENTERTAIN.start='10'
-		uci set dhcp.ENTERTAIN.limit='250'
-		uci set dhcp.ENTERTAIN.leasetime='24h'
-		uci set dhcp.ENTERTAIN.netmask='255.255.255.0'
-		uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
-		uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
-		#uci set dhcp.ENTERTAIN.instance='Whitelist'
-		uci set dhcp.ENTERTAIN.dhcpv4='server'
-		uci set dhcp.ENTERTAIN.dhcpv6='server'
-		uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
-		#uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$INET_GW 
-		uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
-		uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
-		uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
-		if [ "$DNS_IP" != "127.0.0.1" ]
-			then
-				uci set dhcp.ENTERTAIN.server=$DNS_IP'#'$DNSMASQ_Relay_port
-			else
-				uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNSMASQ_Relay_port
-		fi
+				uci set dhcp.ENTERTAIN=dhcp
+				uci set dhcp.ENTERTAIN.interface='ENTERTAIN'
+				uci set dhcp.ENTERTAIN.start='10'
+				uci set dhcp.ENTERTAIN.limit='250'
+				uci set dhcp.ENTERTAIN.leasetime='24h'
+				uci set dhcp.ENTERTAIN.netmask='255.255.255.0'
+				uci set dhcp.ENTERTAIN.domain=$ENTERTAIN_domain
+				uci set dhcp.ENTERTAIN.local='/'$ENTERTAIN_domain'/'
+				#uci set dhcp.ENTERTAIN.instance='Whitelist'
+				uci set dhcp.ENTERTAIN.dhcpv4='server'
+				uci set dhcp.ENTERTAIN.dhcpv6='server'
+				uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$ENTERTAIN_ip 
+				#uci add_list dhcp.ENTERTAIN.dhcp_option='6,'$INET_GW 
+				uci add_list dhcp.ENTERTAIN.dhcp_option='3,'$ENTERTAIN_ip
+				uci add_list dhcp.ENTERTAIN.dhcp_option='42,'$INET_GW 
+				uci add_list dhcp.ENTERTAIN.dhcp_option='15,'$ENTERTAIN_domain
+				if [ "$DNS_IP" != "127.0.0.1" ]
+					then
+						uci set dhcp.ENTERTAIN.server=$DNS_IP'#'$DNSMASQ_Relay_port
+					else
+						uci set dhcp.ENTERTAIN.server=$ENTERTAIN_ip'#'$DNSMASQ_Relay_port
+				fi
 
-		uci set dhcp.GUEST=dhcp
-		uci set dhcp.GUEST.interface='GUEST'
-		uci set dhcp.GUEST.start='10'
-		uci set dhcp.GUEST.limit='250'
-		uci set dhcp.GUEST.leasetime='24h'
-		uci set dhcp.GUEST.netmask='255.255.255.0'
-		uci set dhcp.GUEST.domain=$GUEST_domain
-		uci set dhcp.GUEST.local='/'$GUEST_domain'/'
-		#uci set dhcp.GUEST.instance='Whitelist'
-		uci set dhcp.GUEST.dhcpv4='server'
-		uci set dhcp.GUEST.dhcpv6='server'
-		uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
-		#uci add_list dhcp.GUEST.dhcp_option='6,'$INET_GW 
-		uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
-		uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
-		uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
-		if [ "$DNS_IP" != "127.0.0.1" ]
-			then
-				uci set dhcp.GUEST.server=$DNS_IP'#'$DNSMASQ_Relay_port
-			else
-				uci set dhcp.GUEST.server=$GUEST_ip'#'$DNSMASQ_Relay_port
-		fi
+				uci set dhcp.GUEST=dhcp
+				uci set dhcp.GUEST.interface='GUEST'
+				uci set dhcp.GUEST.start='10'
+				uci set dhcp.GUEST.limit='250'
+				uci set dhcp.GUEST.leasetime='24h'
+				uci set dhcp.GUEST.netmask='255.255.255.0'
+				uci set dhcp.GUEST.domain=$GUEST_domain
+				uci set dhcp.GUEST.local='/'$GUEST_domain'/'
+				#uci set dhcp.GUEST.instance='Whitelist'
+				uci set dhcp.GUEST.dhcpv4='server'
+				uci set dhcp.GUEST.dhcpv6='server'
+				uci add_list dhcp.GUEST.dhcp_option='6,'$GUEST_ip 
+				#uci add_list dhcp.GUEST.dhcp_option='6,'$INET_GW 
+				uci add_list dhcp.GUEST.dhcp_option='3,'$GUEST_ip
+				uci add_list dhcp.GUEST.dhcp_option='42,'$INET_GW 
+				uci add_list dhcp.GUEST.dhcp_option='15,'$GUEST_domain
+				if [ "$DNS_IP" != "127.0.0.1" ]
+					then
+						uci set dhcp.GUEST.server=$DNS_IP'#'$DNSMASQ_Relay_port
+					else
+						uci set dhcp.GUEST.server=$GUEST_ip'#'$DNSMASQ_Relay_port
+				fi
 
-		uci set dhcp.HCONTROL=dhcp
-		uci set dhcp.HCONTROL.interface='HCONTROL'
-		uci set dhcp.HCONTROL.start='10'
-		uci set dhcp.HCONTROL.limit='250'
-		uci set dhcp.HCONTROL.leasetime='24h'
-		uci set dhcp.HCONTROL.netmask='255.255.255.0'
-		uci set dhcp.HCONTROL.domain=$HCONTROL_domain
-		uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
-		#uci set dhcp.HCONTROL.instance='Blacklist'
-		uci set dhcp.HCONTROL.dhcpv4='server'
-		uci set dhcp.HCONTROL.dhcpv6='server'
-		uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
-		#uci add_list dhcp.HCONTROL.dhcp_option='6,'$INET_GW 
-		uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
-		uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
-		uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
-		if [ "$DNS_IP" != "127.0.0.1" ]
-			then
-				uci set dhcp.HCONTROL.server=$DNS_IP'#'$DNSMASQ_Relay_port
-			else
-				uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNSMASQ_Relay_port
-		fi
+			uci set dhcp.HCONTROL=dhcp
+			uci set dhcp.HCONTROL.interface='HCONTROL'
+			uci set dhcp.HCONTROL.start='10'
+			uci set dhcp.HCONTROL.limit='250'
+			uci set dhcp.HCONTROL.leasetime='24h'
+			uci set dhcp.HCONTROL.netmask='255.255.255.0'
+			uci set dhcp.HCONTROL.domain=$HCONTROL_domain
+			uci set dhcp.HCONTROL.local='/'$HCONTROL_domain'/'
+			#uci set dhcp.HCONTROL.instance='Blacklist'
+			uci set dhcp.HCONTROL.dhcpv4='server'
+			uci set dhcp.HCONTROL.dhcpv6='server'
+			uci add_list dhcp.HCONTROL.dhcp_option='6,'$HCONTROL_ip 
+			#uci add_list dhcp.HCONTROL.dhcp_option='6,'$INET_GW 
+			uci add_list dhcp.HCONTROL.dhcp_option='3,'$HCONTROL_ip
+			uci add_list dhcp.HCONTROL.dhcp_option='42,'$INET_GW 
+			uci add_list dhcp.HCONTROL.dhcp_option='15,'$HCONTROL_domain
+			if [ "$DNS_IP" != "127.0.0.1" ]
+				then
+					uci set dhcp.HCONTROL.server=$DNS_IP'#'$DNSMASQ_Relay_port
+				else
+					uci set dhcp.HCONTROL.server=$HCONTROL_ip'#'$DNSMASQ_Relay_port
+			fi
 
-		uci set dhcp.INET=dhcp
-		uci set dhcp.INET.interface='INET'
-		uci set dhcp.INET.start='10'
-		uci set dhcp.INET.limit='250'
-		uci set dhcp.INET.leasetime='24h'
-		uci set dhcp.INET.netmask='255.255.255.0'
-		uci set dhcp.INET.domain=$INET_domain
-		uci set dhcp.INET.local='/'$INET_domain'/'
-		#uci set dhcp.INET.instance='Blacklist'
-		uci set dhcp.INET.dhcpv4='server'
-		uci set dhcp.INET.dhcpv6='server'
-		uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
-		#uci add_list dhcp.INET.dhcp_option='6,'$INET_GW 
-		uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
-		uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
-		uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
-		if [ "$DNS_IP" != "127.0.0.1" ]
-			then
-				uci set dhcp.INET.server=$DNS_IP'#'$DNSMASQ_Relay_port
-			else
-				uci set dhcp.INET.server=$INET_ip'#'$DNSMASQ_Relay_port
-		fi
+			uci set dhcp.INET=dhcp
+			uci set dhcp.INET.interface='INET'
+			uci set dhcp.INET.start='10'
+			uci set dhcp.INET.limit='250'
+			uci set dhcp.INET.leasetime='24h'
+			uci set dhcp.INET.netmask='255.255.255.0'
+			uci set dhcp.INET.domain=$INET_domain
+			uci set dhcp.INET.local='/'$INET_domain'/'
+			#uci set dhcp.INET.instance='Blacklist'
+			uci set dhcp.INET.dhcpv4='server'
+			uci set dhcp.INET.dhcpv6='server'
+			uci add_list dhcp.INET.dhcp_option='6,'$INET_ip 
+			#uci add_list dhcp.INET.dhcp_option='6,'$INET_GW 
+			uci add_list dhcp.INET.dhcp_option='3,'$INET_ip
+			uci add_list dhcp.INET.dhcp_option='42,'$INET_GW 
+			uci add_list dhcp.INET.dhcp_option='15,'$INET_domain
+			if [ "$DNS_IP" != "127.0.0.1" ]
+				then
+					uci set dhcp.INET.server=$DNS_IP'#'$DNSMASQ_Relay_port
+				else
+					uci set dhcp.INET.server=$INET_ip'#'$DNSMASQ_Relay_port
+			fi
 
-		uci del dhcp.lan.ra_slaac
-		uci set dhcp.lan.start='10'
-		uci set dhcp.lan.limit='250'
-		uci set dhcp.lan.leasetime='24h'
-		uci set dhcp.lan.netmask='255.255.255.0'
-		uci set dhcp.lan.domain='lan.local'
-		uci set dhcp.lan.local='/lan.local/'
-		#uci set dhcp.lan.instance='Blacklist'
-		uci set dhcp.lan.dhcpv4='server'
-		uci set dhcp.lan.dhcpv6='server'
-		uci add_list dhcp.lan.dhcp_option='6,'$LAN_ip 
-		#uci add_list dhcp.lan.dhcp_option='6,'$INET_GW 
-		uci add_list dhcp.lan.dhcp_option='3,'$LAN_ip
-		uci add_list dhcp.lan.dhcp_option='42,'$INET_GW 
-		uci add_list dhcp.lan.dhcp_option='15,'$LAN_domain
-		
-		if [ "$DNS_IP" != "127.0.0.1" ]
-			then
-				uci set dhcp.lan.server=$DNS_IP'#'$DNSMASQ_Relay_port
-			else
-				uci set dhcp.lan.server=$LAN_ip'#'$DNSMASQ_Relay_port
-		fi
+			uci del dhcp.lan.ra_slaac
+			uci set dhcp.lan.start='10'
+			uci set dhcp.lan.limit='250'
+			uci set dhcp.lan.leasetime='24h'
+			uci set dhcp.lan.netmask='255.255.255.0'
+			uci set dhcp.lan.domain='lan.local'
+			uci set dhcp.lan.local='/lan.local/'
+			#uci set dhcp.lan.instance='Blacklist'
+			uci set dhcp.lan.dhcpv4='server'
+			uci set dhcp.lan.dhcpv6='server'
+			uci add_list dhcp.lan.dhcp_option='6,'$LAN_ip 
+			#uci add_list dhcp.lan.dhcp_option='6,'$INET_GW 
+			uci add_list dhcp.lan.dhcp_option='3,'$LAN_ip
+			uci add_list dhcp.lan.dhcp_option='42,'$INET_GW 
+			uci add_list dhcp.lan.dhcp_option='15,'$LAN_domain
+			
+			if [ "$DNS_IP" != "127.0.0.1" ]
+				then
+					uci set dhcp.lan.server=$DNS_IP'#'$DNSMASQ_Relay_port
+				else
+					uci set dhcp.lan.server=$LAN_ip'#'$DNSMASQ_Relay_port
+			fi
 
-		uci set dhcp.SERVER=dhcp
-		uci set dhcp.SERVER.interface='SERVER'
-		uci set dhcp.SERVER.start='10'
-		uci set dhcp.SERVER.limit='250'
-		uci set dhcp.SERVER.leasetime='24h'
-		uci set dhcp.SERVER.netmask='255.255.255.0'
-		uci set dhcp.SERVER.domain=$SERVER_domain
-		uci set dhcp.SERVER.local='/'$SERVER_domain'/'
-		#uci set dhcp.SERVER.instance='Blacklist'
-		uci set dhcp.SERVER.dhcpv4='server'
-		uci set dhcp.SERVER.dhcpv6='server'
-		uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
-		#uci add_list dhcp.SERVER.dhcp_option='6,'$INET_GW 
-		uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
-		uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
-		uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
-		if [ "$DNS_IP" != "127.0.0.1" ]
-			then
-				uci set dhcp.SERVER.server=$DNS_IP'#'$DNSMASQ_Relay_port
-			else
-				uci set dhcp.SERVER.server=$SERVER_ip'#'$DNSMASQ_Relay_port
-		fi
+			uci set dhcp.SERVER=dhcp
+			uci set dhcp.SERVER.interface='SERVER'
+			uci set dhcp.SERVER.start='10'
+			uci set dhcp.SERVER.limit='250'
+			uci set dhcp.SERVER.leasetime='24h'
+			uci set dhcp.SERVER.netmask='255.255.255.0'
+			uci set dhcp.SERVER.domain=$SERVER_domain
+			uci set dhcp.SERVER.local='/'$SERVER_domain'/'
+			#uci set dhcp.SERVER.instance='Blacklist'
+			uci set dhcp.SERVER.dhcpv4='server'
+			uci set dhcp.SERVER.dhcpv6='server'
+			uci add_list dhcp.SERVER.dhcp_option='6,'$SERVER_ip 
+			#uci add_list dhcp.SERVER.dhcp_option='6,'$INET_GW 
+			uci add_list dhcp.SERVER.dhcp_option='3,'$SERVER_ip
+			uci add_list dhcp.SERVER.dhcp_option='42,'$INET_GW 
+			uci add_list dhcp.SERVER.dhcp_option='15,'$SERVER_domain
+			if [ "$DNS_IP" != "127.0.0.1" ]
+				then
+					uci set dhcp.SERVER.server=$DNS_IP'#'$DNSMASQ_Relay_port
+				else
+					uci set dhcp.SERVER.server=$SERVER_ip'#'$DNSMASQ_Relay_port
+			fi
 
+			uci set dhcp.TELEKOM=dhcp
+			uci set dhcp.TELEKOM.interface='TELEKOM'
+			uci set dhcp.TELEKOM.start='10'
+			uci set dhcp.TELEKOM.limit='250'
+			uci set dhcp.TELEKOM.leasetime='24h'
+			uci set dhcp.TELEKOM.netmask='255.255.255.0'
+			uci set dhcp.TELEKOM.domain=$TELEKOM_domain
+			uci set dhcp.TELEKOM.local='/'$TELEKOM_domain'/'
+			#uci set dhcp.TELEKOM.instance='Whitelist'
+			uci set dhcp.TELEKOM.dhcpv4='server'
+			uci set dhcp.TELEKOM.dhcpv6='server'
+			uci add_list dhcp.TELEKOM.dhcp_option='6,'$TELEKOM_ip 
+			#uci add_list dhcp.TELEKOM.dhcp_option='6,'$INET_GW 
+			uci add_list dhcp.TELEKOM.dhcp_option='3,'$TELEKOM_ip
+			uci add_list dhcp.TELEKOM.dhcp_option='42,'$INET_GW 
+			uci add_list dhcp.TELEKOM.dhcp_option='15,'$TELEKOM_domain
+			if [ "$DNS_IP" != "127.0.0.1" ]
+				then
+					uci set dhcp.TELEKOM.server=$DNS_IP'#'$DNSMASQ_Relay_port
+				else
+					uci set dhcp.TELEKOM.server=$TELEKOM_ip'#'$DNSMASQ_Relay_port
+			fi
 
-		uci set dhcp.TELEKOM=dhcp
-		uci set dhcp.TELEKOM.interface='TELEKOM'
-		uci set dhcp.TELEKOM.start='10'
-		uci set dhcp.TELEKOM.limit='250'
-		uci set dhcp.TELEKOM.leasetime='24h'
-		uci set dhcp.TELEKOM.netmask='255.255.255.0'
-		uci set dhcp.TELEKOM.domain=$TELEKOM_domain
-		uci set dhcp.TELEKOM.local='/'$TELEKOM_domain'/'
-		#uci set dhcp.TELEKOM.instance='Whitelist'
-		uci set dhcp.TELEKOM.dhcpv4='server'
-		uci set dhcp.TELEKOM.dhcpv6='server'
-		uci add_list dhcp.TELEKOM.dhcp_option='6,'$TELEKOM_ip 
-		#uci add_list dhcp.TELEKOM.dhcp_option='6,'$INET_GW 
-		uci add_list dhcp.TELEKOM.dhcp_option='3,'$TELEKOM_ip
-		uci add_list dhcp.TELEKOM.dhcp_option='42,'$INET_GW 
-		uci add_list dhcp.TELEKOM.dhcp_option='15,'$TELEKOM_domain
-		if [ "$DNS_IP" != "127.0.0.1" ]
-			then
-				uci set dhcp.TELEKOM.server=$DNS_IP'#'$DNSMASQ_Relay_port
-			else
-				uci set dhcp.TELEKOM.server=$TELEKOM_ip'#'$DNSMASQ_Relay_port
-		fi
-
-		uci set dhcp.VOICE=dhcp
-		uci set dhcp.VOICE.interface='VOICE'
-		uci set dhcp.VOICE.start='10'
-		uci set dhcp.VOICE.limit='250'
-		uci set dhcp.VOICE.leasetime='24h'
-		uci set dhcp.VOICE.netmask='255.255.255.0'
-		uci set dhcp.VOICE.domain=$VOICE_domain	
-		uci set dhcp.VOICE.local='/'$VOICE_domain'/'
-		#uci set dhcp.VOICE.instance='Whitelist'
-		uci set dhcp.VOICE.dhcpv4='server'
-		uci set dhcp.VOICE.dhcpv6='server'
-		uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
-		#uci add_list dhcp.VOICE.dhcp_option='6,'$INET_GW 	
-		uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
-		uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
-		uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
-		if [ "$DNS_IP" != "127.0.0.1" ]
-			then
-				uci set dhcp.VOICE.server=$DNS_IP'#'$DNSMASQ_Relay_port
-			else
-				uci set dhcp.VOICE.server=$VOICE_ip'#'$DNSMASQ_Relay_port
+			uci set dhcp.VOICE=dhcp
+			uci set dhcp.VOICE.interface='VOICE'
+			uci set dhcp.VOICE.start='10'
+			uci set dhcp.VOICE.limit='250'
+			uci set dhcp.VOICE.leasetime='24h'
+			uci set dhcp.VOICE.netmask='255.255.255.0'
+			uci set dhcp.VOICE.domain=$VOICE_domain	
+			uci set dhcp.VOICE.local='/'$VOICE_domain'/'
+			#uci set dhcp.VOICE.instance='Whitelist'
+			uci set dhcp.VOICE.dhcpv4='server'
+			uci set dhcp.VOICE.dhcpv6='server'
+			uci add_list dhcp.VOICE.dhcp_option='6,'$VOICE_ip 
+			#uci add_list dhcp.VOICE.dhcp_option='6,'$INET_GW 	
+			uci add_list dhcp.VOICE.dhcp_option='3,'$VOICE_ip
+			uci add_list dhcp.VOICE.dhcp_option='42,'$INET_GW 
+			uci add_list dhcp.VOICE.dhcp_option='15,'$VOICE_domain
+			if [ "$DNS_IP" != "127.0.0.1" ]
+				then
+					uci set dhcp.VOICE.server=$DNS_IP'#'$DNSMASQ_Relay_port
+				else
+					uci set dhcp.VOICE.server=$VOICE_ip'#'$DNSMASQ_Relay_port
+			fi
 		fi
 
 mkdir -p /etc/dnsmasq.d  >> /root/install.log
@@ -28364,18 +28370,21 @@ uci commit dhcp && reload_config >> install.log
 }
 
 create_firewall_zones() {
-uci del firewall.@zone[0].network
-uci add_list firewall.@zone[0].network='lan'
-processes=$(uci commit && reload_config)
-wait $processes >> /root/install.log
+	if [ "$VLAN_ENABLE" = "1" ]
+		then
+			uci del firewall.@zone[0].network
+			uci add_list firewall.@zone[0].network='lan'
+			processes=$(uci commit && reload_config)
+			wait $processes >> /root/install.log
 
-fwzone=""
+			fwzone=""
 
-fwzone=$(uci show firewall | grep zone | grep "name='TELEKOM'")
-if [ -z "$fwzone" ] 
-	then
-		create_firewall_zones_sub
-fi
+			fwzone=$(uci show firewall | grep zone | grep "name='TELEKOM'")
+			if [ -z "$fwzone" ] 
+				then
+					create_firewall_zones_sub
+			fi
+	fi
 }
 
 create_firewall_zones_sub() {
@@ -28718,6 +28727,8 @@ uci set firewall.Allow_Only_WebClient6.enabled='1'
 uci set firewall.Allow_Only_WebClient7.enabled='1'
 uci set firewall.Allow_Only_WebClient8.enabled='1'
 uci set firewall.otherProt.enabled='1'
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.enabled="1"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.enabled="1"
 uci set firewall.blockIncoming.enabled='1'
 processes=$(uci commit && reload_config)
 wait $processes >> /root/install.log
@@ -28742,6 +28753,8 @@ uci set firewall.Allow_Only_WebClient6.enabled='0'
 uci set firewall.Allow_Only_WebClient7.enabled='0'
 uci set firewall.Allow_Only_WebClient8.enabled='0'
 uci set firewall.otherProt.enabled='1'
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.enabled="1"
+uci set firewall.Block_all_other_EXT_HEIGHT_PORT.enabled="1"
 uci set firewall.blockIncoming.enabled='1'
 processes=$(uci commit && reload_config)
 wait $processes >> /root/install.log
@@ -31014,72 +31027,73 @@ uci set firewall.Allow_only_UPNP.dest="wan"
 uci set firewall.Allow_only_UPNP.target="REJECT"
 uci set firewall.Allow_only_UPNP.enabled="0"
 
+if [ "$VLAN_ENABLE" = "1" ]
+	then
+		uci set firewall.Allow_Only_WebClient1=rule
+		uci set firewall.Allow_Only_WebClient1.src='CONTROL'
+		uci set firewall.Allow_Only_WebClient1.dest='wan'
+		uci set firewall.Allow_Only_WebClient1.name='Allow_only_WebClient_CONTROL'
+		uci set firewall.Allow_Only_WebClient1.target='REJECT'
+		uci set firewall.Allow_Only_WebClient1.dest_port="$all_other_OfficeWebClient_port"
+		uci set firewall.Allow_Only_WebClient1.enabled='0'
 
-uci set firewall.Allow_Only_WebClient1=rule
-uci set firewall.Allow_Only_WebClient1.src='CONTROL'
-uci set firewall.Allow_Only_WebClient1.dest='wan'
-uci set firewall.Allow_Only_WebClient1.name='Allow_only_WebClient_CONTROL'
-uci set firewall.Allow_Only_WebClient1.target='REJECT'
-uci set firewall.Allow_Only_WebClient1.dest_port="$all_other_OfficeWebClient_port"
-uci set firewall.Allow_Only_WebClient1.enabled='0'
 
+		uci set firewall.Allow_Only_WebClient2=rule
+		uci set firewall.Allow_Only_WebClient2.src='HCONTROL'
+		uci set firewall.Allow_Only_WebClient2.dest='wan'
+		uci set firewall.Allow_Only_WebClient2.name='Allow_only_WebClient_HCONTROL'
+		uci set firewall.Allow_Only_WebClient2.target='REJECT'
+		uci set firewall.Allow_Only_WebClient2.dest_port="$all_other_OfficeWebClient_port"
+		uci set firewall.Allow_Only_WebClient2.enabled='0'
 
-uci set firewall.Allow_Only_WebClient2=rule
-uci set firewall.Allow_Only_WebClient2.src='HCONTROL'
-uci set firewall.Allow_Only_WebClient2.dest='wan'
-uci set firewall.Allow_Only_WebClient2.name='Allow_only_WebClient_HCONTROL'
-uci set firewall.Allow_Only_WebClient2.target='REJECT'
-uci set firewall.Allow_Only_WebClient2.dest_port="$all_other_OfficeWebClient_port"
-uci set firewall.Allow_Only_WebClient2.enabled='0'
+		uci set firewall.Allow_Only_WebClient3=rule
+		uci set firewall.Allow_Only_WebClient3.src='SERVER'
+		uci set firewall.Allow_Only_WebClient3.dest='wan'
+		uci set firewall.Allow_Only_WebClient3.name='Allow_only_WebClient_SERVER'
+		uci set firewall.Allow_Only_WebClient3.target='REJECT'
+		uci set firewall.Allow_Only_WebClient3.dest_port="$all_other_OfficeWebClient_port"
+		uci set firewall.Allow_Only_WebClient3.enabled='0'
 
-uci set firewall.Allow_Only_WebClient3=rule
-uci set firewall.Allow_Only_WebClient3.src='SERVER'
-uci set firewall.Allow_Only_WebClient3.dest='wan'
-uci set firewall.Allow_Only_WebClient3.name='Allow_only_WebClient_SERVER'
-uci set firewall.Allow_Only_WebClient3.target='REJECT'
-uci set firewall.Allow_Only_WebClient3.dest_port="$all_other_OfficeWebClient_port"
-uci set firewall.Allow_Only_WebClient3.enabled='0'
+		uci set firewall.Allow_Only_WebClient4=rule
+		uci set firewall.Allow_Only_WebClient4.src='GUEST'
+		uci set firewall.Allow_Only_WebClient4.dest='wan'
+		uci set firewall.Allow_Only_WebClient4.name='Allow_only_WebClient_GUEST'
+		uci set firewall.Allow_Only_WebClient4.target='REJECT'
+		uci set firewall.Allow_Only_WebClient4.dest_port="$all_other_OfficeWebClient_port"
+		uci set firewall.Allow_Only_WebClient4.enabled='0'
 
-uci set firewall.Allow_Only_WebClient4=rule
-uci set firewall.Allow_Only_WebClient4.src='GUEST'
-uci set firewall.Allow_Only_WebClient4.dest='wan'
-uci set firewall.Allow_Only_WebClient4.name='Allow_only_WebClient_GUEST'
-uci set firewall.Allow_Only_WebClient4.target='REJECT'
-uci set firewall.Allow_Only_WebClient4.dest_port="$all_other_OfficeWebClient_port"
-uci set firewall.Allow_Only_WebClient4.enabled='0'
+		uci set firewall.Allow_Only_WebClient5=rule
+		uci set firewall.Allow_Only_WebClient5.src='ENTERTAIN'
+		uci set firewall.Allow_Only_WebClient5.dest='wan'
+		uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_ENTERTAIN'
+		uci set firewall.Allow_Only_WebClient5.target='REJECT'
+		uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
+		uci set firewall.Allow_Only_WebClient5.enabled='0'
 
-uci set firewall.Allow_Only_WebClient5=rule
-uci set firewall.Allow_Only_WebClient5.src='ENTERTAIN'
-uci set firewall.Allow_Only_WebClient5.dest='wan'
-uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_ENTERTAIN'
-uci set firewall.Allow_Only_WebClient5.target='REJECT'
-uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
-uci set firewall.Allow_Only_WebClient5.enabled='0'
+		uci set firewall.Allow_Only_WebClient6=rule
+		uci set firewall.Allow_Only_WebClient6.src='CMOVIE'
+		uci set firewall.Allow_Only_WebClient6.dest='wan'
+		uci set firewall.Allow_Only_WebClient6.name='Allow_only_WebClient_CMOVIE'
+		uci set firewall.Allow_Only_WebClient6.target='REJECT'
+		uci set firewall.Allow_Only_WebClient6.dest_port="$all_other_OfficeWebClient_port"
+		uci set firewall.Allow_Only_WebClient6.enabled='0'
 
-uci set firewall.Allow_Only_WebClient6=rule
-uci set firewall.Allow_Only_WebClient6.src='CMOVIE'
-uci set firewall.Allow_Only_WebClient6.dest='wan'
-uci set firewall.Allow_Only_WebClient6.name='Allow_only_WebClient_CMOVIE'
-uci set firewall.Allow_Only_WebClient6.target='REJECT'
-uci set firewall.Allow_Only_WebClient6.dest_port="$all_other_OfficeWebClient_port"
-uci set firewall.Allow_Only_WebClient6.enabled='0'
+		uci set firewall.Allow_Only_WebClient7=rule
+		uci set firewall.Allow_Only_WebClient7.src='TELEKOM'
+		uci set firewall.Allow_Only_WebClient7.dest='wan'
+		uci set firewall.Allow_Only_WebClient7.name='Allow_only_WebClient_TELEKOM'
+		uci set firewall.Allow_Only_WebClient7.target='REJECT'
+		uci set firewall.Allow_Only_WebClient7.dest_port="$all_other_OfficeWebClient_port"
+		uci set firewall.Allow_Only_WebClient7.enabled='0'
 
-uci set firewall.Allow_Only_WebClient7=rule
-uci set firewall.Allow_Only_WebClient7.src='TELEKOM'
-uci set firewall.Allow_Only_WebClient7.dest='wan'
-uci set firewall.Allow_Only_WebClient7.name='Allow_only_WebClient_TELEKOM'
-uci set firewall.Allow_Only_WebClient7.target='REJECT'
-uci set firewall.Allow_Only_WebClient7.dest_port="$all_other_OfficeWebClient_port"
-uci set firewall.Allow_Only_WebClient7.enabled='0'
-
-uci set firewall.Allow_Only_WebClient8=rule
-uci set firewall.Allow_Only_WebClient8.src='LAN'
-uci set firewall.Allow_Only_WebClient8.dest='wan'
-uci set firewall.Allow_Only_WebClient8.name='Allow_only_WebClient_LAN'
-uci set firewall.Allow_Only_WebClient8.target='REJECT'
-uci set firewall.Allow_Only_WebClient8.dest_port="$all_other_OfficeWebClient_port"
-uci set firewall.Allow_Only_WebClient8.enabled='0'
-
+		uci set firewall.Allow_Only_WebClient8=rule
+		uci set firewall.Allow_Only_WebClient8.src='LAN'
+		uci set firewall.Allow_Only_WebClient8.dest='wan'
+		uci set firewall.Allow_Only_WebClient8.name='Allow_only_WebClient_LAN'
+		uci set firewall.Allow_Only_WebClient8.target='REJECT'
+		uci set firewall.Allow_Only_WebClient8.dest_port="$all_other_OfficeWebClient_port"
+		uci set firewall.Allow_Only_WebClient8.enabled='0'
+fi
 #Hohe Ziel (Ports)
 #TCP 
 #10000-33433, 33435-40316, 40318-49316, 49318-54837, 54839-65535
