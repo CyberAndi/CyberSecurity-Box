@@ -265,7 +265,7 @@ if [ -n "$PASS" ];
 	then
 		(echo "$PASS"; sleep 1; echo "$PASS") | passwd > /dev/null
 fi
-
+SUBNET_sepLAN=$(echo $LAN | cut -f3 -d '.')
 SUBNET=$(echo $LAN | cut -f3 -d '.')
 SUBNET_sep=$SUBNET
 
@@ -428,7 +428,7 @@ ENTERTAIN_range='192.168.'$(($SUBNET_sep - 1))'.10,192.168.'$(($SUBNET_sep - 1))
 GUEST_range='192.168.'$(($SUBNET_sep + 10))'.10,192.168.'$(($SUBNET_sep + 10))'.200,24h'
 CMOVIE_range='192.168.'$(($SUBNET_sep + 9))'.10,192.168.'$(($SUBNET_sep + 9))'.200,24h'
 TELEKOM_range='192.168.'$(($SUBNET_sep + 8))'.10,192.168.'$(($SUBNET_sep + 8))'.200,24h'
-LAN_range='192.168.1.10,192.168.1.200,24h'
+LAN_range='192.168.'$($SUBNET_sepLAN)'.10,192.168.'$($SUBNET_sepLAN)'.200,24h'
 
 SERVER_ip='192.168.'$(($SUBNET_sep - 123))'.254'
 CONTROL_ip='192.168.'$(($SUBNET_sep - 119))'.254'
@@ -439,7 +439,7 @@ ENTERTAIN_ip='192.168.'$(($SUBNET_sep - 1))'.1'
 GUEST_ip='192.168.'$(($SUBNET_sep + 10))'.1'
 CMOVIE_ip='192.168.'$(($SUBNET_sep + 9))'.1'
 TELEKOM_ip='192.168.'$(($SUBNET_sep + 8))'.1'
-LAN_ip='192.168.1.1'
+LAN_ip='192.168.'$($SUBNET_sepLAN)'.1'
 
 SERVER_broadcast='192.168.'$(($SUBNET_sep - 123))'.255'
 CONTROL_broadcast='192.168.'$(($SUBNET_sep - 119))'.255'
@@ -450,7 +450,7 @@ ENTERTAIN_broadcast='192.168.'$(($SUBNET_sep - 1))'.255'
 GUEST_broadcast='192.168.'$(($SUBNET_sep + 10))'.255'
 CMOVIE_broadcast='192.168.'$(($SUBNET_sep + 9))'.255'
 TELEKOM_broadcast='192.168.'$(($SUBNET_sep + 8))'.255'
-LAN_broadcast='192.168.1.255'
+LAN_broadcast='192.168.'$($SUBNET_sepLAN)'.255'
 
 SERVER_lan='192.168.'$(($SUBNET_sep - 123))'.0'
 CONTROL_lan='192.168.'$(($SUBNET_sep - 119))'.0'
@@ -461,7 +461,7 @@ ENTERTAIN_lan='192.168.'$(($SUBNET_sep - 1))'.0'
 GUEST_lan='192.168.'$(($SUBNET_sep + 10))'.0'
 CMOVIE_lan='192.168.'$(($SUBNET_sep + 9))'.0'
 TELEKOM_lan='192.168.'$(($SUBNET_sep + 8))'.0'
-LAN_lan='192.168.1.9'
+LAN_lan='192.168.'$($SUBNET_sepLAN)'.0'
 
 SERVER_net=$SERVER_ip'/24'
 CONTROL_net=$CONTROL_ip'/24'
@@ -474,7 +474,7 @@ CMOVIE_net=$CMOVIE_ip'/24'
 TELEKOM_net=$TELEKOM_ip'/24'
 WAN_net=$WAN_ip'/24'
 WAN_MOBILE_net=$WAN_MOBILE_ip'/24'
-LAN_net='192.168.1.1/24'
+LAN_net=$LAN_ip'/24'
 
 SERVER_domain='server.'$LOCAL_DOMAIN
 CONTROL_domain='control.'$LOCAL_DOMAIN
@@ -541,8 +541,12 @@ if [ "$(opkg list-upgradable)" != "" ]
   		opkg update >> /root/install.log
   		opkg upgrade $(opkg list-upgradable | awk '{print $1}')  >> /root/install.log
 fi 
-echo 'check if installed'
-#install_check #>> /root/install.log
+if [ ! -z $remotestart ]
+	then
+		echo 'check if installed'
+		install_check >> /root/install.log
+fi
+
 opkg update >> /root/install.log
 if [ "$unbound_inst" = "" ]
 	then
@@ -31235,7 +31239,9 @@ if [ ! -z $1 ]
    		echo $7 >> /root/install.log
    		echo $8 >> /root/install.log
    		echo $9 >> /root/install.log
-		remotestart=$1
+		remotestart='1'
+	else
+		remotestart=''
 fi
 
 if [ -z $remotestart ]
