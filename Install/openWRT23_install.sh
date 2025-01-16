@@ -177,11 +177,14 @@ if [ ! -z "$2" ]
 fi
 
 IPv6=""
+LANv6=""
 IPv6=$(echo $(echo $($(echo ip addr show dev $(echo $actEth | cut -f1 -d' ')) | grep inet | cut -f6 -d ' ' ) | cut -f1 -d ' ' ) | cut -c 5-6)
 
 if [ "$IPv6" = "::" ]
 	then
 		LAN=''
+	else
+		LANv6=$IPv6
 fi
 
 if [ "$LAN" = "" ]
