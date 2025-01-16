@@ -27815,7 +27815,7 @@ set_dhcp_sub() {
 		uci set dhcp.Blacklist.localservice='1'
 		uci set dhcp.Blacklist.ednspacket_max='1232'
 		uci set dhcp.Blacklist.cachelocal='1'
-		#uci set dhcp.Blacklist.cachesize='0'
+		uci set dhcp.Blacklist.cachesize='1'
 		uci set dhcp.Blacklist.dnssec='1'
 		uci set dhcp.Blacklist.dnsseccheck='1'
 		uci set dhcp.Blacklist.server=$DNS_IP'#'$DNSMASQ_Relay_port 
@@ -27867,7 +27867,7 @@ set_dhcp_sub() {
 				uci set dhcp.Whitelist.localservice='1'
 				uci set dhcp.Whitelist.ednspacket_max='1232'
 				uci set dhcp.Whitelist.cachelocal='1'
-				#uci set dhcp.Whitelist.cachesize='0'
+				uci set dhcp.Whitelist.cachesize='1'
 				uci set dhcp.Whitelist.dnssec='1'
 				uci set dhcp.Whitelist.dnsseccheck='1'
 				uci set dhcp.Whitelist.server=$DNS_IP'#'$DNSMASQ_Relay_port
