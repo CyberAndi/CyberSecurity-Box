@@ -428,7 +428,7 @@ ENTERTAIN_range='192.168.'$(($SUBNET_sep - 1))'.10,192.168.'$(($SUBNET_sep - 1))
 GUEST_range='192.168.'$(($SUBNET_sep + 10))'.10,192.168.'$(($SUBNET_sep + 10))'.200,24h'
 CMOVIE_range='192.168.'$(($SUBNET_sep + 9))'.10,192.168.'$(($SUBNET_sep + 9))'.200,24h'
 TELEKOM_range='192.168.'$(($SUBNET_sep + 8))'.10,192.168.'$(($SUBNET_sep + 8))'.200,24h'
-LAN_range='192.168.'$($SUBNET_sepLAN)'.10,192.168.'$($SUBNET_sepLAN)'.200,24h'
+LAN_range='192.168.'$SUBNET_sepLAN'.10,192.168.'$($SUBNET_sepLAN)'.200,24h'
 
 SERVER_ip='192.168.'$(($SUBNET_sep - 123))'.254'
 CONTROL_ip='192.168.'$(($SUBNET_sep - 119))'.254'
@@ -439,7 +439,7 @@ ENTERTAIN_ip='192.168.'$(($SUBNET_sep - 1))'.1'
 GUEST_ip='192.168.'$(($SUBNET_sep + 10))'.1'
 CMOVIE_ip='192.168.'$(($SUBNET_sep + 9))'.1'
 TELEKOM_ip='192.168.'$(($SUBNET_sep + 8))'.1'
-LAN_ip='192.168.'$($SUBNET_sepLAN)'.1'
+LAN_ip='192.168.'$SUBNET_sepLAN'.1'
 
 SERVER_broadcast='192.168.'$(($SUBNET_sep - 123))'.255'
 CONTROL_broadcast='192.168.'$(($SUBNET_sep - 119))'.255'
@@ -450,7 +450,7 @@ ENTERTAIN_broadcast='192.168.'$(($SUBNET_sep - 1))'.255'
 GUEST_broadcast='192.168.'$(($SUBNET_sep + 10))'.255'
 CMOVIE_broadcast='192.168.'$(($SUBNET_sep + 9))'.255'
 TELEKOM_broadcast='192.168.'$(($SUBNET_sep + 8))'.255'
-LAN_broadcast='192.168.'$($SUBNET_sepLAN)'.255'
+LAN_broadcast='192.168.'$SUBNET_sepLAN'.255'
 
 SERVER_lan='192.168.'$(($SUBNET_sep - 123))'.0'
 CONTROL_lan='192.168.'$(($SUBNET_sep - 119))'.0'
@@ -461,7 +461,7 @@ ENTERTAIN_lan='192.168.'$(($SUBNET_sep - 1))'.0'
 GUEST_lan='192.168.'$(($SUBNET_sep + 10))'.0'
 CMOVIE_lan='192.168.'$(($SUBNET_sep + 9))'.0'
 TELEKOM_lan='192.168.'$(($SUBNET_sep + 8))'.0'
-LAN_lan='192.168.'$($SUBNET_sepLAN)'.0'
+LAN_lan='192.168.'$SUBNET_sepLAN'.0'
 
 SERVER_net=$SERVER_ip'/24'
 CONTROL_net=$CONTROL_ip'/24'
@@ -1483,12 +1483,12 @@ echo
 
 #sichere alte Konfiguration
 echo 'Sichere alte Konfiguration'
-#iptables-save > rules.v4_old_$datum.bkp
+iptables-save > rules.v4_old_$datum.bkp
 
 sleep 30
 FILE3=/www/luci-static/bootstrap/OCR-A.ttf
-#if [ ! -f "$FILE3" ] 
-#	then
+if [ ! -f "$FILE3" ] 
+	then
 
   		if [ "$(ls /www/luci-static/bootstrap/c*.css)" != "" ]
 			then
@@ -1520,7 +1520,7 @@ FILE3=/www/luci-static/bootstrap/OCR-A.ttf
 		wait $processes7
 		processes8=$(wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/www/luci-static/bootstrap/OCR-A.woff -P /www/luci-static/bootstrap/)
 		wait $processes8
-# fi
+fi
 }
 
 config_overview(){
