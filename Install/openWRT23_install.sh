@@ -639,11 +639,12 @@ uninstall_cleanup() {
 	rm /www/*.php -rv >> /root/install.log
 	rm /www/*.php.* -rv >> /root/install.log
 	rm /www/*.html -rv >> /root/install.log
+	rm /www/*.old -rv >> /root/install.log
 	rm /root/*.sh -rv >> /root/install.log
 	rm /root/*.sh.* -rv >> /root/install.log
 
 	opkg update >> /root/install.log
-	opkg remove php* --force-removal-of-dependent-packages >> /root/install.log
+	opkg remove php* odhcpd* nano luci-app-unbound --force-removal-of-dependent-packages >> /root/install.log
 	opkg update >> /root/install.log
 	
 	uci del uhttpd.main.interpreter
@@ -31211,7 +31212,7 @@ test_dns_services() {
 	clear && echo 'Stopp all services' && service dnsmasq stop && service unbound stop && service stubby stop && service tor stop && sleep 5 
 	echo && service tor start && service stubby start && service unbound start && service dnsmasq start && sleep 30 
 	echo 'Tor' && dig www.test.de -p 9053 +dnssec | grep 'www.test.de' && echo 'Stubby' && dig www.test.de -p 5453 +dnssec| grep 'www.test.de' && echo 'Unbound' && dig www.test.de -p 5353 +dnssec | grep 'www.test.de' && echo 'Dnsmasq' && dig www.test.de -p 53  +dnssec | grep 'www.test.de'
-	echo 'DNSSEC Test' && dig sigok.verteiltesysteme.net +dnssec | grep 'flags:' | grep 'ANSWER' | grep 'ad' && echo && echo 'fail' && dig sigfail.verteiltesysteme.net +dnssec | grep 'flags:' | grep 'ANSWER' | grep 'ad' 
+	echo 'DNSSEC Test' && dig sigok.verteiltesysteme.net +dnssec | grep 'flags:' | grep 'ANSWER' | grep 'ad' && echo && echo 'fail' && dig sigfail.verteiltesysteme.net +dnssec | grep 'flags:' | grep 'ANSWER' && echo && echo 'DNS over Tor' && dig bible4u2lvhacg4b3to2e2veqpwmrc2c3tjf2wuuqiz332vlwmr4xbad.onion -p 9053 +dnssec | grep 'bible4u2lvhacg4b3to2e2veqpwmrc2c3tjf2wuuqiz332vlwmr4xbad.onion' && dig bible4u2lvhacg4b3to2e2veqpwmrc2c3tjf2wuuqiz332vlwmr4xbad.onion -p 53 +dnssec | grep 'bible4u2lvhacg4b3to2e2veqpwmrc2c3tjf2wuuqiz332vlwmr4xbad.onion'
 }
 
 #-------------------------start---------------------------------------
