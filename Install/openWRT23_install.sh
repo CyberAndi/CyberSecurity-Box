@@ -1768,6 +1768,7 @@ if [ "$VLAN_ENABLE" = "1" ]
 		wait $processes >> /root/install.log
 		uci set network.Loopback.proto='static'
 		uci set network.Loopback.ipaddr='127.0.0.1'
+		uci set network.Loopback.ip6addr='::1/128'
 		uci set network.Loopback.netmask='255.255.255.0'
 		uci set network.Loopback.device='lo'
 		processes=$(uci commit && reload_config)
