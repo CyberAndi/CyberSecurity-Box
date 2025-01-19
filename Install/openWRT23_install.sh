@@ -1763,6 +1763,17 @@ wait $processes >> /root/install.log
 if [ "$VLAN_ENABLE" = "1" ]
 	then
 		uci add network interface >> /root/install.log
+		uci rename network.@interface[-1]='Loopback'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+		uci set network.Loopback.proto='static'
+		uci set network.Loopback.ipaddr='127.0.0.1'
+		uci set network.Loopback.netmask='255.255.255.0'
+		uci set network.Loopback.device='lo'
+		processes=$(uci commit && reload_config)
+		wait $processes >> /root/install.log
+
+		uci add network interface >> /root/install.log
 		uci rename network.@interface[-1]='TELEKOM'
 		processes=$(uci commit && reload_config)
 		wait $processes >> /root/install.log
