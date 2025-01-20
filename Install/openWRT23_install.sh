@@ -31189,6 +31189,16 @@ setup_tor_routing() {
     iptables -t nat -A POSTROUTING -o wan -j MASQUERADE
 }
 
+set_Firewall_offloading() {
+	uci set firewall.@defaults[0].synflood_protect='1'
+	uci set firewall.@defaults[0].drop_invalid='1'
+	uci set firewall.@defaults[0].flow_offloading='1'
+	uci set firewall.@defaults[0].flow_offloading_hw='1'
+	processes=$(uci commit && reload_config)
+	wait $processes >/dev/null
+	/etc/init.d/firewall restart >/dev/null
+}
+
 set_mountpoints() {
 
 opkg update
@@ -31397,6 +31407,12 @@ echo
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set'
 echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set' >> /root/install.log
 set_firewall_ipset >> /root/install.log
+
+echo
+echo >> /root/install.log
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Offloading'
+echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Offloading' >> /root/install.log
+set_Firewall_offloading >> /root/install.log
 
 if [ "$AD_GUARD" = "1" ]
 	then
