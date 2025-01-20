@@ -2,11 +2,11 @@
 clear
 echo
 echo '########################################################'
-echo '#  #'
-echo '# CyberSecurity-Box#'
-echo '#  #'
+echo '#                                                      #'
+echo '#                CyberSecurity-Box                     #'
+echo '#                                                      #'
 echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#  #'
+echo '#                                                      #'
 echo '########################################################'
 
 #Firewall Pihole Unbound Tor Transparentproxy
@@ -116,14 +116,14 @@ if [ "$RESET_ANSWER" = "y" ]
 		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Firmware/backup-OpenWrt-2024-08-29.tar.gz
 		sysupgrade -r backup-OpenWrt-2024-08-29.tar.gz
   		uci set unbound.ub_main.dhcp_link='dnsmasq'
-	uci set unbound.ub_main.listen_port='5353'
-  	set_unbound_reset
+		uci set unbound.ub_main.listen_port='5353'
+  		set_unbound_reset
   		processes=$(uci commit && reload_config)
-	wait $processes
-  	processes1=$(/etc/init.d/unbound restart)
-	wait $processes1
-  	processes2=$(/etc/init.d/tor restart)
-	wait $processes2
+		wait $processes
+  		processes1=$(/etc/init.d/unbound restart)
+		wait $processes1
+  		processes2=$(/etc/init.d/tor restart)
+		wait $processes2
 		exit 0
 	else
 		RESET='0'
@@ -188,16 +188,16 @@ if [ "$IPv6" = "::" ]
 fi
 
 if [ "$LAN" = "" ]
-then
-LAN='192.168.1.1'
+	then
+		LAN='192.168.1.1'
 fi
 
 LAN_org=$LAN
 
 read -p 'Type the LAN-IP (Internal Network): ['$( echo $LAN )'] ' LAN
 if [ "$LAN" = "" ]
-then
-LAN=$LAN_org
+	then
+		LAN=$LAN_org
 fi
 
 if [ ! -z "$3"  ]
@@ -227,8 +227,8 @@ echo
 
 read -p 'The Main-WiFi-SSID? ['$(echo $WIFI_SSID)'] ' WIFI_SSID
 if [ "$WIFI_SSID" = "" ]
-then
-WIFI_SSID=$WIFI_SSID_org
+	then
+		WIFI_SSID=$WIFI_SSID_org
 fi
 
 if [ ! -z "$5" ]
@@ -265,22 +265,23 @@ if [ -n "$PASS" ];
 	then
 		(echo "$PASS"; sleep 1; echo "$PASS") | passwd > /dev/null
 fi
+
 SUBNET_sepLAN=$(echo $LAN | cut -f3 -d '.')
 SUBNET=$(echo $LAN | cut -f3 -d '.')
 SUBNET_sep=$SUBNET
 
 if [ $SUBNET_sep -lt 125 ]
-then
-if  [ $SUBNET_sep -lt 5 ]
-then
-SUBNET_sep=$(($SUBNET_sep + 6))
-fi
+	then
+		if  [ $SUBNET_sep -lt 5 ]
+			then
+				SUBNET_sep=$(($SUBNET_sep + 6))
+		fi
 		SUBNET_sep=$(($SUBNET_sep + 125))
-else
-if  [ $SUBNET_sep -gt 250 ]
-then
-	SUBNET_sep=$(($SUBNET_sep - 62))
-fi
+	else
+		if  [ $SUBNET_sep -gt 250 ]
+			then
+				SUBNET_sep=$(($SUBNET_sep - 62))
+		fi
 fi
 
 AD_GUARD='0'
@@ -288,13 +289,13 @@ echo
 read -p 'Install AdGuard-Blocker? Need external USB-Device [y/N] ' -s  -n 1 ADGUARD_ACTIVE
 
 if [ "$ADGUARD_ACTIVE" = "" ]
-then
-AD_GUARD='0'
-elif [ "$ADGUARD_ACTIVE" = "y" ]
-then
+	then
+		AD_GUARD='0'
+	elif [ "$ADGUARD_ACTIVE" = "y" ]
+		then
 			AD_GUARD='1'
-else
-AD_GUARD='0'
+	else
+		AD_GUARD='0'
 fi
 
 echo
@@ -339,24 +340,24 @@ DNS_PORT='y'
 read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
 UNBOUND='1'
 if [ "$DNS_PORT" = "" ]
-then
+	then
 		UNBOUND='1'
 		DNSMASQ_Relay_port='5353'
 		if [ "$TOR_ONION" = "1" ]
-		then
+			then
 				UNBOUND_Relay_port='9053'
 		elif [ "$STUBBY" = "0" ] 
    			then
-			UNBOUND_Relay_port='53'
+				UNBOUND_Relay_port='53'
 		else
    				UNBOUND_Relay_port='5453'
-	fi
-elif [ "$DNS_PORT" = "y" ]
+		fi
+	elif [ "$DNS_PORT" = "y" ]
 		then
 			UNBOUND='1'
    			DNSMASQ_Relay_port='5353'
 			if [ "$TOR_ONION" = "1" ]
-			then
+				then
 					UNBOUND_Relay_port='9053'
 				elif [ "$STUBBY" = "0" ] 
 					then
@@ -365,18 +366,18 @@ elif [ "$DNS_PORT" = "y" ]
    					UNBOUND_Relay_port='5453'
 			fi
 	elif [ "$TOR_ONION" = "1" ]
-	then
-		DNSMASQ_Relay_port='9053'
+		then
+			DNSMASQ_Relay_port='9053'
 			UNBOUND_Relay_port='9053'
- 		UNBOUND='0'
-elif [ "$STUBBY" = "0" ] 
+ 			UNBOUND='0'
+	elif [ "$STUBBY" = "0" ] 
 		then
    			DNSMASQ_Relay_port='53'
-	 		UNBOUND_Relay_port='53'
- 		UNBOUND='0'
-		else
+			UNBOUND_Relay_port='53'
+ 			UNBOUND='0'
+	else
 		DNSMASQ_Relay_port='5453'
-			UNBOUND_Relay_port='5453'
+		UNBOUND_Relay_port='5453'
 		UNBOUND='0'
 	fi
 VLAN_ENABLE='0'
@@ -388,7 +389,7 @@ if [ "$VLAN_ACTIVE" = "" ]
 		VLAN_ENABLE='1'
 	elif [ "$VLAN_ACTIVE" = "y" ]
  		then
-		VLAN_ENABLE='1'
+			VLAN_ENABLE='1'
  	else
 		VLAN_ENABLE='0'
 fi
@@ -407,16 +408,16 @@ echo
 read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 SECURE_RULES
 
 if [ "$SECURE_RULES" = "" ]
-then
-   FW_HSactive='1'
-   #  set_HS_Firewall
-elif [ "$SECURE_RULES" = "y" ]
-then
+	then
 		FW_HSactive='1'
-#set_HS_Firewall
-else
-FW_HSactive='0'
-#  set_HS_Firewall_disable
+		#  set_HS_Firewall
+	elif [ "$SECURE_RULES" = "y" ]
+		then
+			FW_HSactive='1'
+			#set_HS_Firewall
+	else
+		FW_HSactive='0'
+		#  set_HS_Firewall_disable
 fi
 
 SERVER_range='192.168.'$(($SUBNET_sep - 123))'.10,192.168.'$(($SUBNET_sep - 123))'.200,24h'
@@ -565,7 +566,7 @@ if [ "$unbound_inst" = "" ]
 				opkg install ca-certificates acme luci-app-acme acme-dnsapi >> /root/install.log
 				opkg update >> /root/install.log
 				opkg install stubby tor tor-geoip dnsmasq-full  >> /root/install.log
-			opkg update >> /root/install.log
+				opkg update >> /root/install.log
 				opkg install php8-fpm php8-cgi mwan3 luci-app-mwan3 luci-app-uhttpd >> /root/install.log
 			elif [ "$main_release" = "22" ]
    				then
@@ -622,11 +623,11 @@ echo 'install opkg'
 clear
 echo
 echo '########################################################'
-echo '#  #'
-echo '# CyberSecurity-Box#'
-echo '#  #'
+echo '#                                                      #'
+echo '#                  CyberSecurity-Box                   #'
+echo '#                                                      #'
 echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#  #'
+echo '#                                                      #'
 echo '########################################################'
 echo
 echo 'Software Packeges installed'
@@ -1419,17 +1420,17 @@ echo
 
 cat << EOF > /etc/banner
 
-  +++ +  +++   +++++
- +   ++ +   +  ++
-+ + +  ++ 
-+ + +  ++
-+  +   +  +++++   +  ++  +++++++   +++++++   +   +
-+   + +   +  +  +  +  + +   +  +  +  +  +  ++  +  +   + +
-+++  +  +++   +++  +++   + ++  +  ++
- +   +   ++  +  + + +   +  + +  +  ++  +  +   + +
-  ++++++++++  +  ++++++   ++   +++++++   +   +
+  +++         +                  +++               +++++
+ +   +        +                 +   +              +    +
++             +                 +                  +    + 
++             +                 +                  +    +
++      +   +  +++    ++   +  ++  +++    ++    ++   +++++    ++   +   +
++       + +   +  +  +  +  + +       +  +  +  +  +  +    +  +  +   + +
++        +    +  +  +++   ++        +  +++   +     +    +  +  +    +
+ +   +   +    +  +  +     +     +   +  +     +  +  +    +  +  +   + +
+  +++    +    +++    +++  +      +++    +++   ++   +++++    ++   +   +
  
-  local Privacy for Voice-Assistents, Smart-TVs and SmartHome 
+      local Privacy for Voice-Assistents, Smart-TVs and SmartHome 
 	   
 --------------------------------------------------------------------------
    powered by OpenWrt $(echo $release), $(echo $revision)
@@ -2060,13 +2061,13 @@ create_network() {
 clear
 echo
 echo '########################################################'
-echo '#  #'
-echo '# CyberSecurity-Box#'
-echo '#  #'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
 echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#  #'
-echo '#Network Definitions   #'
-echo '#  #'
+echo '#                                                      #'
+echo '#                Network Definitions                   #'
+echo '#                                                      #'
 echo '########################################################'
 echo 
 
@@ -3340,13 +3341,13 @@ echo
 clear
 echo
 echo '########################################################'
-echo '#  #'
-echo '# CyberSecurity-Box#'
-echo '#  #'
+echo '#                                                      #'
+echo '#                   CyberSecurity-Box                  #'
+echo '#                                                      #'
 echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#  #'
+echo '#                                                      #'
 echo '#   Unbound lokal DNS-Resolver with lokal root-files   #'
-echo '#  #'
+echo '#                                                      #'
 echo '########################################################'
 view_config
 
@@ -3465,11 +3466,11 @@ create_dnsmasq_url_filter() {
 clear
 echo
 echo '########################################################'
-echo '#  #'
-echo '# CyberSecurity-Box#'
-echo '#  #'
-echo '# dnsmasq Url-Filter   #'
-echo '#  #'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
+echo '#                 dnsmasq Url-Filter                   #'
+echo '#                                                      #'
 echo '########################################################'
 view_config
 
@@ -12589,13 +12590,13 @@ echo
 clear
 echo
 echo '########################################################'
-echo '#  #'
-echo '# CyberSecurity-Box#'
-echo '#  #'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
 echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#  #'
-echo '#AD- and Porn-Filter installed #'
-echo '#  #'
+echo '#                                                      #'
+echo '#          AD- and Porn-Filter installed               #'
+echo '#                                                      #'
 echo '########################################################'
 view_config
 }
@@ -12604,13 +12605,13 @@ create_unbound_url_filter() {
 clear
 echo
 echo '########################################################'
-echo '#  #'
-echo '# CyberSecurity-Box#'
-echo '#  #'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
 echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#  #'
-echo '# Stubby Pivaticy over cloudflair.com  #'
-echo '#  #'
+echo '#                                                      #'
+echo '#         Stubby Pivaticy over cloudflair.com          #'
+echo '#                                                      #'
 echo '########################################################'
 view_config
 
@@ -31356,13 +31357,13 @@ echo
 clear
 echo
 echo '########################################################'
-echo '#  #'
-echo '# CyberSecurity-Box#'
-echo '#  #'
+echo '#                                                      #'
+echo '#                  CyberSecurity-Box                   #'
+echo '#                                                      #'
 echo '# local Privacy for Voice-Assistent Smart-TV SmartHome #'
-echo '#  #'
-echo '# Unbound Blocklist#'
-echo '#  #'
+echo '#                                                      #'
+echo '#                  Unbound Blocklist                   #'
+echo '#                                                      #'
 echo '########################################################'
 view_config
 }
@@ -35054,9 +35055,9 @@ echo >> /root/install.log
 clear
 echo
 echo '########################################################'
-echo '#  #'
-echo '# CyberSecurity-Box#'
-echo '#  #'
+echo '#                                                      #'
+echo '#                 CyberSecurity-Box                    #'
+echo '#                                                      #'
 echo '########################################################'
 echo
 echo 'Firewall-Rules activated '
