@@ -1800,8 +1800,6 @@ DataDirectory /var/lib/tor
 
 User tor
 
-
-
 AutomapHostsOnResolve 1
 VirtualAddrNetworkIPV4 10.192.0.0/10
 VirtualAddrNetworkIPv6 fc00::/7
