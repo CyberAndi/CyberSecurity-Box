@@ -113,7 +113,7 @@ echo
 if [ "$RESET_ANSWER" = "y" ]
 	then
 		RESET='1'
-		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/backup-OpenWrt-2024-08-29.tar.gz
+		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Firmware/backup-OpenWrt-2024-08-29.tar.gz
 		sysupgrade -r backup-OpenWrt-2024-08-29.tar.gz
   		uci set unbound.ub_main.dhcp_link='dnsmasq'
     	uci set unbound.ub_main.listen_port='5353'
@@ -3357,6 +3357,7 @@ set_unbound_reset() {
 mkdir -p /etc/unbound/unbound.conf.d >> /root/install.log
 curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache >> /root/install.log
 curl -sS -L "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&mimetype=plaintext" > /etc/unbound/unbound.conf.d/unbound_ad_servers
+sed -i 's/local-data\: \"[A-Za-z0-9*. -]* A\ 127\.0\.0\.1\"//g' /etc/unbound/unbound.conf.d/unbound_ad_servers
 
 cat << EOF > /etc/hosts
 127.0.0.1 localhost
@@ -3370,6 +3371,7 @@ cat << EOF > /etc/hosts
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
+
 
 uci set unbound.ub_main.tls_cert_bundle='/var/lib/unbound/ca-certificates.crt'
 uci set unbound.ub_main.auto_trust_anchor_file='/var/lib/unbound/root.key'
@@ -12626,48 +12628,55 @@ cat << EOF > /etc/unbound/unbound_srv.conf
 ##############################################################################
 server:
 
-local-zone: "onion" nodefault 
-local-zone: "exit" nodefault
-local-zone: $INET_domain nodefault
-local-zone: $SERVER_domain nodefault
-local-zone: $HCONTROL_domain nodefault
-local-zone: $CONTROL_domain nodefault
-local-zone: $VOICE_domain nodefault
-local-zone: $GUEST_domain nodefault
-local-zone: $ENTERTAIN_domain nodefault
-local-zone: $CMOVIE_domain nodefault
-local-zone: $LAN_domain nodefault
+local-zone: "localhost." nodefault
+local-zone: "127.in-addr.arpa." nodefault
+local-zone: "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa." nodefault
+local-zone: "home.arpa." nodefault
+local-zone: "test." nodefault
+local-zone: "invalid." nodefault
+local-zone: "10.in-addr.arpa." nodefault
+local-zone: "onion." nodefault 
+local-zone: "exit." nodefault
+local-zone: "$INET_domain." nodefault
+local-zone: "$SERVER_domain." nodefault
+local-zone: "$HCONTROL_domain." nodefault
+local-zone: "$CONTROL_domain." nodefault
+local-zone: "$VOICE_domain." nodefault
+local-zone: "$GUEST_domain." nodefault
+local-zone: "$ENTERTAIN_domain." nodefault
+local-zone: "$CMOVIE_domain." nodefault
+local-zone: "$LAN_domain." nodefault
 
-domain-insecure: "onion"
-domain-insecure: "exit"
-domain-insecure: $CMOVIE_domain
-domain-insecure: $ENTERTAIN_domain
-domain-insecure: $GUEST_domain
-domain-insecure: $VOICE_domain
-domain-insecure: $CONTROL_domain
-domain-insecure: $HCONTROL_domain
-domain-insecure: $SERVER_domain
-domain-insecure: $INET_domain
-domain-insecure: $LAN_domain
+domain-insecure: "onion."
+domain-insecure: "exit."
+domain-insecure: "$CMOVIE_domain."
+domain-insecure: "$ENTERTAIN_domain."
+domain-insecure: "$GUEST_domain."
+domain-insecure: "$VOICE_domain."
+domain-insecure: "$CONTROL_domain."
+domain-insecure: "$HCONTROL_domain."
+domain-insecure: "$SERVER_domain."
+domain-insecure: "$INET_domain."
+domain-insecure: "$LAN_domain."
 
-private-domain: $INET_domain
-private-address: $INET_net
-private-domain: $SERVER_domain
-private-address: $SERVER_net
-private-domain: $HCONTROL_domain
-private-address: $HCONTROL_net
-private-domain: $CONTROL_domain
-private-address: $CONTROL_net
-private-domain: $VOICE_domain
-private-address: $VOICE_net
-private-domain: $GUEST_domain
-private-address: $GUEST_net
-private-domain: $ENTERTAIN_domain
-private-address: $ENTERTAIN_net
-private-domain: $CMOVIE_domain
-private-address: $CMOVIE_net
-private-domain: $LAN_domain
-private-address: $LAN_net
+private-domain: "$INET_domain."
+private-address: "$INET_net"
+private-domain: "$SERVER_domain."
+private-address: "$SERVER_net"
+private-domain: "$HCONTROL_domain."
+private-address: "$HCONTROL_net"
+private-domain: "$CONTROL_domain."
+private-address: "$CONTROL_net"
+private-domain: "$VOICE_domain."
+private-address: "$VOICE_net"
+private-domain: "$GUEST_domain."
+private-address: "$GUEST_net"
+private-domain: "$ENTERTAIN_domain."
+private-address: "$ENTERTAIN_net"
+private-domain: "$CMOVIE_domain."
+private-address: "$CMOVIE_net"
+private-domain: "$LAN_domain."
+private-address: "$LAN_net"
 private-address: "127.0.0.1/8"
 
 #local-zone: "onion." static
