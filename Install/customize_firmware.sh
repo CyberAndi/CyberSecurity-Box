@@ -1811,18 +1811,28 @@ VirtualAddrNetworkIPv6 fc00::/7
 ControlPort 9051
 CookieAuthentication 1
 DNSPort 127.0.0.1:9053
-DNSPort 127.0.0.1:9153
+DNSPort [0::1]:9053
+DNSPort 0.0.0.0/0:9053
+DNSPort [::]/0:9053
 
-TransPort 9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort 9050 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort 9150 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort 9100 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort 9200 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 0.0.0.0/0:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort 0.0.0.0/0:9050 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort 0.0.0.0/0:9150 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort 0.0.0.0/0:9100 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort 0.0.0.0/0:9200 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort [::]/0:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort [::]/0:9050 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort [::]/0:9150 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort [::]/0:9100 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort [::]/0:9200 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
 
-#ORPort 127.0.0.1:9049
+
+#ORPort 0.0.0.0/0:9049
+#ORPort [::]/0:9049
 #DirPort 9030
 
-HTTPTunnelPort 9060 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+HTTPTunnelPort 0.0.0.0/0:9060 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+HTTPTunnelPort [::]/0:9060 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
 
 DisableDebuggerAttachment 1
 DisableAllSwap 1
