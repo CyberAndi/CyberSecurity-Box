@@ -324,16 +324,16 @@ fi
 
 echo
 
-qSDNS_PORT='y'
+qStubbyDNS_PORT='y'
 DNSMASQ_Relay_port=$DNS_port
 echo
 
 STUBBY='1'
 DNS_IP='127.0.0.1'
-read -p 'DNS-Relay to STUBBY [Y/n] ' -s -n 1 qSDNS_PORT
+read -p 'DNS-Relay to STUBBY [Y/n] ' -s -n 1 qStubbyDNS_PORT
 
 
-if [ "$qSDNS_PORT" = "" ]
+if [ "$qSstubbyDNS_PORT" = "" ]
 	then
 		STUBBY='1'
 	elif [ "$SNDS_PORT" = "y" ]
@@ -342,7 +342,7 @@ if [ "$qSDNS_PORT" = "" ]
 	else
 		STUBBY='0'
 		DNSMASQ_relay_port=$DNS_port
-		DNS_PORT=$qDNS_PORT
+		SDNS_PORT=$qDNS_PORT
 		DNS_IP=$INET_GW
 fi
 echo $DNS_IP
