@@ -32335,6 +32335,46 @@ test_tor_dns_intercept() {
 	service firewall restart
 }
 
+test_Intercept_TCP() {
+cat << "EOF" > /etc/nftables.d/tor.sh
+TOR_CHAIN="dstnat_$(uci -q get firewall.tcp_int.src)"
+TOR_RULE="$(nft -a list chain inet fw4 ${TOR_CHAIN} \
+| sed -n -e "/Intercept-TCP/p")"
+nft replace rule inet fw4 ${TOR_CHAIN} \
+handle ${TOR_RULE##* } \
+fib daddr type != { local, broadcast } ${TOR_RULE}
+EOF
+uci -q delete firewall.tor_nft
+uci set firewall.tor_nft="include"
+uci set firewall.tor_nft.path="/etc/nftables.d/tor.sh"
+uci -q delete firewall.tcp_int
+uci set firewall.tcp_int="redirect"
+uci set firewall.tcp_int.name="Intercept-TCP"
+uci set firewall.tcp_int.src="lan"
+uci set firewall.tcp_int.src_dport="0-65535"
+uci set firewall.tcp_int.dest_port="$TOR_TRANS_port"
+uci set firewall.tcp_int.proto="tcp"
+uci set firewall.tcp_int.family="any"
+uci set firewall.tcp_int.target="DNAT"
+
+uci -q delete firewall.tcp2_int
+uci set firewall.tcp2_int="redirect"
+uci set firewall.tcp2_int.name="Intercept-TCP"
+uci set firewall.tcp2_int.src="INET"
+uci set firewall.tcp2_int.src_dport="0-65535"
+uci set firewall.tcp2_int.dest_port="$TOR_TRANS_port"
+uci set firewall.tcp2_int.proto="tcp"
+uci set firewall.tcp2_int.family="any"
+uci set firewall.tcp2_int.target="DNAT"
+
+# Disable LAN to WAN forwarding
+uci -q delete firewall.@forwarding[0]
+uci -q delete firewall.@forwarding[4]
+uci commit firewall
+service firewall restart
+
+}
+
 setup_tor_routing() {
 iptables -t nat -A PREROUTING -i inet -p tcp --syn -j REDIRECT --to-ports $TOR_TRANS_port
 iptables -A FORWARD -i inet -o wan -j ACCEPT
