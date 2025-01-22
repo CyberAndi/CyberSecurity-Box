@@ -32296,6 +32296,23 @@ uci set firewall.homematic1.extra='--syn'
 uci set firewall.homematic1.enabled='0'
 }
 
+setup_tor_routing() {
+iptables -t nat -A PREROUTING -i inet -p tcp --syn -j REDIRECT --to-ports $TOR_TRANS_port
+iptables -A FORWARD -i inet -o wan -j ACCEPT
+iptables -A FORWARD -i wan -o inet -j ACCEPT
+iptables -t nat -A POSTROUTING -o wan -j MASQUERADE
+}
+
+set_Firewall_offloading() {
+	uci set firewall.@defaults[0].synflood_protect='1'
+	uci set firewall.@defaults[0].drop_invalid='1'
+	uci set firewall.@defaults[0].flow_offloading='1'
+	uci set firewall.@defaults[0].flow_offloading_hw='1'
+	processes=$(uci commit && reload_config)
+	wait $processes >/dev/null
+	/etc/init.d/firewall restart >/dev/null
+}
+
 set_HS_Firewall() {
 uci set firewall.OfficeClient.enabled='1'
 uci set firewall.OfficeWebClient.enabled='1'
@@ -34749,23 +34766,6 @@ wait $processes >/dev/null
 /etc/init.d/firewall restart >/dev/null
 }
 
-setup_tor_routing() {
-iptables -t nat -A PREROUTING -i inet -p tcp --syn -j REDIRECT --to-ports $TOR_TRANS_port
-iptables -A FORWARD -i inet -o wan -j ACCEPT
-iptables -A FORWARD -i wan -o inet -j ACCEPT
-iptables -t nat -A POSTROUTING -o wan -j MASQUERADE
-}
-
-set_Firewall_offloading() {
-	uci set firewall.@defaults[0].synflood_protect='1'
-	uci set firewall.@defaults[0].drop_invalid='1'
-	uci set firewall.@defaults[0].flow_offloading='1'
-	uci set firewall.@defaults[0].flow_offloading_hw='1'
-	processes=$(uci commit && reload_config)
-	wait $processes >/dev/null
-	/etc/init.d/firewall restart >/dev/null
-}
-
 set_mountpoints() {
 
 opkg update
@@ -34966,14 +34966,14 @@ echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Routing über Tor Onion einrichten' 
 setup_tor_routing >> /root/install.log
 fi
 
-echo
-echo >> /root/install.log
-echo
-view_config
-echo 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set' >> /root/install.log
-set_firewall_ipset >> /root/install.log
+#echo
+#echo >> /root/install.log
+#echo
+#view_config
+#echo 
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set'
+#echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-IP-Set' >> /root/install.log
+#aset_firewall_ipset >> /root/install.log
 
 echo
 echo >> /root/install.log
