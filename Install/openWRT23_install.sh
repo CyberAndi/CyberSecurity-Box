@@ -32150,6 +32150,16 @@ echo 'On Error enter logread'
 echo
 }
 
+set_Firewall_offloading() {
+	uci set firewall.@defaults[0].synflood_protect='1'
+	uci set firewall.@defaults[0].drop_invalid='1'
+	uci set firewall.@defaults[0].flow_offloading='1'
+	uci set firewall.@defaults[0].flow_offloading_hw='1'
+	processes=$(uci commit && reload_config)
+	wait $processes >/dev/null
+	/etc/init.d/firewall restart >/dev/null
+}
+
 set_firewall_intercept() {
 echo 'set Tor intercept' >> /root/install.log
 uci set firewall.ssh_int.enabled='1'
@@ -32301,16 +32311,6 @@ iptables -t nat -A PREROUTING -i inet -p tcp --syn -j REDIRECT --to-ports $TOR_T
 iptables -A FORWARD -i inet -o wan -j ACCEPT
 iptables -A FORWARD -i wan -o inet -j ACCEPT
 iptables -t nat -A POSTROUTING -o wan -j MASQUERADE
-}
-
-set_Firewall_offloading() {
-	uci set firewall.@defaults[0].synflood_protect='1'
-	uci set firewall.@defaults[0].drop_invalid='1'
-	uci set firewall.@defaults[0].flow_offloading='1'
-	uci set firewall.@defaults[0].flow_offloading_hw='1'
-	processes=$(uci commit && reload_config)
-	wait $processes >/dev/null
-	/etc/init.d/firewall restart >/dev/null
 }
 
 set_HS_Firewall() {
