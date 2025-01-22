@@ -108,15 +108,15 @@ INET_GW_org=$INET_GW
 RESET='0'
 
 echo
-read -p 'Would you Reset the Configuration: [y/N] ' -s -n 1 RESET_ANSWER
+read -p 'Would you Reset the Configuration: [y/N] ' -s -n 1 qRESET_ANSWER
 echo
-if [ "$RESET_ANSWER" = "y" ]
+if [ "$qRESET_ANSWER" = "y" ]
 	then
 		RESET='1'
 		wget https://github.com/CyberAndi/CyberSecurity-Box/raw/CyberSecurity-Box/Firmware/backup-OpenWrt-2024-08-29.tar.gz
 		sysupgrade -r backup-OpenWrt-2024-08-29.tar.gz
   		uci set unbound.ub_main.dhcp_link='dnsmasq'
-		uci set unbound.ub_main.listen_port='5353'
+		uci set unbound.ub_main.listen_port=$DNS_UNBOUND_port
   		set_unbound_reset
   		processes=$(uci commit && reload_config)
 		wait $processes
@@ -130,11 +130,13 @@ if [ "$RESET_ANSWER" = "y" ]
 fi
 
 echo
-read -p 'Please give me the WAN-IP (Gateway/Router): ['$INET_GW'] ' INET_GW
+read -p 'Please give me the WAN-IP (Gateway/Router): ['$INET_GW'] ' qINET_GW
 echo
-if [ "$INET_GW" = "" ]
+if [ "$qINET_GW" = "" ]
 	then
 		INET_GW=$INET_GW_org
+	else
+		INET_GW=$qINET_GW
 fi
 
 WAN_ip=$(echo $INET_GW | cut -f1 -d '.')
@@ -194,10 +196,12 @@ fi
 
 LAN_org=$LAN
 
-read -p 'Type the LAN-IP (Internal Network): ['$( echo $LAN )'] ' LAN
-if [ "$LAN" = "" ]
+read -p 'Type the LAN-IP (Internal Network): ['$( echo $LAN )'] ' qLAN
+if [ "$qLAN" = "" ]
 	then
 		LAN=$LAN_org
+	else
+		LAN=$qLAN
 fi
 
 if [ ! -z "$3"  ]
@@ -208,10 +212,12 @@ if [ ! -z "$3"  ]
 fi
 
 echo
-read -p  'Your local Domain of your LAN? [CyberSecBox.local] ' LOCAL_DOMAIN
-if [ "$LOCAL_DOMAIN" = "" ]
+read -p  'Your local Domain of your LAN? [CyberSecBox.local] ' qLOCAL_DOMAIN
+if [ "$qLOCAL_DOMAIN" = "" ]
 	then
 		LOCAL_DOMAIN=$LOCAL_DOMAIN_org
+	else
+		LOCAL_DOMAIN=$qLOCAL_DOMAIN
 fi
 
 if [ ! -z "$4" ]
@@ -225,10 +231,12 @@ WIFI_SSID_org=$WIFI_SSID
 
 echo
 
-read -p 'The Main-WiFi-SSID? ['$(echo $WIFI_SSID)'] ' WIFI_SSID
-if [ "$WIFI_SSID" = "" ]
+read -p 'The Main-WiFi-SSID? ['$(echo $WIFI_SSID)'] ' qWIFI_SSID
+if [ "$qWIFI_SSID" = "" ]
 	then
 		WIFI_SSID=$WIFI_SSID_org
+	else
+		WIFI_SSID=$qWIFI_SSID
 fi
 
 if [ ! -z "$5" ]
@@ -242,18 +250,20 @@ WIFI_PASS_org=$WIFI_PASS
 
 echo
 
-read -p 'And the WiFi-Key? [Cyber,Sec9ox] ' WIFI_PASS
-if [ "$WIFI_PASS" = "" ]
+read -p 'And the WiFi-Key? [Cyber,Sec9ox] ' qWIFI_PASS
+if [ "$qWIFI_PASS" = "" ]
 	then
 		WIFI_PASS=$WIFI_PASS_org
+	else
+		WIFI_PASS=$qWIFI_PASS
 fi
 
-USERNAME='root'
+qUSERNAME='root'
 echo
-read -p 'Enter the user for the login: [root] ' -s USERNAME
+read -p 'Enter the user for the login: [root] ' -s qUSERNAME
 echo
 echo
-passwd $USERNAME
+passwd $qUSERNAME
 
 if [ ! -z "$6" ]
 	then
@@ -286,12 +296,12 @@ fi
 
 AD_GUARD='0'
 echo
-read -p 'Install AdGuard-Blocker? Need external USB-Device [y/N] ' -s  -n 1 ADGUARD_ACTIVE
+read -p 'Install AdGuard-Blocker? Need external USB-Device [y/N] ' -s  -n 1 qADGUARD_ACTIVE
 
-if [ "$ADGUARD_ACTIVE" = "" ]
+if [ "$qADGUARD_ACTIVE" = "" ]
 	then
 		AD_GUARD='0'
-	elif [ "$ADGUARD_ACTIVE" = "y" ]
+	elif [ "$qADGUARD_ACTIVE" = "y" ]
 		then
 			AD_GUARD='1'
 	else
@@ -301,11 +311,11 @@ fi
 echo
 TOR_ONION='0'
 echo
-read -p 'Use TOR(Onion)-Network? [Y/n] ' -s  -n 1 TOR_ACTIVE
-if [ "$TOR_ACTIVE" = "" ]
+read -p 'Use TOR(Onion)-Network? [Y/n] ' -s  -n 1 qTOR_ACTIVE
+if [ "$qTOR_ACTIVE" = "" ]
 	then
 		TOR_ONION='1'
-	elif [ "$TOR_ACTIVE" = "y" ]
+	elif [ "$qTOR_ACTIVE" = "y" ]
  		then
 			TOR_ONION='1'
  	else
@@ -314,16 +324,16 @@ fi
 
 echo
 
-SDNS_PORT='y'
+qSDNS_PORT='y'
 DNSMASQ_Relay_port='53'
 echo
 
 STUBBY='1'
 DNS_IP='127.0.0.1'
-read -p 'DNS-Relay to STUBBY [Y/n] ' -s -n 1 SDNS_PORT
+read -p 'DNS-Relay to STUBBY [Y/n] ' -s -n 1 qSDNS_PORT
 
 
-if [ "$SDNS_PORT" = "" ]
+if [ "$qSDNS_PORT" = "" ]
 	then
 		STUBBY='1'
 	elif [ "$SNDS_PORT" = "y" ]
@@ -331,63 +341,64 @@ if [ "$SDNS_PORT" = "" ]
 			STUBBY='1'
 	else
 		STUBBY='0'
-		DNSMASQ_relay_port='53'
+		DNSMASQ_relay_port=$DNS_port
+		DNS_PORT=$qDNS_PORT
 		DNS_IP=$INET_GW
 fi
 echo $DNS_IP
 echo
-DNS_PORT='y'
-read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 DNS_PORT
+qDNS_PORT='y'
+read -p 'DNS-Relay to UNBOUND-DNS? [Y/n] ' -s  -n 1 qDNS_PORT
 UNBOUND='1'
-if [ "$DNS_PORT" = "" ]
+if [ "$qDNS_PORT" = "" ]
 	then
 		UNBOUND='1'
-		DNSMASQ_Relay_port='5353'
+		DNSMASQ_Relay_port=$DNSMASQ_port
 		if [ "$TOR_ONION" = "1" ]
 			then
-				UNBOUND_Relay_port='9053'
+				UNBOUND_Relay_port=$DNS_TOR_port
 		elif [ "$STUBBY" = "0" ] 
    			then
-				UNBOUND_Relay_port='53'
+				UNBOUND_Relay_port=$DNS_port
 		else
-   				UNBOUND_Relay_port='5453'
+   				UNBOUND_Relay_port=$DNS_STUBBY_port
 		fi
-	elif [ "$DNS_PORT" = "y" ]
+	elif [ "$qDNS_PORT" = "y" ]
 		then
 			UNBOUND='1'
-   			DNSMASQ_Relay_port='5353'
+   			DNSMASQ_Relay_port=$DNSMASQ_port
 			if [ "$TOR_ONION" = "1" ]
 				then
-					UNBOUND_Relay_port='9053'
+					UNBOUND_Relay_port=$DNS_TOR_port
 				elif [ "$STUBBY" = "0" ] 
 					then
-   						UNBOUND_Relay_port='53'
+   						UNBOUND_Relay_port=$DNS_port
 				else
-   					UNBOUND_Relay_port='5453'
+   					UNBOUND_Relay_port=$DNS_STUBBY_port
 			fi
 	elif [ "$TOR_ONION" = "1" ]
 		then
-			DNSMASQ_Relay_port='9053'
-			UNBOUND_Relay_port='9053'
+			DNSMASQ_Relay_port=$DNS_TOR_port
+			UNBOUND_Relay_port=$DNS_TOR_port
  			UNBOUND='0'
 	elif [ "$STUBBY" = "0" ] 
 		then
-   			DNSMASQ_Relay_port='53'
-			UNBOUND_Relay_port='53'
+   			DNSMASQ_Relay_port=$DNS_port
+			UNBOUND_Relay_port=$DNS_port
  			UNBOUND='0'
 	else
-		DNSMASQ_Relay_port='5453'
-		UNBOUND_Relay_port='5453'
+		DNSMASQ_Relay_port=$DNS_STUBBY_port
+		UNBOUND_Relay_port=$DNS_STUBBY_port
 		UNBOUND='0'
 	fi
 VLAN_ENABLE='0'
 echo
 echo
-read -p 'Would you like separate Networks for each Device-Category? [Y/n] ' -s  -n 1 VLAN_ACTIVE
-if [ "$VLAN_ACTIVE" = "" ]
+read -p 'Would you like separate Networks for each Device-Category? [Y/n] ' -s  -n 1 qVLAN_ACTIVE
+if [ "$qVLAN_ACTIVE" = "" ]
 	then
 		VLAN_ENABLE='1'
-	elif [ "$VLAN_ACTIVE" = "y" ]
+	elif [ "$qVLAN_ACTIVE" = "y" ]
  		then
 			VLAN_ENABLE='1'
  	else
@@ -399,19 +410,19 @@ echo
 
 if [ ! -z "$7" ]
 	then
-		SECURE_RULESW=$7
+		qSECURE_RULES=$7
 	else
-		SECURE_RULES='y'
+		qSECURE_RULES='y'
 fi
 
 echo
-read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 SECURE_RULES
+read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 qSECURE_RULES
 
-if [ "$SECURE_RULES" = "" ]
+if [ "$qSECURE_RULES" = "" ]
 	then
 		FW_HSactive='1'
 		#  set_HS_Firewall
-	elif [ "$SECURE_RULES" = "y" ]
+	elif [ "$qSECURE_RULES" = "y" ]
 		then
 			FW_HSactive='1'
 			#set_HS_Firewall
@@ -753,6 +764,8 @@ all_other_CONTROLER_port="1-8042 8044-65535"
 mDNS_port="5353"
 all_other_mDNS_port="1-5352 5354-65535"
 
+
+
 #Link Local Multicast Name Resolution (LLMNR)
 #5357
 LLMNR_port="5357"
@@ -947,6 +960,8 @@ ACCESS_HTTPS_port="8443"
 #TOR Onion Services
 TOR_SOCKS_port="9050"
 TOR_SOCKS2_port="9150"
+TOR_SOCKS3_port="9100"
+TOR_SOCKS4_port="9200"
 TOR_TRANS_port="9040"
 TOR_DIR_port="9030"
 TOR_OR_port="9049"
@@ -1256,6 +1271,8 @@ iptab_ACCESS_HTTPS_port="8443"
 #TOR Onion Services
 iptab_TOR_SOCKS_port="9050"
 iptab_TOR_SOCKS2_port="9150"
+iptab_TOR_SOCKS3_port="9100"
+iptab_TOR_SOCKS4_port="9200"
 iptab_TOR_TRANS_port="9040"
 iptab_TOR_DIR_port="9030"
 iptab_TOR_OR_port="9049"
@@ -3082,23 +3099,23 @@ VirtualAddrNetworkIPv6 fc00::/7
 
 ControlPort 9051
 CookieAuthentication 1
-DNSPort 127.0.0.1:9053
-DNSPort 127.0.0.1:9153
-DNSPort 0.0.0.0:9053
-DNSPort [::]:9053
+DNSPort 127.0.0.1:$(echo $DNS_TOR_port)
+DNSPort [0::1]:$(echo $DNS_TOR_port)
+DNSPort 0.0.0.0:$(echo $DNS_TOR_port)
+DNSPort [::]:$(echo $DNS_TOR_port)
 
-TransPort 0.0.0.0:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-TransPort [::]:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-#TransPort 9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort 9050 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort 9150 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort 9100 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
-SocksPort 9200 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 0.0.0.0:$(echo $TOR_TRANS_port) IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort [::]:$(echo $TOR_TRANS_port)  IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+#TransPort $(echo $TOR_TRANS_port)  IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort $(echo $TOR_SOCKS_port)  IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort $(echo $TOR_SOCKS2_port)  IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort $(echo $TOR_SOCKS3_port) IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+SocksPort $(echo $TOR_SOCKS4_port) IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
 
-#ORPort 127.0.0.1:9049
-#DirPort 9030
+#ORPort 127.0.0.1:$(echo $TOR_OR_port) NoListen
+#DirPort $(echo $TOR_DIR_port) NoListen
 
-HTTPTunnelPort 9060 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+HTTPTunnelPort $(echo $TOR_THTTP_port) IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
 
 DisableDebuggerAttachment 1
 DisableAllSwap 1
@@ -3415,9 +3432,10 @@ uci set unbound.ub_main.verbosity='1'
 
 uci add_list unbound.ub_main.outgoing_port_permit=$SDNS_port
 uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS_port
-uci add_list unbound.ub_main.outgoing_port_permit='9150'
+uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS2_port
 uci add_list unbound.ub_main.outgoing_port_permit=$DNS_TOR_port
-uci add_list unbound.ub_main.outgoing_port_permit='9153'
+uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS3_port
+uci add_list unbound.ub_main.outgoing_port_permit=$TOR_SOCKS4_port
 uci add_list unbound.ub_main.outgoing_port_avoid='1-9029'
 uci add_list unbound.ub_main.outgoing_port_avoid='9061-65335'
 
@@ -32165,8 +32183,6 @@ echo 'set Tor intercept' >> /root/install.log
 uci set firewall.ssh_int.enabled='1'
 uci set firewall.http_int.enabled='1'
 uci set firewall.https_int.enabled='1'
-uci set firewall.tcp_tor1_int.enabled='1'
-uci set firewall.tcp_tor2_int.enabled='1'
 processes=$(uci commit && reload_config)
 wait $processes >> /root/install.log
 
@@ -32304,6 +32320,19 @@ uci set firewall.homematic1.src_dip='192.168.70.52/32'
 uci set firewall.homematic1.src_dport='4443'
 uci set firewall.homematic1.extra='--syn'
 uci set firewall.homematic1.enabled='0'
+}
+
+test_tor_dns_intercept() {
+	uci -q del firewall.dns_int
+	uci set firewall.dns_int="redirect"
+	uci set firewall.dns_int.name="Intercept-DNS"
+	uci set firewall.dns_int.family="any"
+	uci set firewall.dns_int.proto="tcp udp"
+	uci set firewall.dns_int.src="lan"
+	uci set firewall.dns_int.src_dport=$DNSPort
+	uci set firewall.dns_int.target="DNAT"
+	uci commit firewall
+	service firewall restart
 }
 
 setup_tor_routing() {
