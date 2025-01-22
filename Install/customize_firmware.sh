@@ -1884,6 +1884,8 @@ ContactInfo Cyb3r4nd1@protonmail.com
 #DataDirectory /var/lib/tor
 
 EOF
+
+service tor restart
 }
 
 #-------------------------start---------------------------------------
