@@ -839,6 +839,8 @@ all_other_Bittorrent_port="1-6880 7000-65535"
 #DNS
 DNS_port="53"
 all_other_DNS_port="1-52 54-65535"
+DNSMASQ_port="53"
+all_other_DNSMASQ_port="1:52 54:65535"
 
 #Tor_dns
 DNS_TOR_port="9053"
@@ -1150,6 +1152,12 @@ iptab_all_other_eMule_port="1:4661 4663:4671 4673:65535"
 #6881:6999
 iptab_Bittorrent_port="6881:6999"
 iptab_all_other_Bittorrent_port="1:6880 7000:65535"
+
+#dns
+iptab_DNS_port="53"
+iptab_all_other_DNS_port="1:52 54:65535"
+iptab_DNSMASQ_port="53"
+iptab_all_other_DNSMASQ_port="1:52 54:65535"
 
 #Tor_dns
 iptab_DNS_TOR_port="9053"
