@@ -1858,6 +1858,7 @@ StrictNodes 1
 GeoIPExcludeUnknown 1
 
 ##MapAddress dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion 127.0.0.1 
+##MapAddress dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion [0::1]
 
 HardwareAccel 1
 
