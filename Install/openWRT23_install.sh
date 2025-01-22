@@ -325,7 +325,7 @@ fi
 echo
 
 qSDNS_PORT='y'
-DNSMASQ_Relay_port='53'
+DNSMASQ_Relay_port=$DNS_port
 echo
 
 STUBBY='1'
@@ -353,7 +353,7 @@ UNBOUND='1'
 if [ "$qDNS_PORT" = "" ]
 	then
 		UNBOUND='1'
-		DNSMASQ_Relay_port=$DNSMASQ_port
+		DNSMASQ_Relay_port=$DNS_UNBOUND_port
 		if [ "$TOR_ONION" = "1" ]
 			then
 				UNBOUND_Relay_port=$DNS_TOR_port
@@ -366,7 +366,7 @@ if [ "$qDNS_PORT" = "" ]
 	elif [ "$qDNS_PORT" = "y" ]
 		then
 			UNBOUND='1'
-   			DNSMASQ_Relay_port=$DNSMASQ_port
+   			DNSMASQ_Relay_port=$DNS_UNBOUND_port
 			if [ "$TOR_ONION" = "1" ]
 				then
 					UNBOUND_Relay_port=$DNS_TOR_port
