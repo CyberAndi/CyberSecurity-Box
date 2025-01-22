@@ -32344,6 +32344,7 @@ nft replace rule inet fw4 ${TOR_CHAIN} \
 handle ${TOR_RULE##* } \
 fib daddr type != { local, broadcast } ${TOR_RULE}
 EOF
+
 uci -q delete firewall.tor_nft
 uci set firewall.tor_nft="include"
 uci set firewall.tor_nft.path="/etc/nftables.d/tor.sh"
@@ -32376,10 +32377,10 @@ service firewall restart
 }
 
 setup_tor_routing() {
-iptables -t nat -A PREROUTING -i inet -p tcp --syn -j REDIRECT --to-ports $TOR_TRANS_port
-iptables -A FORWARD -i inet -o wan -j ACCEPT
-iptables -A FORWARD -i wan -o inet -j ACCEPT
-iptables -t nat -A POSTROUTING -o wan -j MASQUERADE
+	iptables -t nat -A PREROUTING -i inet -p tcp --syn -j REDIRECT --to-ports $TOR_TRANS_port
+	iptables -A FORWARD -i inet -o wan -j ACCEPT
+	iptables -A FORWARD -i wan -o inet -j ACCEPT
+	iptables -t nat -A POSTROUTING -o wan -j MASQUERADE
 }
 
 set_HS_Firewall() {
@@ -32477,16 +32478,16 @@ processes=$(uci commit && reload_config)
 wait $processes >> /root/install.log
 /etc/init.d/firewall restart >> /root/install.log
 if [ "$SECURE_RULES" = "" ]
-then
- FW_HSactive='1'
- set_HS_Firewall
-elif [ "$SECURE_RULES" = "y" ]
-then
+	then
 		FW_HSactive='1'
-set_HS_Firewall
-else
-  FW_HSactive='0'
-  set_HS_Firewall_disable
+		set_HS_Firewall
+	elif [ "$SECURE_RULES" = "y" ]
+		then
+			FW_HSactive='1'
+			set_HS_Firewall
+	else
+		FW_HSactive='0'
+		set_HS_Firewall_disable
 fi
 
 view_config
@@ -34812,22 +34813,22 @@ uci set firewall.blockIncoming.target="REJECT"
 uci set firewall.blockIncoming.enabled="1"
 if [ "$TOR_ONION" = "1" ]
    then
-			setup_tor_routing
+		setup_tor_routing
 fi	   
 echo
 echo 'Firewall active: ' $SECURE_RULES
 echo
 if [ "$SECURE_RULES" = "" ]
-then
- FW_HSactive='1'
- set_HS_Firewall
-elif [ "$SECURE_RULES" = "y" ]
-then
+	then
 		FW_HSactive='1'
-set_HS_Firewall
-else
-  FW_HSactive='0'
-  set_HS_Firewall_disable
+		set_HS_Firewall
+	elif [ "$SECURE_RULES" = "y" ]
+		then
+			FW_HSactive='1'
+			set_HS_Firewall
+	else
+		FW_HSactive='0'
+		set_HS_Firewall_disable
 fi
 
 processes=$(uci commit && reload_config)
@@ -35029,11 +35030,14 @@ if [ "$TOR_ONION" = "1" ]
 		echo
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept'
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Set Firewall-Intercept' >> /root/install.log
-		set_firewall_intercept >> /root/install.log
+#		set_firewall_intercept >> /root/install.log
+		test_tor_dns_intercept >> /root/install.log
+		test_Intercept_TCP >> /root/install.log
+
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Routing über Tor Onion einrichten'
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Routing über Tor Onion einrichten' >> /root/install.log
-setup_tor_routing >> /root/install.log
-fi
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Routing über Tor Onion einrichten' >> /root/install.log
+#		setup_tor_routing >> /root/install.log
+#fi
 
 #echo
 #echo >> /root/install.log
