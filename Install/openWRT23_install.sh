@@ -3072,8 +3072,6 @@ DataDirectory /var/lib/tor
 
 User tor
 
-
-
 AutomapHostsOnResolve 1
 VirtualAddrNetworkIPV4 10.192.0.0/10
 VirtualAddrNetworkIPv6 fc00::/7
@@ -3086,8 +3084,12 @@ ControlPort 9051
 CookieAuthentication 1
 DNSPort 127.0.0.1:9053
 DNSPort 127.0.0.1:9153
+DNSPort 0.0.0.0:9053
+DNSPort [::]:9053
 
-TransPort 9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort 0.0.0.0:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+TransPort [::]:9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+#TransPort 9040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
 SocksPort 9050 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
 SocksPort 9150 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
 SocksPort 9100 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
