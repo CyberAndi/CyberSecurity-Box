@@ -32493,11 +32493,11 @@ uci set firewall.filter6_fwd.target="ACCEPT"
 processes=$(uci commit && reload_config)
 wait $processes >> /root/install.log
 /etc/init.d/firewall restart >> /root/install.log
-if [ "$SECURE_RULES" = "" ]
+if [ "$qSECURE_RULES" = "" ]
 	then
 		FW_HSactive='1'
 		set_HS_Firewall
-	elif [ "$SECURE_RULES" = "y" ]
+	elif [ "$qSECURE_RULES" = "y" ]
 		then
 			FW_HSactive='1'
 			set_HS_Firewall
@@ -34832,13 +34832,13 @@ if [ "$TOR_ONION" = "1" ]
 		setup_tor_routing
 fi	   
 echo
-echo 'Firewall active: ' $SECURE_RULES
+echo 'Firewall active: ' $qSECURE_RULES
 echo
-if [ "$SECURE_RULES" = "" ]
+if [ "$qSECURE_RULES" = "" ]
 	then
 		FW_HSactive='1'
 		set_HS_Firewall
-	elif [ "$SECURE_RULES" = "y" ]
+	elif [ "$qSECURE_RULES" = "y" ]
 		then
 			FW_HSactive='1'
 			set_HS_Firewall
