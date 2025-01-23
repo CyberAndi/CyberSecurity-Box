@@ -32200,8 +32200,9 @@ echo
 }
 
 set_firewall_22_intercept() {
-
+echo
 echo 'set Tor intercept' >> /root/install.log
+echo
 # Intercept SSH, HTTP and HTTPS traffic
 uci -q delete firewall.ssh_int >/dev/null
 uci set firewall.ssh_int="redirect"
@@ -32233,104 +32234,107 @@ uci commit firewall && reload_config >/dev/null
 
 uci -q delete firewall.tcp_onion_int > /dev/null uci set firewall.tcp_onion_int="redirect"
 uci set firewall.tcp_onion_int.name="Intercept_Onion_Domain"
-uci set firewall.tcp_onion_int.src_dport=$TOR_TRANS_port
-uci set firewall.tcp_onion_int.dest_port=$TOR_TRANS_port
+uci set firewall.tcp_onion_int.src_dport="$TOR_TRANS_port"
+uci set firewall.tcp_onion_int.dest_port="$TOR_TRANS_port"
 uci set firewall.tcp_onion_int.proto="tcp"
 uci set firewall.tcp_onion_int.target="DNAT"
 uci set firewall.tcp_onion_int.src="INET"
 uci set firewall.tcp_onion_int.src_dip="10.192.0.0./10"
 uci set firewall.tcp_onion_int.extra="--syn"
-uci set firewall.tcp_onion_int.enabled='0'
+uci set firewall.tcp_onion_int.enabled="0"
 
 uci -q delete firewall.tcp_onionSocks_int > /dev/null 
 uci set firewall.tcp_onionSocks_int="redirect"
-uci set firewall.tcp_onionSocks_int.name='Intercept_Onion_Domain'
-uci set firewall.tcp_onionSocks_int.src='INET'
-uci set firewall.tcp_onionSocks_int.src_dport=$TOR_SOCKS2_port
-uci set firewall.tcp_onionSocks_int.dest_port=$TOR_SOCKS2_port
-uci set firewall.tcp_onionSocks_int.src_dip='10.192.0.0/10'
-uci set firewall.tcp_onionSocks_int.proto='tcp'
-uci set firewall.tcp_onionSocks_int.target='DNAT'
-uci set firewall.tcp_onionSocks_int.extra='--syn'
-uci set firewall.tcp_onionSocks_int.enabled='0'
+uci set firewall.tcp_onionSocks_int.name="Intercept_Onion_Domain"
+uci set firewall.tcp_onionSocks_int.src="INET"
+uci set firewall.tcp_onionSocks_int.src_dport="$TOR_SOCKS2_port"
+uci set firewall.tcp_onionSocks_int.dest_port="$TOR_SOCKS2_port"
+uci set firewall.tcp_onionSocks_int.src_dip="10.192.0.0/10"
+uci set firewall.tcp_onionSocks_int.proto="tcp"
+uci set firewall.tcp_onionSocks_int.target="DNAT"
+uci set firewall.tcp_onionSocks_int.extra="--syn"
+uci set firewall.tcp_onionSocks_int.enabled="0"
 
 uci -q delete firewall.tcp_onionSocks1_int > /dev/null 
 uci set firewall.tcp_onionSocks1_int=redirect
-uci set firewall.tcp_onionSocks1_int.name='Intercept_Onion1_Domain'
-uci set firewall.tcp_onionSocks1_int.src='INET'
-uci set firewall.tcp_onionSocks1_int.dest_port=$TOR_SOCKS_port
-uci set firewall.tcp_onionSocks1_int.src_dport=$TOR_SOCKS_port
-uci set firewall.tcp_onionSocks1_int.proto='tcp'
-uci set firewall.tcp_onionSocks1_int.target='DNAT'
-uci set firewall.tcp_onionSocks1_int.extra='--syn'
-uci set firewall.tcp_onionSocks1_int.enabled='0'
+uci set firewall.tcp_onionSocks1_int.name="Intercept_Onion1_Domain"
+uci set firewall.tcp_onionSocks1_int.src="INET"
+uci set firewall.tcp_onionSocks1_int.dest_port="$TOR_SOCKS_port"
+uci set firewall.tcp_onionSocks1_int.src_dport="$TOR_SOCKS_port"
+uci set firewall.tcp_onionSocks1_int.proto="tcp"
+uci set firewall.tcp_onionSocks1_int.target="DNAT"
+uci set firewall.tcp_onionSocks1_int.extra="--syn"
+uci set firewall.tcp_onionSocks1_int.enabled="0"
 
 uci -q delete firewall.tcp_tor2_int > /dev/null 
 uci set firewall.tcp_tor2_int=redirect
-uci set firewall.tcp_tor2_int.src_dip='!192.168.0.0/16'
-uci set firewall.tcp_tor2_int.proto='tcp'
-uci set firewall.tcp_tor2_int.target='DNAT'
-uci set firewall.tcp_tor2_int.dest_port=$TOR_TRANS_port
-uci set firewall.tcp_tor2_int.src='INET'
-uci set firewall.tcp_tor2_int.src_dport=$HTTPS_port
-uci set firewall.tcp_tor2_int.extra='--syn'
-uci set firewall.tcp_tor2_int.name='Intercept https tor'
-uci set firewall.tcp_tor2_int.enabled='0'
+uci set firewall.tcp_tor2_int.src_dip="!192.168.0.0/16"
+uci set firewall.tcp_tor2_int.proto="tcp"
+uci set firewall.tcp_tor2_int.target="DNAT"
+uci set firewall.tcp_tor2_int.dest_port="$TOR_TRANS_port"
+uci set firewall.tcp_tor2_int.src="INET"
+uci set firewall.tcp_tor2_int.src_dport="$HTTPS_port"
+uci set firewall.tcp_tor2_int.extra="--syn"
+uci set firewall.tcp_tor2_int.name="Intercept https tor"
+uci set firewall.tcp_tor2_int.enabled="0"
 
 uci -q delete firewall.tcp_tor3_int > /dev/null 
 uci set firewall.tcp_tor3_int=redirect
-uci set firewall.tcp_tor3_int.src_dip='!192.168.0.0/16'
-uci set firewall.tcp_tor3_int.proto='tcp'
-uci set firewall.tcp_tor3_int.target='DNAT'
-uci set firewall.tcp_tor3_int.dest_port=$TOR_TRANS_port
-uci set firewall.tcp_tor3_int.src='INET'
-uci set firewall.tcp_tor3_int.name='Intercept http tor'
-uci set firewall.tcp_tor3_int.src_dport=$HTTP_port
-uci set firewall.tcp_tor3_int.extra='--syn'
-uci set firewall.tcp_tor3_int.enabled='0'
+uci set firewall.tcp_tor3_int.src_dip="!192.168.0.0/16"
+uci set firewall.tcp_tor3_int.proto="tcp"
+uci set firewall.tcp_tor3_int.target="DNAT"
+uci set firewall.tcp_tor3_int.dest_port="$TOR_TRANS_port"
+uci set firewall.tcp_tor3_int.src="INET"
+uci set firewall.tcp_tor3_int.name="Intercept http tor"
+uci set firewall.tcp_tor3_int.src_dport="$HTTP_port"
+uci set firewall.tcp_tor3_int.extra="--syn"
+uci set firewall.tcp_tor3_int.enabled="0"
 
 uci -q delete firewall.omada > /dev/null
 uci set firewall.omada=redirect
-uci set firewall.omada.dest_port=$CONTROLER_port
-uci set firewall.omada.name='Network_omada'
-uci set firewall.omada.src_dport=$CONTROLER_port
-uci set firewall.omada.target='DNAT'
-uci set firewall.omada.dest_ip='192.168.71.175'
-uci set firewall.omada.dest='HCONTROL'
-uci set firewall.omada.src='INET'
-uci set firewall.omada.extra='--syn'
-uci set firewall.omada.enabled='0'
+uci set firewall.omada.dest_port="$CONTROLER_port"
+uci set firewall.omada.name="Network_omada"
+uci set firewall.omada.src_dport="$CONTROLER_port"
+uci set firewall.omada.target="DNAT"
+uci set firewall.omada.dest_ip="192.168.71.175"
+uci set firewall.omada.dest="HCONTROL"
+uci set firewall.omada.src="INET"
+uci set firewall.omada.extra="--syn"
+uci set firewall.omada.enabled="0"
 
 uci -q delete firewall.homematic > /dev/null
 uci set firewall.homematic=redirect
-uci set firewall.homematic.dest_port='80'
-uci set firewall.homematic.target='DNAT'
-uci set firewall.homematic.src='INET'
-uci set firewall.homematic.dest_ip='192.168.70.52'
-uci set firewall.homematic.dest='CONTROL'
-uci set firewall.homematic.proto='tcp'
-uci set firewall.homematic.name='Homematic ccu'
-uci set firewall.homematic.src_dip='192.168.70.52/32'
-uci set firewall.homematic.src_dport='8080'
-uci set firewall.homematic.extra='--syn'
-uci set firewall.homematic.enabled='0'
+uci set firewall.homematic.dest_port="80"
+uci set firewall.homematic.target="DNAT"
+uci set firewall.homematic.src="INET"
+uci set firewall.homematic.dest_ip="192.168.70.52"
+uci set firewall.homematic.dest="CONTROL"
+uci set firewall.homematic.proto="tcp"
+uci set firewall.homematic.name="Homematic ccu"
+uci set firewall.homematic.src_dip="192.168.70.52/32"
+uci set firewall.homematic.src_dport="8080"
+uci set firewall.homematic.extra="--syn"
+uci set firewall.homematic.enabled="0"
 
 uci -q delete firewall.homematic1 > /dev/null
 uci set firewall.homematic1=redirect
-uci set firewall.homematic1.dest_port='443'
-uci set firewall.homematic1.target='DNAT'
-uci set firewall.homematic1.src='INET'
-uci set firewall.homematic1.dest_ip='192.168.70.52'
-uci set firewall.homematic1.dest='CONTROL'
-uci set firewall.homematic1.proto='tcp'
-uci set firewall.homematic1.name='Homematic ccu'
-uci set firewall.homematic1.src_dip='192.168.70.52/32'
-uci set firewall.homematic1.src_dport='4443'
-uci set firewall.homematic1.extra='--syn'
-uci set firewall.homematic1.enabled='0'
+uci set firewall.homematic1.dest_port="443"
+uci set firewall.homematic1.target="DNAT"
+uci set firewall.homematic1.src="INET"
+uci set firewall.homematic1.dest_ip="192.168.70.52"
+uci set firewall.homematic1.dest="CONTROL"
+uci set firewall.homematic1.proto="tcp"
+uci set firewall.homematic1.name="Homematic ccu"
+uci set firewall.homematic1.src_dip="192.168.70.52/32"
+uci set firewall.homematic1.src_dport="4443"
+uci set firewall.homematic1.extra="--syn"
+uci set firewall.homematic1.enabled="0"
 }
 
 test_tor_dns_intercept() {
+	echo
+	echo 'set Tor intercept DNS' >> /root/install.log
+	echo
 	uci -q del firewall.dns_int
 	uci set firewall.dns_int="redirect"
 	uci set firewall.dns_int.name="Intercept-DNS"
@@ -32339,11 +32343,15 @@ test_tor_dns_intercept() {
 	uci set firewall.dns_int.src="lan"
 	uci set firewall.dns_int.src_dport=$DNSPort
 	uci set firewall.dns_int.target="DNAT"
-	uci commit firewall
-	service firewall restart
+	processes=$(uci commit && reload_config)
+	wait $processes >> /root/install.log
+	/etc/init.d/firewall restart >> /root/install.log
 }
 
 test_Intercept_TCP() {
+echo
+echo 'set Tor intercept TCP' >> /root/install.log
+echo
 cat << "EOF" > /etc/nftables.d/tor.sh
 TOR_CHAIN="dstnat_$(uci -q get firewall.tcp_int.src)"
 TOR_RULE="$(nft -a list chain inet fw4 ${TOR_CHAIN} \
@@ -32376,11 +32384,11 @@ uci set firewall.tcp2_int.proto="tcp"
 uci set firewall.tcp2_int.family="any"
 uci set firewall.tcp2_int.target="DNAT"
 
-# Disable LAN to WAN forwarding
 uci -q delete firewall.@forwarding[0]
 uci -q delete firewall.@forwarding[4]
-uci commit firewall
-service firewall restart
+processes=$(uci commit && reload_config)
+wait $processes >> /root/install.log
+/etc/init.d/firewall restart >> /root/install.log
 
 }
 
@@ -35066,8 +35074,8 @@ if [ "$AD_GUARD" = "1" ]
 	then
 		echo
   		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Set_Mountpoints' 
-echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Set_Mountpoints' >> /root/install.log
-set_mountpoints >> /root/install.log
+		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Set_Mountpoints' >> /root/install.log
+		set_mountpoints >> /root/install.log
 		echo
 	  	echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard'
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S':') ' Install Adguard' >> /root/install.log
