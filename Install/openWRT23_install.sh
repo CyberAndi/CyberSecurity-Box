@@ -31451,7 +31451,7 @@ set_dhcp_sub() {
 						uci add_list dhcp.Blacklist.notinterface='br-lan.110'
 						uci add_list dhcp.Blacklist.notinterface='loopback'
 					else
-					echo $main_release >> /root/install.log
+						echo $main_release >> /root/install.log
 						uci add_list dhcp.Blacklist.interface='br-lan.105'
 						uci add_list dhcp.Blacklist.interface='br-lan.106'
 						uci add_list dhcp.Blacklist.interface='br-lan.107'
