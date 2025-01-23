@@ -19,8 +19,8 @@ echo
 echo 'DNS-Server:   '$DNS_IP
 echo
 echo 'DNS-Relay Port:   '$DNSMASQ_Relay_port
-echo 'Tor/Onion:'$TOR_ONION
-echo 'Firewall: '$FW_HSactive
+echo 'Tor/Onion:	'$TOR_ONION
+echo 'Firewall: 	'$FW_HSactive
 echo
 echo 'Client-WiFi SSID: '$INET_ssid
 echo 'Key:  '$WIFI_PASS
