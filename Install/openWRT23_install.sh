@@ -418,6 +418,8 @@ fi
 echo
 read -p 'Activate HighSecure-Firewall? [Y/n] ' -s  -n 1 qSECURE_RULES
 
+echo >> /root/install.log
+echo $qSECURE_RULES >> /root/install.log
 if [ "$qSECURE_RULES" = "" ]
 	then
 		FW_HSactive='1'
