@@ -35062,7 +35062,7 @@ if [ "$TOR_ONION" = "1" ]
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Routing über Tor Onion einrichten'
 		echo $(date +%d'.'%m'.'%y' '%H':'%M':'%S) ' Routing über Tor Onion einrichten' >> /root/install.log
 #		setup_tor_routing >> /root/install.log
-#fi
+fi
 
 #echo
 #echo >> /root/install.log
