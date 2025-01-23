@@ -32343,7 +32343,7 @@ test_tor_dns_intercept() {
 	uci set firewall.dns_int.family="any"
 	uci set firewall.dns_int.proto="tcp udp"
 	uci set firewall.dns_int.src="lan"
-	uci set firewall.dns_int.src_dport=$DNSPort
+	uci set firewall.dns_int.src_dport=$DNS_port
 	uci set firewall.dns_int.target="DNAT"
 	processes=$(uci commit && reload_config)
 	wait $processes >> /root/install.log
