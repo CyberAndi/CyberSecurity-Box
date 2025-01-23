@@ -32422,6 +32422,9 @@ uci set firewall.otherProt.enabled='1'
 uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.enabled="1"
 uci set firewall.Block_all_other_EXT_HEIGHT_PORT.enabled="1"
 uci set firewall.blockIncoming.enabled='1'
+echo 
+echo 'Firewall enabled' >> /root/install.log
+echo
 processes=$(uci commit && reload_config)
 wait $processes >> /root/install.log
 /etc/init.d/firewall restart >> /root/install.log
@@ -32448,6 +32451,9 @@ uci set firewall.otherProt.enabled='1'
 uci set firewall.Block_all_other_EXT_HEIGHT_PORT_UDP.enabled="1"
 uci set firewall.Block_all_other_EXT_HEIGHT_PORT.enabled="1"
 uci set firewall.blockIncoming.enabled='1'
+echo 
+echo 'Firewall disabled' >> /root/install.log
+echo
 processes=$(uci commit && reload_config)
 wait $processes >> /root/install.log
 /etc/init.d/firewall restart >> /root/install.log
@@ -34835,6 +34841,7 @@ if [ "$TOR_ONION" = "1" ]
 fi	   
 echo
 echo 'Firewall active: ' $qSECURE_RULES
+echo $FW_HSactive
 echo
 if [ "$qSECURE_RULES" = "" ]
 	then
