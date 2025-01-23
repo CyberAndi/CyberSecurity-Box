@@ -32358,9 +32358,15 @@ cat << "EOF" > /etc/nftables.d/tor.sh
 TOR_CHAIN="dstnat_$(uci -q get firewall.tcp_int.src)"
 TOR_RULE="$(nft -a list chain inet fw4 ${TOR_CHAIN} \
 | sed -n -e "/Intercept-TCP/p")"
+TOR_CHAIN2="dstnat_$(uci -q get firewall.tcp2_int.src)"
+TOR_RULE2="$(nft -a list chain inet fw4 ${TOR_CHAIN2} \
+| sed -n -e "/Intercept2-TCP/p")"
 nft replace rule inet fw4 ${TOR_CHAIN} \
 handle ${TOR_RULE##* } \
 fib daddr type != { local, broadcast } ${TOR_RULE}
+nft replace rule inet fw4 ${TOR_CHAIN2} \
+handle ${TOR_RULE2##* } \
+fib daddr type != { local, broadcast } ${TOR_RULE2}
 EOF
 
 uci -q delete firewall.tor_nft
@@ -32369,22 +32375,24 @@ uci set firewall.tor_nft.path="/etc/nftables.d/tor.sh"
 uci -q delete firewall.tcp_int
 uci set firewall.tcp_int="redirect"
 uci set firewall.tcp_int.name="Intercept-TCP"
-uci set firewall.tcp_int.src="lan"
+uci set firewall.tcp_int.src="INET"
 uci set firewall.tcp_int.src_dport="0-65535"
 uci set firewall.tcp_int.dest_port="$TOR_TRANS_port"
 uci set firewall.tcp_int.proto="tcp"
 uci set firewall.tcp_int.family="any"
 uci set firewall.tcp_int.target="DNAT"
+uci set firewall.tcp_int.extra="--syn"
 
 uci -q delete firewall.tcp2_int
 uci set firewall.tcp2_int="redirect"
-uci set firewall.tcp2_int.name="Intercept-TCP"
-uci set firewall.tcp2_int.src="INET"
+uci set firewall.tcp2_int.name="Intercept2-TCP"
+uci set firewall.tcp2_int.src="lan"
 uci set firewall.tcp2_int.src_dport="0-65535"
 uci set firewall.tcp2_int.dest_port="$TOR_TRANS_port"
 uci set firewall.tcp2_int.proto="tcp"
 uci set firewall.tcp2_int.family="any"
 uci set firewall.tcp2_int.target="DNAT"
+uci set firewall.tcp2_int.extra="--syn"
 
 uci -q delete firewall.@forwarding[0]
 uci -q delete firewall.@forwarding[4]
