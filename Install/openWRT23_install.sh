@@ -32582,100 +32582,100 @@ uci -q delete firewall.tcp_onion_int > /dev/null
 uci set firewall.tcp_onion_int="redirect"
 uci set firewall.tcp_onion_int.name="Intercept_Onion_Domain"
 uci set firewall.tcp_onion_int.src="INET"
-uci set firewall.tcp_onion_int.src_dport=$TOR_TRANS_port
-uci set firewall.tcp_onion_int.dest_port=$TOR_TRANS_port
+uci set firewall.tcp_onion_int.src_dport="$TOR_TRANS_port"
+uci set firewall.tcp_onion_int.dest_port="$TOR_TRANS_port"
 uci set firewall.tcp_onion_int.src_dip="10.192.0.0./10"
 uci set firewall.tcp_onion_int.proto="tcp"
 uci set firewall.tcp_onion_int.target="DNAT"
 uci set firewall.tcp_onion_int.extra="--syn"
-uci set firewall.tcp_onion_int.enabled='0'
+uci set firewall.tcp_onion_int.enabled="0"
 
 uci -q delete firewall.tcp_onionSocks_int > /dev/null 
 uci set firewall.tcp_onionSocks_int="redirect"
-uci set firewall.tcp_onionSocks_int.name='Intercept_Onion_Domain'
-uci set firewall.tcp_onionSocks_int.src='INET'
-uci set firewall.tcp_onionSocks_int.src_dport=$TOR_SOCKS2_port
-uci set firewall.tcp_onionSocks_int.dest_port=$TOR_SOCKS2_port
-uci set firewall.tcp_onionSocks_int.src_dip='10.192.0.0/10'
-uci set firewall.tcp_onionSocks_int.proto='tcp'
-uci set firewall.tcp_onionSocks_int.target='DNAT'
-uci set firewall.tcp_onionSocks_int.extra='--syn'
-uci set firewall.tcp_onionSocks_int.enabled='0'
+uci set firewall.tcp_onionSocks_int.name="Intercept_Onion_Domain"
+uci set firewall.tcp_onionSocks_int.src="INET"
+uci set firewall.tcp_onionSocks_int.src_dport="$TOR_SOCKS2_port"
+uci set firewall.tcp_onionSocks_int.dest_port="$TOR_SOCKS2_port"
+uci set firewall.tcp_onionSocks_int.src_dip="10.192.0.0/10"
+uci set firewall.tcp_onionSocks_int.proto="tcp"
+uci set firewall.tcp_onionSocks_int.target="DNAT"
+uci set firewall.tcp_onionSocks_int.extra="--syn"
+uci set firewall.tcp_onionSocks_int.enabled="0"
 
 uci -q delete firewall.tcp_onionSocks1_int > /dev/null 
 uci set firewall.tcp_onionSocks1_int=redirect
-uci set firewall.tcp_onionSocks1_int.name='Intercept_Onion1_Domain'
-uci set firewall.tcp_onionSocks1_int.src='INET'
-uci set firewall.tcp_onionSocks1_int.dest_port=$TOR_SOCKS_port
-uci set firewall.tcp_onionSocks1_int.src_dport=$TOR_SOCKS_port
-uci set firewall.tcp_onionSocks1_int.proto='tcp'
-uci set firewall.tcp_onionSocks1_int.target='DNAT'
-uci set firewall.tcp_onionSocks1_int.extra='--syn'
-uci set firewall.tcp_onionSocks1_int.enabled='0'
+uci set firewall.tcp_onionSocks1_int.name="Intercept_Onion1_Domain"
+uci set firewall.tcp_onionSocks1_int.src="INET"
+uci set firewall.tcp_onionSocks1_int.dest_port="$TOR_SOCKS_port"
+uci set firewall.tcp_onionSocks1_int.src_dport="$TOR_SOCKS_port"
+uci set firewall.tcp_onionSocks1_int.proto="tcp"
+uci set firewall.tcp_onionSocks1_int.target="DNAT"
+uci set firewall.tcp_onionSocks1_int.extra="--syn"
+uci set firewall.tcp_onionSocks1_int.enabled="0"
 
 uci -q delete firewall.tcp_tor2_int > /dev/null 
 uci set firewall.tcp_tor2_int=redirect
-uci set firewall.tcp_tor2_int.src_dip='!192.168.0.0/16'
-uci set firewall.tcp_tor2_int.proto='tcp'
-uci set firewall.tcp_tor2_int.target='DNAT'
-uci set firewall.tcp_tor2_int.dest_port=$TOR_TRANS_port
-uci set firewall.tcp_tor2_int.src='INET'
-uci set firewall.tcp_tor2_int.src_dport=$HTTPS_port
-uci set firewall.tcp_tor2_int.extra='--syn'
-uci set firewall.tcp_tor2_int.name='Intercept https tor'
-uci set firewall.tcp_tor2_int.enabled='0'
+uci set firewall.tcp_tor2_int.src_dip="!192.168.0.0/16"
+uci set firewall.tcp_tor2_int.proto="tcp"
+uci set firewall.tcp_tor2_int.target="DNAT"
+uci set firewall.tcp_tor2_int.dest_port="$TOR_TRANS_port"
+uci set firewall.tcp_tor2_int.src="INET"
+uci set firewall.tcp_tor2_int.src_dport="$HTTPS_port"
+uci set firewall.tcp_tor2_int.extra="--syn"
+uci set firewall.tcp_tor2_int.name="Intercept https tor"
+uci set firewall.tcp_tor2_int.enabled="0"
 
 uci -q delete firewall.tcp_tor3_int > /dev/null 
 uci set firewall.tcp_tor3_int=redirect
-uci set firewall.tcp_tor3_int.src_dip='!192.168.0.0/16'
-uci set firewall.tcp_tor3_int.proto='tcp'
-uci set firewall.tcp_tor3_int.target='DNAT'
-uci set firewall.tcp_tor3_int.dest_port=$TOR_TRANS_port
-uci set firewall.tcp_tor3_int.src='INET'
-uci set firewall.tcp_tor3_int.name='Intercept http tor'
-uci set firewall.tcp_tor3_int.src_dport=$HTTP_port
-uci set firewall.tcp_tor3_int.extra='--syn'
-uci set firewall.tcp_tor3_int.enabled='0'
+uci set firewall.tcp_tor3_int.src_dip="!192.168.0.0/16"
+uci set firewall.tcp_tor3_int.proto="tcp"
+uci set firewall.tcp_tor3_int.target="DNAT"
+uci set firewall.tcp_tor3_int.dest_port="$TOR_TRANS_port"
+uci set firewall.tcp_tor3_int.src="INET"
+uci set firewall.tcp_tor3_int.name="Intercept http tor"
+uci set firewall.tcp_tor3_int.src_dport="$HTTP_port"
+uci set firewall.tcp_tor3_int.extra="--syn"
+uci set firewall.tcp_tor3_int.enabled="0"
 
 uci -q delete firewall.omada > /dev/null
 uci set firewall.omada=redirect
-uci set firewall.omada.dest_port=$CONTROLER_port
-uci set firewall.omada.name='Network_omada'
-uci set firewall.omada.src_dport=$CONTROLER_port
-uci set firewall.omada.target='DNAT'
-uci set firewall.omada.dest_ip='192.168.71.175'
-uci set firewall.omada.dest='HCONTROL'
-uci set firewall.omada.src='INET'
-uci set firewall.omada.extra='--syn'
-uci set firewall.omada.enabled='0'
+uci set firewall.omada.dest_port="$CONTROLER_port"
+uci set firewall.omada.name="Network_omada"
+uci set firewall.omada.src_dport="$CONTROLER_port"
+uci set firewall.omada.target="DNAT"
+uci set firewall.omada.dest_ip="192.168.71.175"
+uci set firewall.omada.dest="HCONTROL"
+uci set firewall.omada.src="INET"
+uci set firewall.omada.extra="--syn"
+uci set firewall.omada.enabled="0"
 
 uci -q delete firewall.homematic > /dev/null
 uci set firewall.homematic=redirect
-uci set firewall.homematic.dest_port='80'
-uci set firewall.homematic.target='DNAT'
-uci set firewall.homematic.src='INET'
-uci set firewall.homematic.dest_ip='192.168.70.52'
-uci set firewall.homematic.dest='CONTROL'
-uci set firewall.homematic.proto='tcp'
-uci set firewall.homematic.name='Homematic ccu'
-uci set firewall.homematic.src_dip='192.168.70.52/32'
-uci set firewall.homematic.src_dport='8080'
-uci set firewall.homematic.extra='--syn'
-uci set firewall.homematic.enabled='0'
+uci set firewall.homematic.dest_port="80"
+uci set firewall.homematic.target="DNAT"
+uci set firewall.homematic.src="INET"
+uci set firewall.homematic.dest_ip="192.168.70.52"
+uci set firewall.homematic.dest="CONTROL"
+uci set firewall.homematic.proto="tcp"
+uci set firewall.homematic.name="Homematic ccu"
+uci set firewall.homematic.src_dip="192.168.70.52/32"
+uci set firewall.homematic.src_dport="8080"
+uci set firewall.homematic.extra="--syn"
+uci set firewall.homematic.enabled="0"
 
 uci -q delete firewall.homematic1 > /dev/null
 uci set firewall.homematic1=redirect
-uci set firewall.homematic1.dest_port='443'
-uci set firewall.homematic1.target='DNAT'
-uci set firewall.homematic1.src='INET'
-uci set firewall.homematic1.dest_ip='192.168.70.52'
-uci set firewall.homematic1.dest='CONTROL'
-uci set firewall.homematic1.proto='tcp'
-uci set firewall.homematic1.name='Homematic ccu'
-uci set firewall.homematic1.src_dip='192.168.70.52/32'
-uci set firewall.homematic1.src_dport='4443'
-uci set firewall.homematic1.extra='--syn'
-uci set firewall.homematic1.enabled='0'
+uci set firewall.homematic1.dest_port="43"
+uci set firewall.homematic1.target="NAT"
+uci set firewall.homematic1.src="NET"
+uci set firewall.homematic1.dest_ip="12.168.70.52"
+uci set firewall.homematic1.dest="CONTROL"
+uci set firewall.homematic1.proto="tcp"
+uci set firewall.homematic1.name="Homematic ccu"
+uci set firewall.homematic1.src_dip="192.168.70.52/32"
+uci set firewall.homematic1.src_dport="4443"
+uci set firewall.homematic1.extra="--syn"
+uci set firewall.homematic1.enabled="0"
 
 #-----------------------------------------------------------------------------
 
@@ -32728,43 +32728,43 @@ uci set firewall.WebClient.target="ACCEPT"
 #Office_Client (Port)
 # 21 22 23 25 53 67 80 110 123 139 138 137 443 445 515 548 631 853 2049 5353 9030 9040 9049 9050 9053 9060 9100 50275 54715 54789 51465 56343 56534 57687 60870
 uci set firewall.OfficeClient=rule
-uci set firewall.OfficeClient.src='INET'
-uci set firewall.OfficeClient.name='Allow_OfficeClient'
-uci set firewall.OfficeClient.dest='SERVER'
-uci set firewall.OfficeClient.proto='udp tcp'
-uci set firewall.OfficeClient.target='ACCEPT'
+uci set firewall.OfficeClient.src="INET"
+uci set firewall.OfficeClient.name="Allow_OfficeClient"
+uci set firewall.OfficeClient.dest="SERVER"
+uci set firewall.OfficeClient.proto="udp tcp"
+uci set firewall.OfficeClient.target="ACCEPT"
 uci set firewall.OfficeClient.dest_port="$OfficeClient_port"
-uci set firewall.OfficeClient.enabled='0'
+uci set firewall.OfficeClient.enabled="0"
 #1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
 
 uci set firewall.OfficeWebClient=rule
-uci set firewall.OfficeWebClient.src='INET'
-uci set firewall.OfficeWebClient.name='Allow_OfficeClient_WEB'
-uci set firewall.OfficeWebClient.dest='wan'
-uci set firewall.OfficeWebClient.proto='udp tcp'
-uci set firewall.OfficeWebClient.target='ACCEPT'
+uci set firewall.OfficeWebClient.src="INET"
+uci set firewall.OfficeWebClient.name="Allow_OfficeClient_WEB"
+uci set firewall.OfficeWebClient.dest="wan"
+uci set firewall.OfficeWebClient.proto="udp tcp"
+uci set firewall.OfficeWebClient.target="ACCEPT"
 uci set firewall.OfficeWebClient.dest_port="$OfficeWebClient_port"
-uci set firewall.OfficeWebClient.enabled='0'
+uci set firewall.OfficeWebClient.enabled="0"
 
 #Alexa (Port)
 #"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
 #udp 4070 5353 40317 49317 33434 50000:60000 3478:3481
 uci set firewall.Amazon_Alexa=rule
-uci set firewall.Amazon_Alexa.name='Allow_AmazonAlexa'
-uci set firewall.Amazon_Alexa.proto='tcp'
-uci set firewall.Amazon_Alexa.dest='wan'
-uci set firewall.Amazon_Alexa.target='ACCEPT'
-uci set firewall.Amazon_Alexa.src='VOICE'
+uci set firewall.Amazon_Alexa.name="Allow_AmazonAlexa"
+uci set firewall.Amazon_Alexa.proto="tcp"
+uci set firewall.Amazon_Alexa.dest="wan"
+uci set firewall.Amazon_Alexa.target="ACCEPT"
+uci set firewall.Amazon_Alexa.src="VOICE"
 uci set firewall.Amazon_Alexa.dest_port="$Amazon_Alexa_port"
-uci set firewall.Amazon_Alexa_.enabled='0'
+uci set firewall.Amazon_Alexa_.enabled="0"
 uci set firewall.Amazon_Alexa_UDP=rule
-uci set firewall.Amazon_Alexa_UDP.name='Allow_AmazonAlexa_UDP'
-uci set firewall.Amazon_Alexa_UDP.proto='udp'
-uci set firewall.Amazon_Alexa_UDP.dest='wan'
-uci set firewall.Amazon_Alexa_UDP.target='ACCEPT'
-uci set firewall.Amazon_Alexa_UDP.src='VOICE'
+uci set firewall.Amazon_Alexa_UDP.name="Allow_AmazonAlexa_UDP"
+uci set firewall.Amazon_Alexa_UDP.proto="udp"
+uci set firewall.Amazon_Alexa_UDP.dest="wan"
+uci set firewall.Amazon_Alexa_UDP.target="ACCEPT"
+uci set firewall.Amazon_Alexa_UDP.src="VOICE"
 uci set firewall.Amazon_Alexa_UDP.dest_port="$Amazon_Alexa_UDP_port"
-uci set firewall.Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Amazon_Alexa_UDP.enabled="0"
 
 #Google Assistent (Port)
 #uci set firewall.Google_assistent=rule
@@ -33405,43 +33405,43 @@ uci set firewall.Block_WebClient.target="REJECT"
 #Office_Client (Port)
 # 21 22 23 25 53 67 80 110 123 139 138 137 443 445 515 548 631 853 2049 5353 9030 9040 9049 9050 9053 9060 9100 50275 54715 54789 51465 56343 56534 57687 60870
 uci set firewall.Block_OfficeClient=rule
-uci set firewall.Block_OfficeClient.src='INET'
-uci set firewall.Block_OfficeClient.name='Block_OfficeClient'
-uci set firewall.Block_OfficeClient.dest='SERVER'
-uci set firewall.Block_OfficeClient.proto='udp tcp'
-uci set firewall.Block_OfficeClient.target='REJECT'
+uci set firewall.Block_OfficeClient.src="INET"
+uci set firewall.Block_OfficeClient.name="Block_OfficeClient"
+uci set firewall.Block_OfficeClient.dest="SERVER"
+uci set firewall.Block_OfficeClient.proto="udp tcp"
+uci set firewall.Block_OfficeClient.target="REJECT"
 uci set firewall.Block_OfficeClient.dest_port="$OfficeClient_port"
 #1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
-uci set firewall.Block_OfficeClient.enabled='0'
+uci set firewall.Block_OfficeClient.enabled="0"
 
 uci set firewall.Block_OfficeWebClient=rule
-uci set firewall.Block_OfficeWebClient.src='INET'
-uci set firewall.Block_OfficeWebClient.name='Block_OfficeClient_WEB'
-uci set firewall.Block_OfficeWebClient.dest='wan'
-uci set firewall.Block_OfficeWebClient.proto='udp tcp'
-uci set firewall.Block_OfficeWebClient.target='REJECT'
+uci set firewall.Block_OfficeWebClient.src="INET"
+uci set firewall.Block_OfficeWebClient.name="Block_OfficeClient_WEB"
+uci set firewall.Block_OfficeWebClient.dest="wan"
+uci set firewall.Block_OfficeWebClient.proto="udp tcp"
+uci set firewall.Block_OfficeWebClient.target="REJECT"
 uci set firewall.Block_OfficeWebClient.dest_port="$OfficeWebClient_port"
-uci set firewall.Block_OfficeWebClient.enabled='0'
+uci set firewall.Block_OfficeWebClient.enabled="0"
 
 #Alexa (Port)
 #"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
 #udp 4070 5353 40317 49317 33434 50000:60000 3478:3481
 uci set firewall.Block_Amazon_Alexa=rule
-uci set firewall.Block_Amazon_Alexa.name='Block_AmazonAlexa'
-uci set firewall.Block_Amazon_Alexa.proto='tcp'
-uci set firewall.Block_Amazon_Alexa.dest='wan'
-uci set firewall.Block_Amazon_Alexa.target='REJECT'
-uci set firewall.Block_Amazon_Alexa.src='VOICE'
+uci set firewall.Block_Amazon_Alexa.name="Block_AmazonAlexa"
+uci set firewall.Block_Amazon_Alexa.proto="tcp"
+uci set firewall.Block_Amazon_Alexa.dest="wan"
+uci set firewall.Block_Amazon_Alexa.target="REJECT"
+uci set firewall.Block_Amazon_Alexa.src="VOICE"
 uci set firewall.Block_Amazon_Alexa.dest_port="$Amazon_Alexa_port"
-uci set firewall.Block_Amazon_Alexa.enabled='0'
+uci set firewall.Block_Amazon_Alexa.enabled="0"
 uci set firewall.Block_Amazon_Alexa_UDP=rule
-uci set firewall.Block_Amazon_Alexa_UDP.name='Block_AmazonAlexa_UDP'
-uci set firewall.Block_Amazon_Alexa_UDP.proto='udp'
-uci set firewall.Block_Amazon_Alexa_UDP.dest='wan'
-uci set firewall.Block_Amazon_Alexa_UDP.target='REJECT'
-uci set firewall.Block_Amazon_Alexa_UDP.src='VOICE'
+uci set firewall.Block_Amazon_Alexa_UDP.name="Block_AmazonAlexa_UDP"
+uci set firewall.Block_Amazon_Alexa_UDP.proto="udp"
+uci set firewall.Block_Amazon_Alexa_UDP.dest="wan"
+uci set firewall.Block_Amazon_Alexa_UDP.target="REJECT"
+uci set firewall.Block_Amazon_Alexa_UDP.src="VOICE"
 uci set firewall.Block_Amazon_Alexa_UDP.dest_port="$Amazon_Alexa_UDP_port"
-uci set firewall.Block_Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Block_Amazon_Alexa_UDP.enabled="0"
 
 #Google Assistent (Port)
 #uci set firewall.Block_Google_assistent=rule
@@ -34083,44 +34083,44 @@ uci set firewall.Allow_only_WebClient.target="REJECT"
 #Office_Client (Port)
 # 21 22 23 25 53 67 80 110 123 139 138 137 443 445 515 548 631 853 2049 5353 9030 9040 9049 9050 9053 9060 9100 50275 54715 54789 51465 56343 56534 57687 60870
 uci set firewall.Allow_only_OfficeClient=rule
-uci set firewall.Allow_only_OfficeClient.src='INET'
-uci set firewall.Allow_only_OfficeClient.name='Allow_only_OfficeClient'
-uci set firewall.Allow_only_OfficeClient.dest='SERVER'
-uci set firewall.Allow_only_OfficeClient.proto='udp tcp'
-uci set firewall.Allow_only_OfficeClient.target='REJECT'
+uci set firewall.Allow_only_OfficeClient.src="INET"
+uci set firewall.Allow_only_OfficeClient.name="Allow_only_OfficeClient"
+uci set firewall.Allow_only_OfficeClient.dest="SERVER"
+uci set firewall.Allow_only_OfficeClient.proto="udp tcp"
+uci set firewall.Allow_only_OfficeClient.target="REJECT"
 uci set firewall.Allow_only_OfficeClient.dest_port="$all_other_OfficeClient_port"
 #1-20 24 26-52 54-66 68-79 81-109 111-122 124-136 140-442 444 446-514 516-547 549-630 632-852 854-2048 2050-5352 5354-8442 8444-9029 9031-9039 9041-9048 9051 9052 9054-9059 9061-9099 9101-40442 40446-50274 50276-51464 51465-54714 54716-54788 54790-56342 56344-56533 56535-57686 57688-60869 60871-65535'
-uci set firewall.Allow_only_OfficeClient.enabled='0'
+uci set firewall.Allow_only_OfficeClient.enabled="0"
 
 uci set firewall.Allow_only_OfficeWebClient=rule
-uci set firewall.Allow_only_OfficeWebClient.src='INET'
-uci set firewall.Allow_only_OfficeWebClient.name='Allow_only_OfficeClient_WEB'
-uci set firewall.Allow_only_OfficeWebClient.dest='wan'
-uci set firewall.Allow_only_OfficeWebClient.proto='udp tcp'
-uci set firewall.Allow_only_OfficeWebClient.target='REJECT'
+uci set firewall.Allow_only_OfficeWebClient.src="INET"
+uci set firewall.Allow_only_OfficeWebClient.name="Allow_only_OfficeClient_WEB"
+uci set firewall.Allow_only_OfficeWebClient.dest="wan"
+uci set firewall.Allow_only_OfficeWebClient.proto="udp tcp"
+uci set firewall.Allow_only_OfficeWebClient.target="REJECT"
 uci set firewall.Allow_only_OfficeWebClient.dest_port="$all_other_OfficeWebClient_port"
-uci set firewall.Allow_only_OfficeWebClient.enabled='0'
+uci set firewall.Allow_only_OfficeWebClient.enabled="0"
 
 #Alexa (Port)
 #"67:68 8080 40317 49317 33434 123 54838 55443 46053 1000:10000 50000:65000 16000:26000"
 #udp 4070 5353 40317 49317 33434 50000:60000 3478:3481
 uci set firewall.Allow_only_Amazon_Alexa=rule
-uci set firewall.Allow_only_Amazon_Alexa.name='Allow_only_AmazonAlexa'
-uci set firewall.Allow_only_Amazon_Alexa.proto='tcp'
-uci set firewall.Allow_only_Amazon_Alexa.dest='wan'
-uci set firewall.Allow_only_Amazon_Alexa.target='REJECT'
-uci set firewall.Allow_only_Amazon_Alexa.src='VOICE'
+uci set firewall.Allow_only_Amazon_Alexa.name="Allow_only_AmazonAlexa"
+uci set firewall.Allow_only_Amazon_Alexa.proto="tcp"
+uci set firewall.Allow_only_Amazon_Alexa.dest="wan"
+uci set firewall.Allow_only_Amazon_Alexa.target="REJECT"
+uci set firewall.Allow_only_Amazon_Alexa.src="VOICE"
 uci set firewall.Allow_only_Amazon_Alexa.dest_port="$all_other_Amazon_Alexa_port"
-uci set firewall.Allow_only_Amazon_Alexa.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa.enabled="0"
 
 uci set firewall.Allow_only_Amazon_Alexa_UDP=rule
-uci set firewall.Allow_only_Amazon_Alexa_UDP.name='Allow_only_AmazonAlexa_UDP'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.proto='udp'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.dest='wan'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.target='REJECT'
-uci set firewall.Allow_only_Amazon_Alexa_UDP.src='VOICE'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.name="Allow_only_AmazonAlexa_UDP"
+uci set firewall.Allow_only_Amazon_Alexa_UDP.proto="udp"
+uci set firewall.Allow_only_Amazon_Alexa_UDP.dest="wan"
+uci set firewall.Allow_only_Amazon_Alexa_UDP.target="REJECT"
+uci set firewall.Allow_only_Amazon_Alexa_UDP.src="VOICE"
 uci set firewall.Allow_only_Amazon_Alexa_UDP.dest_port="$all_other_Amazon_Alexa_UDP_port"
-uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled='0'
+uci set firewall.Allow_only_Amazon_Alexa_UDP.enabled="0"
 
 #Google Assistent (Port)
 #uci set firewall.Allow_only_Google_assistent=rule
@@ -34712,69 +34712,69 @@ uci set firewall.Allow_only_UPNP.enabled="0"
 if [ "$VLAN_ENABLE" = "1" ]
 	then
 		uci set firewall.Allow_Only_WebClient1=rule
-		uci set firewall.Allow_Only_WebClient1.src='CONTROL'
-		uci set firewall.Allow_Only_WebClient1.dest='wan'
-		uci set firewall.Allow_Only_WebClient1.name='Allow_only_WebClient_CONTROL'
-		uci set firewall.Allow_Only_WebClient1.target='REJECT'
+		uci set firewall.Allow_Only_WebClient1.src="CONTROL"
+		uci set firewall.Allow_Only_WebClient1.dest="wan"
+		uci set firewall.Allow_Only_WebClient1.name="Allow_only_WebClient_CONTROL"
+		uci set firewall.Allow_Only_WebClient1.target="REJECT"
 		uci set firewall.Allow_Only_WebClient1.dest_port="$all_other_OfficeWebClient_port"
-		uci set firewall.Allow_Only_WebClient1.enabled='0'
+		uci set firewall.Allow_Only_WebClient1.enabled="0"
 
 
 		uci set firewall.Allow_Only_WebClient2=rule
-		uci set firewall.Allow_Only_WebClient2.src='HCONTROL'
-		uci set firewall.Allow_Only_WebClient2.dest='wan'
-		uci set firewall.Allow_Only_WebClient2.name='Allow_only_WebClient_HCONTROL'
-		uci set firewall.Allow_Only_WebClient2.target='REJECT'
+		uci set firewall.Allow_Only_WebClient2.src="HCONTROL"
+		uci set firewall.Allow_Only_WebClient2.dest="wan"
+		uci set firewall.Allow_Only_WebClient2.name="Allow_only_WebClient_HCONTROL"
+		uci set firewall.Allow_Only_WebClient2.target="REJECT"
 		uci set firewall.Allow_Only_WebClient2.dest_port="$all_other_OfficeWebClient_port"
-		uci set firewall.Allow_Only_WebClient2.enabled='0'
+		uci set firewall.Allow_Only_WebClient2.enabled="0"
 
 		uci set firewall.Allow_Only_WebClient3=rule
-		uci set firewall.Allow_Only_WebClient3.src='SERVER'
-		uci set firewall.Allow_Only_WebClient3.dest='wan'
-		uci set firewall.Allow_Only_WebClient3.name='Allow_only_WebClient_SERVER'
-		uci set firewall.Allow_Only_WebClient3.target='REJECT'
+		uci set firewall.Allow_Only_WebClient3.src="SERVER"
+		uci set firewall.Allow_Only_WebClient3.dest="wan"
+		uci set firewall.Allow_Only_WebClient3.name="Allow_only_WebClient_SERVER"
+		uci set firewall.Allow_Only_WebClient3.target="REJECT"
 		uci set firewall.Allow_Only_WebClient3.dest_port="$all_other_OfficeWebClient_port"
-		uci set firewall.Allow_Only_WebClient3.enabled='0'
+		uci set firewall.Allow_Only_WebClient3.enabled="0"
 
 		uci set firewall.Allow_Only_WebClient4=rule
-		uci set firewall.Allow_Only_WebClient4.src='GUEST'
-		uci set firewall.Allow_Only_WebClient4.dest='wan'
-		uci set firewall.Allow_Only_WebClient4.name='Allow_only_WebClient_GUEST'
-		uci set firewall.Allow_Only_WebClient4.target='REJECT'
+		uci set firewall.Allow_Only_WebClient4.src="GUEST"
+		uci set firewall.Allow_Only_WebClient4.dest="wan"
+		uci set firewall.Allow_Only_WebClient4.name="Allow_only_WebClient_GUEST"
+		uci set firewall.Allow_Only_WebClient4.target="REJECT"
 		uci set firewall.Allow_Only_WebClient4.dest_port="$all_other_OfficeWebClient_port"
-		uci set firewall.Allow_Only_WebClient4.enabled='0'
+		uci set firewall.Allow_Only_WebClient4.enabled="0"
 
 		uci set firewall.Allow_Only_WebClient5=rule
-		uci set firewall.Allow_Only_WebClient5.src='ENTERTAIN'
-		uci set firewall.Allow_Only_WebClient5.dest='wan'
-		uci set firewall.Allow_Only_WebClient5.name='Allow_only_WebClient_ENTERTAIN'
-		uci set firewall.Allow_Only_WebClient5.target='REJECT'
+		uci set firewall.Allow_Only_WebClient5.src="ENTERTAIN"
+		uci set firewall.Allow_Only_WebClient5.dest="wan"
+		uci set firewall.Allow_Only_WebClient5.name="Allow_only_WebClient_ENTERTAIN"
+		uci set firewall.Allow_Only_WebClient5.target="REJECT"
 		uci set firewall.Allow_Only_WebClient5.dest_port="$all_other_OfficeWebClient_port"
-		uci set firewall.Allow_Only_WebClient5.enabled='0'
+		uci set firewall.Allow_Only_WebClient5.enabled="0"
 
 		uci set firewall.Allow_Only_WebClient6=rule
-		uci set firewall.Allow_Only_WebClient6.src='CMOVIE'
-		uci set firewall.Allow_Only_WebClient6.dest='wan'
-		uci set firewall.Allow_Only_WebClient6.name='Allow_only_WebClient_CMOVIE'
-		uci set firewall.Allow_Only_WebClient6.target='REJECT'
+		uci set firewall.Allow_Only_WebClient6.src="CMOVIE"
+		uci set firewall.Allow_Only_WebClient6.dest="wan"
+		uci set firewall.Allow_Only_WebClient6.name="Allow_only_WebClient_CMOVIE"
+		uci set firewall.Allow_Only_WebClient6.target="REJECT"
 		uci set firewall.Allow_Only_WebClient6.dest_port="$all_other_OfficeWebClient_port"
-		uci set firewall.Allow_Only_WebClient6.enabled='0'
+		uci set firewall.Allow_Only_WebClient6.enabled="0"
 
 		uci set firewall.Allow_Only_WebClient7=rule
-		uci set firewall.Allow_Only_WebClient7.src='TELEKOM'
-		uci set firewall.Allow_Only_WebClient7.dest='wan'
-		uci set firewall.Allow_Only_WebClient7.name='Allow_only_WebClient_TELEKOM'
-		uci set firewall.Allow_Only_WebClient7.target='REJECT'
+		uci set firewall.Allow_Only_WebClient7.src="TELEKOM"
+		uci set firewall.Allow_Only_WebClient7.dest="wan"
+		uci set firewall.Allow_Only_WebClient7.name="Allow_only_WebClient_TELEKOM"
+		uci set firewall.Allow_Only_WebClient7.target="REJECT"
 		uci set firewall.Allow_Only_WebClient7.dest_port="$all_other_OfficeWebClient_port"
-		uci set firewall.Allow_Only_WebClient7.enabled='0'
+		uci set firewall.Allow_Only_WebClient7.enabled="0"
 
 		uci set firewall.Allow_Only_WebClient8=rule
-		uci set firewall.Allow_Only_WebClient8.src='LAN'
-		uci set firewall.Allow_Only_WebClient8.dest='wan'
-		uci set firewall.Allow_Only_WebClient8.name='Allow_only_WebClient_LAN'
-		uci set firewall.Allow_Only_WebClient8.target='REJECT'
+		uci set firewall.Allow_Only_WebClient8.src="LAN"
+		uci set firewall.Allow_Only_WebClient8.dest="wan"
+		uci set firewall.Allow_Only_WebClient8.name="Allow_only_WebClient_LAN"
+		uci set firewall.Allow_Only_WebClient8.target="REJECT"
 		uci set firewall.Allow_Only_WebClient8.dest_port="$all_other_OfficeWebClient_port"
-		uci set firewall.Allow_Only_WebClient8.enabled='0'
+		uci set firewall.Allow_Only_WebClient8.enabled="0"
 fi
 #Hohe Ziel (Ports)
 #TCP 
