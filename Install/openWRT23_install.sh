@@ -34936,6 +34936,10 @@ if [ ! -z $1 ]
 	else
 		remotestart=''
 fi
+opkg update
+opkg install bc
+#for Testing
+remotestart='1'
 
 if [ -z $remotestart ]
 	then 
