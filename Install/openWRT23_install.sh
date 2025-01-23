@@ -32342,9 +32342,17 @@ test_tor_dns_intercept() {
 	uci set firewall.dns_int.name="Intercept-DNS"
 	uci set firewall.dns_int.family="any"
 	uci set firewall.dns_int.proto="tcp udp"
-	uci set firewall.dns_int.src="lan"
+	uci set firewall.dns_int.src="INET"
 	uci set firewall.dns_int.src_dport=$DNS_port
 	uci set firewall.dns_int.target="DNAT"
+	uci -q del firewall.dns2_int
+	uci set firewall.dns2_int="redirect"
+	uci set firewall.dns2_int.name="Intercept-DNS"
+	uci set firewall.dns2_int.family="any"
+	uci set firewall.dns2_int.proto="tcp udp"
+	uci set firewall.dns2_int.src="lan"
+	uci set firewall.dns2_int.src_dport=$DNS_port
+	uci set firewall.dns2_int.target="DNAT"
 	processes=$(uci commit && reload_config)
 	wait $processes >> /root/install.log
 	/etc/init.d/firewall restart >> /root/install.log
@@ -34939,7 +34947,7 @@ fi
 opkg update
 opkg install bc
 #for Testing
-remotestart='1'
+#remotestart='1'
 
 if [ -z $remotestart ]
 	then 
