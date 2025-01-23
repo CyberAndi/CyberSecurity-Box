@@ -1512,7 +1512,7 @@ echo
 
 #sichere alte Konfiguration
 echo 'Sichere alte Konfiguration'
-iptables-save > rules.v4_old_$datum.bkp
+#iptables-save > rules.v4_old_$datum.bkp
 
 sleep 30
 FILE3=/www/luci-static/bootstrap/OCR-A.ttf
