@@ -136,7 +136,7 @@
 ||*lgbt*c^
 ||*boygirl*^
 ||*zwitter*^
-||*((.+[||you](?=tube))|.*[||you]tube*^
+||*you?=tube*^
 ||*pussy*^
 ||*puss*^
 ||.asia^
@@ -148,7 +148,7 @@
 ||.ae^
 ||.af^
 ||.ag^
-||((.*).)*((.*ladyboy([-,_,a-z,1-9]*)).((([-,_,a-z,1-9]*).)*)(([a-z]*)))^
+||*ladyboy*^
 ||.ai^
 ||.al^
 ||.am^
