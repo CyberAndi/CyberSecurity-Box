@@ -1,3 +1,4 @@
+test.cz
 ||.cz^
 .cz^
 cz^
