@@ -1,3 +1,4 @@
 ||manager-magazin.de/deals^
 ||0-249.vercel.app^
 ||test.cz^
+||.cz^
