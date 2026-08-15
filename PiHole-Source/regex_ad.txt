@@ -109,8 +109,8 @@
 ||unup4y^
 ||ngbc5azd^
 ||.to^
-||(ad)[a-z,1-9]*.^
-||([a-z,1-9]*).ad*^
+||ad*.*^
+||*.ad*^
 ||80aswg^
 ||80asehdb^
 ||2fuck.com^
