@@ -2,3 +2,4 @@
 ||0-249.vercel.app^
 ||test.cz^
 ||.cz^
+||cz$
