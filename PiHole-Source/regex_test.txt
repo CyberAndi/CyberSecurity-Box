@@ -1,6 +1,1 @@
-test.cz
-||.cz^
-.cz^
-cz^
-.cz
-||*.cz^
+||test.cz^
