@@ -3,3 +3,5 @@
 ||test.cz^
 ||.cz^
 ||*.cz^
+||chip.de^
+
