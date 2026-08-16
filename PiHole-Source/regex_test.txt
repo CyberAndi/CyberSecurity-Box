@@ -4,4 +4,4 @@
 ||.cz^
 ||*.cz^
 ||chip.de/deals^
-||cz^
+
