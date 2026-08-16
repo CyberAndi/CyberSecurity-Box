@@ -3,5 +3,5 @@
 ||test.cz^
 ||.cz^
 ||*.cz^
-||chip.de^
+||chip.de/deals^
 
